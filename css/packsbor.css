@@ -1,0 +1,33 @@
+.input1{
+	width: 30%;
+	min-width: 500px;
+	margin: auto;
+	height: 70%;
+	margin-bottom: 50px;
+	background-color: #E8DDC5;
+	border-radius: 3px;
+	color: #6C3F00;
+	border: 1px solid #6C3F00;
+	}
+	.input2{
+	
+	margin: 20px;
+	margin-top: 30px;
+	}
+	.row{
+		margin-top: 5px;
+		border-bottom: 1px solid #6C3F00;
+	}
+	.left{
+		display: inline-block;
+		width: 50%;
+	}
+	.cent{
+	width: 30%;
+	display: inline-block;	
+	}
+	.right{
+		width: 20%;
+	display: inline-block;
+	text-align: right;	
+	}

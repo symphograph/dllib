@@ -1,0 +1,148 @@
+@charset "utf-8";
+/* CSS Document */
+html {
+  height: 100%;
+}
+header {
+  padding-top: 8px;
+  padding-bottom: 20px;
+}
+ 
+header h1 {
+  padding-top: 0;
+  position: relative;
+  vertical-align: top;
+}
+ 
+header h1 a {
+  display: inline-block;
+  vertical-align: middle;
+}
+ 
+header h1 a:nth-child(2) {
+  padding-top: 6px;
+  padding-left: 65px;
+  padding-bottom: 6px;
+}
+ 
+header h1 img {
+  display: inline-block;
+  vertical-align: top;
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  width: 72px;
+  height: 72px;
+}
+ 
+header::after {
+  display: none;
+}
+ 
+header nav {
+    padding-top: 19px;
+}
+ 
+.input1 {
+  position: absolute;
+  top: 93px;
+  bottom: 66px;
+  left: 50%;
+  width: 1024px;
+  margin-left: -512px;
+  /*height: calc(100% - 140px);*/
+}
+ 
+.input2 {
+  margin-bottom: 0;
+  width: auto;
+  margin: 0;
+  height: 100%;
+  padding: 0 0 0 2px;
+}
+ 
+.topw {
+  display: none;
+}
+ 
+.inpur {
+  /*height: 100%;*/
+  margin: 0;
+  height: calc(100% - 50px);
+}
+ 
+.p_title {
+  height: auto;
+  padding-top: 8px;
+  margin-bottom: 16px;
+}
+ 
+.select_area {
+  width: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+ 
+form[name="locations"] {
+    margin-top: 40px;
+	/*margin-bottom: 21px;*/
+}
+ 
+.select_row {
+  display: inline-block;
+	/*margin-left: 30px;*/
+}
+ 
+.select_row + .select_row {
+  /*padding-left: 34px;*/
+}
+
+.packs_area_t1 {
+  /* 165 = 130 на форму (99 высотка + 31 margin-bottom) + 35 на заголовки + 16 padding */
+  height: calc(100% - 250px);
+  margin-top: 0;
+  max-height: none;
+  border-radius: 0;
+  border: 0;
+  margin-left: 1px;
+  margin-right: 1px;
+  border-top: 1px solid #84601d;
+}
+ 
+.zone_row {
+  height: auto;
+  line-height: 1.4;
+  padding-bottom: .6em;
+}
+ 
+.packs_area_t1 hr {
+  margin-bottom: 10px;
+}
+ 
+.pack_icon {
+  transition: .4s ease all;
+}
+ 
+.pack_icon:hover {
+  border-width: 2px !important;
+}
+/* 
+.pack_row1,
+.pack_row2 {
+  vertical-align: top;
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+
+.pack_row1 .itemprompt,
+.pack_row2 .itemprompt {
+  vertical-align: top;
+}
+.pack_row1 .pack_name,
+.pack_row2 .pack_name,
+.pack_row1 .price_col,
+.pack_row2 .price_col{
+  vertical-align: top;
+  line-height: 44px;
+}
+*/ 

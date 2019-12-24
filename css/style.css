@@ -1,0 +1,169 @@
+*{
+	transition-duration: 200ms;
+	/*font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif";*/
+}
+.top{
+	width: 368px;
+	/*height: 100px;*/
+	background-color: rgba(0,0,0,0.00);	
+	}
+	.top1{
+	width: 368px;
+	height: 200px;
+	background-color: rgba(0,0,0,0.00);	
+	}
+#content {
+	width: 60%; /* Ширина слоя */
+	max-width: 450px;
+	min-width: 300px;
+	/*margin: 100px auto 100px;  Выравнивание по центру */
+	background-color: rgba(21,17,0,0.78); /* Цвет фона */
+	color: #fff;
+	min-height: 582px;
+	align-content: center;
+	text-align: center;
+	font-size: 16px;
+	font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif";
+   }
+
+  
+   #footer {
+	position: fixed; /* Фиксированное положение */
+	left: 0;
+	bottom: 0; /* Левый нижний угол */
+	padding: 10px; /* Поля вокруг текста */
+	background-color: #000000; /* Цвет фона */
+	color: #fff; /* Цвет текста */
+	width: 100%; /* Ширина слоя */
+	text-align: center;
+    letter-spacing: 1px;
+   }
+   /*@import url("Search.css");*/
+#parent {
+	align: middle;
+    display: table-cell;
+    
+}
+
+#block {
+   
+    }
+
+summary{
+	cursor: pointer;
+}
+
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700italic);
+* { padding: 0; margin: 0; }
+   body { 
+   background: #FFFFFF; 
+   background: url("../img/bg.jpg") no-repeat fixed center center / cover  ;    
+   margin:0px; 
+   padding:auto;  
+   position: 50% 50%;    
+   min-height: 100%; 
+   
+   }
+/*
+header {
+	max-height: 150px;
+	text-align: justify;
+	margin-top: 0;
+	
+	background-color: rgba(2,2,2,0.90);
+	color: #fff;
+	letter-spacing: 1px;
+	
+	width: 100%;
+	z-index: 9999;
+}
+
+header::after {
+    content: '';
+    display: inline-block;
+    width: 100%;
+}
+
+header h1,
+header nav {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: left:
+}
+
+header h1 {
+    width: 50%;
+   
+}
+
+header nav {
+    padding-top: 1em;
+}
+
+.logo{
+	display:inline-block;
+
+}
+*/
+.link1 { color: #E79421;
+    text-decoration: none; /* Убирает подчеркивание для ссылок */
+   } 
+   
+   .topw{
+	height: 180px;
+	width: 70%;	
+	left: 30%;
+	}
+	
+	.dis1{
+		width: 1000px;
+		margin: auto;
+		height: 70%;
+		margin-bottom: 50px;
+	}
+	.vk-wall{
+		width: 60%;
+		display:inline-block;
+		height: 50%;
+		margin-bottom: 80px;
+	}
+	.dis2{
+	width: 30%;
+	min-width: 300px;
+	display:inline-block;
+	height: 70%;
+	margin-left: 10px;
+	}
+	.hello{
+	height: 150px;
+	background-color: #E8DDC5;
+	border-radius: 3px;
+	margin-bottom: 10px;
+	text-align: center;
+	color: #6C3F00;	
+	}
+	
+	.helloin{
+	height: 130px;
+	width: 280px;
+	margin: auto;
+	}
+.clear{
+	clear: both;
+}
+
+.valut_price{
+	min-height: 60px;
+	display:inline-block;
+	float: left;
+	font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif";
+	margin: 10px;
+}
+
+.valut_price:hover{
+	/*font-size: 18px;*/
+	cursor: default;
+	/*margin-left: 5px;
+	transition-duration: 50ms;
+	letter-spacing: 1px;*/
+}

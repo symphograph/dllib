@@ -1,0 +1,52 @@
+ #zayavka{
+	width: 898px;
+	height: 703px;
+	background-color: rgba(0,0,0,0.00);
+	background-image: url(../img/zayavka.png);	
+	}
+	.ztop{
+	height: 240px;
+	width: 898px;
+	display: block;		
+	}
+	.zinfo{
+	width: 898px;
+	margin-top: 30px;
+	margin-left: auto;
+	color: #66400b;		
+	
+	}
+    
+	.link1 { color: #66400b;
+    text-decoration: none; /* Убирает подчеркивание для ссылок */
+   } 
+  
+   A:hover {
+    text-decoration: underline; /* Делает ссылку подчеркнутой при наведении на нее курсора */
+    /* Цвет ссылки */
+   } 
+	.text-1{
+	width: 700px;	
+	}
+	.topw{
+	height: 180px;
+	width: 70	%;	
+	left: 30%;
+	}
+	
+	.dis1{
+		width: 60%;
+		margin: auto;
+		height: 70%;
+		margin-bottom: 50px;
+	}
+	.vk-wall{
+		width: 60%;
+		float: left;
+		height: 50%;
+		margin-bottom: 80px;
+	}
+	.dis2{
+	width: 30%;
+	float: right;
+	}

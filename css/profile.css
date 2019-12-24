@@ -1,0 +1,80 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+.persrow {
+	display: flex;
+	justify-content: space-between;
+	align-content:flex-end;
+	padding: 0.5em 0 0 0;
+	
+}
+@media screen and (max-width:800px){
+	.persrow {
+		flex-wrap: wrap; 
+	}
+}
+.nicon_out {
+	display: flex;
+	justify-content: flex-start;
+	
+}
+
+.nicon_out label {
+	display: block;
+}
+
+.nicon_out input[type="checkbox"],
+.nicon_out input[type="radio"] {
+	display: none;
+}
+
+.nicon_out input[type="checkbox"]:checked + label,
+.nicon_out input[type="radio"]:checked + label{
+	border-radius: 10px;
+	box-shadow: 0 0 3px 0 black;
+}
+
+.nicon_out .navicon:hover {
+	border-radius: 30px;
+}
+
+.navicon:hover {
+	box-shadow: 0px 0px 4px 2px green;
+}
+
+.persnames {
+	padding: 0 0 0 1em;
+}
+.persnames > div {
+	padding-left: 10px;
+}
+input[type="text"] {
+	width: 270px;
+	color: #6c3f00;
+	border: none;
+	background: none;
+	background-image: url("../img/reward2.png");
+	padding: 10px 2em 8px 2em;
+	outline: none;
+	background-repeat: no-repeat;
+	background-size: 270px 33px;
+	
+}
+
+input[type="text"]:focus {
+	background-image: url("../img/reward.png");
+}
+
+#Nick_Ok {
+	font-size: 20px;
+}
+
+#items {
+	width: 100%;
+}
+
+#accs {
+	width: 90%;
+	margin: auto;
+}

@@ -1,0 +1,85 @@
+@charset "utf-8";
+/* CSS Document */
+
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700italic);
+* { padding: 0; margin: 0; }
+	body { 
+	background: #FFFFFF; 
+	background: url("../img/bg.jpg") no-repeat fixed center center / cover  ;    
+	margin:0px; 
+	padding:auto;  
+	position: 50% 50%;    
+	min-height: 100%; 
+	transition-duration: 200ms;
+	/*font-family: "Gill Sans", "Gill Sans MT", "Myriad Pro", "DejaVu Sans Condensed", Helvetica, Arial, "sans-serif";*/
+   }
+
+header {
+	text-align: justify;
+	margin-top: 0;
+	padding: 2em 0;
+	background-color: rgba(2,2,2,0.90);
+	color: #fff;
+	letter-spacing: 1px;
+	position: fixed;
+	width: 100%;
+	z-index: 9999;
+}
+
+header::after {
+    content: '';
+    display: inline-block;
+    width: 100%;
+}
+
+header h1,
+header nav {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: left;
+}
+
+header h1 {
+    width: 50%;
+    padding-top: 0.5em;
+}
+
+header nav {
+    padding-top: 1em;
+}
+
+.logo{
+	display:inline-block;
+
+}
+.login{
+	display: inline-block;
+	float: right;
+	width: 200px;
+	text-align: right;	
+}
+.hello_user{
+	width: 200px;
+	text-align: left;
+	word-wrap: break-word;
+}
+.top_login{
+	padding: 20px;
+	width: 450px;
+	height: 120px;
+}
+.link1 { color: #E79421;
+    text-decoration: none; /* Убирает подчеркивание для ссылок */
+   } 
+
+#footer {
+	position: fixed; /* Фиксированное положение */
+	left: 0;
+	bottom: 0; /* Левый нижний угол */
+	padding: 10px; /* Поля вокруг текста */
+	background-color: #000000; /* Цвет фона */
+	color: #fff; /* Цвет текста */
+	width: 100%; /* Ширина слоя */
+	text-align: center;
+    letter-spacing: 1px;
+   }

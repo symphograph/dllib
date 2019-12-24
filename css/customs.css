@@ -1,0 +1,154 @@
+@charset "utf-8";
+/* CSS Document */
+
+.navcustoms {
+	
+	display: flex;
+	justify-content: space-around;
+	
+}
+.all_info {
+	flex-direction: column;
+}
+.prof_cell {
+	display: inline-block;
+	float: left;
+	width: 210px;
+	padding: 15px;
+}
+
+.prof_cells {
+	/*box-sizing: content-box;*/
+	width: 90%;
+	margin: auto;
+}
+
+.prof_img {
+	display: inline-block;
+	float: left;
+	border: 1px white solid;
+	width: 46px;
+	height: 46px;
+	background-position: center;
+	background-size: 46px 46px;
+	background-repeat: no-repeat;
+}
+
+.prof_pharams {
+	display: inline-block;
+	float: left;
+	height: 50px;
+	width: 160px;
+}
+
+.prof_pharams select {
+	padding: 5px;
+	width: 100%;
+	border: none;
+	outline: none;
+}
+
+.clear {
+	clear: both;
+}
+
+.item_name {
+	white-space: nowrap;
+}
+
+
+.prof_area {
+	margin: 0 auto 0 auto;
+	/*box-sizing:inherit;*/
+	padding-top: 1em; 
+}
+
+
+
+
+input[name^="setgold"] {
+	width: 7em; 
+}
+
+input[name^="setsilver"],input[name^="setbr"] {
+	width: 3em;
+}
+
+.money-line input {
+	padding: 5px;
+	outline:none;
+	border-color: #e2dec6; 
+	border-width:0;
+	color: #6c3f00;
+	align-content: right;
+	border-radius: 4px;
+	/*background-color: rgba(226,222,198,0.00);*/
+	input:-webkit-outer-spin-button,; 	
+	text-align: right;
+}
+
+.money-line input :hover{
+	/*padding: 5px;*/
+	border: 1px solid black;
+	outline-color: gray;
+}
+
+.PrOk {
+	font-size: 1.5em;
+	color: lawngreen;
+	text-shadow: 1px 1px black;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.itim{
+	color: #FFFFFF;
+	background-color: #877575;
+	background: no-repeat;
+	background-size: contain;
+	background-position: center;
+	width: 45px;
+	height: 45px;
+	border: 1px solid white;
+	border-radius: 2px;
+	transition-duration: 200ms;
+	cursor: pointer;
+   }
+
+.itim:hover, .prof_img:hover {
+	border: 1px solid gray!important;
+}
+
+.top_itim{
+	
+	color: #FFFFFF;
+	background-color: #FFFFFF;
+	background: no-repeat;
+	background-size: contain;
+	width: 42px;
+	height: 42px;
+	border: 3px white solid ;
+	border-radius: 2px;
+	/*border-color: #FFFFFF;*/
+}
+
+.price_pharams {
+	display: flex;
+	align-items: flex-end;
+}
+
+select {
+	/*border: none;*/
+	background: none;
+	color: #6c3f00;
+	height: 1em;
+	padding: 0.5em;
+	box-sizing: content-box;
+	font-size: 1em;
+	outline: none;
+	text-align: right;
+}
+select:hover {
+	
+	border: 1px solid;
+}

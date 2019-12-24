@@ -1,0 +1,36 @@
+@charset "utf-8";
+/* CSS Document */
+
+.topw{
+	height: 180px;
+	width: 100%;	
+	}
+
+.input2{
+	width: 1000px;
+	margin: auto;
+	/*height: 70%;*/
+	margin-bottom: 50px;
+	background-color: #F0E9DB;
+	border-radius: 3px;
+	color: #6C3F00;
+	border: 2px solid rgba(71,46,10,0.88);
+	background-image: url(../img/windows/win-head2.png);
+	background-repeat: no-repeat;
+	background-size: 1020px 200px;
+	padding: 10px;
+	}
+
+.input1{
+ width: 1000px;
+ /*min-width: 700px;*/
+ margin: auto;
+ /*background-color: #E8DDC5;*/
+ padding: 1px;
+}
+.inpur{
+	margin: 20px;
+    white-space: nowrap;
+	margin-top: 60px;
+    /*background-color: #E8DDC5;*/
+	}

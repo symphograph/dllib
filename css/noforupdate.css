@@ -1,0 +1,28 @@
+/* CSS Document */
+ .topwr{
+	height: 180px;
+	width: 70%;	
+	left: 30%;
+	
+	}
+.messwrap{
+	
+	width: 400px;
+	margin: auto;
+	margin-top: 100px;
+	height: 70%;
+	min-height: 300px;
+	margin-bottom: 50px;
+	background-color: #E8DDC5;
+	border-radius: 3px;
+	color: #6C3F00;
+	border: 1px solid #6C3F00;
+	
+	}
+	
+	.messwrapin{
+	margin: 20px;
+	margin-top: 30px;
+	
+	/*max-height: 600px;*/
+	}

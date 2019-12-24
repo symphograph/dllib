@@ -1,0 +1,43 @@
+@charset "utf-8";
+/* CSS Document */
+.comments_row{
+	padding: 5px;
+	margin-top: 10px;
+}
+
+.user_info, .comment, .report{
+	display: inline-block;
+	float: left;
+}
+
+.user_info{
+	width: 150px;
+}
+
+.comment{
+min-width: 400px;
+max-width: 800px;
+min-height: 100px;
+border: solid 1px;
+border-radius: 5px;
+border-color: antiquewhite;
+padding: 10px;
+background-color: rgba(221,217,200,0.46);
+transition-duration: 0 !important;
+}
+
+.report{
+min-width: 200px;
+min-height: 100px;
+border: solid 1px;
+border-radius: 5px;
+padding: 7px;
+background-color: rgba(221,217,200,0.46);
+}
+
+.textarea{
+	width: 90%; 
+	min-height: 100px; 
+	padding: 5px; 
+	border-radius: 5px;
+}
