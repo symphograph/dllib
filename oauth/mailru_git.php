@@ -4,6 +4,7 @@ include_once '../functions/filefuncts.php';
 $identy = OnlyText($_COOKIE['identy']);
 if(iconv_strlen($identy) != 12)
 exit('Missed Cookies');
+///jhjgfhjhgfhjhgfhjhfhjhgfghjhgf
 class Utils {
     public static function redirect($uri = '') {
         header("HTTP/1.1 301 Moved Permanently");
