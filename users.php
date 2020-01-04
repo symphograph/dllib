@@ -130,7 +130,7 @@ foreach($qwe as $q)
 		$avafile = 'img/avatars/'.$avafile;
 	
 	if(!file_exists($avafile)) 
-		$avafile = '/img/icons/8001096.png';
+		$avafile = '/img/init_ava.png';
 	if(!$user_nick) 
 		$user_nick = NickAdder($mail_id);
 	//var_dump($server_group);

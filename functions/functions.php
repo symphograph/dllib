@@ -296,11 +296,11 @@ function UserInfo($identy = '')
 				if($avafile)
 					$userinfo_arr['avatar'] = 'img/avatars/'.$avafile;
 				else 
-					$userinfo_arr['avatar'] = 'img/icons/8001096.png';
+					$userinfo_arr['avatar'] = 'img/8001096.png';
 				
 			}elseif(!$q['email'])
 			{
-				$userinfo_arr['avatar'] = 'img/icons/8001096.png';
+				$userinfo_arr['avatar'] = 'img/8001096.png';
 				$userinfo_arr['user_nick'] = '';
 			}
 			
@@ -384,7 +384,7 @@ function price_str($price,$valuta)
 	return($price);
 	}else
 	{   //$price = str_pad($price, 6, "0", STR_PAD_LEFT);
-		$v_img = '<img src="../img/icons/'.$valuta.'.png" width="10" height="10" alt="coal"/>';
+		$v_img = '<img src="../img/'.$valuta.'.png" width="10" height="10" alt="coal"/>';
 		//$s = sscanf($price, "%2d%2d%d", $gold, $silver, $bronse);
 		$price = $price.$v_img;
 		return($price);

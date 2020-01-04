@@ -89,7 +89,7 @@ foreach($query as $q)
 		$avafile = 'img/avatars/'.$avafile;
 	
 	if(!file_exists($avafile)) 
-		$avafile = '/img/icons/8001096.png';
+		$avafile = '/img/init_ava.png';
 	
 	$check = $checks[$active];
 	?>
