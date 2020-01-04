@@ -1,5 +1,6 @@
 ip.php
 includs/ip.php
+cgi-bin/*
 oauth/mailru.php
 _notes/*
 logs/*
