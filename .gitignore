@@ -3,7 +3,8 @@ includs/ip.php
 oauth/mailru.php
 _notes/*
 logs/*
-img/*
+img/icons/*
+img/avatars/*
 global/*
 verify-admitad.txt
 yandex?
