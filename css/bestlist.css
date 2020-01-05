@@ -1,0 +1,104 @@
+@charset "utf-8";
+/* CSS Document */
+#rent{
+	background-image: url(../img/windows/win-head2.png), -webkit-linear-gradient(270deg,rgba(238,232,218,1.00) 0%,rgba(238,232,218,1.00) 14.51%);
+	background-image: url(../img/windows/win-head2.png), -moz-linear-gradient(270deg,rgba(238,232,218,1.00) 0%,rgba(238,232,218,1.00) 14.51%);
+	background-image: url(../img/windows/win-head2.png), -o-linear-gradient(270deg,rgba(238,232,218,1.00) 0%,rgba(238,232,218,1.00) 14.51%);
+	background-image: url(../img/windows/win-head2.png), linear-gradient(180deg,rgba(238,232,218,1.00) 0%,rgba(238,232,218,1.00) 14.51%);
+}
+.toprow {
+	display: flex;
+	justify-content: flex-start;
+	/*height: 50px;*/
+	padding: 3px;
+	text-align: center;
+}
+.row1, .row0{
+	display: flex;
+	justify-content: flex-start;
+	text-align: right;
+	padding: 3px;
+}
+.row1{
+	background-color: #EDE4D4;
+}
+.row0{
+	
+}
+.critem_name {
+	font-size: 16px;
+	min-width: 200px;
+}
+
+.rec_name {
+	font-size: 12px;
+}
+
+.pack_icon{
+	width: 40px;
+	height: 40px;
+	border: 2px solid rgba(150,146,138,1.00);
+	border-radius: 3px;
+	text-decoration: none;
+	color: white;
+	
+}
+.pack_icon:hover {
+	border: 3px solid #FFFFFF!important;	 
+	 }
+   .itdigit{
+	position: absolute;
+	bottom: 3px;
+	right: 4px;
+	text-shadow: -2px -2px 3px rgba(0,0,0,1.00);
+	text-align: right;
+	/*font-weight: lighter;*/
+	font-size: 15px;
+   }
+
+.img_name {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.rec_item_names {
+	padding: 5px;
+}
+
+.stolb {
+	width: 1px;
+	border-right: 1px dotted rgba(112,60,9,1.00);
+}
+
+.col1 {
+	width: 350px;
+	text-align: left;
+}
+.col2 {
+	width: 120px;
+	/*text-align: right;*/
+	font-size: 14px;
+	padding: 5px;
+}
+.col3 {
+	padding: 5px;
+	font-size: 14px;
+	width: 330px;
+	text-align: left;
+	/*display: flex;
+	justify-content: flex-start;*/
+}
+
+.ok {
+	display: none;
+	font-size: 12px;
+	color: darkgreen;
+	padding: 5px;
+}
+
+
+
+.priceform {
+	display: flex;
+	justify-content: flex-start;
+}

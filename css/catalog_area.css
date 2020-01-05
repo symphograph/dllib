@@ -1,0 +1,168 @@
+@charset "utf-8";
+/* CSS Document */
+#catalog_area {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-content: flex-start;
+	padding-bottom: 100px;
+}
+
+
+@media screen and (min-width:600px){
+
+	.up_craft_area {
+		max-width: 720px;
+		max-height: 225px;
+		overflow-y: scroll;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		align-content: flex-start;
+		padding-bottom: 20px;
+	}	
+	.all_res_area {
+		max-width: 720px;
+		max-height: 180px;
+		overflow-y: auto;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		align-content: flex-start;
+		/*padding-bottom: 20px;*/
+	}
+	.crresults {
+		max-width: 250px;
+	}
+	.craftinfo > div {
+	width: 40%;
+	min-width: 250px;
+	display: flex;
+	flex-direction: column;
+	/*justify-content: space-between;*/
+}
+}
+@media screen and (max-width:600px){
+	
+		.up_craft_area {
+		max-width: 720px;
+		max-height: 225px;
+		overflow-x: auto;
+		overflow-y: hidden;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		align-content: flex-start;
+		padding-bottom: 20px;
+		
+	}
+	.all_res_area {
+		/*max-width: 720px;*/
+		max-height: 180px;
+		overflow-y: hidden;
+		overflow-x: scroll;
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-content: flex-start;
+		/*padding-bottom: 20px;*/
+	}
+	.matrow {
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	max-width: 240px;
+	overflow-x: auto;
+	}
+	
+	.craftinfo > div {
+	width: 100%;
+	min-width: 250px;
+	display: flex;
+	flex-direction: column;
+	/*justify-content: space-between;*/
+}
+
+}
+
+.item_descr_area {
+	width: 320px;
+	text-align: justify;
+}
+
+#catalog_right {
+	width: 100%;
+	max-width: 700px;
+}
+
+.crftarea {
+	display: flex;
+	justify-content: flex-start;
+}
+.matrow {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.matneed {
+	text-shadow: 0px 0px 2px black;
+	text-decoration: none;
+	position: absolute;
+	bottom: 3px;
+	right:  5px;
+}
+
+.main_itim {
+	color: #FFFFFF;
+	background-color: #877575;
+	background: no-repeat;
+	background-size: contain;
+	background-position: center;
+	width: 70px;
+	height: 70px;
+	border: 1px solid white;
+	border-radius: 2px;
+	transition-duration: 200ms;
+	cursor: pointer;
+}
+
+.crresults {
+	display: flex;
+	justify-content: space-between;
+
+}
+
+#isbuy {
+	display: flex;
+	justify-content: space-between;
+	/*padding: 0 20px;*/
+}
+
+#isbuy .navicon {
+	margin: 0;
+}
+
+.isby {
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-end;
+}
+
+#isbuy input[type="radio"] + label{
+	opacity: 0.5;
+}
+
+#isbuy input[type="radio"]:checked + label{
+	/*border-radius: 10px;*/
+	box-shadow: 0 0 3px 0 lightgreen;
+	opacity: 1;
+}
+
+.craftinfo {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
