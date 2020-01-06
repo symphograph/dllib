@@ -1,15 +1,10 @@
 <?php 
 include_once 'includs/usercheck.php';
 setcookie('path', 'users');
-//include_once 'includs/user.php';
+
 $hrefself = '<a href="'.$_SERVER['PHP_SELF'].'?query=';
 $ver = random_str(8);
-/*
-$sessmark = OnlyText($_COOKIE['sessmark']);	
-	if(iconv_strlen($sessmark) != 12)
-		die('error_sess');
-*/
-//if(!$email) exit;
+
 ?>
 <!doctype html>
 <html lang="ru">
@@ -70,24 +65,20 @@ LIMIT 100
 	<div class="menu_area">
 	<div class="navcustoms">
 	<h2>Цены пользователей</h2>
-	<div class="buttons">
-		
-		<form method="POST" action="serverchange.php" name="server">
-			<select name="serv" id="server" class="server" onchange="this.form.submit()">
-			<?php
-			$query = qwe("SELECT * FROM `servers`");
-			SelectOpts($query, 'id', 'server_name', $server, false);	
+		<div class="buttons">
 
-			?>
-			</select>
-		</form>
-		<a href="user_prices.php"><button class="def_button">Мои цены</button></a>
-		<a href="user_customs.php"><button class="def_button">Настройки</button></a>
-	</div>
-	<?php
-	
+			<form method="POST" action="serverchange.php" name="server">
+				<select name="serv" id="server" class="server" onchange="this.form.submit()">
+				<?php
+				$query = qwe("SELECT * FROM `servers`");
+				SelectOpts($query, 'id', 'server_name', $server, false);	
 
-	?>
+				?>
+				</select>
+			</form>
+			<a href="user_prices.php"><button class="def_button">Мои цены</button></a>
+			<a href="user_customs.php"><button class="def_button">Настройки</button></a>
+		</div>
 	</div><hr>
 	</div>
 <div id="rent_in" class="rent_in">
@@ -106,11 +97,10 @@ LIMIT 100
 		Эта опция не распространяется на предметы, имеющие цену субъективного характера. Например, Ремесленнаую репутацию, Очки работы, Честь, Вексель региональной общины и еще пару сотен подобных. При любых настройках из этого списка будет предпочитаться именно Ваша цена.
 		<br><br>
 		Ники сгенерированы случайным образом. 
-			<?php
-			if($email)
-				echo 'Изменить свой ник можно в <a href="profile.php">профиле</a>.';
-			?>
-			
+		<?php
+		if($email)
+			echo 'Изменить свой ник можно в <a href="profile.php">профиле</a>.';
+		?>			
 		</div>
 	</details><br>
 <form method="post" id="fol_form">
@@ -152,12 +142,6 @@ foreach($qwe as $q)
 			<?php LastUserPriceCell($mail_id,$server_group);?>
 			</div>
 		</div>
-		<?php 
-		/*if($active)
-		{
-			?><a href="exit.php"><button type="button" class="def_button">Выход</button></a><?php
-		}*/
-		?>
 		<div class="folow_check">
 		<?php 
 		if($mail_id != $user_id)
@@ -172,25 +156,10 @@ foreach($qwe as $q)
 		<div class="mailnick"><?php if($flws) echo 'Доверяют: '.$flws?></div>
 		</div>
 	</div>
-	
-	<?php 
-	/*if($active)
-		{
-		?>
-		<span>Публичный ник:<br></span>
-		<input data-tooltip="Публичный ник.<br>Только буквы и цифры<br>3-20 символов." id="public_nick" type="text" name="public_nick" placeholder="Публичный ник" value="<?php echo $user_nick?>" autocomplete="off" />
-
-		<button type="button" id="sendnick" class="def_button" style="display: none;">Ok</button>
-		<span style="color: green; font-size: 20px;" id="Nick_Ok"></span>
-		<?php
-		}*/
-		?>
 	<hr>
-	<?php
+<?php
 }
-
 ?>
-
 
 <input type="hidden" name="folow[0]" value=0>
 </form>
