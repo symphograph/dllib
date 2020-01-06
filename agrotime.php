@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 <?php
+///forktest
 include_once 'includs/ip.php';
 if(!$myip) exit();
 include_once 'functions/functions.php';
