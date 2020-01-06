@@ -1,4 +1,8 @@
-﻿<?php $ip = $_SERVER['REMOTE_ADDR'];
+﻿<?php 
+/**
+Пожалуй, сохраню это на память этот кошмар.
+*/
+$ip = $_SERVER['REMOTE_ADDR'];
 if($ip == '37.194.65.246'){
  ini_set('display_errors',1);
 error_reporting(E_ALL);}
