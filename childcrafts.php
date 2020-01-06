@@ -1,6 +1,7 @@
 ﻿<?php 
 /**
-Пожалуй, сохраню на память этот кошмар.
+Classic cattle code.
+In memory of a nightmare.
 */
 $ip = $_SERVER['REMOTE_ADDR'];
 if($ip == '37.194.65.246'){
