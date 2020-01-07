@@ -14,7 +14,7 @@ $ver = random_str(8);
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name = "description" content = "Таблица цен на паки в Archeage 5.7"/>
   <meta name = "keywords" content = "товары фактории ,паки 5.7, archeage, архейдж, региональные товары, таблица паков, сколько стоят паки, цена паков" />
-<title>Таблица цен на паки 5.7</title>
+<title>Таблица цен на паки 6.0</title>
 <link href="css/default.css?ver=<?php echo md5_file('css/default.css')?>" rel="stylesheet">
 <link href="css/packtable.css?ver=<?php echo md5_file('css/packtable.css')?>" rel="stylesheet">
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
@@ -53,7 +53,7 @@ if(isset($_POST['perc']) and ctype_digit($_POST['perc']))
 			<div class="navname">Настройки</div>
 		</div>
 	</div>
-<h2 class="p_title"><span>Паки 5.7 при</span><?php perselect(130);?><span>%</span></h2>
+<h2 class="p_title"><span>Паки 6.0 при</span><?php perselect(130);?><span>%</span></h2>
 <div class="siol">
 		<div class="nicon_out ">
 			<input type="checkbox" id="siol" name="siol" value="5">
