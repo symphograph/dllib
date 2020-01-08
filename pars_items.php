@@ -2,7 +2,7 @@
 <?php
 $start = microtime(true);
 
-include_once 'includs/ip.php';
+require_once 'includs/ip.php';
 if(!$myip) exit();
 $start_id = $_POST['start_id'] ?? 0;
 $start_id = intval($start_id);

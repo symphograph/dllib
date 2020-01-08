@@ -1,12 +1,12 @@
 <?php
 var_dump($_POST); die;
-include '../includs/ip.php';
+require_once '../includs/ip.php';
 $craft_id = $_POST['craft_id'] ?? $_GET['craft_id'] ?? 0;
 $craft_id = intval($craft_id);
 if($craft_id == 0) exit();
 
 
-include_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functions.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functs.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/includs/config.php';

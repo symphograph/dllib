@@ -1,5 +1,5 @@
 <?php 
-include_once 'includs/ip.php';
+require_once 'includs/ip.php';
 $timestart = $_SERVER["REQUEST_TIME_FLOAT"];
 if(!$myip) exit;
 include_once 'includs/usercheck.php';

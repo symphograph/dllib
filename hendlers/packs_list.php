@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 if(empty($_POST))
 exit();
 

@@ -1,5 +1,5 @@
 <?php 
-include_once '../includs/ip.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 if(!$myip)  exit();
 include "../includs/config.php";
 include_once "../functions/functs.php";

@@ -1,5 +1,5 @@
 <?php
-include 'includs/ip.php'; 
+require_once 'includs/ip.php'; 
 include("tscheck.php");
 echo '<meta charset="utf-8">';
 if($group_lvl < 4){echo 'Нет доступа.'; exit();}

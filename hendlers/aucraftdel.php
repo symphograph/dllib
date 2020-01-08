@@ -4,7 +4,7 @@ $item_id = intval($item_id);
 if($item_id == 0)
 	die();
 
-include_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functions.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functs.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/includs/config.php';

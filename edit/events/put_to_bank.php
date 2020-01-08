@@ -1,6 +1,6 @@
 ﻿<?php
 if(!isset ($_POST['bank'])) {echo 'Ничего не вижу'; exit();};
-include '../../includs/ip.php'; 
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php'; 
 $bank_id = $_POST['bank'];
 $bill = $_POST['bill'];
 $editor = $_POST['nick'];

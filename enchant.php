@@ -1,6 +1,6 @@
 <?php
 exit(header("Location: catalog.php", TRUE, 302));
-include 'includs/ip.php';
+require_once 'includs/ip.php';
 include 'includs/config.php';
 include 'functions/enchant_values.php';
 ?>

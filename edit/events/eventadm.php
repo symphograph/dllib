@@ -1,5 +1,5 @@
 <?php
-include '../../includs/ip.php'; 
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php'; 
 include("../../tscheck.php");
 echo '<meta charset="utf-8">';
 if($group_lvl < 1){echo 'Нет доступа.'; exit();}

@@ -1,5 +1,5 @@
 <?
-include '../../includs/ip.php'; 
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php'; 
 include("../../tscheck.php");
 if($group_lvl < 4 or !isset($_POST['event_id'])){echo '<meta charset="utf-8">Нет доступа.'; exit();}
 $event_id = $_POST['event_id'];

@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <?php
 $start = microtime(true);
-include 'includs/ip.php';
+require_once 'includs/ip.php';
 if(!$myip) exit();
 ?>
 Не забудь сделать бэкап таблицы parsed_items!

@@ -4,7 +4,7 @@ if(!empty($_GET['query']))
  die();
 $href = '<a href="catalog.php?query=';
 $href2 = '" text-decoration: none; style="color: #6C3F00;">';
-include 'includs/ip.php';
+require_once 'includs/ip.php';
 include 'includs/config.php'; // Подключение к БД.
 	$query = mysqli_real_escape_string($dbLink,$_GET['query']);
 	$array = array();
