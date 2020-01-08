@@ -1,7 +1,7 @@
 <?php
 $sgr = intval($_POST['sgroup']);
 if(!$sgr) die;
-include_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functions.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functs.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/includs/config.php';

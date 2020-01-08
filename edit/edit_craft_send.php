@@ -7,7 +7,7 @@
 
 <body>
 <?php
-	include '../includs/ip.php';
+	require_once '../includs/ip.php';
 	include_once '../functions/functs.php';
 if(!$myip) exit();
 

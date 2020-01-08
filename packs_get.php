@@ -1,5 +1,5 @@
 <?php
-include 'includs/ip.php';
+require_once 'includs/ip.php';
 //include("tscheck.php");
 
 ?>

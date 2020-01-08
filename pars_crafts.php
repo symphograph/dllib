@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <?php
 $start = $_SERVER["REQUEST_TIME_FLOAT"];
-include 'includs/ip.php';
+require_once 'includs/ip.php';
 if(!$myip) exit();
 ?>
 <form method="post" action="">

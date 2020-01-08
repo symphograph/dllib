@@ -1,5 +1,5 @@
 <?php
-include_once 'includs/ip.php';
+require_once 'includs/ip.php';
 if(!$myip) exit();
 include_once 'functions/functions.php';
 include_once 'includs/config.php';

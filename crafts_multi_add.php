@@ -5,7 +5,7 @@
 <title>Добавляем кучу рецептов</title>
 </head>
 <?php
-include 'includs/ip.php';
+require_once 'includs/ip.php';
 if(!$myip) exit();
 if(!empty($_POST['set_ids']))
 {

@@ -1,6 +1,6 @@
 <?php 
 
-include 'includs/ip.php';
+require_once 'includs/ip.php';
 include_once 'includs/config.php';
 include_once 'includs/user.php';
 if(empty($_POST) or $user_id < 1) exit();

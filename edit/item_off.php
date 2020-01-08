@@ -1,5 +1,5 @@
 ﻿<?php
-include '../includs/ip.php';
+require_once '../includs/ip.php';
 if(!$myip) exit();
 //var_dump($_GET);
 if(!empty($_GET['item_id']))

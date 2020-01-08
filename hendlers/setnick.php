@@ -7,7 +7,7 @@ if(!$nick)
 
 $reports = ['<span style="color: red">ой!<span>','ок'];
 	
-include_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 include_once '../functions/functions.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functs.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/includs/config.php';

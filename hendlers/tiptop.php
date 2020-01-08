@@ -5,7 +5,7 @@ if(empty($_POST['tiptop']))
 $tiptop = intval($_POST['tiptop']);
 if($tiptop != 1)
 	die('ttt');
-include_once '../includs/ip.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 include_once '../includs/config.php';
 
 $qwe = qwe("

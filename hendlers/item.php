@@ -4,7 +4,7 @@ $item_id = intval($_POST['item_id']);
 if(!$item_id) die;
 $cooktime = time()+60*60*24*360;
 setcookie("item_id",$item_id,$cooktime,'/');
-include_once '../includs/ip.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 include_once '../functions/functions.php';
 include_once '../functions/functs.php';
 include_once '../cat-funcs.php';

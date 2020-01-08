@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <?php
-include 'includs/ip.php';
+require_once 'includs/ip.php';
 if(!$myip) exit();
 echo '<form method="post" action="">
 <input type="submit" name="go" value="go">	

@@ -1,6 +1,6 @@
 <?php
 
-include '../includs/ip.php';
+require_once '../includs/ip.php';
 $item_id = $_POST['item_id'] ?? $_GET['item_id'] ?? 0;
 $item_id = intval($item_id);
 if($item_id == 0) exit();
@@ -9,7 +9,7 @@ $isbuy = $_POST['isbuy'] ?? $_GET['isbuy'] ?? 0;
 $isbuy = intval($isbuy);
 if($isbuy == 0) exit();
 
-include_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functions.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functs.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/includs/config.php';

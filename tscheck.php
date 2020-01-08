@@ -1,5 +1,5 @@
 <?php
-include('includs/ip.php');
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 $ipbd = '';
 $cldbid = 0;
 $group_lvl = 0;

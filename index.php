@@ -1,5 +1,5 @@
 <?php 
-include 'includs/ip.php';
+require_once 'includs/ip.php';
 //if(!isset($_COOKIE['cldbid']))
  include_once 'tscheck.php';
 //if($ip == '37.194.65.246')exit();

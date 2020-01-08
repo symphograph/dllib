@@ -1,7 +1,7 @@
 <?php /*?><meta charset="utf-8"><?php */
 //var_dump($_POST);
 $start = microtime(true);
-include 'includs/ip.php';
+require_once 'includs/ip.php';
 if(!$myip) exit();
 if(empty($_POST))
 {

@@ -356,7 +356,7 @@ function child_recs_ecco($item_id, $hrefself, $dbLink, $orcost, $matrow, $price_
 	ORDER BY `isbest` DESC, `craft_price`");
 	$bye = false;
 	$bye_vs_craft = 0;
-	include 'includs/ip.php';
+	require_once 'includs/ip.php';
 	 $user_cr = false;
 	$i = 0;
 	$best_used = $best_prof_id = 0;

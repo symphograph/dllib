@@ -5,7 +5,7 @@
 <title>Обновить из KR</title>
 </head>
 <?php
-include '../includs/ip.php';
+require_once '../includs/ip.php';
 if(!$myip) exit();
 if(isset($_POST['upd']))
 {

@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <?php
-include 'includs/ip.php';
+require_once 'includs/ip.php';
 include 'functions/functions.php';
 //header('Content-type: text/plain');
 $now = date('d.m.y H:i');

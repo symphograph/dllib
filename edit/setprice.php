@@ -1,7 +1,7 @@
 <?php
 if(empty($_POST['sendprice']))
 exit();
-include_once '../includs/ip.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 //var_dump($_POST);
 //die;
 include_once $_SERVER['DOCUMENT_ROOT'].'/includs/usercheck.php';
