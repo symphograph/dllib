@@ -10,4 +10,5 @@ global/*
 verify-admitad.txt
 dwsync.xml
 tcalldl/*
+.cache/*
 .htaccess
