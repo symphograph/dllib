@@ -45,7 +45,7 @@ GROUP BY `result_item_id`
 LIMIT 10
 ");*/
 $qwe = qwe("
-SELECT `item_id` FROM `New_items60`
+SELECT `item_id` FROM `New_items61`
 ");
 $i = 0;
 $ver = random_str(8);

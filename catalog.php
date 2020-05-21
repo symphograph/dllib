@@ -64,6 +64,7 @@ if(!empty($_COOKIE['item_id']))
 	<div class="navcustoms">
 
 <?php
+//dbCleaner();
 $qwe = qwe("
 SELECT * FROM `item_subgroups`
 WHERE `visible_ui` > 0

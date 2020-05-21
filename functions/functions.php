@@ -429,16 +429,16 @@ function EmptyIdFinder($table,$colname = false)
 
 function dbCleaner()
 {
-	$query = qwe("
+	qwe("
 	DELETE FROM `mailusers` WHERE `last_time` = `time`
 	AND TO_DAYS(`last_time`) < TO_DAYS(NOW())-30
 	");
-	$query = qwe("
+	qwe("
 	DELETE FROM `user_crafts` 
 	WHERE `craft_id` IN 
 	(SELECT `craft_id` FROM `crafts` WHERE `on_off` = 0)
 	");
-	$query = qwe("
+	qwe("
 	DELETE FROM `user_crafts` 
 	WHERE `item_id` IN 
 	(SELECT `item_id` FROM `items` WHERE `on_off` = 0)
