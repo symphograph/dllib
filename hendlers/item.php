@@ -685,7 +685,7 @@ function UpCraftList($item_id)
 	AND craft_materials.item_id = '$item_id'
 	AND items.on_off = 1
 	AND craft_materials.mater_need > 0
-	INNER JOIN crafts ON items.item_id = crafts.result_item_id
+	INNER JOIN crafts ON craft_materials.craft_id = crafts.craft_id
 	AND crafts.on_off = 1
 	ORDER BY crafts.deep DESC,
 	items.categ_id, craft_materials.result_item_id

@@ -20,7 +20,7 @@ include_once 'functions/functions.php';
 
 $start_id = 8000735;
 $stop_id = 8000787;
-$limit = 2;
+$limit = 1;
 
 
 /*
@@ -36,6 +36,7 @@ $qlist = qwe("
 SELECT * FROM New_crafts61 
 /*WHERE result_item_id in (SELECT item_id FROM New_items60)*/
 WHERE craft_id >= (SELECT item_id FROM parsed_last)
+LIMIT 1
 ");
 
 $icrfts = 0;
@@ -77,7 +78,7 @@ foreach($qlist as $qq)
 		$new = true;
 	}
 	
-	if(!$new) continue;
+	//if(!$new) continue;
 	//if(IsCraftExistInBD($rec))
 		//continue;
 	
@@ -159,7 +160,7 @@ foreach($qlist as $qq)
 	$mats = $arr[0];
 	//var_dump($mats);
 	$cnt = count($mats);
-	//echo '<p>Материалов: '.($cnt-1).'</p>';
+	echo '<p>Материалов: '.($cnt-1).'</p>';
 	$i = 1;
 	$item_name = $amount = '';
 	if(preg_match('/deprecated|test|тестовый/',$item_name)) 
@@ -276,14 +277,13 @@ foreach($qlist as $qq)
 			$mat_name = $mat_inf[1];
 			$mater_need = $mat_inf[2];
 			$mat_grade = intval($mat_inf[3]);
-			qwe("
+			$result = qwe("
 			REPLACE INTO `craft_materials` 
 				(`craft_id`, `item_id`, `result_item_id`, `mater_need`, `item_name`, `result_item_name`,`mat_grade`)
 				VALUES 
 				('$craft_id', '$mat_id', '$item_id', '$mater_need', '$mat_name', '$item_name', '$mat_grade')
 				");
-				
-			
+			//var_dump($result);			
 		}	
 	}
 	else
