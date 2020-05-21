@@ -66,18 +66,34 @@ $custWay = $custWays[$customType];
 function modes($mode)
 {
 	$chks = ['','checked'];
+	$mode_names = ['','Наивность', 'Маргинал', 'Хардкор'];
+	$mode_tooltips = 
+	[
+		'',
+		'Режим для новичка.<br>Предпочитает Ваши цены или более новые из доверенных.<br>Если их нет, ищет у других.<br>Спрашивает только, если никто и никогда не указывал цену.<br>',
+		'Не видит ничьих цен, кроме Ваших и тех, кому Вы доверяете.<br>Предпочитает более новые.<br>ОР, РР, Честь и прочие субъективные предпочитает Ваши независимо от их новизны.',
+		'Видит только Ваши цены.<br>В любой непонятной ситуации будет спрашивать.'
+	];
 ?>
 	<form id="fmodes" method="post" action="edit/setmode.php">
 		<div class="modes">
-			<label data-tooltip="Режим для новичка.<br>Предпочитает Ваши цены или более новые из доверенных.<br>Если их нет, ищет у других.<br>Спрашивает только, если никто и никогда не указывал цену.<br>">
-			<div><input type="radio" <?php if($mode == 1) echo 'checked'?> name="mode" value="1" onchange="this.form.submit()"/>Наивность</div></label>
-			<label data-tooltip="Не видит ничьих цен, кроме Ваших и тех, кому Вы доверяете.">
-			<div><input type="radio" <?php if($mode == 2) echo 'checked'?> name="mode" value="2" onchange="this.form.submit()"/>Маргинал</div></label>
-			<label data-tooltip="Видит только Ваши цены.<br>В любой непонятной ситуации будет спрашивать.">
-			<div><input type="radio" <?php if($mode == 3) echo 'checked'?> name="mode" value="3" onchange="this.form.submit()"/>Хардкор</div></label>
-			
+			<?php
+			foreach($mode_names as $mnk => $mnv)
+			{
+				if(!$mnv) continue;
+				?>
+				<label data-tooltip="<?php echo $mode_tooltips[$mnk];?>">
+					<div>
+						<input type="radio" <?php if($mode == $mnk) echo 'checked'?> name="mode" value="<?php echo $mnk;?>" onchange="this.form.submit()"/>
+						<?php echo $mnv;?>
+					</div>
+				</label>
+				<?php
+			}
+			?>	
 		</div>
-	</form><hr>
+	</form>
+	<hr>
 <?php
 }
 ?>
