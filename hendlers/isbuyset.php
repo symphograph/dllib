@@ -22,7 +22,7 @@ $user_id = $muser;
 //$item_id = ResultItemId($craft_id);
 if($isbuy == 3)
 {
-	$auc_price = PriceMode($item_id,$user_id)['auc_price'];
+	$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 	if(!$auc_price) die();
 	qwe("
 	UPDATE `user_crafts`
@@ -47,7 +47,7 @@ if($isbuy == 3)
 }
 if($isbuy == 1)
 {
-	//$auc_price = PriceMode($item_id,$user_id)['auc_price'];
+	//$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 	qwe("
 	DELETE FROM `user_crafts`
 	WHERE `user_id` = '$user_id' 

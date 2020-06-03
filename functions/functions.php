@@ -274,50 +274,53 @@ function UserInfo($identy = '')
 		LEFT JOIN `servers` ON `servers`.`id` = `server`
 		WHERE BINARY `mailusers`.`identy` = '$identy'
 		");
-	if(mysqli_num_rows($query) > 0)
+	//var_dump($query->num_rows);
+	
+	if((!$query) or $query->num_rows == 0) 
+		return false;
+	
+	foreach($query as $q)
 	{
-		foreach($query as $q)
+		$userinfo_arr['muser'] = $q['mail_id'];
+		$userinfo_arr['identy'] = $identy;
+		$userinfo_arr['server'] = $q['server'] ?? 9;
+		$userinfo_arr['server_group'] = $q['server_group'] ?? 2;
+		$userinfo_arr['fname'] = $q['first_name'] ?? 'Незнакомец';
+		$userinfo_arr['mode'] = $q['mode'] ?? 1;
+		$avafile = $q['avafile'];
+
+		if($avafile and !file_exists('img/avatars/'.$avafile)) 
+			$userinfo_arr['avatar'] = 'img/avatars/'.$avafile;
+		elseif($q['email'])
 		{
-			$userinfo_arr['muser'] = $q['mail_id'];
-			$userinfo_arr['identy'] = $identy;
-			$userinfo_arr['server'] = $q['server'] ?? 9;
-			$userinfo_arr['server_group'] = $q['server_group'] ?? 2;
-			$userinfo_arr['fname'] = $q['first_name'] ?? 'Незнакомец';
-			$userinfo_arr['mode'] = $q['mode'] ?? 1;
-			$avafile = $q['avafile'];
-		
-			if($avafile and !file_exists('img/avatars/'.$avafile)) 
+			$ava = $q['avatar'];
+			include_once($_SERVER['DOCUMENT_ROOT'].'/functions/filefuncts.php');
+			$avafile = AvaGetAndPut($ava,$identy);
+			if($avafile)
 				$userinfo_arr['avatar'] = 'img/avatars/'.$avafile;
-			elseif($q['email'])
-			{
-				$ava = $q['avatar'];
-				include_once($_SERVER['DOCUMENT_ROOT'].'/functions/filefuncts.php');
-				$avafile = AvaGetAndPut($ava,$identy);
-				if($avafile)
-					$userinfo_arr['avatar'] = 'img/avatars/'.$avafile;
-				else 
-					$userinfo_arr['avatar'] = 'img/8001096.png';
-				
-			}elseif(!$q['email'])
-			{
+			else 
 				$userinfo_arr['avatar'] = 'img/8001096.png';
-				$userinfo_arr['user_nick'] = '';
-			}
-			
-			if($q['email'])
-			{
-				if(!$q['user_nick']) 
-				$userinfo_arr['user_nick'] = NickAdder($q['mail_id']);
-			else
-				$userinfo_arr['user_nick'] = $q['user_nick'];
-			}
-			
-			$userinfo_arr['email'] = $q['email'] ?? false;
-			$userinfo_arr['siol'] = intval($q['siol']);	
+
+		}elseif(!$q['email'])
+		{
+			$userinfo_arr['avatar'] = 'img/8001096.png';
+			$userinfo_arr['user_nick'] = '';
 		}
+
+		if($q['email'])
+		{
+			if(!$q['user_nick']) 
+			$userinfo_arr['user_nick'] = NickAdder($q['mail_id']);
+		else
+			$userinfo_arr['user_nick'] = $q['user_nick'];
+		}
+
+		$userinfo_arr['email'] = $q['email'] ?? false;
+		$userinfo_arr['siol'] = intval($q['siol']);	
+	}
 		
-	}else
-	$userinfo_arr = false;
+
+	//$userinfo_arr = false;
 	return $userinfo_arr;
 }
 
@@ -523,7 +526,7 @@ function UserMatPrice($item_id,$user_id,$craftignor = false)
 		if($valut_id == 500)
 			return $price_buy;
 		
-		$matprice = PriceMode($item_id,$user_id)['auc_price'];
+		$matprice = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 		if($matprice)
 			return $matprice;
 
@@ -876,7 +879,7 @@ function PriceMode($item_id,$user_id)
 		return PriceSolo($item_id,$user_id);
 	}
 	//var_dump($pricearr);
-	return $pricearr;
+	//return $pricearr;
 	
 }
 

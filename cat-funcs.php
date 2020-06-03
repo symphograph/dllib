@@ -32,7 +32,7 @@ function auc_price($itemq, $item_id, $auc_price, $spec_price, $myprice, $user_id
 	//var_dump($user_id);
 	global $HardPersonal;
 	
-	$auc_price_info = PriceMode($item_id,$user_id)['auc_price'];
+	$auc_price_info = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 	
 	$myprice = $auc_price_info['user_id'] == $user_id;
 	if((!$spec_price) or in_array($item_id, $HardPersonal))

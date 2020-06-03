@@ -17,7 +17,7 @@ if(!$userinfo_arr)
 extract($userinfo_arr);
 $user_id = $muser;
 $item_id = ResultItemId($craft_id);
-//$auc_price = PriceMode($item_id,$user_id)['auc_price'];
+//$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 $isbest = isBest($craft_id);
 if($isbest)
 {
