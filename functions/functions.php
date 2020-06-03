@@ -530,15 +530,15 @@ function UserMatPrice($item_id,$user_id,$craftignor = false)
 		if($matprice)
 			return $matprice;
 
-		$matprice = PriceMode($valut_id,$user_id)['auc_price'] * $price_buy;
+		$matprice = PriceMode($valut_id,$user_id)['auc_price'] ?? false;
 		if($matprice)
-			return $matprice;	
+			return $matprice * $price_buy;	
 	}
 	
 	if($craftable and (!$craftignor))
 		{return UserCraftPrice($item_id,$user_id); echo $item_name;}
 	
-	return PriceMode($item_id,$user_id)['auc_price'];
+	return PriceMode($item_id,$user_id)['auc_price'] ?? false;
 }
 
 function ItemAny($item_ids,$colname)
