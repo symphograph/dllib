@@ -318,6 +318,7 @@ function DwnCraftList($item_id)
 	`crafts`.`dood_name`,
 	`crafts`.`result_item_id`,
 	`crafts`.`result_item_name`,
+	`crafts`.`rec_name`,
 	`crafts`.`labor_need`,
 	round(`labor_need` * (100 - IFNULL(`save_or`,0)) / 100,0) AS `labor_need2`,
 	round(`labor_need` * (100 - IFNULL(`save_or`,0)) / 100/ `result_amount`,2) AS `labor_single`,
@@ -364,7 +365,7 @@ function DwnCraftList($item_id)
 		extract($q);
 	 	
 	 	if(!$basic_grade) $basic_grade = 1;
-		$craft_name = $craft_name ?? $result_item_name;
+		$craft_name = $rec_name ?? $result_item_name;
 	 	//$u_amount = $result_amount;
 	 	$u_amount = 1;
 	 	if($i == 1)
@@ -404,7 +405,7 @@ function DwnCraftList($item_id)
 	 	if($i == 2)
 			echo '<br><details><summary>Другие рецепты</summary>';
 			
-		$auc_price =PriceMode($item_id,$user_id)['auc_price'];
+		$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 	 	//var_dump($auc_price);
 	 	if($auc_price)
 		{
@@ -441,6 +442,14 @@ function DwnCraftList($item_id)
 			<div><b><?php echo $best_types[$isbest];?></b></div>
 			<div>
 				<!--<div class="itemprompt" data-title="Рецепт будет выбран автоматически">Сбросить выбор</div>-->
+			</div>
+		</div>
+		<div class="craftinfo">
+			<div>
+				<div class="crresults"><div></div></div>	
+			</div>
+			<div>
+				<div class="crresults"><div><b><?php echo $craft_name?></b></div></div>	
 			</div>
 		</div>
 		<div class="craftinfo">
@@ -676,7 +685,7 @@ function UpCraftList($item_id)
 	AND craft_materials.item_id = '$item_id'
 	AND items.on_off = 1
 	AND craft_materials.mater_need > 0
-	INNER JOIN crafts ON items.item_id = crafts.result_item_id
+	INNER JOIN crafts ON craft_materials.craft_id = crafts.craft_id
 	AND crafts.on_off = 1
 	ORDER BY crafts.deep DESC,
 	items.categ_id, craft_materials.result_item_id

@@ -313,10 +313,9 @@ function MonetisationList($val_link, $valut_id, $user_id)
 		$price_buy = $p['price_buy'];
 		$item_id = $p['item_id'];
 		$item_name = $p['item_name'];
-		$auc_info = PriceMode($item_id,$user_id);
-		$auc_price = $auc_info['auc_price'];
+		$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 		$basic_grade = $p['basic_grade'];
-		if(!($auc_price > 1)) continue;
+		if(!$auc_price) continue;
 
 		$val_pr = round($auc_price/$price_buy*0.9,0);
 		$array[$item_id.'_,_'.$item_name.'_,_'.$price_buy] = $val_pr;

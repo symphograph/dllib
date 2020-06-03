@@ -58,7 +58,7 @@ function qwe($sql)
 		dbconnect();
 	
 	$return = mysqli_query($dbLink,$sql);
-	$error = mysqli_error($dbLink);
+	$error = mysqli_error($dbLink) ?? '';
 	if (empty($error))
 		return $return;
 	

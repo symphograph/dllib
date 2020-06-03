@@ -169,7 +169,7 @@ WHERE `server_group` = '$server_group'
 ORDER BY `time` DESC");
 $spec_items = array(2, 3, 4, 5, 23633);
 	if($arritem['personal'] < 1 or in_array($item_id, $spec_items))
-		$auc_price = PriceMode($item_id,$user_id)['auc_price'];
+		$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 $forchenge = '';
 	if((!$auc_price) and (!$by_npc)) 
 		$forchenge = ' (Сохраните <b>свою</b> цену)';

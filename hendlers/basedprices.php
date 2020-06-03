@@ -72,7 +72,7 @@ if(mysqli_num_rows($query)>0)
 	foreach($query as $it)	
 	{
 		extract($it);
-		$auc_price =  PriceMode($item_id,$user_id)['auc_price'];	
+		$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;	
 	?>
 		
 	<div class="price_cell" id="aucraft_<?php echo $item_id?>">

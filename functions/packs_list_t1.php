@@ -56,19 +56,26 @@ INNER JOIN
 	zones.side,
 	zones.zone_name,
 	fresh_data.fresh_lvl,
-	packs.pack_t_id,
+	pack_types.pack_t_id,
 	fresh_data.fresh_type,
-	packs.pack_type,
+	pack_types.pack_t_name as pack_type,
 	pack_prices.valuta_id,
 	fresh_data.fresh_tstart,
 	fresh_data.fresh_tstop,
 	pack_prices.pack_price as db_price,
-	ROUND(ROUND(pack_prices.pack_price/mul + pack_prices.pack_price/mul * IF(packs.pack_t_id = 6,1,fresh_data.fresh_per)/100)/130*IF(pack_prices.valuta_id = 500,".($per+$siol).",130)) as quantity
+	ROUND(
+		ROUND(
+		pack_prices.pack_price/mul + pack_prices.pack_price/mul * 
+		IF(pack_types.pack_t_id = 6,1,fresh_data.fresh_per)/100)/130*
+		IF(pack_prices.valuta_id = 500,".($per+$siol).",130
+		)
+	) as quantity
 	FROM fresh_data
 	INNER JOIN zones ON zones.fresh_type = fresh_data.fresh_type AND zones.side = '$side_to_id'
 	INNER JOIN packs ON packs.zone_id = zones.zone_id
 	INNER JOIN pack_prices ON pack_prices.zone_id = zones.zone_id AND pack_prices.item_id = packs.item_id
-	WHERE ('$pack_age' BETWEEN fresh_data.fresh_tstart AND fresh_data.fresh_tstop-1)
+	INNER JOIN pack_types ON packs.pack_t_id = pack_types.pack_t_id
+	WHERE (fresh_data.fresh_lvl = '$pack_age' /*BETWEEN fresh_data.fresh_tstart AND fresh_data.fresh_tstop-1*/)
 ) as packjoin
 ON fresh_data.fresh_type = packjoin.fresh_type AND fresh_data.fresh_lvl = packjoin.fresh_lvl
 INNER JOIN items ON items.item_id = packjoin.item_id AND items.on_off = 1

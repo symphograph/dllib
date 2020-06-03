@@ -1,20 +1,5 @@
 <?php
-/*
-$zone_to_id = '';
-$zone_from_id = 100;
 
-$side_to_id = $_POST['side_to'] ?? 1;
-$side_to_id = intval($side_to_id);
-if(isset($_POST['zone_to']) and ctype_digit($_POST['zone_to']))
-	$zone_to_id = $_POST['zone_to'];
-if(isset($_POST['zone_from']) and ctype_digit($_POST['zone_from']))
-	$zone_from_id = $_POST['zone_from'];
-if(isset($_GET['new_side']) and ctype_digit($_GET['new_side']))
-	$side_to_id = $_GET['new_side'];
-if(isset($_GET['new_zone']) and ctype_digit($_GET['new_zone']))
-	$zone_to_id = $_GET['new_zone'];
-$old_side = '';
-*/
 $ps = [];
 if(!empty($_COOKIE['pack_settings']))
 {
@@ -94,18 +79,26 @@ if(!empty($_COOKIE['pack_settings']))
 		<?php
 			
 			//if($pack_age == 0)
-			echo '<option value="0" selected >Свежесть - 0:00</option>';
-			for($i=15;$i<2525;$i+=15)
-			{	
-				if($i>=105) $i = $i+15;
-				if($i>=150) $i = $i+30;
-				if($i>=180) $i = $i+3*60;
+			//echo '<option value="0" selected >Свежесть - 0ч</option>';
+			//$freg_arr = [24,48,51,52,56,60,72,88,96,120];
+			$freg_arr = qwe("Select * from fresh_lvls");
+			foreach($freg_arr as $i)
+			{
+			//for($i=24;$i<120;$i+=24)
+			//{	
+				//if($i>48) $i = $i+3;
+				//if($i>=150) $i = $i+30;
+				//if($i>=180) $i = $i+3*60;
 				//if($i==$pack_age and $i >0)
 				//$selected = 'selected';
-				$pack_time = date("H:i",$i*60-3600*3);
-				if($i > 1439)
-					$pack_time = $pack_time.'+1д';
-				echo '<option value="'.$i.'">'.$pack_time.'</option>';
+				//if($i > 24)
+					//$pack_time = date("jд : Gч",$i*60*60-3600*3-3600*24);
+				//else
+					//$pack_time = $i.'ч';
+				
+					//$pack_time = $pack_time.'+1д';
+				//echo '<option value="'.($i*60).'">'.$pack_time.'</option>';
+				echo '<option value="'.($i['fresh_lvl']).'">'.$i['fresh_name'].'</option>';
 				$selected = '';
 			}	
 		?>

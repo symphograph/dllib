@@ -20,7 +20,7 @@ include_once 'functions/functions.php';
 
 $start_id = 8000735;
 $stop_id = 8000787;
-
+$limit = 200;
 
 
 /*
@@ -33,8 +33,10 @@ foreach($qlast as $q)
 */
 
 $qlist = qwe("
-SELECT * FROM crafts 
-WHERE result_item_id in (SELECT item_id FROM New_items60)
+SELECT * FROM `New_crafts_65` 
+/*WHERE result_item_id in (SELECT item_id FROM New_items60)*/
+WHERE craft_id > (SELECT item_id FROM parsed_last)
+/*LIMIT 5*/
 ");
 
 $icrfts = 0;
@@ -47,7 +49,7 @@ foreach($qlist as $qq)
 	$icrfts++;
 	
 	$new = true;
-	//$rec = $qq['craft_id'];
+	$rec = $qq['craft_id'];
 	$on_off = 1;
 	
 	qwe("UPDATE `parsed_last` SET `item_id` = '$rec' WHERE `id` = 1");
@@ -57,31 +59,33 @@ foreach($qlist as $qq)
 	if(mysqli_num_rows($ignorq)>0)
 		continue;
 	*/
-	/*
+	
 	$query = qwe("SELECT `craft_id`, `on_off` FROM `crafts`
 	WHERE `craft_id` = '$rec'");
 	if(mysqli_num_rows($query)>0)
 	{
 		foreach($query as $q)
 		{
-			$on_off = $q['on_off'];
+			$on_off = intval($q['on_off']);
+			//var_dump($on_off);			
 		}
-		if(!($on_off > 0)) 
+		$new = false;
+		if(!$on_off)
 			continue;
 	}else
 	{
 		$new = true;
 	}
-	*/
 	
+	//if(!$new) continue;
 	//if(IsCraftExistInBD($rec))
 		//continue;
 	
-	if(IsCraftDeletedInBD($rec))
-		continue;
+	//if(IsCraftDeletedInBD($rec))
+		//continue;
 	
 	$icrfts2++;
-	if($icrfts2 > 100) break;
+	if($icrfts2 > $limit) break;
 	
 	$plink = 'http://archeagecodex.com/ru/recipe/'.$rec;
 	sleep(1);
@@ -106,37 +110,45 @@ foreach($qlist as $qq)
 		//echo 'Рецепт пуст<hr>'; 
 		continue;
 	}else
-	echo 'Id: '.$craft_id.' | ';
-	$craft_name = AboutCraft('#<span class="item_title">(.+?)</span>#is', 'item_names', $table);
-	echo $craft_name.'</p>';
+	//echo 'Id: '.$craft_id.' | '.'';
+	?>
+	Id: <a href="https://archeagecodex.com/ru/recipe/<?php echo $craft_id?>/"><?php echo $craft_id?></a>
+	<?php
+	echo ' | ';
+	//$craft_name = AboutCraft('#<span class="item_title">(.+?)</span>#is', 'item_names', $table);
+	$craft_name = $qq['rec_name'];
+	echo $craft_name.' | ';
 
 
 	$labor_need = AboutCraft('#Очки работы: (.+?)<br>#is', 'digits', $table);
-	echo '<p>labor_need: '.$labor_need.'</p>';
+	//echo '<p>labor_need: '.$labor_need.'</p>';
 
 
 	$craft_time = AboutCraft('#Время производства: (.+?)с#is', 'craft_time', $table);
-	echo '<p>craft_time: '.$craft_time.'</p>';
+	//echo '<p>craft_time: '.$craft_time.'</p>';
 	///линия
 	unset($arr);
 	preg_match_all('#<td>Ремесло:(.+?)<hr class="hr_long">#is', $somepage, $arr);
 	$table = $arr[0][0];
 	//print_r($table);
+	/*
 	$prof_need = AboutCraft('#Требуемый уровень ремесла: (.+?)<br>#is', 'prof_need', $table);
 	echo '<p>p_need: '.$prof_need.'</p>';
+	*/
+	$prof_need = $qq['prof_need'];
 
 
 	$profession = AboutCraft('#Ремесло: (.+?)<br>#is', 'letters', $table);
-	echo '<p>'.$profession.'</p>';
+	//echo '<p>'.$profession.'</p>';
 	$prof_id = profid($profession);
-	echo '<p>$prof_id'.$prof_id.'</p>';
+	//echo '<p>$prof_id'.$prof_id.'</p>';
 	
 	
 	$dood_id = AboutCraft('#doodad--(.+?)data#is', 'digits', $table);
 	//echo '<p>'.$dood_id.'</p>';
 
 	$dood_name = AboutCraft('#Приспособление: (.+?)</a>#is', 'letters', $table);
-	echo '<p>dood_name: '.$dood_name.'</p>';
+	//echo '<p>dood_name: '.$dood_name.'</p>';
 	//Закончили параметры.
 
 	//Материалы:
@@ -264,14 +276,13 @@ foreach($qlist as $qq)
 			$mat_name = $mat_inf[1];
 			$mater_need = $mat_inf[2];
 			$mat_grade = intval($mat_inf[3]);
-			qwe("
+			$result = qwe("
 			REPLACE INTO `craft_materials` 
 				(`craft_id`, `item_id`, `result_item_id`, `mater_need`, `item_name`, `result_item_name`,`mat_grade`)
 				VALUES 
 				('$craft_id', '$mat_id', '$item_id', '$mater_need', '$mat_name', '$item_name', '$mat_grade')
 				");
-				
-			
+			//var_dump($result);			
 		}	
 	}
 	else

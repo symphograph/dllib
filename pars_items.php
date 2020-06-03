@@ -20,11 +20,11 @@ if(!$stop_id)
 </form>
 <?php
 if(empty($_POST['go'])) exit();
-include_once 'includs/config.php';
-include_once 'functions/pars_functs.php';
-include_once 'functions/filefuncts.php';
-include_once 'functions/functs.php';
-include_once 'functions/functions.php';
+require_once 'includs/config.php';
+require_once 'functions/pars_functs.php';
+require_once 'functions/filefuncts.php';
+require_once 'functions/functs.php';
+require_once 'functions/functions.php';
 
 $start_id = $_POST['start_id'] ?? 0;
 $start_id = intval($start_id);
@@ -45,8 +45,12 @@ GROUP BY `result_item_id`
 LIMIT 10
 ");*/
 $qwe = qwe("
-SELECT `item_id` FROM `New_items60`
+SELECT * FROM `New items 6.5`
+WHERE item_id > (SELECT item_id FROM parsed_last)
+LIMIT 100
 ");
+if((!$qwe) or $qwe->num_rows == 0)
+	die('no items');
 $i = 0;
 $ver = random_str(8);
 //for($itm = $start_id; $itm <= $stop_id; $itm++)
@@ -57,9 +61,9 @@ foreach($qwe as $q)
 	$itm = $q['item_id'];
  	$new = 1;
  	$new = (!IsItemExistInBD($itm));
- 	if(!$new) continue;
+ 	//if(!$new) continue;
 	$i++;
- 	if($i>100) break;
+ 	//if($i>100) break;
 	qwe("UPDATE `parsed_last` SET `item_id` = '$itm' WHERE `id` = 1");
 	
 	echo '<hr>';
@@ -82,9 +86,12 @@ foreach($qwe as $q)
 	
 	$item_id = AboutCraft('#ID: (.+?)td>#is', 'digits', $table);
 	$item_id = intval($item_id);
-	echo 'Id: '.$itm.' | ';
-
-	if(!$item_id) {echo 'Предмет пуст<hr>'; continue;}
+	//echo 'Id: '.$itm.' | ';
+	?>
+	Id: <a href="https://archeagecodex.com/ru/item/<?php echo $itm?>/"><?php echo $itm?></a>
+	<?php
+	echo ' | ';
+	if($item_id != $itm) {echo 'Предмет пуст<hr>'; continue;}
 	$item_name = AboutCraft('#id="item_name"(.+?)</span>#is', 'item_names', $table);
 	if(preg_match('/deprecated|test|Тест: |тестовый|NO_NAME|Не используется/ui',$item_name)) continue;
 	
@@ -188,7 +195,7 @@ foreach($qwe as $q)
 	VALUES 
 	('$item_id', '$price_buy', '$price_type', '$valut_id', '$price_sale', '$is_trade_npc', '$category', '$categ_id', '$item_name', '$description', '$personal', '$grade')");
 	
- 	/*else
+ 	else
  	qwe("UPDATE `items` SET 
 	`price_buy` = '$price_buy', 
 	`price_type` = '$price_type', 
@@ -199,7 +206,7 @@ foreach($qwe as $q)
 	`personal` = '$personal', 
 	`basic_grade` = '$grade'
 	WHERE `item_id` = '$item_id'
-	");*/
+	");
 	
 	$iconfile = ParsIcons($item_id);
 	if($iconfile)
@@ -208,7 +215,10 @@ foreach($qwe as $q)
 		?><div style="width: 40px; height: 40px; background-image: url(<?php echo 'img/icons/50/'.$iconfile.'.png?ver='.$ver?>)"></div><?php
 	}
 	
-	//echo '<p>Записал</p>';
+	if($new)
+		echo 'Добавил';
+	else
+		echo 'Обновил';
 	/*
 	unset($all_mat_inf);
 	unset($itmarr);

@@ -203,7 +203,7 @@ INNER JOIN
 	INNER JOIN pack_prices ON pack_prices.zone_id = zones.zone_id AND pack_prices.item_id = packs.item_id
 	INNER JOIN pack_types ON pack_types.pack_t_id = packs.pack_t_id
 	LEFT JOIN `prof_lvls` ON `prof_lvls`.`lvl` = '$TradeLvl'
-	WHERE ('$pack_age' BETWEEN fresh_data.fresh_tstart AND fresh_data.fresh_tstop-1)
+	WHERE (fresh_data.fresh_lvl = '$pack_age' /*BETWEEN fresh_data.fresh_tstart AND fresh_data.fresh_tstop-1*/)
 ) as packjoin
 ON fresh_data.fresh_type = packjoin.fresh_type AND fresh_data.fresh_lvl = packjoin.fresh_lvl
 INNER JOIN items ON items.item_id = packjoin.item_id AND items.on_off = 1
