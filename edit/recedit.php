@@ -1,9 +1,9 @@
 <?php 
 require_once '../includs/ip.php';
 if(!$myip) exit(); 
-include_once('../functions/functs.php');
+require_once '../functions/functs.php';
+require_once '../functions/functions.php';
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 <meta charset="utf-8">
@@ -80,15 +80,16 @@ if(!empty($_GET['query']))
    
         
 	<form action="edit_craft_send.php" method="POST">
-      <div class="line">
-      
-    
-      
-          <?php echo '<div class="top_itimset" style="background-image: url(../img/icons/'.$item_id.'.png)"></div>';
-		  echo $result_item_name;
-	?>
-            
-     </div>
+	<div class="line">
+
+	<?php $icon = ItemAny($item_id,'icon')[$item_id];
+		//var_dump($icon);
+		?>
+
+	<div class="top_itimset" style="background-image: url(../img/icons/50/<?php echo $icon?>.png)"></div>
+	<?  echo $result_item_name;?>
+
+	</div>
      <br><br>
     <hr width="320">
    <div class="confirm">
@@ -139,19 +140,41 @@ if(!empty($_GET['query']))
 <div class="rent_count"><div class="rent_count_in">
 <?php
 $i=0;
-$q_maters = qwe("SELECT `craft_materials`.`item_id`, `craft_materials`.`mater_need`, `items`.`item_name` 
+$q_maters = qwe("SELECT 
+`craft_materials`.`item_id` as mat_id, 
+`craft_materials`.`mater_need` as mat_need, 
+`items`.`item_name` as mat_name,
+items.icon
 FROM `craft_materials`, `items` 
 where `craft_materials`.`item_id`= `items`.`item_id`
 AND `craft_materials`.`craft_id` = '$craft_id'");
-foreach($q_maters as $v){
-	
-	$mat_id = $v['item_id'];
-	$mat_need = $v['mater_need'];
-	$mat_name = $v['item_name'];
-   echo '<div class="itemline"><div class="itemprompt" data-title="'.$mat_name.' x '.$mat_need.'"><div class="itim" style="background-image: url(../img/icons/'.$mat_id.'.png)"><div class="itdigit"><input style="width: 35px; background-color: transparent; border-color: transparent; color: white; text-shadow: -1px -1px 5px #010101;
-	text-align: right;" type="text" name="mater_need['.$mat_id.']" value= "'.$mat_need.'"><input type="checkbox" name="del[]" value="'.$mat_id.'"
-	style="background-color: transparent; border-color: transparent;"
-	"></div></div></div></div>';
+foreach($q_maters as $v)
+{
+	extract($v);
+	?>
+   <div class="itemline">
+	   <div class="itemprompt" data-title="<?php echo $mat_name.' x '.$mat_need?>">
+		   <div class="itim" style="background-image: url(../img/icons/50/<?php echo $icon?>.png)">
+			   <div class="itdigit">
+				<input style="
+					width: 35px; 
+					background-color: transparent; 
+					border-color: transparent; 
+					color: white; 
+					text-shadow: -1px -1px 5px #010101; 
+					text-align: right;"
+					autocomplete="off"
+					type="text" 
+					name="mater_need[<?php echo $mat_id?>]" 
+					value= "<?php echo $mat_need?>">
+				   
+				 <input type="checkbox" name="del[]" value="<?php echo $mat_id?>"
+				autocomplete="off" style="background-color: transparent; border-color: transparent;">
+			   </div>
+		   </div>
+	   </div>
+	</div>
+	<?php
 $i++;
 } 
 	
@@ -163,9 +186,9 @@ for($c=0;$c<12-$i;$c++)
 		<div class="itim">
 			<div class="itdigit">
 			<input style="width: 35px; background-color: transparent; border-color: transparent; color: white; text-shadow: -1px -1px 5px #010101;
-			text-align: right;" name="newmat[]" value= "">
+			text-align: right;" autocomplete="off" name="newmat[]" value= "">
 			<input style="width: 35px; background-color: transparent; border-color: transparent; color: white; text-shadow: -1px -1px 5px #010101;
-			text-align: right;" name="newmatneed[]" value= "">
+			text-align: right;" name="newmatneed[]" autocomplete="off" value= "">
 			</div>
 		</div>
 	</div>

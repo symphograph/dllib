@@ -3,7 +3,7 @@ setcookie('path', 'packtable');
 include_once 'includs/usercheck.php';
 
 $ver = random_str(8);
-$aa_ver = '6.0';
+$aa_ver = '6.5';
 ?>
 
 
@@ -13,7 +13,7 @@ $aa_ver = '6.0';
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name = "description" content = "Таблица цен на паки в Archeage <?php echo $aa_ver?>"/>
-  <meta name = "keywords" content = "товары фактории ,паки <?php echo $aa_ver?>, archeage, архейдж, региональные товары, таблица паков, сколько стоят паки, цена паков" />
+  <meta name = "keywords" content = "товары фактории, паки <?php echo $aa_ver?>, archeage, архейдж, аркейдж, региональные товары, таблица паков, сколько стоят паки, цена паков" />
 <title>Таблица цен на паки <?php echo $aa_ver?></title>
 <link href="css/default.css?ver=<?php echo md5_file('css/default.css')?>" rel="stylesheet">
 <link href="css/packtable.css?ver=<?php echo md5_file('css/packtable.css')?>" rel="stylesheet">
@@ -69,10 +69,10 @@ function perselect($per)
 
 	?><select name="perc" class="perc"><?php
 
-	$f = 45; $sel_per = '';
+	$f = 135; $sel_per = '';
 	for ($i = 1; $i <= 17; $i++)
 	{
-		$f = $f+5;
+		$f = $f-5;
 		if($f==$per) $sel_per = 'selected';
 		echo '<option value="'.$f.'" '.$sel_per.'>'.$f.'</option>';
 		$sel_per = '';

@@ -20,7 +20,7 @@ include_once 'functions/functions.php';
 
 $start_id = 8000735;
 $stop_id = 8000787;
-$limit = 1;
+$limit = 200;
 
 
 /*
@@ -33,10 +33,10 @@ foreach($qlast as $q)
 */
 
 $qlist = qwe("
-SELECT * FROM New_crafts61 
+SELECT * FROM `New_crafts_65` 
 /*WHERE result_item_id in (SELECT item_id FROM New_items60)*/
-WHERE craft_id >= (SELECT item_id FROM parsed_last)
-LIMIT 1
+WHERE craft_id > (SELECT item_id FROM parsed_last)
+/*LIMIT 5*/
 ");
 
 $icrfts = 0;
@@ -66,12 +66,11 @@ foreach($qlist as $qq)
 	{
 		foreach($query as $q)
 		{
-			$on_off = $q['on_off'];
-			//var_dump($on_off);
-			
+			$on_off = intval($q['on_off']);
+			//var_dump($on_off);			
 		}
 		$new = false;
-		if(!($on_off > 0)) 
+		if(!$on_off)
 			continue;
 	}else
 	{
@@ -82,8 +81,8 @@ foreach($qlist as $qq)
 	//if(IsCraftExistInBD($rec))
 		//continue;
 	
-	if(IsCraftDeletedInBD($rec))
-		continue;
+	//if(IsCraftDeletedInBD($rec))
+		//continue;
 	
 	$icrfts2++;
 	if($icrfts2 > $limit) break;
@@ -160,7 +159,7 @@ foreach($qlist as $qq)
 	$mats = $arr[0];
 	//var_dump($mats);
 	$cnt = count($mats);
-	echo '<p>Материалов: '.($cnt-1).'</p>';
+	//echo '<p>Материалов: '.($cnt-1).'</p>';
 	$i = 1;
 	$item_name = $amount = '';
 	if(preg_match('/deprecated|test|тестовый/',$item_name)) 
