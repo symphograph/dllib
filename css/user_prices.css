@@ -148,3 +148,9 @@ select:hover {
 	
 	border: 1px solid;
 }
+.pricecell_date_row {
+	/*display: grid;*/
+	
+	width: 75%;
+	margin: auto;
+}

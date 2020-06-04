@@ -1,9 +1,9 @@
 <?php 
 //require_once 'includs/ip.php';
-include_once 'includs/config.php';
-include_once 'includs/usercheck.php';
+//include_once 'includs/config.php';
+require_once 'includs/usercheck.php';
 if(empty($_POST['send']) or $user_id == 1) exit('send');
-include_once 'functions/functs.php';
+//require_once 'functions/functs.php';
 $uri_from = 'index.php';
 
 $uri_from = $_SERVER['HTTP_REFERER'];
