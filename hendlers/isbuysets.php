@@ -35,15 +35,7 @@ if($val)
 	VALUES
 	('$user_id',(SELECT `craft_id` FROM `crafts` WHERE result_item_id = '$item_id' LIMIT 1), '$item_id', 3)
 	");
-	/*
-	qwe("
-	UPDATE `user_crafts`
-	SET `isbest` = 3,
-	auc_price = '$auc_price'
-	WHERE `item_id` = '$item_id'
-	AND `user_id` = '$user_id'
-	");
-	*/
+
 	qwe("
 	DELETE FROM `user_crafts`
 	WHERE `user_id` = '$user_id' 
