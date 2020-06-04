@@ -327,7 +327,6 @@ function DwnCraftList($item_id)
 	`crafts`.`prof_id`,
 	`crafts`.`mins`,
 	`user_crafts`.`craft_price`,
-	`user_crafts`.`auc_price`,
 	`user_crafts`.`isbest`,
 	`user_crafts`.`labor_total`,
 	`user_crafts`.`spmu`,

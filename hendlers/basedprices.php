@@ -52,7 +52,6 @@ foreach($query as $pr)
 	$query = qwe("
 	SELECT 
 `user_crafts`.`item_id`,
-`user_crafts`.`auc_price`,
 `user_crafts`.`craft_id`,
 `items`.`item_name`,
 `items`.`icon`

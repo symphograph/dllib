@@ -656,13 +656,36 @@ function AvaGetAndPut($ava,$identy)
 	return $filename;
 }
 
-function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='')
+function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='')
 {
 	if(!empty($time))
-		$time = date('d.m.Y',strtotime($time));
+		$time = date('d.m.Y',strtotime($time)); 
+	
 	?>
 	<div class="price_cell">
-		<span class="comdate"><?php echo $time?></span>
+		<div class="price_row">
+			<span class="comdate"><?php echo $time?></span>
+			<?php if(!empty($isby))
+			{
+			//var_dump($isby);
+			if($isby == 4)
+				$checked = 'checked';
+			else
+				$checked = '';
+			?>
+			<div class="pricecell_date_row">				
+				<div>
+					<label data-tooltip="Куплю. Не буду крафтить.">
+						<input type="checkbox" <?php echo $checked ?> id="isby_<?php echo $item_id ?>" name="isby"/>
+						Покупаемый
+					</label>
+				</div>
+			</div>
+			<?php
+			}
+			?>	
+			
+		</div>
 		<div class="price_row">
 			<div class="itim" id="itim_<?php echo $item_id;?>" style="background-image: url('img/icons/50/<?php echo $icon;?>.png')">
 				<div class="grade" class="grade" data-tooltip="<?php echo $item_name?>" style="background-image: url(/img/grade/icon_grade<?php echo $grade?>.png)">

@@ -331,6 +331,9 @@ function IsBuySet(item_id,isbuy)
 		// Данные пришли
 		success: function(data) 
 		{
+			if(data != 'ok')
+			$("#tiptop").html('<span style="color: red">Не вижу цену!');
+			else
 			LoadItem(item_id);
 		}
 	});

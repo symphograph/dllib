@@ -1,5 +1,5 @@
 <?php 
-include_once 'includs/usercheck.php';
+require_once 'includs/usercheck.php';
 setcookie('path', 'user_prices');
 //$user_id = $muser;
 //$hrefself = '<a href="'.$_SERVER['PHP_SELF'].'?query=';
@@ -77,10 +77,12 @@ if($puser_id != $user_id)
 ?>
 	
 	<a href="user_customs.php"><button class="def_button">Настройки</button></a>
-	</div><br><hr>
+	</div><br><hr><div class = "responses"><div id = "responses"></div></div>
 	</div>
+
 <div id="rent_in" class="rent_in">
 <div class="clear"></div>
+
 <div class="all_info_area">
 <div class="all_info" id="all_info">
 <div id="items">
@@ -94,30 +96,45 @@ SELECT
 `items`.`item_name`,
 `items`.`icon`,
 `items`.`basic_grade`,
-`items`.`item_id` IN (".$based_prices.") as `isbased`
+`items`.`item_id` IN (".$based_prices.") as `isbased`,
+user_crafts.isbest,
+user_crafts.isbest = 3 as ismybuy,
+items.craftable
 FROM `prices`
 INNER JOIN `items` ON `items`.`item_id` = `prices`.`item_id`
 AND `prices`.`user_id` = '$puser_id'
 AND `prices`.`server_group` = '$server_group'
 ".$valutignor."
-ORDER BY `isbased` DESC, `prices`.`time` DESC
+LEFT JOIN user_crafts ON user_crafts.user_id = '$user_id' AND user_crafts.item_id = `prices`.`item_id`
+AND user_crafts.isbest > 0
+ORDER BY `isbased` DESC, ismybuy DESC, `prices`.`time` DESC
 ");
 
-$checks = ['','checked'];
+//$checks = ['','checked'];
 
-foreach($qwe as $q)
+UserPriceList($qwe);
+
+function UserPriceList($qwe)
 {
-	extract($q);
-	?><div><?php
+	global $puser_id, $user_id;
 	
-	$chk = '';
-	
-	if($puser_id == $user_id)		
-	PriceCell($item_id,$auc_price,$item_name,$icon,$basic_grade,$time);
-	else
-	PriceCell2($item_id,$auc_price,$item_name,$icon,$basic_grade,$time);
-	?>
-	</div><?php
+	foreach($qwe as $q)
+	{
+		extract($q);
+		?><div><?php
+
+		$chk = $isby = '';
+
+		if($craftable)
+			$isby = intval($isbest)+1;
+
+		if($puser_id == $user_id)		
+		PriceCell($item_id,$auc_price,$item_name,$icon,$basic_grade,$time,$isby);
+		else
+		PriceCell2($item_id,$auc_price,$item_name,$icon,$basic_grade,$time);
+		?>
+		</div><?php
+	}	
 }
 ?>
 </div>
@@ -243,6 +260,26 @@ $('#all_info').on('click','.itim',function(){
 	var item_id = $(this).attr('id').slice(5);
 	var url = 'catalog.php?item_id='+item_id;
 	window.location.href = url;
+});
+	
+$('.prices').on('change', 'input[type=checkbox]', function(){
+	var item_id = $(this).attr('id').slice(5);
+	var okid = $('#responses');
+    var dataObj = {
+        item_id: item_id,
+        value: $(this).is(':checked')
+    }
+    $.ajax({
+        data: dataObj,
+        url: 'hendlers/isbuysets.php',
+		type: "POST",
+        success: function(data){
+            console.log('Сервер вернул:' + data);
+			$(okid).html(data);
+			$(okid).show(); 
+			setTimeout(function() {$(okid).hide('slow');}, 2000);
+        }
+    });
 });
 </script>
 </html>
