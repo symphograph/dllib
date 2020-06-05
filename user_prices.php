@@ -113,6 +113,7 @@ ORDER BY `isbased` DESC, ismybuy DESC, `prices`.`time` DESC
 
 //$checks = ['','checked'];
 
+
 UserPriceList($qwe);
 
 function UserPriceList($qwe)
@@ -262,7 +263,5 @@ $('#all_info').on('click','.itim',function(){
 	var url = 'catalog.php?item_id='+item_id;
 	window.location.href = url;
 });
-	
-
 </script>
 </html>

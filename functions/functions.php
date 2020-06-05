@@ -677,7 +677,7 @@ function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='')
 				<div>
 					<label data-tooltip="Куплю. Не буду крафтить.">
 						<input type="checkbox" <?php echo $checked ?> id="isby_<?php echo $item_id ?>" name="isby"/>
-						<span class="comdate">Покупаемый</span>
+						  <span class="comdate">Покупаемый</span>
 					</label>
 				</div>
 			</div>

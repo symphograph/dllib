@@ -30,6 +30,7 @@ if($val)
 	$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 	if(!$auc_price) die('<span style="color:red">Не нашел цену!</span>');
 	
+
 	$craft_id = BestCraftForItem($user_id,$item_id);
 	if($craft_id)
 	{
@@ -57,13 +58,6 @@ if($val)
 		");
 	}
 	
-/*
-	qwe("REPLACE INTO `user_crafts`
-	(`user_id`, `craft_id`, `item_id`, `isbest`)
-	VALUES
-	('$user_id',(SELECT `craft_id` FROM `crafts` WHERE result_item_id = '$item_id' LIMIT 1), '$item_id', 3)
-	");
-*/
 	qwe("
 	DELETE FROM `user_crafts`
 	WHERE `user_id` = '$user_id' 
@@ -71,12 +65,15 @@ if($val)
 	");
 	
 	qwe("
+
 	INSERT IGNORE `prices`
+
 	(`item_id`,`user_id`,`auc_price`,`server_group`,`time`)
 	VALUES
 	('$item_id','$user_id','$auc_price','$server_group',NOW())
 	");
 	echo 'ok';
+
 }
 else
 {
