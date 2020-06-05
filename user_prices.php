@@ -277,7 +277,7 @@ $('.prices').on('change', 'input[type=checkbox]', function(){
             console.log('Сервер вернул:' + data);
 			$(okid).html(data);
 			$(okid).show(); 
-			setTimeout(function() {$(okid).hide('slow');}, 2000);
+			//setTimeout(function() {$(okid).hide('slow');}, 2000);
         }
     });
 });

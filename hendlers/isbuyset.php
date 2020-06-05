@@ -30,6 +30,7 @@ if($isbuy == 3)
 	auc_price = '$auc_price'
 	WHERE `item_id` = '$item_id'
 	AND `user_id` = '$user_id'
+	AND `isbest` > 0
 	");
 	
 	qwe("
@@ -39,7 +40,7 @@ if($isbuy == 3)
 	");
 	
 	qwe("
-	REPLACE INTO `prices`
+	INSERT IGNORE INTO `prices`
 	(`item_id`,`user_id`,`auc_price`,`server_group`,`time`)
 	VALUES
 	('$item_id','$user_id','$auc_price','$server_group',NOW())

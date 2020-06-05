@@ -10,8 +10,8 @@ $count_mats = mysqli_num_rows($craftsq);
 $x = 1;
 $icrft = 0;
 $crafta = 0;
-$crafts = array();
-$crdeep = array();
+$crafts = [];
+$crdeep = [];
 if(!isset($lost))
 	$lost = [];
 $deep = 0;
@@ -32,17 +32,18 @@ $crftorder[] = $item_id;
 	//echo implode(', ', $crdeep); exit();
 	$userbest =array();
     $b = mysqli_num_rows($querycrafts);
+/*
 	$selucrafts = "SELECT * FROM `user_crafts` WHERE `user_id` = '$user_id' and `isbest` > 1";
 	$quucrafts = qwe($selucrafts);
 
 	foreach($quucrafts as $ucr)
 	{
 		$userbest[$ucr['craft_id']] = $ucr['isbest'] ;
-		$userbestaucprice[$ucr['craft_id']] =  $ucr['auc_price'];
+		//$userbestaucprice[$ucr['craft_id']] =  $ucr['auc_price'];
 		//echo $ucr['craft_id'];
 	}
 	//print_r($userbest); exit();
-
+*/
 //Если есть непосчитанные рецепты, считаем
 if($b > 0)
 {
@@ -56,7 +57,7 @@ if($b > 0)
 	
 	$craftarr = CraftsBuffering($craftkeys1);
 	
-		if(!in_array($_SERVER['SCRIPT_NAME'],['/hendlers/packs_list.php']))
+		if(!in_array($_SERVER['SCRIPT_NAME'],['/hendlers/packs_list.php','/hendlers/isbuysets.php']))
 		{
 			if(count($lost)>0)
 			{
