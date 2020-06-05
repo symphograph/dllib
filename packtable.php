@@ -329,38 +329,5 @@ $('#all_info').on('click','.itim',function(){
 	window.location.href = url;
 });
 </script>
-<?php /*?><script type='text/javascript'>
-//var slider = document.getElementById("myRange");
-//var output = document.getElementById("percent");
-var slider2 = document.getElementById("myRange2");
-var output2 = document.getElementById("package");
-//var perc = output.val();
 
-//output.innerHTML = slider.value; // Display the default slider value
-output2.innerHTML = slider2.value;
-// Update the current slider value (each time you drag the slider handle)
-
-String.prototype.toHHMMSS = function () {
-var sec_num = parseInt(this, 10); // don't forget the second param
-var sec_num = sec_num *60;	
-var days    = Math.floor(sec_num / 3600 / 24);
-var hours   = Math.floor(sec_num / 3600 - days*24);
-var minutes = Math.floor((sec_num - (hours * 3600)) / 60 - days*24*60);
-var seconds = sec_num - (hours * 3600) - (minutes * 60) - days*24*3600;
-
-if (days > 0)    {days   = ' +'+days+'д.';}
-	else days = '';
-if (hours   < 10) {hours   = "0"+hours;}
-if (minutes < 10) {minutes = "0"+minutes;}
-if (seconds < 10) {seconds = "0"+seconds;}
-return hours+':'+minutes+days//+':'+seconds;
-}
-slider2.oninput = function() {
-    
-	var package = this.value.toHHMMSS();
-	//console.log(package);
-	output2.innerHTML = package;	
-}
-
-</script><?php */?>
 </html>
