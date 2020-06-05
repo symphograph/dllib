@@ -1,19 +1,8 @@
 <?php 
 require_once 'includs/usercheck.php';
-setcookie('path', 'user_prices');
-//$user_id = $muser;
-//$hrefself = '<a href="'.$_SERVER['PHP_SELF'].'?query=';
+setcookie('path', 'packres');
+
 $ver = random_str(8);
-/*
-$sessmark = OnlyText($_COOKIE['sessmark']);	
-	if(iconv_strlen($sessmark) != 12)
-		die('error_sess');
-*/
-//if(!$email) exit;
-
-$puser_id = $_GET['puser_id'] ?? $user_id;
-$puser_id = intval($puser_id);
-
 
 ?>
 <!doctype html>
@@ -24,7 +13,7 @@ $puser_id = intval($puser_id);
 <meta name = "description" content = "Калькулятор себестоимости ресурсов Archeage." />
   <meta name = "keywords" content = "Умный калькулятор, archeage, архейдж, крафт" />
   <meta name=“robots” content=“index, nofollow”>
-<title>Цены пользователя</title>
+<title>Ресурсы для паков</title>
 <link href="css/default.css?ver=<?php echo md5_file('css/default.css')?>" rel="stylesheet">
 <link href="css/user_prices.css?ver=<?php echo md5_file('css/user_prices.css')?>" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,43 +29,21 @@ $puser_id = intval($puser_id);
 <body>
 
 <?php include_once 'includs/header.php';
-$puser_nick = AnyById($puser_id,'mailusers','user_nick')[$puser_id];
+//$puser_nick = AnyById($puser_id,'mailusers','user_nick')[$puser_id];
 	  
 ?>
 <main>
 <div id="rent">
 
 	<div class="navcustoms">
-	<h2>Цены пользователя <?php echo $puser_nick?></h2><br>
+	<h2>Ресурсы для паков</h2><br>
 	<div class="prmenu">
-	<?php ServerSelect();
-
-if($puser_id != $user_id)
-{
-	$valutignor = 'AND `prices`.`item_id` NOT in ('.implode(',',IntimItems()).')';
-	$chks = ['','checked'];
-	$chk = intval(IsFolow($user_id,$puser_id));
-	?>
-	<label for="folw" data-tooltip="Если цена этого пользователя новее Вашей, она будет использована в расчетах.">
-	Доверять этим ценам
-		<input type="checkbox" <?php echo $chks[$chk]?> name="sfolow" id="folw" value="<?php echo $puser_id?>">
-	</label>
+	<?php ServerSelect();?>
 	
-	<?php
-	if($ismobiledevice)
-	{
-		echo '<p>Если цена этого пользователя новее Вашей, она будет использована в расчетах.</p>';
-	}
-	?>
 	<br>
 	<a href="user_prices.php"><button class="def_button">Мои цены</button></a>
-	<?php
-}else
-{
-	$valutignor = '';
-}
-?>
 	
+
 	<a href="user_customs.php"><button class="def_button">Настройки</button></a>
 	</div><br><hr><div class = "responses"><div id = "responses"></div></div>
 	</div>
@@ -91,24 +58,49 @@ if($puser_id != $user_id)
 <?php
 $qwe = qwe("
 SELECT 
-`prices`.`item_id`, 
-`prices`.`auc_price`, 
-`prices`.`time`,
-`items`.`item_name`,
-`items`.`icon`,
-`items`.`basic_grade`,
-`items`.`item_id` IN (".$based_prices.") as `isbased`,
-user_crafts.isbest,
-user_crafts.isbest = 3 as ismybuy,
-items.craftable
-FROM `prices`
-INNER JOIN `items` ON `items`.`item_id` = `prices`.`item_id`
-AND `prices`.`user_id` = '$puser_id'
-AND `prices`.`server_group` = '$server_group'
-".$valutignor."
-LEFT JOIN user_crafts ON user_crafts.user_id = '$user_id' AND user_crafts.item_id = `prices`.`item_id`
-AND user_crafts.isbest > 0
-ORDER BY `isbased` DESC, ismybuy DESC, `prices`.`time` DESC
+items.item_id, 
+items.item_name, 
+items.craftable,  
+items.personal,
+items.icon,
+items.basic_grade,
+prices.auc_price,
+prices.time,
+isbest,
+(isbest = 3) as isbuy
+FROM
+(
+	SELECT item_id, result_item_id 
+	FROM craft_materials 
+	WHERE result_item_id IN 
+	(
+		SELECT DISTINCT item_id 
+		FROM packs WHERE item_id IN 
+		(SELECT result_item_id FROM crafts WHERE on_off)
+	)
+	OR result_item_id in (49003, 49033, 49034)
+	OR result_item_id in 
+	(
+		SELECT item_id 
+		FROM craft_materials 
+		WHERE result_item_id 
+		IN  (49003, 49033, 49034)
+	)
+	GROUP BY item_id
+) as tmp
+INNER JOIN items 
+	ON items.item_id = tmp.item_id 
+	AND items.on_off 
+	AND items.item_id != 500
+LEFT JOIN prices 
+	ON prices.user_id = '$user_id' 
+	AND prices.item_id = items.item_id 
+	AND prices.server_group = '$server_group'
+LEFT JOIN user_crafts 
+	ON user_crafts.user_id = '$user_id' 
+	AND user_crafts.item_id = items.item_id 
+	AND user_crafts.isbest > 0
+	ORDER BY isbuy DESC, item_name
 ");
 
 //$checks = ['','checked'];
@@ -117,22 +109,30 @@ UserPriceList($qwe);
 
 function UserPriceList($qwe)
 {
-	global $puser_id, $user_id;
+	global $user_id;
 	
 	foreach($qwe as $q)
 	{
 		extract($q);
 		?><div><?php
 
-		$chk = $isby = '';
+		$isby = '';
 
 		if($craftable)
 			$isby = intval($isbest)+1;
-
-		if($puser_id == $user_id)		
+		if(!$time)
+			$time = '01-01-0000';
+		
+		
+			$pr_arr = PriceMode($item_id,$user_id) ?? false;
+			if($pr_arr)
+			{
+				$auc_price = $pr_arr['auc_price'];
+				$time = $pr_arr['time'];
+			}
+		
 		PriceCell($item_id,$auc_price,$item_name,$icon,$basic_grade,$time,$isby);
-		else
-		PriceCell2($item_id,$auc_price,$item_name,$icon,$basic_grade,$time);
+	
 		?>
 		</div><?php
 	}	
@@ -160,33 +160,7 @@ window.onload = function() {
 $(".small_del").show();
 	
 };
-$('#rent').on('change','#folw',function(){
-	 
-	var condition = Number($(this).prop("checked"))+1;
 
-	//console.log(condition);
-	
-	$.ajax
-	({
-		url: "hendlers/setfolow.php", // путь к ajax файлу
-		type: "POST",      // тип запроса
-		dataType: "html",
-		cache: false,
-		data: {
-			sfolow_id: <?php echo $puser_id?>,
-			condition: condition
-		},
-		// Данные пришли
-		success: function(data) 
-		{
-			/*
-			$(okid).html(data);
-			$(okid).show();
-			setTimeout(function() {$(okid).hide('slow');}, 0);
-			*/
-		}
-	});
-});	
 	
 $('#all_info').on('input','.pr_inputs',function(){
 	
@@ -262,7 +236,5 @@ $('#all_info').on('click','.itim',function(){
 	var url = 'catalog.php?item_id='+item_id;
 	window.location.href = url;
 });
-	
-
 </script>
 </html>

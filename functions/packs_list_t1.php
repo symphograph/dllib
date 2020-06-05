@@ -1,7 +1,7 @@
 <?php
 if(!PriceMode(32103,$user_id))
 {
-	$coalprice = PriceMode(32103,$user_id)['auc_price'];
+	$coalprice = PriceMode(32103,$user_id)['auc_price'] ?? false;
 	$coalprice = intval($coalprice);
 	if($coalprice > 0)
 	qwe("REPLACE INTO `prices` (`user_id`, `item_id`, `server_group`, `auc_price`, `time`) 
@@ -12,7 +12,7 @@ if(!PriceMode(32103,$user_id))
 
 if(!PriceMode(32106,$user_id,1))
 {
-	$shellprice = PriceMode(32106,$user_id)['auc_price'];
+	$shellprice = PriceMode(32106,$user_id)['auc_price'] ?? false;
 	$shellprice = intval($shellprice);
 	if($shellprice > 0)
 	qwe("REPLACE INTO `prices` (`user_id`, `item_id`, `server_group`, `auc_price`, `time`) 

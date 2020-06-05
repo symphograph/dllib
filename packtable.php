@@ -46,7 +46,7 @@ if(isset($_POST['perc']) and ctype_digit($_POST['perc']))
 
 
 <div class="navcustoms top">
-	
+<h2 class="p_title"><span>Паки <?php echo $aa_ver?> при</span><?php perselect(130);?><span>%</span></h2>	
 	<div class="siol">
 		<div class="nicon_out ">
 			<a href="/user_customs.php">
@@ -55,9 +55,18 @@ if(isset($_POST['perc']) and ctype_digit($_POST['perc']))
 			<div class="navname">Настройки</div>
 		</div>
 	</div>
-<h2 class="p_title"><span>Паки <?php echo $aa_ver?> при</span><?php perselect(130);?><span>%</span></h2>
 
-<div class="siol">
+
+	
+	<div class="siol">
+		<div class="nicon_out ">
+			<a href="/packres.php">
+			<label class="navicon" style="background-image: url(../img/icons/50/icon_item_1314.png);"></label>
+			</a>
+			<div class="navname">Ресурсы для паков</div>
+		</div>
+	</div>
+	<div class="siol">
 		<div class="nicon_out ">
 			<input type="checkbox" id="siol" name="siol" value="5">
 			<label class="navicon" for="siol" style="background-image: url(../img/icons/50/icon_item_3368.png);"></label>

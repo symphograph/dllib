@@ -488,7 +488,7 @@ function UserCraftPrice($item_id,$user_id)
 	$qwe = mysqli_fetch_assoc($qwe);
 	extract($qwe);
 	if($isbest == 3)
-		return PriceMode($item_id,$user_id)['auc_price'];
+		return PriceMode($item_id,$user_id)['auc_price'] ?? false;
 	
 	return $craft_price;
 }

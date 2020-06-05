@@ -48,7 +48,7 @@ $crftorder[] = $item_id;
 if($b > 0)
 {
 	if(!isset($orcost))
-	$orcost = PriceMode(2,$user_id)['auc_price'];
+	$orcost = PriceMode(2,$user_id)['auc_price'] ?? false;
 	
 	foreach($querycrafts as $key){	
 	$craftkeys1[$key['result_item_id']][] = $key['craft_id'];

@@ -10,7 +10,7 @@ function rescost($rv, $forlost)
 {
 	global $craft_id, $rec_name, $item_id, $lost, $forlostnames, $trash, $user_id, $orcost;
 	if(!isset($orcost))
-	$orcost = PriceMode(2,$user_id)['auc_price'];
+	$orcost = PriceMode(2,$user_id)['auc_price'] ?? false;
 	 $lvl = 0;
 		$craft_id = $rv;
 	//echo '<p>'.$craft_id.'</p>';

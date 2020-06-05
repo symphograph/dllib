@@ -76,7 +76,7 @@ if($val)
 	VALUES
 	('$item_id','$user_id','$auc_price','$server_group',NOW())
 	");
-	echo 'Добавлено';
+	echo 'ok';
 }
 else
 {
@@ -86,6 +86,6 @@ else
 	WHERE `user_id` = '$user_id' 
 	AND (`item_id` = '$item_id' OR `isbest` < 2)
 	");
-	echo 'Удалено';
+	echo 'ok';
 }	
 ?>

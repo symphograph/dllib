@@ -17,7 +17,8 @@ $path_white = [
 'user_customs' => 'user_customs.php',
 'catalog' => 'catalog.php',
 'user_prices' => 'user_prices.php',
-'users' => 'users.php'
+'users' => 'users.php',
+'packres' => 'packres.php'
 ];
 $path = $path_white[$_COOKIE['path']];
 
