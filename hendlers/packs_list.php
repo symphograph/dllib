@@ -234,7 +234,7 @@ foreach($query as $v)
 	if($valuta != 500)
 	 $price = $v['quantity'];
 	else
-	$price = $v['fresh_price'];
+	 $price = $v['fresh_price'];
 	$profit = $v['profit'];
 	$zname_from = $v['zone_name'];
 	$zname_to = $v['zname_to'];
