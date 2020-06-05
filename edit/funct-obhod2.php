@@ -10,7 +10,7 @@ function rescost($rv, $forlost)
 {
 	global $craft_id, $rec_name, $item_id, $lost, $forlostnames, $trash, $user_id, $orcost;
 	if(!isset($orcost))
-	$orcost = PriceMode(2,$user_id)['auc_price'];
+	$orcost = PriceMode(2,$user_id)['auc_price'] ?? false;
 	 $lvl = 0;
 		$craft_id = $rv;
 	//echo '<p>'.$craft_id.'</p>';
@@ -640,7 +640,7 @@ function ToBuffer2($item_id)
 		AND user_crafts.user_id = '$user_id'
 		AND user_crafts.isbest > 1
 		) as tmp
-		ORDER BY isbest DESC, deep DESC, item_id, spmp, craft_price
+		ORDER BY isbest DESC, deep DESC, item_id, spmp, craft_price, result_amount DESC
 		
 		");
 		if(!$qwe) return;
@@ -676,6 +676,5 @@ function ToBuffer2($item_id)
 			now()
 			)");
 		}
-		//$qwe = mysqli_fetch_assoc($qwe);	
 }
 ?>

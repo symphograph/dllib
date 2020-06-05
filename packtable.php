@@ -46,7 +46,7 @@ if(isset($_POST['perc']) and ctype_digit($_POST['perc']))
 
 
 <div class="navcustoms top">
-	
+<h2 class="p_title"><span>Паки <?php echo $aa_ver?> при</span><?php perselect(130);?><span>%</span></h2>	
 	<div class="siol">
 		<div class="nicon_out ">
 			<a href="/user_customs.php">
@@ -55,9 +55,18 @@ if(isset($_POST['perc']) and ctype_digit($_POST['perc']))
 			<div class="navname">Настройки</div>
 		</div>
 	</div>
-<h2 class="p_title"><span>Паки <?php echo $aa_ver?> при</span><?php perselect(130);?><span>%</span></h2>
 
-<div class="siol">
+
+	
+	<div class="siol">
+		<div class="nicon_out ">
+			<a href="/packres.php">
+			<label class="navicon" style="background-image: url(../img/icons/50/icon_item_1314.png);"></label>
+			</a>
+			<div class="navname">Ресурсы для паков</div>
+		</div>
+	</div>
+	<div class="siol">
 		<div class="nicon_out ">
 			<input type="checkbox" id="siol" name="siol" value="5">
 			<label class="navicon" for="siol" style="background-image: url(../img/icons/50/icon_item_3368.png);"></label>
@@ -320,38 +329,5 @@ $('#all_info').on('click','.itim',function(){
 	window.location.href = url;
 });
 </script>
-<?php /*?><script type='text/javascript'>
-//var slider = document.getElementById("myRange");
-//var output = document.getElementById("percent");
-var slider2 = document.getElementById("myRange2");
-var output2 = document.getElementById("package");
-//var perc = output.val();
 
-//output.innerHTML = slider.value; // Display the default slider value
-output2.innerHTML = slider2.value;
-// Update the current slider value (each time you drag the slider handle)
-
-String.prototype.toHHMMSS = function () {
-var sec_num = parseInt(this, 10); // don't forget the second param
-var sec_num = sec_num *60;	
-var days    = Math.floor(sec_num / 3600 / 24);
-var hours   = Math.floor(sec_num / 3600 - days*24);
-var minutes = Math.floor((sec_num - (hours * 3600)) / 60 - days*24*60);
-var seconds = sec_num - (hours * 3600) - (minutes * 60) - days*24*3600;
-
-if (days > 0)    {days   = ' +'+days+'д.';}
-	else days = '';
-if (hours   < 10) {hours   = "0"+hours;}
-if (minutes < 10) {minutes = "0"+minutes;}
-if (seconds < 10) {seconds = "0"+seconds;}
-return hours+':'+minutes+days//+':'+seconds;
-}
-slider2.oninput = function() {
-    
-	var package = this.value.toHHMMSS();
-	//console.log(package);
-	output2.innerHTML = package;	
-}
-
-</script><?php */?>
 </html>

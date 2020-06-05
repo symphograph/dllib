@@ -31,7 +31,7 @@ WHERE `items`.`item_id` IN (32103, 32106,2,3,4,23633,32038,8007,32039,3712,27545
 foreach($query as $pr)
 {
 	extract($pr);
-	$auc_price =  PriceMode($item_id,$user_id,3)['auc_price'];
+	$auc_price =  PriceMode($item_id,$user_id,3)['auc_price'] ?? false;
 
 	PriceCell($item_id,$auc_price,$item_name,$icon,$basic_grade);
 }

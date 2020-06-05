@@ -30,20 +30,34 @@ if($val)
 	$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 	if(!$auc_price) die('<span style="color:red">Не нашел цену!</span>');
 	
-	qwe("REPLACE INTO `user_crafts`
-	(`user_id`, `craft_id`, `item_id`, `isbest`)
-	VALUES
-	('$user_id',(SELECT `craft_id` FROM `crafts` WHERE result_item_id = '$item_id' LIMIT 1), '$item_id', 3)
-	");
-	/*
-	qwe("
-	UPDATE `user_crafts`
-	SET `isbest` = 3,
-	auc_price = '$auc_price'
-	WHERE `item_id` = '$item_id'
-	AND `user_id` = '$user_id'
-	");
-	*/
+
+	$craft_id = BestCraftForItem($user_id,$item_id);
+	if($craft_id)
+	{
+		qwe("
+		UPDATE `user_crafts`
+		SET `isbest` = 3,
+		auc_price = '$auc_price'		
+		WHERE `user_id` = '$user_id'
+		AND `craft_id` = '$craft_id'
+		");
+		
+	}else
+	{
+		include $_SERVER['DOCUMENT_ROOT'].'/edit/funct-obhod2.php';
+		include $_SERVER['DOCUMENT_ROOT'].'/cat-funcs.php';
+		include $_SERVER['DOCUMENT_ROOT'].'/includs/recurs.php';
+		$craft_id = BestCraftForItem($user_id,$item_id);
+		if(!$craft_id) die('craft_error');
+		qwe("
+		UPDATE `user_crafts`
+		SET `isbest` = 3,
+		auc_price = '$auc_price'		
+		WHERE `user_id` = '$user_id'
+		AND `craft_id` = '$craft_id'
+		");
+	}
+	
 	qwe("
 	DELETE FROM `user_crafts`
 	WHERE `user_id` = '$user_id' 
@@ -51,12 +65,15 @@ if($val)
 	");
 	
 	qwe("
-	REPLACE INTO `prices`
+
+	INSERT IGNORE `prices`
+
 	(`item_id`,`user_id`,`auc_price`,`server_group`,`time`)
 	VALUES
 	('$item_id','$user_id','$auc_price','$server_group',NOW())
 	");
-	echo 'Добавлено';
+	echo 'ok';
+
 }
 else
 {
@@ -66,6 +83,6 @@ else
 	WHERE `user_id` = '$user_id' 
 	AND (`item_id` = '$item_id' OR `isbest` < 2)
 	");
-	echo 'Удалено';
+	echo 'ok';
 }	
 ?>

@@ -195,7 +195,7 @@ function all_res($user_id, $mat_id, $mater_need2, $mat_deep)
 			$best = 0;
 			if($craftable > 0)
 			{
-				$best = BestCraftForItem($user_id,$mat_id);
+				$best = UserCraftStatus($user_id,$mat_id);
 				
 				if($best != 3 and $item_group != 23)
 				{
@@ -273,7 +273,7 @@ function all_trash($user_id, $mat_id, $mater_need2, $mat_deep)
 		$best = 0;
 		if($craftable and $mater_need >0)
 		{
-			$best = BestCraftForItem($user_id,$mat_id);
+			$best = UserCraftStatus($user_id,$mat_id);
 
 			if($best != 3)
 			{

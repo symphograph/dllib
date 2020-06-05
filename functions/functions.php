@@ -488,7 +488,7 @@ function UserCraftPrice($item_id,$user_id)
 	$qwe = mysqli_fetch_assoc($qwe);
 	extract($qwe);
 	if($isbest == 3)
-		return PriceMode($item_id,$user_id)['auc_price'];
+		return PriceMode($item_id,$user_id)['auc_price'] ?? false;
 	
 	return $craft_price;
 }
@@ -677,7 +677,7 @@ function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='')
 				<div>
 					<label data-tooltip="Куплю. Не буду крафтить.">
 						<input type="checkbox" <?php echo $checked ?> id="isby_<?php echo $item_id ?>" name="isby"/>
-						Покупаемый
+						  <span class="comdate">Покупаемый</span>
 					</label>
 				</div>
 			</div>
@@ -931,7 +931,7 @@ AND `user_servers`.`user_id` = '$user_id'
 	return $qwe['server_group'];
 }
 
-function BestCraftForItem($user_id,$item_id)
+function UserCraftStatus($user_id,$item_id)
 {
 	$qwe = qwe("
 	SELECT * FROM `user_crafts` 
@@ -948,6 +948,22 @@ function BestCraftForItem($user_id,$item_id)
 		return $qwe['isbest'];	
 }
 
+function BestCraftForItem($user_id,$item_id)
+{
+	$qwe = qwe("
+	SELECT * FROM `user_crafts` 
+	WHERE `user_id` = '$user_id' 
+	AND `item_id` = '$item_id' 
+	ORDER BY isbest DESC
+	LIMIT 1
+	");
+	if(!$qwe or $qwe->num_rows == 0) 
+			return false;
+
+	$qwe = mysqli_fetch_assoc($qwe);
+
+		return $qwe['craft_id'];	
+}
 function IntimItems()
 {
 	global $IntimItems;
