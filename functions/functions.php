@@ -699,7 +699,7 @@ function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='')
 				</div>
 			</div>
 			<div class="price_pharams">
-				<div><span class="item_name"><?php echo $item_name;?></span>
+				<div><span class="item_name" id="itname_<?php echo $item_name?>" data-tooltip="Копировать в буфер"><?php echo $item_name?></span>
 					<form id="pr_<?php echo $item_id;?>">
 						<div class="money_area_down">
 						<?php MoneyLineBL($price,$item_id);?>

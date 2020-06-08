@@ -240,6 +240,33 @@ function SetPrice(form_id)
 		}
 	});
 }
+$('#all_info').on('click','.item_name',function(){
+    var txt = $(this).text();
+    selectText(this.id);
+    document.execCommand("copy");
+    $(this).html(txt +=' ');
+    $(this).html(txt);
+
+});
+function selectText(elementId) {
+    var doc = document,
+        text = doc.getElementById(elementId),
+        range,
+        selection;
+
+    if (doc.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
+    } else if (window.getSelection) {
+        selection = window.getSelection();
+        range = document.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+}
+
 
 $('#all_info').on('click','.small_del',function(){
 	//Удаляет цену юзера

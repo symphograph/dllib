@@ -154,3 +154,7 @@ select:hover {
 	width: 75%;
 	margin: auto;
 }
+
+.item_name{
+	cursor: copy;
+}
