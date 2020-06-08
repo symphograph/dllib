@@ -1,8 +1,10 @@
 <?php 
 require_once 'includs/usercheck.php';
 setcookie('path', 'packres');
+
 $userinfo_arr = UserInfo();
 extract($userinfo_arr);
+
 $ver = random_str(8);
 
 ?>
@@ -70,6 +72,7 @@ prices.time,
 isbest,
 (isbest = 3) as isbuy,
 user_crafts.craft_price
+
 FROM
 (
 	SELECT item_id, result_item_id 
@@ -104,6 +107,7 @@ LEFT JOIN user_crafts
 	AND user_crafts.isbest > 0
 	ORDER BY isbuy DESC, item_name
 ");
+
 /*
 $prof_q = qwe("SELECT * FROM `user_profs` where `user_id` ='$user_id'");
 include 'cat-funcs.php';
@@ -124,10 +128,12 @@ foreach($qwe as $q)
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 */
+
 UserPriceList($qwe);
 
 function UserPriceList($qwe)
 {
+
 	global $user_id,$userinfo_arr;
     extract($userinfo_arr);
 	foreach($qwe as $q)
@@ -161,6 +167,7 @@ function UserPriceList($qwe)
 */
 		?></div><?php
 	}
+
 }
 ?>
 </div>
@@ -171,6 +178,7 @@ function UserPriceList($qwe)
 </div></div>
 </div></div>
 </main>
+
 <?php
 function CraftPriceForItem($item_id,$user_id)
 {
@@ -186,6 +194,7 @@ function CraftPriceForItem($item_id,$user_id)
     $qwe = mysqli_fetch_assoc($qwe);
     return $qwe['craft_price'];
 }
+
 include_once 'pageb/footer.php'; ?>
 </body>
 <script type='text/javascript'>

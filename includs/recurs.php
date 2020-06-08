@@ -59,6 +59,7 @@ if($b > 0)
 	
 	$craftarr = CraftsBuffering($craftkeys1);
 	
+
     if(!in_array($_SERVER['SCRIPT_NAME'],['/hendlers/packs_list.php','/hendlers/isbuysets.php','packres.php']))
     {
         if(count($lost)>0)
@@ -67,6 +68,7 @@ if($b > 0)
             exit();
         }
     }
+
 		
 	$i = 0;
 }
