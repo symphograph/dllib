@@ -6,7 +6,9 @@ FROM `craft_materials`
 WHERE `result_item_id` = '$item_id'
 ");
 $count_mats = mysqli_num_rows($craftsq);
+
 //echo '<p>Надо посчитать:'.$count_mats.' итемов</p>';
+
 $x = 1;
 $icrft = 0;
 $crafta = 0;
@@ -57,14 +59,14 @@ if($b > 0)
 	
 	$craftarr = CraftsBuffering($craftkeys1);
 	
-		if(!in_array($_SERVER['SCRIPT_NAME'],['/hendlers/packs_list.php','/hendlers/isbuysets.php']))
-		{
-			if(count($lost)>0)
-			{
-				MissedList($lost);
-				exit();
-			}
-		}
+    if(!in_array($_SERVER['SCRIPT_NAME'],['/hendlers/packs_list.php','/hendlers/isbuysets.php','packres.php']))
+    {
+        if(count($lost)>0)
+        {
+            MissedList($lost);
+            exit();
+        }
+    }
 		
 	$i = 0;
 }
