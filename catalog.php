@@ -28,6 +28,7 @@ if(!empty($_COOKIE['item_id']))
 
 //$sgroupWays = ['basedprices','custprofs','userprofile'];
 //$sgroupWay = $sgroupWays[$item_sgroup];
+//jjjj
 ?>
 <!doctype html>
 <html lang="ru">

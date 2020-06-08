@@ -2,6 +2,9 @@
 require_once 'includs/usercheck.php';
 setcookie('path', 'packres');
 
+$userinfo_arr = UserInfo();
+extract($userinfo_arr);
+
 $ver = random_str(8);
 
 ?>
@@ -67,7 +70,9 @@ items.basic_grade,
 prices.auc_price,
 prices.time,
 isbest,
-(isbest = 3) as isbuy
+(isbest = 3) as isbuy,
+user_crafts.craft_price
+
 FROM
 (
 	SELECT item_id, result_item_id 
@@ -103,17 +108,38 @@ LEFT JOIN user_crafts
 	ORDER BY isbuy DESC, item_name
 ");
 
-//$checks = ['','checked'];
+/*
+$prof_q = qwe("SELECT * FROM `user_profs` where `user_id` ='$user_id'");
+include 'cat-funcs.php';
+include 'edit/funct-obhod2.php';
+qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
+qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+foreach($qwe as $q)
+{
+    extract($q);
+    if($craft_price) continue;
+
+    //$itemq = $item_id = $pack['item_id'];
+    CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q);
+
+    unset($total, $itog, $craft_id, $rec_name, $item_id, $forlostnames, $orcost, $repprice, $honorprice, $dzprice, $soverprice, $mat_deep,
+        $crafts, $crdeep, $deeptmp, $craftsq, $icrft,$crftorder,$craftarr);
+}
+qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
+qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+*/
 
 UserPriceList($qwe);
 
 function UserPriceList($qwe)
 {
-	global $user_id;
-	
+
+	global $user_id,$userinfo_arr;
+    extract($userinfo_arr);
 	foreach($qwe as $q)
 	{
 		extract($q);
+
 		?><div><?php
 
 		$isby = '';
@@ -122,20 +148,26 @@ function UserPriceList($qwe)
 			$isby = intval($isbest)+1;
 		if(!$time)
 			$time = '01-01-0000';
-		
-		
-			$pr_arr = PriceMode($item_id,$user_id) ?? false;
-			if($pr_arr)
-			{
-				$auc_price = $pr_arr['auc_price'];
-				$time = $pr_arr['time'];
-			}
-		
+
+
+        $pr_arr = PriceMode($item_id,$user_id) ?? false;
+        if($pr_arr)
+        {
+            $auc_price = $pr_arr['auc_price'];
+            $time = $pr_arr['time'];
+        }
+
 		PriceCell($item_id,$auc_price,$item_name,$icon,$basic_grade,$time,$isby);
-	
-		?>
-		</div><?php
-	}	
+/*
+        if ($craft_price)
+            $craft_price = esyprice($craft_price,15,1);
+
+
+        ?><div>Крафт:<?php echo $craft_price?></div><?php
+*/
+		?></div><?php
+	}
+
 }
 ?>
 </div>
@@ -146,10 +178,21 @@ function UserPriceList($qwe)
 </div></div>
 </div></div>
 </main>
-<?php 
-function MyPrices($user_id)
+
+<?php
+function CraftPriceForItem($item_id,$user_id)
 {
-	
+    $qwe = qwe("
+    SELECT * FROM user_crafts
+    WHERE user_id = '$user_id'
+    and item_id = '$item_id'
+    order by isbest desc 
+    limit 1
+    ");
+    if(!$qwe or $qwe->num_rows == 0)
+        return false;
+    $qwe = mysqli_fetch_assoc($qwe);
+    return $qwe['craft_price'];
 }
 
 include_once 'pageb/footer.php'; ?>

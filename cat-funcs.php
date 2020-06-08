@@ -454,6 +454,8 @@ function res($item_id, $craftsq, $x, $crafta, $icrft, $crdeep, $crftorder)
 	global $crafts, $crdeep, $deeptmp, $craftsq, $icrft, $crftorder, $user_id;
 	$cr =0;
 	$deeptmp= $deeptmp+1;
+
+    //if(!$craftsq) echo '!$craftsq'.'<br>';
 	if($craftsq)
 	foreach($craftsq as $v)
 	{

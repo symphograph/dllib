@@ -140,9 +140,10 @@ if($craftable)
 	$prof_q = qwe("SELECT * FROM `user_profs` WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
-	include '../edit/funct-obhod2.php';
+	require_once '../edit/funct-obhod2.php';
 	include '../includs/recurs.php';
-	
+	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
+	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 	DwnCraftList($globalitem_id);
 	?></div><?php
 }else
@@ -525,10 +526,11 @@ function DwnCraftList($item_id)
 		SELECT 
 		craft_materials.item_id,
 		craft_materials.mater_need,
-		craft_materials.mat_grade as basic_grade,
+		craft_materials.mat_grade,
 		items.item_name,
 		items.icon,
-		items.craftable
+		items.craftable,
+		items.basic_grade
 		FROM `craft_materials`
 		INNER JOIN items ON items.item_id = craft_materials.item_id
 		AND craft_materials.craft_id = '$craft_id'
@@ -633,7 +635,7 @@ function MaCubiki($qwe,$u_amount,$craft_price)
 	foreach($qwe as $q)
 	{$i++;
 		extract($q);
-		 if(!$basic_grade) $basic_grade = 1;
+
 		 if($item_id == 500)
 		 {
 			 $money = $mater_need;
@@ -649,7 +651,12 @@ function MaCubiki($qwe,$u_amount,$craft_price)
 		$mater_need = round($mater_need*$u_amount,2);
 		$tooltip = $item_name.'<br>'.$mater_need.' шт по<br>'.$matprice;
 
-		Cubik($item_id,$icon,$basic_grade,$tooltip,$mater_need);
+		if($mat_grade < 2 or !$mat_grade)
+		    $mat_grade = $basic_grade;
+
+		if(!$basic_grade) $basic_grade = 1;
+
+		Cubik($item_id,$icon,$mat_grade,$tooltip,$mater_need);
 	}
 	return $money;
 }
