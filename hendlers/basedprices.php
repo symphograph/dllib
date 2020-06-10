@@ -46,7 +46,7 @@ foreach($query as $pr)
 
 <br>
 <br>
-<a href="user_prices.php"><button class="def_button">Все цены</button></a>
+<a href="user_prices.php"><button class="def_button">Мои цены</button></a>
 <hr>
 <?php
 	$query = qwe("

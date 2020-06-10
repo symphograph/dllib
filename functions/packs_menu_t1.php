@@ -13,6 +13,14 @@ if(!empty($_COOKIE['pack_settings']))
 	<div class="slidecontainer"><input type="range" min="50" max="130" value="100" class="slider" id="myRange"></div>
 	
 </div>-->
+
+<?php
+function PackTypeButtons()
+{
+    //$qwe = qwe("select * from pack_types");
+}
+?>
+
 <div class="select_row">
 
 	<div class="navcustoms">
@@ -27,6 +35,11 @@ if(!empty($_COOKIE['pack_settings']))
 			<label class="navicon" for="type_1" style="background-image: url(../img/icons/50/icon_item_0863.png);"></label>
 			<div class="navname">Обычные</div>
 		</div>
+        <div class="nicon_out">
+            <input type="checkbox" id="type_8" name="type[1]" <?php if(isset($ps['type'][8])) echo 'checked' ?> value="8">
+            <label class="navicon" for="type_8" style="background-image: url(../img/icons/50/icon_item_0476.png);"></label>
+            <div class="navname">За ДЗ</div>
+        </div>
 		<div class="nicon_out">
 			<input type="checkbox" id="type_2" name="type[2]" <?php if(isset($ps['type'][2])) echo 'checked' ?> value="2">
 			<label class="navicon" for="type_2" style="background-image: url(../img/icons/50/icon_item_2504.png);"></label>
@@ -77,28 +90,24 @@ if(!empty($_COOKIE['pack_settings']))
 	<div class="freguency" title="Возраст пака">
 		<select name="pack_age" class="select_input" autocomplete="off" onchange="">
 		<?php
-			
-			//if($pack_age == 0)
-			//echo '<option value="0" selected >Свежесть - 0ч</option>';
-			//$freg_arr = [24,48,51,52,56,60,72,88,96,120];
-			$freg_arr = qwe("Select * from fresh_lvls");
+			$freg_arr = qwe("
+            Select * from fresh_data
+            GROUP BY fresh_tstart;
+            ");
 			foreach($freg_arr as $i)
 			{
-			//for($i=24;$i<120;$i+=24)
-			//{	
-				//if($i>48) $i = $i+3;
-				//if($i>=150) $i = $i+30;
-				//if($i>=180) $i = $i+3*60;
-				//if($i==$pack_age and $i >0)
-				//$selected = 'selected';
-				//if($i > 24)
-					//$pack_time = date("jд : Gч",$i*60*60-3600*3-3600*24);
-				//else
-					//$pack_time = $i.'ч';
-				
-					//$pack_time = $pack_time.'+1д';
-				//echo '<option value="'.($i*60).'">'.$pack_time.'</option>';
-				echo '<option value="'.($i['fresh_lvl']).'">'.$i['fresh_name'].'</option>';
+                $time = $i['fresh_tstart'];
+
+                if(($time/60) >= 24)
+                    $format = "jд. H:i";
+                else
+                    $format = "H:i";
+
+                $pack_time = date($format,$time*60-3600*3-3600*24);
+
+				echo '<option value="'.($i['fresh_tstart']).'">';
+                echo $pack_time;
+				echo '</option>';
 				$selected = '';
 			}	
 		?>
