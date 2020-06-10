@@ -23,7 +23,7 @@ $per = intval($per);
 $side = $_POST['side'] ?? 0;
 $side = intval($side);
 $siol = $_POST['siol'] ?? 0;
-$qsort = intval($siol);
+//$qsort = intval($siol);
 $side = intval($side);
 $qsort = $_POST['sort'] ?? 0;
 $qsort = intval($qsort);
@@ -134,7 +134,7 @@ $sorts = [
 	'profit DESC',
 	'zone_name, profit DESC',
 	'zname_to, profit DESC',
-	'fresh_price DESC',
+	'take DESC',
 	'profitor DESC'
 ];
 $sort = $sorts[$qsort];
@@ -149,6 +149,9 @@ $imgor = '<img src="../img/icons/50/2.png" width="15px" height="15px"/>';
 <?php
 $craft_price = 1;
 $TradeLvl = ProfLvl($user_id,5);
+
+
+/*
 $query = qwe("
 SELECT *,
 ROUND(profit/labor_all,0) as profitor
@@ -189,6 +192,7 @@ INNER JOIN
 	fresh_data.fresh_lvl,
 	packs.pack_t_id,
 	fresh_data.fresh_type,
+	fresh_data.fresh_group,
 	packs.pack_type,
 	packs.pack_sname,
 	pack_prices.valuta_id,
@@ -197,14 +201,24 @@ INNER JOIN
 	pack_types.pass_labor,
 	round(`pass_labor` * (100 - IFNULL(`save_or`,0)) / 100,0) AS `pass_labor2`,
 	pack_prices.pack_price as db_price,
-	ROUND(ROUND(pack_prices.pack_price/mul + pack_prices.pack_price/mul * IF(packs.pack_t_id = 6,1,`fresh_data`.`fresh_per`)/100)/130*IF(`pack_prices`.`valuta_id` = 500,".($per+$siol).",130)) as `quantity`
+	ROUND
+	(
+	    ROUND
+	     (
+	        pack_prices.pack_price/mul + 
+	        pack_prices.pack_price/mul * 
+	        IF(packs.pack_t_id = 6,1,`fresh_data`.`fresh_per`)/100
+	    )/130*
+	    IF(`pack_prices`.`valuta_id` = 500,".($per+$siol).",130)
+	) 
+	as `quantity`
 	FROM `fresh_data`
 	INNER JOIN zones ON zones.fresh_type = `fresh_data`.`fresh_type` AND `zones`.`side` = '$side'
 	INNER JOIN packs ON packs.zone_id = zones.zone_id AND `packs`.`pack_t_id` IN (".$typess.")
 	INNER JOIN pack_prices ON pack_prices.zone_id = zones.zone_id AND pack_prices.item_id = packs.item_id
-	INNER JOIN pack_types ON pack_types.pack_t_id = packs.pack_t_id
+	INNER JOIN pack_types ON pack_types.pack_t_id = packs.pack_t_id and pack_types.fresh_group = fresh_data.fresh_group
 	LEFT JOIN `prof_lvls` ON `prof_lvls`.`lvl` = '$TradeLvl'
-	WHERE (fresh_data.fresh_lvl = '$pack_age' /*BETWEEN fresh_data.fresh_tstart AND fresh_data.fresh_tstop-1*/)
+	WHERE (fresh_data.fresh_lvl = '$pack_age')
 ) as packjoin
 ON fresh_data.fresh_type = packjoin.fresh_type AND fresh_data.fresh_lvl = packjoin.fresh_lvl
 INNER JOIN items ON items.item_id = packjoin.item_id AND items.on_off = 1
@@ -219,6 +233,55 @@ as `coal_price`
 on coal_price.item_id = packjoin.valuta_id
 ) as `tttmp`
 ORDER BY ".$sort);
+*/
+
+$query = qwe("
+SELECT *, take - craft_price as profit,
+ROUND((take - craft_price)/labor_all) as profitor
+FROM
+(SELECT 
+items.item_id,
+items.icon,
+IFNULL(packs.pack_sname,items.item_name) as item_name,
+pack_types.pack_t_name as pack_type,
+zs_from.zone_name,
+zones.zone_name as zname_to,
+pack_prices.zone_to,
+pack_prices.pack_price,
+user_crafts.craft_price,
+pack_prices.valuta_id,
+fresh_data.fresh_per,
+fresh_lvls.fresh_name,
+round(if(packs.pack_t_id=4,coal_price.auc_price/mul*pack_price,pack_price*(1+".($siol/100)."))*(1+fresh_data.fresh_per/100)*$per/100) as take,
+round(`pass_labor` * (100 - IFNULL(`save_or`,0)) / 100 + user_crafts.labor_total) AS `labor_all`
+FROM pack_prices 
+INNER JOIN items 
+	on pack_prices.item_id = items.item_id
+	AND items.on_off 
+INNER JOIN packs ON pack_prices.item_id = packs.item_id 
+	AND pack_prices.zone_id = packs.zone_id
+INNER JOIN pack_types ON packs.pack_t_id = pack_types.pack_t_id 
+	AND pack_types.pack_t_id IN (".implode(',',$types).")
+INNER JOIN (SELECT * FROM zones) as zs_from 
+	ON zs_from.zone_id = pack_prices.zone_id
+	AND zs_from.side = '$side'
+INNER JOIN zones ON zones.zone_id = pack_prices.zone_to
+INNER JOIN fresh_data ON fresh_data.fresh_type = zs_from.fresh_type AND pack_types.fresh_group = fresh_data.fresh_group
+ AND '$pack_age' between fresh_data.fresh_tstart and fresh_data.fresh_tstop 
+LEFT JOIN user_crafts ON user_crafts.user_id = '$user_id' AND pack_prices.item_id = user_crafts.item_id AND user_crafts.isbest
+LEFT JOIN (
+			SELECT 32103 as item_id, ROUND($coalprice*0.9) as auc_price
+			UNION
+			SELECT 32106 as item_id, ROUND($shellprice*0.9) as auc_price
+			) 
+as `coal_price`
+on coal_price.item_id = pack_prices.valuta_id
+LEFT JOIN `prof_lvls` ON `prof_lvls`.`lvl` = '$TradeLvl'
+INNER JOIN fresh_lvls on fresh_lvls.fresh_lvl = fresh_data.fresh_lvl
+) as tmp
+ORDER BY ".$sort
+);
+//var_dump($types);
 $zone_name2 = '';
 $numrows = mysqli_num_rows($query);
 $i=0; $n=0; $open = false;
@@ -232,10 +295,12 @@ foreach($query as $v)
 	$freshency = $v['fresh_name'];
 	$fres_per = $v['fresh_per'];
 	$valuta = $v['valuta_id'];
+
 	if($valuta != 500)
-	 $price = $v['quantity'];
+	 $price = $v['pack_price']/100;
 	else
-	 $price = $v['fresh_price'];
+	 $price = $v['take'];
+
 	$profit = $v['profit'];
 	$zname_from = $v['zone_name'];
 	$zname_to = $v['zname_to'];

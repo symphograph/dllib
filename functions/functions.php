@@ -387,7 +387,7 @@ function price_str($price,$valuta)
 	return($price);
 	}else
 	{   //$price = str_pad($price, 6, "0", STR_PAD_LEFT);
-		$v_img = '<img src="../img/'.$valuta.'.png" width="10" height="10" alt="coal"/>';
+		$v_img = '<img src="../img/'.$valuta.'.png?ver='.md5_file('../img/'.$valuta.'.png').'" width="10" height="10" alt="coal"/>';
 		//$s = sscanf($price, "%2d%2d%d", $gold, $silver, $bronse);
 		$price = $price.$v_img;
 		return($price);
@@ -699,7 +699,7 @@ function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='')
 				</div>
 			</div>
 			<div class="price_pharams">
-				<div><span class="item_name"><?php echo $item_name;?></span>
+				<div><span class="item_name" id="itname_<?php echo $item_name?>"><?php echo $item_name?></span>
 					<form id="pr_<?php echo $item_id;?>">
 						<div class="money_area_down">
 						<?php MoneyLineBL($price,$item_id);?>

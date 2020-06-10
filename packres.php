@@ -241,6 +241,7 @@ function SetPrice(form_id)
 	});
 }
 
+
 $('#all_info').on('click','.small_del',function(){
 	//Удаляет цену юзера
 	var form_id = $(this).get(0).form.id;
