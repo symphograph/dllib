@@ -264,15 +264,15 @@ INNER JOIN pack_types ON packs.pack_t_id = pack_types.pack_t_id
 	AND pack_types.pack_t_id IN (".implode(',',$types).")
 INNER JOIN (SELECT * FROM zones) as zs_from 
 	ON zs_from.zone_id = pack_prices.zone_id
-	AND zs_from.side = 1
+	AND zs_from.side = '$side'
 INNER JOIN zones ON zones.zone_id = pack_prices.zone_to
 INNER JOIN fresh_data ON fresh_data.fresh_type = zs_from.fresh_type AND pack_types.fresh_group = fresh_data.fresh_group
  AND '$pack_age' between fresh_data.fresh_tstart and fresh_data.fresh_tstop 
 LEFT JOIN user_crafts ON user_crafts.user_id = '$user_id' AND pack_prices.item_id = user_crafts.item_id AND user_crafts.isbest
 LEFT JOIN (
-			SELECT 32103 as item_id, ROUND(40000*0.9) as auc_price
+			SELECT 32103 as item_id, ROUND($coalprice*0.9) as auc_price
 			UNION
-			SELECT 32106 as item_id, ROUND(120000*0.9) as auc_price
+			SELECT 32106 as item_id, ROUND($shellprice*0.9) as auc_price
 			) 
 as `coal_price`
 on coal_price.item_id = pack_prices.valuta_id
