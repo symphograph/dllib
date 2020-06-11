@@ -5,13 +5,12 @@ if(!$myip) exit();
 include_once 'functions/functions.php';
 include_once 'includs/config.php';
 
-$arr = [];
 $item_id = 8318;
-$arr = DependentItems($item_id, $arr);
+$arr = DependentItems($item_id);
 
-function DependentItems($item_id, $arr,$i=0)
+function DependentItems($item_id, $arr=[],$i=0)
 {
-    if(!$i) $i = 0;
+    $i = intval($i);
     $i++;
     //global $arr;
     $qwe = qwe("
@@ -30,16 +29,24 @@ function DependentItems($item_id, $arr,$i=0)
         $id = $q['result_item_id'];
         $ismat = $q['ismat'];
         $arr[] = $id;
-        //$item_name = ItemAny($id,'item_name')[$id] ?? 'oo!'.$id;
-       // echo $id.' '.$item_name.'<br>';
         if($ismat)
             $arr = DependentItems($id, $arr,$i);
     }
+    sort($arr);
     return $arr;
 }
-//sort($arr);
-printr($arr);
-
+//echo implode(', ',$arr)
+//printr($arr);
+$qwe = qwe("
+SELECT * from items
+WHERE item_id
+IN (".implode(', ',$arr).")
+");
+foreach ($qwe as $q)
+{
+    extract($q);
+    echo $item_name.'<br>';
+}
 
 ?>
 
