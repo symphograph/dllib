@@ -662,10 +662,17 @@ function AvaGetAndPut($ava,$identy)
 	return $filename;
 }
 
-function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='')
+function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='',$iscolor = false)
 {
 	if(!empty($time))
-		$time = date('d.m.Y',strtotime($time)); 
+		$time = date('d.m.Y',strtotime($time));
+	if($iscolor)
+    {
+        $colors = ['', '#f35454', '#dcde4f', '#79f148'];
+        $color = $colors[$iscolor];
+        $color = ' style = "background-color:'.$color.'" ';
+    }else
+        $color = '';
 	
 	?>
 	<div class="price_cell">
@@ -702,7 +709,7 @@ function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='')
 				<div><span class="item_name" id="itname_<?php echo $item_name?>"><?php echo $item_name?></span>
 					<form id="pr_<?php echo $item_id;?>">
 						<div class="money_area_down">
-						<?php MoneyLineBL($price,$item_id);?>
+						<?php MoneyLineBL($price,$item_id,$color);?>
 						</div>
 					<input type="hidden" name="item_id" value="<?php echo $item_id;?>"/>
 					</form>
@@ -970,6 +977,7 @@ function BestCraftForItem($user_id,$item_id)
 
 		return $qwe['craft_id'];	
 }
+
 function IntimItems()
 {
 	global $IntimItems;
@@ -993,5 +1001,73 @@ function IntimItems()
 		$IntimItems[] = $q['item_id'];
 	}
 	return $IntimItems;
+}
+
+function Folows($user_id)
+{
+    $qwe = qwe("
+    Select * from folows
+    WHERE user_id = '$user_id'
+    ");
+    if(!$qwe or $qwe->num_rows == 0)
+        return [];
+
+    $follows = [];
+    foreach ($qwe as $q)
+    {
+        $follows[] = $q['folow_id'];
+    }
+    return $follows;
+}
+
+function ColorPrice($auc_arr)
+{
+    global $user_id, $folows;
+    if(!isset($folows))
+        $folows = Folows($user_id);
+    $auc_price = $auc_arr['auc_price'] ?? false;
+    if(!$auc_price) return 1;
+
+    if($user_id == $auc_arr['user_id'])
+        return 3;
+
+    if(in_array($auc_arr['user_id'],$folows))
+        return 2;
+
+    return 1;
+}
+
+function modes($mode)
+{
+    $chks = ['','checked'];
+    $mode_names = ['','Наивность', 'Маргинал', 'Хардкор'];
+    $mode_tooltips =
+        [
+            '',
+            'Режим для новичка.<br>Предпочитает Ваши цены или более новые из доверенных.<br>Если их нет, ищет у других.<br>Спрашивает только, если никто и никогда не указывал цену.<br>',
+            'Не видит ничьих цен, кроме Ваших и тех, кому Вы доверяете.<br>Предпочитает более новые.<br>ОР, РР, Честь и прочие субъективные предпочитает Ваши независимо от их новизны.',
+            'Видит только Ваши цены.<br>В любой непонятной ситуации будет спрашивать.'
+        ];
+    ?>
+    <form id="fmodes" method="post" action="edit/setmode.php">
+        <div class="modes">
+            <?php
+            foreach($mode_names as $mnk => $mnv)
+            {
+                if(!$mnv) continue;
+                ?>
+                <label data-tooltip="<?php echo $mode_tooltips[$mnk];?>">
+                    <div>
+                        <input type="radio" <?php if($mode == $mnk) echo 'checked'?> name="mode" value="<?php echo $mnk;?>" onchange="this.form.submit()"/>
+                        <?php echo $mnv;?>
+                    </div>
+                </label>
+                <?php
+            }
+            ?>
+        </div>
+    </form>
+    <hr>
+    <?php
 }
 ?>
