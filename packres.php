@@ -39,16 +39,26 @@ $ver = random_str(8);
 <div id="rent">
 
 	<div class="navcustoms">
-	<h2>Ресурсы для паков</h2><br>
-	<div class="prmenu">
-	<?php ServerSelect();?>
-	
-	<br>
-	<a href="user_prices.php"><button class="def_button">Мои цены</button></a>
-	
+	    <h2>Ресурсы для паков</h2><br>
+        <div class="prmenu">
+            <?php ServerSelect();?>
 
-	<a href="user_customs.php"><button class="def_button">Настройки</button></a>
-	</div><br><hr><div class = "responses"><div id = "responses"></div></div>
+            <br>
+            <a href="user_prices.php"><button class="def_button">Мои цены</button></a>
+            <a href="user_customs.php"><button class="def_button">Настройки</button></a>
+
+        </div><hr>
+        <div class="modes"></div>
+        <?php modes($mode); ?>
+
+
+
+        <div class="PrColorsInfo">
+            <span style="background-color:#f35454">Чужая цена</span>
+            <span style="background-color:#dcde4f">Цена друга</span>
+            <span style="background-color:#79f148">Ваша цена</span>
+        </div>
+        <div class = "responses"><div id = "responses"></div></div>
 	</div>
 
 <div id="rent_in" class="rent_in">
@@ -59,12 +69,14 @@ $ver = random_str(8);
 <div id="items">
 <div class="prices">
 <?php
-$qwe = qwe("
+$sql = "
 SELECT 
 items.item_id, 
 items.item_name, 
 items.craftable,  
 items.personal,
+items.is_trade_npc,
+items.valut_id,
 items.icon,
 items.basic_grade,
 prices.auc_price,
@@ -72,7 +84,6 @@ prices.time,
 isbest,
 (isbest = 3) as isbuy,
 user_crafts.craft_price
-
 FROM
 (
 	SELECT item_id, result_item_id 
@@ -106,9 +117,9 @@ LEFT JOIN user_crafts
 	AND user_crafts.item_id = items.item_id 
 	AND user_crafts.isbest > 0
 	ORDER BY isbuy DESC, item_name
-");
+	";
+$qwe = qwe($sql);
 
-/*
 $prof_q = qwe("SELECT * FROM `user_profs` where `user_id` ='$user_id'");
 include 'cat-funcs.php';
 include 'edit/funct-obhod2.php';
@@ -116,10 +127,11 @@ qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 foreach($qwe as $q)
 {
-    extract($q);
-    if($craft_price) continue;
-
-    //$itemq = $item_id = $pack['item_id'];
+    //extract($q);
+    if($q['craft_price']) continue;
+    if(!$q['craftable']) continue;
+    if($q['is_trade_npc'] and $q['valut_id'] == 500) continue;
+    $itemq = $item_id = $q['item_id'];
     CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q);
 
     unset($total, $itog, $craft_id, $rec_name, $item_id, $forlostnames, $orcost, $repprice, $honorprice, $dzprice, $soverprice, $mat_deep,
@@ -127,8 +139,9 @@ foreach($qwe as $q)
 }
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
-*/
 
+$folows = Folows($user_id);
+$qwe = qwe($sql);
 UserPriceList($qwe);
 
 function UserPriceList($qwe)
@@ -140,6 +153,9 @@ function UserPriceList($qwe)
 	{
 		extract($q);
 
+        //var_dump($craft_price);
+     if($is_trade_npc and $valut_id == 500) continue;
+
 		?><div><?php
 
 		$isby = '';
@@ -150,21 +166,24 @@ function UserPriceList($qwe)
 			$time = '01-01-0000';
 
 
+        $iscolor = false;
+
         $pr_arr = PriceMode($item_id,$user_id) ?? false;
         if($pr_arr)
         {
             $auc_price = $pr_arr['auc_price'];
             $time = $pr_arr['time'];
+            $iscolor = ColorPrice($pr_arr);
         }
 
-		PriceCell($item_id,$auc_price,$item_name,$icon,$basic_grade,$time,$isby);
-/*
+		PriceCell($item_id,$auc_price,$item_name,$icon,$basic_grade,$time,$isby,$iscolor);
+
         if ($craft_price)
+        {
             $craft_price = esyprice($craft_price,15,1);
+            ?><div>Крафт:<?php echo $craft_price?></div><?php
+        }
 
-
-        ?><div>Крафт:<?php echo $craft_price?></div><?php
-*/
 		?></div><?php
 	}
 

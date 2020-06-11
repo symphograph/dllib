@@ -58,45 +58,7 @@ $custWay = $custWays[$customType];
 <?php modes($mode); ?>
 </div>
 <div id="rent_in" class="rent_in">
-	
-	
 
-
-<?php 
-function modes($mode)
-{
-	$chks = ['','checked'];
-	$mode_names = ['','Наивность', 'Маргинал', 'Хардкор'];
-	$mode_tooltips = 
-	[
-		'',
-		'Режим для новичка.<br>Предпочитает Ваши цены или более новые из доверенных.<br>Если их нет, ищет у других.<br>Спрашивает только, если никто и никогда не указывал цену.<br>',
-		'Не видит ничьих цен, кроме Ваших и тех, кому Вы доверяете.<br>Предпочитает более новые.<br>ОР, РР, Честь и прочие субъективные предпочитает Ваши независимо от их новизны.',
-		'Видит только Ваши цены.<br>В любой непонятной ситуации будет спрашивать.'
-	];
-?>
-	<form id="fmodes" method="post" action="edit/setmode.php">
-		<div class="modes">
-			<?php
-			foreach($mode_names as $mnk => $mnv)
-			{
-				if(!$mnv) continue;
-				?>
-				<label data-tooltip="<?php echo $mode_tooltips[$mnk];?>">
-					<div>
-						<input type="radio" <?php if($mode == $mnk) echo 'checked'?> name="mode" value="<?php echo $mnk;?>" onchange="this.form.submit()"/>
-						<?php echo $mnv;?>
-					</div>
-				</label>
-				<?php
-			}
-			?>	
-		</div>
-	</form>
-	<hr>
-<?php
-}
-?>
 <div class="clear"></div>
 <div class="all_info" id="all_info">
 <div id="items">
@@ -200,6 +162,9 @@ function SetPrice(form_id)
 			$(okid).show(); 
 			setTimeout(function() {$(okid).hide('slow');}, 0);
 			$("#prdel_"+item_id).show();
+			if(data == "ок")
+                $('input[class=pr_inputs]',form).css('background-color', '#79f148');
+                //console.log($('input[class=pr_inputs]',form));
 		}
 	});
 }

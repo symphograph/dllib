@@ -582,6 +582,7 @@ global $arr_or, $allor_deep, $mater_exponent;
 function CraftsBuffering($craftkeys1)
 {
 	global $user_id,$complited;
+    //$craftarr = [];
 	if(!isset($complited))
 		$complited = [];
 	$mycost = 0;
@@ -608,9 +609,14 @@ function CraftsBuffering($craftkeys1)
 		ToBuffer2($item_id);
 		$complited[$item_id] = 1;
 	}
-	
-	$craftarr = array_unique($craftarr);
-	return $craftarr;
+
+	if(isset($craftarr))
+    {
+        $craftarr =  array_unique($craftarr);
+        return $craftarr;
+    }
+	else
+	    return [];
 }
 function ToBuffer2($item_id)
 {
