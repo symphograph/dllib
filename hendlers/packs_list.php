@@ -300,6 +300,7 @@ foreach($query as $v)
 	 $price = $v['pack_price']/100;
 	else
 	 $price = $v['take'];
+
 	$profit = $v['profit'];
 	$zname_from = $v['zone_name'];
 	$zname_to = $v['zname_to'];

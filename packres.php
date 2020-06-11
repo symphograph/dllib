@@ -84,8 +84,6 @@ prices.time,
 isbest,
 (isbest = 3) as isbuy,
 user_crafts.craft_price
-       
-
 FROM
 (
 	SELECT item_id, result_item_id 
@@ -122,7 +120,6 @@ LEFT JOIN user_crafts
 	";
 $qwe = qwe($sql);
 
-
 $prof_q = qwe("SELECT * FROM `user_profs` where `user_id` ='$user_id'");
 include 'cat-funcs.php';
 include 'edit/funct-obhod2.php';
@@ -155,8 +152,10 @@ function UserPriceList($qwe)
 	foreach($qwe as $q)
 	{
 		extract($q);
+
         //var_dump($craft_price);
-        if($is_trade_npc and $valut_id == 500) continue;
+     if($is_trade_npc and $valut_id == 500) continue;
+
 		?><div><?php
 
 		$isby = '';
@@ -166,7 +165,9 @@ function UserPriceList($qwe)
 		if(!$time)
 			$time = '01-01-0000';
 
+
         $iscolor = false;
+
         $pr_arr = PriceMode($item_id,$user_id) ?? false;
         if($pr_arr)
         {
