@@ -5,38 +5,48 @@ if(!$myip) exit();
 include_once 'functions/functions.php';
 include_once 'includs/config.php';
 
-$item_id = 8318;
-$arr = DependentItems($item_id);
+$item_id = 28971;
+$arr = AllPotentialMats($item_id);
 
-function DependentItems($item_id, $arr=[],$i=0)
+function AllPotentialMats($item_id, $arr=[],$i=0)
 {
     $i = intval($i);
     $i++;
-    //global $arr;
+
     $qwe = qwe("
-    Select result_item_id, ismat 
-    from craft_materials 
-    inner join items on craft_materials.result_item_id = items.item_id
-    and craft_materials.item_id = '$item_id' 
-    and items.on_off
-    group by result_item_id
+    SELECT 
+    crafts.craft_id,
+    items.item_id,
+    items.item_name,
+    items.craftable
+    FROM craft_materials
+    inner join items on craft_materials.item_id = items.item_id
+    AND craft_materials.result_item_id = '$item_id'
+    AND items.on_off
+    AND craft_materials.mater_need > 0
+    inner join crafts on crafts.craft_id = craft_materials.craft_id
+	AND crafts.on_off
     ");
     if(!$qwe or $qwe->num_rows == 0)
-        return false;
+        return [];
 
     foreach ($qwe as $q)
     {
-        $id = $q['result_item_id'];
-        $ismat = $q['ismat'];
+
+        $id = $q['item_id'];
+        $craftable = $q['craftable'];
+        //if(!$craftable) continue;
+        //echo $id.'<br>';
         $arr[] = $id;
-        if($ismat)
-            $arr = DependentItems($id, $arr,$i);
+        if($craftable)
+            $arr = ParentItems($id, $arr,$i);
     }
+    $arr = array_unique($arr);
     sort($arr);
     return $arr;
 }
-//echo implode(', ',$arr)
 //printr($arr);
+
 $qwe = qwe("
 SELECT * from items
 WHERE item_id

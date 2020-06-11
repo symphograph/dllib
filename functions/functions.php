@@ -452,6 +452,12 @@ function dbCleaner()
 	WHERE `item_id` IN 
 	(SELECT `item_id` FROM `items` WHERE `on_off` = 0)
 	");
+
+	$qwe = qwe("SELECT * FROM user_crafts WHERE isbest = 3");
+	foreach ($qwe as $q)
+    {
+        //qwe("REPLACE INTO ");
+    }
 }
 
 function PriceValidator($array=[])
@@ -978,6 +984,10 @@ function BestCraftForItem($user_id,$item_id)
 		return $qwe['craft_id'];	
 }
 
+/**
+ * @return array|null
+ * возвращает итемы, цена которых не должна изменяться другими юзерами
+ */
 function IntimItems()
 {
 	global $IntimItems;
@@ -1003,6 +1013,11 @@ function IntimItems()
 	return $IntimItems;
 }
 
+/**
+ * @param $user_id
+ * @return array
+ * возвращает массив id юзеров, на чьи цены подписан юзер
+ */
 function Folows($user_id)
 {
     $qwe = qwe("
@@ -1069,5 +1084,37 @@ function modes($mode)
     </form>
     <hr>
     <?php
+}
+
+/**
+ * возвращает массив итемов, крафт которых может быть изменён при изменении цены исходного итема
+ */
+function DependentItems($item_id, $arr=[],$i=0)
+{
+    $i = intval($i);
+    $i++;
+
+    $qwe = qwe("
+    Select result_item_id, ismat 
+    from craft_materials 
+    inner join items on craft_materials.result_item_id = items.item_id
+    and craft_materials.item_id = '$item_id' 
+    and items.on_off
+    group by result_item_id
+    ");
+    if(!$qwe or $qwe->num_rows == 0)
+        return [];
+
+    foreach ($qwe as $q)
+    {
+        $id = $q['result_item_id'];
+        $ismat = $q['ismat'];
+        $arr[] = $id;
+        if($ismat)
+            $arr = DependentItems($id, $arr,$i);
+    }
+    $arr = array_unique($arr);
+    sort($arr);
+    return $arr;
 }
 ?>

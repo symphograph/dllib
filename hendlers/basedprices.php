@@ -12,6 +12,11 @@ $user_id = $muser;
 ?>
 <h3>Базовые ресурсы</h3>
 <p>Стоит определиться с их стоимостью</p>
+<div class="PrColorsInfo">
+    <span style="background-color:#f35454">Чужая цена</span>
+    <span style="background-color:#dcde4f">Цена друга</span>
+    <span style="background-color:#79f148">Ваша цена</span>
+</div>
 <div class="prices">
 
 <?php

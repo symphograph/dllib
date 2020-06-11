@@ -51,8 +51,6 @@ $ver = random_str(8);
         <div class="modes"></div>
         <?php modes($mode); ?>
 
-
-
         <div class="PrColorsInfo">
             <span style="background-color:#f35454">Чужая цена</span>
             <span style="background-color:#dcde4f">Цена друга</span>
