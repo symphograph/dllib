@@ -226,5 +226,32 @@ $('#all_info').on('click','.itim',function(){
 	var url = 'catalog.php?item_id='+item_id;
 	window.location.href = url;
 });
+
+$('#all_info').on('click','.item_name',function(){
+    var txt = $(this).text();
+    selectText(this.id);
+    document.execCommand("copy");
+    $(this).html(txt +=' ');
+    $(this).html(txt);
+
+});
+function selectText(elementId) {
+    var doc = document,
+        text = doc.getElementById(elementId),
+        range,
+        selection;
+
+    if (doc.body.createTextRange) {
+        range = document.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
+    } else if (window.getSelection) {
+        selection = window.getSelection();
+        range = document.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+}
 </script>
 </html>

@@ -54,6 +54,7 @@
 
 .item_name {
 	white-space: nowrap;
+	cursor: copy;
 }
 
 

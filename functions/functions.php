@@ -464,6 +464,14 @@ function dbCleaner()
         ('$user_id', '$item_id')
         ");
     }
+
+	qwe("
+    DELETE from user_buys
+    WHERE user_id NOT IN
+    (SELECT mail_id FROM mailusers)
+    OR item_id NOT IN
+    (SELECT item_id from items WHERE on_off)
+    ");
 }
 
 function PriceValidator($array=[])

@@ -219,7 +219,32 @@ if($myip)
 	<?php
 }
 ?>
-	
+    $('#all_info').on('click','#mitemname',function(){
+        var txt = $(this).text();
+        selectText(this.id);
+        document.execCommand("copy");
+        $(this).html(txt +=' ');
+        $(this).html(txt);
+
+    });
+    function selectText(elementId) {
+        var doc = document,
+            text = doc.getElementById(elementId),
+            range,
+            selection;
+
+        if (doc.body.createTextRange) {
+            range = document.body.createTextRange();
+            range.moveToElementText(text);
+            range.select();
+        } else if (window.getSelection) {
+            selection = window.getSelection();
+            range = document.createRange();
+            range.selectNodeContents(text);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    }
 /*
  $('body').on( {
    'mouseenter':function() { console.log("enter"); },
