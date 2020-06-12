@@ -211,10 +211,10 @@
 }
 
 .top select {
-	border: none;
+	border: 1px solid;
 	background: none;
 	color: #6c3f00;
-	height: 1em;
+	height: 1.3em;
 	/*padding: 0.5em;*/
 	box-sizing: content-box;
 	font-size: 1em;
@@ -258,7 +258,7 @@ h2 span {
 }
 
 .sortrow select {
-	border: none;
+	border: 1px solid;
 	background: none;
 	color: #6c3f00;
 	height: 2.2em;
@@ -266,12 +266,12 @@ h2 span {
 	box-sizing:border-box;
 	font-size: 1em;
 	outline: none;
-	width: 11em;
+	width: 7em;
 }
 
 select:hover {
-	
-	border: 1px solid;
+
+	border-color: #2d5519;
 }
 
 .pack_row0, .pack_row1 {

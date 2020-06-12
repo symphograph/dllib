@@ -134,11 +134,11 @@ main {
 }
 
 select {
-	/*border: none;*/
+	border: 1px solid;
 	background: none;
 	color: #6c3f00;
-	height: 1em;
-	padding: 0.5em;
+	height: 2em;
+	/*padding: 0.5em;*/
 	box-sizing: content-box;
 	font-size: 1em;
 	outline: none;
@@ -147,6 +147,7 @@ select {
 select:hover {
 	
 	border: 1px solid;
+	border-color: #2d5519;
 }
 .pricecell_date_row {
 	/*display: grid;*/
