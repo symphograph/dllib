@@ -32,32 +32,29 @@ if($val)
 	
 
 	$craft_id = BestCraftForItem($user_id,$item_id);
-	if($craft_id)
-	{
-		qwe("
-		UPDATE `user_crafts`
-		SET `isbest` = 3,
-		auc_price = '$auc_price'		
-		WHERE `user_id` = '$user_id'
-		AND `craft_id` = '$craft_id'
-		");
-		
-	}else
+	if(!$craft_id)
 	{
 		include $_SERVER['DOCUMENT_ROOT'].'/edit/funct-obhod2.php';
 		include $_SERVER['DOCUMENT_ROOT'].'/cat-funcs.php';
 		include $_SERVER['DOCUMENT_ROOT'].'/includs/recurs.php';
 		$craft_id = BestCraftForItem($user_id,$item_id);
 		if(!$craft_id) die('craft_error');
-		qwe("
-		UPDATE `user_crafts`
-		SET `isbest` = 3,
-		auc_price = '$auc_price'		
-		WHERE `user_id` = '$user_id'
-		AND `craft_id` = '$craft_id'
-		");
-	}
-	
+    }
+
+    qwe("
+    UPDATE `user_crafts`
+    SET `isbest` = 3,
+    auc_price = '$auc_price'		
+    WHERE `user_id` = '$user_id'
+    AND `craft_id` = '$craft_id'
+    ");
+
+    qwe("
+    REPLACE INTO user_buys
+    (user_id, item_id)
+    values 
+    ('$user_id', '$item_id')
+    ");
 	qwe("
 	DELETE FROM `user_crafts`
 	WHERE `user_id` = '$user_id' 
@@ -65,10 +62,8 @@ if($val)
 	");
 	
 	qwe("
-
-	INSERT IGNORE `prices`
-
-	(`item_id`,`user_id`,`auc_price`,`server_group`,`time`)
+	INSERT IGNORE prices
+	(item_id, user_id, auc_price, server_group, time)
 	VALUES
 	('$item_id','$user_id','$auc_price','$server_group',NOW())
 	");
@@ -77,12 +72,17 @@ if($val)
 }
 else
 {
-	//$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 	qwe("
 	DELETE FROM `user_crafts`
 	WHERE `user_id` = '$user_id' 
 	AND (`item_id` = '$item_id' OR `isbest` < 2)
 	");
+
+    qwe("DELETE FROM user_buys
+    WHERE user_id = '$user_id'
+    AND item_id = '$item_id'
+    ");
+
 	echo 'ok';
 }	
 ?>

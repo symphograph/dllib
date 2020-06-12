@@ -456,7 +456,13 @@ function dbCleaner()
 	$qwe = qwe("SELECT * FROM user_crafts WHERE isbest = 3");
 	foreach ($qwe as $q)
     {
-        //qwe("REPLACE INTO ");
+        extract($q);
+        qwe("
+        REPLACE INTO user_buys
+        (user_id, item_id)
+        values 
+        ('$user_id', '$item_id')
+        ");
     }
 }
 

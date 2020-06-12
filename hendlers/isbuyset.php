@@ -45,6 +45,13 @@ if($isbuy == 3)
 	VALUES
 	('$item_id','$user_id','$auc_price','$server_group',NOW())
 	");
+
+    qwe("
+        REPLACE INTO user_buys
+        (user_id, item_id)
+        values 
+        ('$user_id', '$item_id')
+        ");
 	echo 'ok';
 }
 if($isbuy == 1)
@@ -55,6 +62,11 @@ if($isbuy == 1)
 	WHERE `user_id` = '$user_id' 
 	AND (`item_id` = '$item_id' OR `isbest` < 2)
 	");
+
+	qwe("DELETE FROM user_buys
+    WHERE user_id = '$user_id'
+    AND item_id = '$item_id'
+    ");
 	echo 'ok';
 }	
 ?>
