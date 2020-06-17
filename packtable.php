@@ -56,8 +56,15 @@ if(isset($_POST['perc']) and ctype_digit($_POST['perc']))
 		</div>
 	</div>
 
+    <div class="siol">
+        <div class="nicon_out ">
+            <a href="/routestime.php">
+                <label class="navicon" style="background-image: url(../img/icons/50/icon_item_0474.png);"></label>
+            </a>
+            <div class="navname">Время в пути</div>
+        </div>
+    </div>
 
-	
 	<div class="siol">
 		<div class="nicon_out ">
 			<a href="/packres.php">

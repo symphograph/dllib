@@ -1,4 +1,7 @@
-<?php 
+<?php
+header("Location: packtable.php");
+exit();
+
 require_once 'includs/ip.php';
 //if(!isset($_COOKIE['cldbid']))
  include_once 'tscheck.php';

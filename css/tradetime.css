@@ -1,0 +1,47 @@
+.timetable{
+    /*display: grid;*/
+    /*grid-template-columns: max-content max-content max-content;*/
+   /* grid-gap: 15px 15px;*/
+   /* grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-gap: 2vw;
+    width: 100%;*/
+    max-width: 460px;
+    margin: auto;
+}
+
+.zones{
+
+}
+
+.wayarea{
+    border: 1px solid;
+    padding: 1em;
+    border-radius: 3px;
+    min-width: 300px;
+}
+
+input[type="number"]{
+    width: 3em;
+    height: 100%;
+    border: none;
+}
+
+.inputs{
+    padding: 3px;
+    display: flex;
+    baseline-shift: sub;
+    justify-content: space-between;
+
+}
+
+.inputs label{
+    display: flex;
+    align-items: flex-end;
+    height: 33px;
+    /*white-space: nowrap;*/
+}
+
+.inputs select{
+    width: 100%;
+    text-align: left;
+}

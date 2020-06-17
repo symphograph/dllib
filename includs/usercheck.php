@@ -7,7 +7,7 @@ $BotName = is_bot();
 if(empty($_COOKIE['identy']) and (!$BotName))
 CookieTest();
 $userinfo_arr = Metka($ip,$BotName);
-//setcookie("test","");
+
 $user_id = $userinfo_arr['muser'];
 
 $identy = $userinfo_arr['identy'];

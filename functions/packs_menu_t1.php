@@ -117,7 +117,7 @@ function PackTypeButtons()
 	<div class="sortmenu">	
 		<div class="nicon_out">
 			<input type="radio" id="sort_1" name="sort" value="1">
-			<label class="navicon" for="sort_1" style="background-image: url(../img/packmaker.png?ver2);"></label>
+			<label class="navicon" for="sort_1" style="background-image: url(../img/packmaker.png?ver=2);"></label>
 			<div class="navname">Откуда</div>
 		</div>
 		<div class="nicon_out">

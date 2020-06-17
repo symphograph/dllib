@@ -437,6 +437,7 @@ function dbCleaner()
     WHERE
     mail_id NOT IN ( SELECT user_id FROM prices GROUP BY user_id ) 
     AND `mode` = 1 
+    AND mail_id NOT IN ( SELECT user_id FROM user_routimes GROUP BY user_id )
     AND email IS NULL
     AND TO_DAYS(`last_time`) < TO_DAYS(NOW())-1
 	");
@@ -1069,7 +1070,7 @@ function ColorPrice($auc_arr)
 function modes($mode)
 {
     $chks = ['','checked'];
-    $mode_names = ['','Наивность', 'Маргинал', 'Хардкор'];
+    $mode_names = ['','С миру по нитке', 'Доверие', 'Хардкор'];
     $mode_tooltips =
         [
             '',
@@ -1130,5 +1131,41 @@ function DependentItems($item_id, $arr=[],$i=0)
     $arr = array_unique($arr);
     sort($arr);
     return $arr;
+}
+
+function SelectZone($zone_start=0)
+{
+    $zone_start = intval($zone_start);
+    if(!$zone_start)
+    {
+        $qwe = qwe("
+        select * from zones 
+        where zone_id < 30
+        order by side, zone_name
+        ");
+
+        $input_name = 'from_id';
+    }else
+    {
+        $qwe = qwe("
+        SELECT 
+        pack_prices.zone_to as zone_id,
+        zones.zone_name
+        FROM pack_prices
+        INNER JOIN zones ON pack_prices.zone_to = zones.zone_id
+        AND pack_prices.zone_id = '$zone_start'
+        GROUP BY pack_prices.zone_id, pack_prices.zone_to
+        ");
+        $input_name = 'to_id';
+    }
+    ?><select autocomplete="off"  name="<?php echo $input_name?>" id="<?php echo $input_name?>"><?php
+
+
+    foreach($qwe as $q)
+    {
+        extract($q);
+        ?><option value="<?php echo $zone_id?>"><?php echo $zone_name?></option><?php
+    }
+    ?></select><?php
 }
 ?>

@@ -2,6 +2,7 @@
 	<span>&copy; <a  href="https://vk.com/roman_chubich" target="_blank">Граф</a> * <a  href="https://github.com/symphograph/dllib" target="_blank">Github</a> * Шаеда</span>
 <?php
 $email = $email ?? '';
+/*
 if($email == '')
 {   
 ?>
@@ -10,6 +11,7 @@ if($email == '')
 	</div>
 <?php
 }
+*/
 ?> 
 </footer>
 <script type='text/javascript'>

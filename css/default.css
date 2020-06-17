@@ -467,3 +467,9 @@ summary {
 	height: 30px;
 	text-align: center;
 }
+
+hr{
+	height: 1px;
+	border: none;
+	background-color: #ac8863;
+}
