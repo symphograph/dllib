@@ -203,7 +203,7 @@ function MissedList($lost)
 	if(count($valutas) > 0)
 	{
 		$valutas = ItemAny($valutas,'item_name');
-		var_dump($valutas);
+		//var_dump($valutas);
 		//printr($valutas);
 		foreach($valutas as $k => $v)
 		{
@@ -418,7 +418,7 @@ function BestCraftWay($query, $user_id, $all_or,$mater_need)
 
 function SumOr($item_id, $user_id, $best_arr)
 {
-	var_dump($best_arr);
+	//var_dump($best_arr);
 	$bestcraft_str = implode(' ,',$best_arr);
 	$query = qwe("SELECT sum(`labor_need`) as `sum_or`,
 	`crafts`.`prof_id`,

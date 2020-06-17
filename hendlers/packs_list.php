@@ -57,44 +57,25 @@ if(!count($types)>0)
 
 $typess = implode(',',$types);
 
-$coalprice = PriceMode(32103,$user_id);
+$coalprice = PriceMode(32103,$user_id) ?? 0;
 if($coalprice)
 {
 	$coalprice = $coalprice['auc_price'];
-	/*
-	$coalprice = intval($coalprice);
-	if($coalprice > 0)
-	qwe("REPLACE INTO `prices` (`user_id`, `item_id`, `server_group`, `auc_price`, `time`) 
-	VALUES
-	('$user_id','32103', '$server_group', '$coalprice', '2018-02-02 00:00:00')
-	");
-	*/
 }
 
-$shellprice = PriceMode(32106,$user_id);
+$shellprice = PriceMode(32106,$user_id) ?? 0;
 if($shellprice)
 {
 	$shellprice = $shellprice['auc_price'];
-	/*
-	$shellprice = intval($shellprice);
-	if($shellprice > 0)
-	qwe("REPLACE INTO `prices` (`user_id`, `item_id`, `server_group`, `auc_price`, `time`) 
-	VALUES
-	('$user_id','32106', '$server_group', '$shellprice', '2018-02-02 00:00:00')
-	");
-	*/
 }
 include '../cat-funcs.php';
 include '../edit/funct-obhod2.php';
 if(in_array(4,$types))
 {
-	if(!$coalprice or !$shellprice) 
-	{
-		MissedList([32103,32106]);
-		echo '<br><hr>';
-		//die('<h2>Настройте цену растворов</h2>');
-	}
-		
+        if(!$coalprice)
+            $lost[] = 32103;
+        if(!$shellprice)
+            $lost[] = 32106;
 }
 
 
@@ -123,9 +104,12 @@ foreach($packs_q as $pack)
 }
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+
 if(isset($lost) and count($lost)>0)
 {
+
 	MissedList($lost);
+	qwe("delete FROM user_crafts where user_id = '$user_id' AND isbest < 2");
 	exit();
 }
 

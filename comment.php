@@ -10,7 +10,7 @@ $uri_from = $_SERVER['HTTP_REFERER'];
 $item_id = intval($_POST['item_id']);
 if(!$item_id) exit('item_id');
 $text = $_POST['text'];
-var_dump($text);
+//var_dump($text);
 //$text = strip_tags($text);
 $text = mysqli_real_escape_string($dbLink,$text);
 
