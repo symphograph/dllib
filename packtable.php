@@ -126,7 +126,8 @@ function perselect($per)
 <div class="clear"></div>
 <hr>
 
-</form>	
+</form>
+    <div id="plz"><a href="routestime.php">Поделитесь</a>, пожалуйста, знанием о времени перевозки.</div>
 <div id="tiptop"></div>
 </div>
 	
