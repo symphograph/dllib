@@ -586,7 +586,7 @@ function DwnCraftList($item_id)
 			all_trash($user_id, $item_id, $result_amount*$u_amount, $mat_deep);
 			
 			//if($mat_deep > 1)
-				include '../all_res.php';
+			include $_SERVER['DOCUMENT_ROOT'].'/includs/all_res.php';
 			qwe("DELETE FROM `craft_all_mats` WHERE `user_id` = '$user_id'");
 			qwe("DELETE FROM `craft_all_trash` WHERE `user_id` = '$user_id'");
 			?></div><div class="clear"><?php
