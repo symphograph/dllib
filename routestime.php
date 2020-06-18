@@ -221,6 +221,7 @@ $(document).ready( function(){
 });
 $('#form').on('input',function()
 {
+    istractor();
     LoadTimes();
 });
 function LoadTimes(){
