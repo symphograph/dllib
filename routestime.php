@@ -28,7 +28,7 @@ $ver = random_str(8);
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
 <?php if(!$ismobiledevice)
 {
 	?><script type="text/javascript" src="js/tooltips.js?ver=<?php echo md5_file('js/tooltips.js')?>"></script><?php
@@ -292,9 +292,6 @@ function SendTime() {
         url: "hendlers/tradetimeadd.php", // путь к ajax файлу
         type: "POST",      // тип запроса
 
-
-
-
         data: form.serialize(),
 
         dataType: "html",
@@ -308,31 +305,5 @@ function SendTime() {
     });
 }
 
-<?php
-/*
-google.charts.load('current', {'packages':['table']});
-google.charts.setOnLoadCallback(drawTable);
-
-function drawTable() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Name');
-    data.addColumn('string', 'Salary');
-    data.addColumn('string', 'ffff1');
-    data.addColumn('string', 'ffff2');
-    data.addColumn('string', 'ffff3');
-    data.addColumn('string', 'ffff4');
-    data.addColumn('string', 'ffff5');
-    data.addColumn('string', 'ffff6');
-    data.addColumn('string', 'ffff7');
-    data.addRows([
-        <?php echo $rows;?>
-    ]);
-
-    var table = new google.visualization.Table(document.getElementById('table_div'));
-
-    table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
-}
-*/
-?>
 </script>
 </html>
