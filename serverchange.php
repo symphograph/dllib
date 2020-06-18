@@ -12,13 +12,12 @@ qwe($sqldel);
 
 
 $path_white = [
-'enchant' => 'enchant.php', 
-'packtable' => 'packtable.php',
-'user_customs' => 'user_customs.php',
-'catalog' => 'catalog.php',
-'user_prices' => 'user_prices.php',
-'users' => 'users.php',
-'packres' => 'packres.php'
+'packtable' => '/packtable.php',
+'user_customs' => '/user_customs.php',
+'catalog' => '/catalog.php',
+'user_prices' => '/user_prices.php',
+'users' => '/users.php',
+'packres' => '/packres.php'
 ];
 $path = $path_white[$_COOKIE['path']];
 
@@ -26,5 +25,5 @@ if(in_array($path,$path_white))
 	$url = $path;
 else 
 	$url = 'packtable.php';
-?>
+header ('Location: '.$url);?>
 <meta http-equiv="refresh" content="0; url=<?php echo $url?>">

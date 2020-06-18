@@ -50,8 +50,7 @@ foreach($qwe as $q)
 
 //echo mb_detect_encoding($description);
 $description = mysqli_real_escape_string($dbLink,$description);
-//$regex = '/((?<=[а-я])[А-Я]|[А-Я](?=[а-я]))/ui';
-//$regex = '/(?<!^)((?<![[:upper:]])[[:upper:]]|[[:upper:]](?![[:upper:]]))/';
+
 $regex = '/((?<=\p{Ll})\p{Lu}|\p{Lu}(?=\p{Ll}))/ui';
 $description = preg_replace( $regex, ' $1', $description );
 $description = preg_replace("/ {2,}/"," ",$description);
@@ -105,9 +104,9 @@ $description = preg_replace("/ {2,}/"," ",$description);
 		
 		if($myip)
 		{
-			?><a href="edit/recedit.php?addrec=<?php echo $item_id?>" target="_blank"><button class="def_button">Добавить рецепт</button></a><br><?php
-			?><a href="edit/edit_item.php?item_id=<?php echo $item_id?>"><button class="def_button">Править итем</button></a><br><?php
-			?><a href="edit/item_off.php?item_id=<?php echo $item_id?>"><button class="def_button">отключить</button></a><br><?php
+			?><a href="/edit/recedit.php?addrec=<?php echo $item_id?>" target="_blank"><button class="def_button">Добавить рецепт</button></a><br><?php
+			?><a href="/edit/edit_item.php?item_id=<?php echo $item_id?>"><button class="def_button">Править итем</button></a><br><?php
+			?><a href="/edit/item_off.php?item_id=<?php echo $item_id?>"><button class="def_button">отключить</button></a><br><?php
 		}
 		?>
 	<hr><br><a href="user_customs.php"><button class="def_button">Настройки</button></a>	
@@ -156,13 +155,11 @@ if($craftable)
 	if(($is_trade_npc and $valut_id !=500) or  in_array($item_id,[3,4,5,6,23633]))
 		ValutInfo($q);
 }
-	
-	
-?></div><?php	
-
-?></div><?php	
-
-?></div><?php	
+?>
+        </div>
+    </div>
+</div>
+<?php
 Comments($userinfo_arr,$item_id);
 
 function ValutInfo($q)
@@ -598,6 +595,7 @@ function DwnCraftList($item_id)
 	
 
 }
+
 function PackObject($item_id)
 {
 	global $user_id;
@@ -626,6 +624,7 @@ LEFT JOIN `prof_lvls` ON `user_profs`.`lvl` = `prof_lvls`.`lvl`
 	extract($qwe);
 	return ['pass_labor'=> $pass_labor2];
 }
+
 function MaCubiki($qwe,$u_amount,$craft_price)
 {
 	global $user_id;
@@ -659,21 +658,6 @@ function MaCubiki($qwe,$u_amount,$craft_price)
 		Cubik($item_id,$icon,$mat_grade,$tooltip,$mater_need);
 	}
 	return $money;
-}
-
-
-
-function ValutToGold($item_id)
-{
-	$qwe = qwe("
-	SELECT * FROM `items` 
-	WHERE `item_id` = '$item_id'
-	");
-	if(!$qwe) return false;
-	if($qwe->num_rows == 0) return false;
-	$qwe = mysqli_fetch_assoc($qwe);
-	extract($qwe);
-	
 }
 
 function UpCraftList($item_id)

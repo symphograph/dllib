@@ -320,14 +320,10 @@ input[type='number'] {
 	overflow-y: scroll;
 	display: none;
 	width: 344px;
-	background-color: #C4E158;
+	background-color: #c4e158ed;
 	border: 1px solid rgba(138,89,41,1.00);
 	color: #6c3f00;
 	-moz-opacity: 0.95;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha"(Opacity=95);
-	opacity: 0.95;
-	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=95);
-	filter: alpha(opacity=95);
 	z-index: 99999999;
 	position: absolute;
 	/*top: 24px;*/

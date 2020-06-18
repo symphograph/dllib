@@ -19,7 +19,6 @@ class PathHelper {
 
 	// массив разрешенных значений, чтобы избежать неожиданных значений в куки
 	const PATH_WHITELIST = array(
-    	'enchant' => '../enchant.php', 
     	'packtable' => '../packtable.php',
 		'catalog' => '../catalog.php',
 		'user_customs' => '../user_customs.php',

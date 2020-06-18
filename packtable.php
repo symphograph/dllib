@@ -46,7 +46,7 @@ if(isset($_POST['perc']) and ctype_digit($_POST['perc']))
 
 
 <div class="navcustoms top">
-<h2 class="p_title"><span>Паки <?php echo $aa_ver?> при</span><?php perselect(130);?><span>%</span></h2>	
+<h2 class="p_title"><span>Паки <?php echo $aa_ver?> при</span><?php perselect(130);?><span>%</span></h2>
 	<div class="siol">
 		<div class="nicon_out ">
 			<a href="/user_customs.php">

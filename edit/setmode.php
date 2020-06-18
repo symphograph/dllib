@@ -9,7 +9,6 @@ qwe("UPDATE `mailusers` SET `mode` = '$setmode' WHERE BINARY `identy` = '$identy
 $sql="DELETE FROM `user_crafts` WHERE `user_id` = '$user_id' and `isbest` <2";
 qwe($sql);
 $path_white = [
-    'enchant' => 'enchant.php',
     'packtable' => 'packtable.php',
     'user_customs' => 'user_customs.php',
     'catalog' => 'catalog.php',
