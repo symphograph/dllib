@@ -60,7 +60,7 @@ foreach ($qwe as $q)
         <div class="nicon_out">
 
 
-            <label class="navicon" for="<?php echo $mail_id?>" style="background-image: url(<?php echo $avafile?>);"></label>
+            <label class="navicon" for="<?php echo $tuser_id?>" style="background-image: url(<?php echo $avafile?>);"></label>
 
             <div class="persnames">
                 <div class="mailnick"><b><?php echo $tuser_nick?></b></div>

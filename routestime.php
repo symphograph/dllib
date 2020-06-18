@@ -39,7 +39,7 @@ $ver = random_str(8);
 <body>
 
 <?php include_once 'includs/header.php';
-//$puser_nick = AnyById($puser_id,'mailusers','user_nick')[$puser_id];
+
 	  
 ?>
 <main>
