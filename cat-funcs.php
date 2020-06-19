@@ -1,32 +1,5 @@
 <?php
 
-function orrepcost($user_id, $server_group)
-{
-	global $orcost, $repprice, $honorprice, $dzprice, $soverprice;
-	$specialq = qwe("SELECT * from `prices` where `item_id` in (2, 3, 4,5,6, 23633) 
-	AND `server_group` = '$server_group' 
-	AND `user_id` = '$user_id' 
-	ORDER BY `time` DESC ");
-	$orcost = $repprice = $honorprice = $dzprice = $soverprice = false;
-	foreach($specialq as $skey)
-		{
-			if($skey['item_id'] == 2) $orcost = $skey['auc_price'];
-			if($skey['item_id'] == 3) $repprice = $skey['auc_price'];
-			if($skey['item_id'] == 4) $honorprice = $skey['auc_price'];
-			if($skey['item_id'] == 23633) $dzprice = $skey['auc_price'];
-		} 
-//var_dump($repprice);
-	if(!$orcost) $orcost = 1;
-	if(!$repprice) $repprice = RepMedian($server_group,'Ремесленная репутация');
-	if(!$honorprice) $honorprice = RepMedian($server_group,'Честь');
-	
-	$orrepcost[2] = $orcost;
-	$orrepcost[3] = $repprice;
-	$orrepcost[4] = $honorprice;
-	$orrepcost[23633] = $dzprice;
-	return $orrepcost;
-}
-
 function auc_price($itemq, $item_id, $auc_price, $spec_price, $myprice, $user_id)
 {
 	//var_dump($user_id);
@@ -102,49 +75,6 @@ function MoneyLine($auc_price,$item_id)
 	<input type="number" name="setbronze" value= "<?php echo $bro;?>" id="silbro_down" autocomplete="off" max="99"><?php echo $img_bronze;?></div>
 	<?php
 }
-
-function parent_recs_ecco($item_id, $hrefself, $dbLink)
-{
-	$queryhi = qwe("
-	SELECT DISTINCT 
-	`items`.`item_name`, 
-	`crafts`.`result_item_id`, 
-	concat(items.icon,'.png') as icon 
-	FROM `crafts`
-INNER JOIN `items` ON items.item_id = `crafts`.`result_item_id` AND `items`.`on_off` = 1
-	WHERE `crafts`.`on_off` = 1
-	AND `craft_id` in
-	(SELECT DISTINCT `craft_materials`.`craft_id`
-	FROM `craft_materials`
-	WHERE `craft_materials`.`item_id` = '$item_id'
-	AND `craft_materials`.`mater_need` > 0)
-	AND `result_item_id` in
-	(select `item_id` FROM `items`
-	WHERE `on_off` = 1
-	AND `item_name` is NOT NULL 
-	AND `item_name` != '')
-	ORDER BY `deep` DESC, `result_item_id`");
-	if (mysqli_num_rows($queryhi)>0)
-	{
-		echo '<details class="for1" open="open"><summary><b>Используется в рецептах:</b></summary><div class="hirec">';
-		while ($array = mysqli_fetch_assoc($queryhi))
-		{
-			$result_item_name =$array['item_name'];
-			$result_item_id =$array['result_item_id'];
-			//$item_link= str_replace(" ","+",$result_item_name); 
-			echo '<a href="'.$hrefself.'?query_id='.$result_item_id.'" title="'.$result_item_name.'"  data-toggle="tooltip" data-placement="top">';
-			?>
-			<div class="itemline-hi"> <div class="itim" style="background-image: url(img/icons/50/<?php echo $array['icon'];?>)"></div>
-			</div></a>
-			<?php
-		}
-		echo '</div></details>';
-	}
-	else 
-	{
-		echo '<div class="for1"><b>Не используется в рецептах.</b></div>';
-	}; 
-};
 
 ////Материалы
 function all_res($user_id, $mat_id, $mater_need2, $mat_deep)
@@ -298,23 +228,6 @@ function all_trash($user_id, $mat_id, $mater_need2, $mat_deep)
 	//return($mat_deep);
 	//echo '</details></ul>';
 }
-
-function GradeInfo($item_id,$basic_grade)
-{
-	if($basic_grade < 1) 
-		$basic_grade = 1;
-	
-	$query_basic_grade = qwe("SELECT * FROM `grades` WHERE `id` = '$basic_grade'");
-	
-	foreach($query_basic_grade as $qbg)
-	{
-		$grade_arr[0] = $qbg['color'];
-		$grade_arr[1] = $qbg['gr_name'];
-		$grade_arr[2] = $qbg['chance_craft'];
-		return($grade_arr);
-	}
-}
-
 
 /**
  * Для выяснения всех необходимых итемов для расчета всего дерева.
