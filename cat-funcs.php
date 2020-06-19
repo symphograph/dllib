@@ -299,139 +299,6 @@ function all_trash($user_id, $mat_id, $mater_need2, $mat_deep)
 	//echo '</details></ul>';
 }
 
-
-//Вывод ПОСЧИТАННЫХ материалов рецепта и их суммарной стоимости.
-function last_alter_crafts($key, $dbLink, $craft_id, $orcost, $user_id, $or, $u_amount)
-{	
-	global $matrow, $total, $crft_nalog;
-	$hrefself = $_SERVER['PHP_SELF'];
-	$itog = $key['result_amount'];
-	$res_name = $key['result_item_name'];
-	$item_id = $key['result_item_id'];
-	$rec_name = $key['rec_name'];
-	$or_need = $or;
-	$profession = $key['profession'];
-	$dood = $key['dood_name'];
-	//$next = $key['next'];
-	if($key['dood_name'] == 'Лаборатория')
-	$itog = $itog*1.1;
-	$query2 = qwe("
-	SELECT 
-	`craft_materials`.`mater_need`, 
-	`items`.`item_name`, 
-	`items`.`price_buy`, 
-	`items`.`price_sale`, 
-	`items`.`price_type`, 
-	`items`.`is_trade_npc`, 
-	`items`.`item_id`, 
-	`items`.`craftable`,
-	`craft_materials`.`mat_grade`,
-	`items`.`icon`,
-	user_crafts.craft_price
-	FROM `craft_materials`
-	INNER JOIN `items` ON `items`.`ismat` = 1 AND 
-	`craft_materials`.`craft_id` = '$craft_id' AND 
-	`items`.`item_id` = `craft_materials`.`item_id` AND 
-	`items`.`on_off` = '1'
-	LEFT JOIN user_crafts ON user_crafts.craft_id = `craft_materials`.`craft_id` AND user_crafts.user_id = '$user_id'
-	ORDER BY `item_id`");
-	$sum = 0; $matrow = array(); $crft_nalog = 0;
-	foreach($query2 as $ikey)
-		{
-			$price_type = $ikey['price_type'];
-			if($price_type == '') $price_type ='gold';
-			$mater_need = $ikey['mater_need'];
-			$matname = $ikey['item_name'];
-			$npc = ($ikey['is_trade_npc'] > 0);
-			$craftable = ($ikey['craftable'] > 0);
-			$pr = $ikey['price_buy'];
-			$mat_grade = $ikey['mat_grade'];
-			//if($next == 1 and $mater_need < 0) $pr = $pr*0.9;
-			$mater = $ikey['item_id'];
-			$total = $ikey['craft_price'];
-
-			if($npc)
-			{$pr = $ikey['price_buy'];};
-			if(!$npc and $craftable)
-			{
-
-				$q_craft_pr = qwe("
-				SELECT `craft_price`, `auc_price`  
-				FROM `user_crafts` 
-				WHERE  `isbest` > 0 
-				AND `item_id` = '$mater' 
-				AND `user_id` ='$user_id'");
-				//$cnt = mysqli_num_rows($q_craft_pr);
-				$arrbest = mysqli_fetch_assoc($q_craft_pr);
-				$pr = $arrbest['craft_price'];
-				if($arrbest['auc_price']>0) $pr = $arrbest['auc_price'];
-			}
-			if((!$npc and !$craftable and $mater != '500') or $mater_need<0)
-			{
-				
-
-				
-				$user_aucprice = PriceMode($mater,$user_id);
-				if($user_aucprice)
-				{
-					$pr = $user_aucprice['auc_price'];
-					$price_type = 'gold';
-				}
-				else $pr = 0;
-				
-			}
-			if(in_array($price_type,['Ремесленная репутация','Честь','Очки вклада','Дельфийская звезда']))
-			{
-				$user_aucprice = PriceMode($mater,$user_id);
-				if($user_aucprice)
-				{
-					$pr = $user_aucprice['auc_price'];
-					$price_type = 'gold';
-				}else
-				{
-					$server_group = ServerInfo($user_id);
-					$pr = RepMedian($server_group, $price_type, $user_id);
-					$pr = $pr*$ikey['price_buy'];
-					$price_type = 'gold';
-				}
-			}
-			$pr = intval($pr);
-				$matsum = $mater_need*$pr;
-
-			$sum = $sum+$matsum;
-			
-			if($mater == 500)
-			$crft_nalog = $mater_need;
-             $prs = $pr;
-			if(isset($pr) and $price_type == 'gold') 
-			$prs = round($pr/10000,4);
-			
-			if($pr == 0) $prs = '?';
-			if($mater !== '500')
-				{
-					$grade_color = '#FFFFFF';
-					$grade_name = '';
-					if($mat_grade > 0)
-					{
-						$grade_arr = GradeInfo($mater,$mat_grade);
-						$grade_color = $grade_arr[0];
-						if($mat_grade > 1)
-						$grade_name = ' ('.$grade_arr[1].')';
-					}
-					$item_link= str_replace(" ","+",$ikey['item_name']); 
-					$matrow[] = '<a href="'.$hrefself.'?query_id='.$mater.'">
-					<div class="itemline"><div class="itemprompt" data-title="'.$matname.$grade_name.' по '.$prs.$price_type.'"> 
-					<div class="itim" style="background-image: url(img/grade/icon_grade'.$mat_grade.'.png), url(img/icons/50/'.$ikey['icon'].'.png); border-color: '.$grade_color.';">
-					<div class="itdigit">'.$mater_need*$u_amount.'</div></div></div></div>
-					</a>';
-				};
-		};
-
-	//$total = $sum+($or_need*$orcost);
-	//$total = round($total/$itog)*$u_amount;
-
-};
-
 function GradeInfo($item_id,$basic_grade)
 {
 	if($basic_grade < 1) 
@@ -448,7 +315,17 @@ function GradeInfo($item_id,$basic_grade)
 	}
 }
 
-///Для выяснения всех необходимых итемов для расчета всего дерева.
+
+/**
+ * Для выяснения всех необходимых итемов для расчета всего дерева.
+ * @param $item_id
+ * @param $craftsq
+ * @param $x
+ * @param $crafta
+ * @param $icrft
+ * @param $crdeep
+ * @param $crftorder
+ */
 function res($item_id, $craftsq, $x, $crafta, $icrft, $crdeep, $crftorder)
 {
 	global $crafts, $crdeep, $deeptmp, $craftsq, $icrft, $crftorder, $user_id;
