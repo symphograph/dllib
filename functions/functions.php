@@ -289,7 +289,7 @@ function UserInfo($identy = '')
 		$userinfo_arr['mode'] = $q['mode'] ?? 1;
 		$avafile = $q['avafile'];
 
-		if($avafile and !file_exists('img/avatars/'.$avafile)) 
+		if($avafile and file_exists('img/avatars/'.$avafile))
 			$userinfo_arr['avatar'] = 'img/avatars/'.$avafile;
 		elseif($q['email'])
 		{
@@ -678,8 +678,9 @@ function AvaGetAndPut($ava,$identy)
 		qwe("UPDATE `mailusers` SET `avafile` = '$filename'
 		WHERE BINARY  `identy` = '$identy'
 		");
-	}
-	unlink($tmp);
+	}else
+	    return false;
+
 	return $filename;
 }
 

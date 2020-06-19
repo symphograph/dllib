@@ -20,6 +20,7 @@ if(!$user_id) die('user_id');
 
 $qwe = qwe("
 SELECT
+user_routimes.dur_id,
 user_routimes.user_id as tuser_id,
 user_routimes.time,
 mailusers.user_nick as tuser_nick,
@@ -55,7 +56,7 @@ foreach ($qwe as $q)
     }else
         $avafile = '/img/init_ava.png';
     ?>
-    <div class="persrow">
+    <div class="persrow" id="row_<?php echo $dur_id?>">
 
         <div class="nicon_out">
 
@@ -68,6 +69,20 @@ foreach ($qwe as $q)
             </div>
 
         </div>
+        <?php
+        if($user_id == $tuser_id)
+        {
+            ?><input
+                type="button"
+                 id="<?php echo $dur_id?>"
+                 style="display: block;"
+                 name="dur_id" class="small_del"
+                 value="del"
+                onclick="DurDel(<?php echo $dur_id?>)"
+                 data-tooltip="Удалить">
+            <?php
+        }
+        ?>
     </div>
 <?php
 }

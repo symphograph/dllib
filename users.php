@@ -1,5 +1,6 @@
 <?php 
 include_once 'includs/usercheck.php';
+include_once 'functions/filefuncts.php';
 setcookie('path', 'users');
 
 $hrefself = '<a href="'.$_SERVER['PHP_SELF'].'?query=';
@@ -119,7 +120,9 @@ foreach($qwe as $q)
 	else 
 		$avafile = 'img/avatars/'.$avafile;
 	
-	if(!file_exists($avafile)) 
+	if(!file_exists($avafile))
+        $avafile = AvaGetAndPut($avatar,$midenty);
+    if(!file_exists($avafile))
 		$avafile = '/img/init_ava.png';
 	if(!$user_nick) 
 		$user_nick = NickAdder($mail_id);

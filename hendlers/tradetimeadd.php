@@ -5,8 +5,17 @@ if(!$from_id) die('Откуда?');
 $to_id = $_POST['to_id'] ?? 0;
 $to_id = intval($to_id);
 if(!$to_id) die('Куда?');
+
 include_once $_SERVER['DOCUMENT_ROOT'].'/includs/usercheck.php';
 if(!$user_id) die('user_id');
+
+$ptoken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? 0;
+$ptoken = OnlyText($ptoken);
+$token = AskToken();
+if((!$token) or (!$ptoken) or $ptoken != $token)
+    die('token');
+
+
 if(!isset($_POST['transport'])) die('На чём?');
 $transport = intval($_POST['transport']);
 //var_dump($transport);
@@ -31,10 +40,25 @@ if(isset($_POST['buff']))
 }
 if($transport != 1)
     $buff_1 = 0;
+
+$qwe = qwe("
+Select * from user_routimes 
+where (user_id, from_id, to_id, transport, buff_1, buff_2, buff_3) 
+          = 
+      ($user_id, $from_id, $to_id, $transport, $buff_1, $buff_2, $buff_3)");
+if($qwe and $qwe->num_rows > 0)
+{
+    $qwe = mysqli_fetch_assoc($qwe);
+    $dur_id = $qwe['dur_id'];
+}else
+{
+    $dur_id = EmptyIdFinder('user_routimes','dur_id');
+}
+
 qwe("
 replace into user_routimes
-(user_id, from_id, to_id, transport, buff_1, buff_2, buff_3,durway,time) VALUES 
-('$user_id', '$from_id', '$to_id', '$transport', '$buff_1', '$buff_2', '$buff_3', '$time', now())
+(dur_id,user_id, from_id, to_id, transport, buff_1, buff_2, buff_3,durway,time) VALUES 
+('$dur_id', '$user_id', '$from_id', '$to_id', '$transport', '$buff_1', '$buff_2', '$buff_3', '$time', now())
 ");
 
 ?>

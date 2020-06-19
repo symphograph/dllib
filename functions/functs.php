@@ -1,9 +1,9 @@
 <?php
 //Опшенсы простого селекта
-function SelectOpts($query, $col_val, $col_name, $sel_val, $defoult)
+function SelectOpts($query, $col_val, $col_name, $sel_val, $default)
 {	$selected = '';
- if($defoult)
-	echo '<option value="0">'.$defoult.'</option>';
+ if($default)
+	echo '<option value="0">'.$default.'</option>';
 	foreach($query as $q)
 	{
 		if($sel_val)

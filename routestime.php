@@ -19,8 +19,9 @@ $ver = random_str(8);
 
 <meta charset="utf-8">
 <meta name = "description" content = "Калькулятор себестоимости ресурсов Archeage." />
-  <meta name = "keywords" content = "Умный калькулятор, archeage, архейдж, крафт" />
-  <meta name=“robots” content=“index, nofollow”>
+<meta name = "keywords" content = "Умный калькулятор, archeage, архейдж, крафт" />
+<meta name=“robots” content=“index”>
+<meta name="token" content="<?php echo SetToken()?>">
 <title>Время в пути</title>
 <link href="css/default.css?ver=<?php echo md5_file('css/default.css')?>" rel="stylesheet">
 <link href="css/user_prices.css?ver=<?php echo md5_file('css/user_prices.css')?>" rel="stylesheet">
@@ -199,16 +200,17 @@ window.onload = function() {
     LoadTimes();
 };
 function istractor() {
+    var buff = $("#buff_1");
     if($('#trans_1').prop("checked"))
     {
        // console.log("yes");
-        $("#buff_1").show(0);
+        buff.show(0);
     }else
     {
        // console.log('no');
+        buff.find("input[type=checkbox]").prop("checked", false);
+        buff.hide(0);
 
-        $("#buff_1").hide(0);
-        $("#buff_1").find("input[type=checkbox]").prop("checked", false);
     }
 
 }
@@ -231,8 +233,6 @@ function LoadTimes(){
         type: "POST",      // тип запроса
 
         data: $('#form').serialize(),
-
-
         dataType: "html",
         cache: false,
         // Данные пришли
@@ -293,8 +293,10 @@ function SendTime() {
         type: "POST",      // тип запроса
 
         data: form.serialize(),
-
         dataType: "html",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="token"]').attr('content')
+        },
         cache: false,
         // Данные пришли
         success: function(data)
@@ -304,6 +306,24 @@ function SendTime() {
         }
     });
 }
+function DurDel(dur_id)
+{
+    $.ajax({
+        url: "hendlers/deldur.php", // путь к ajax файлу
+        type: "POST",      // тип запроса
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="token"]').attr('content')
+        },
+        data: {
+            dur_id: dur_id
+        },
 
+        // Данные пришли
+        success: function(data) {
+            if(data === "ok")
+            $("#row_"+dur_id).hide();
+        }
+    });
+}
 </script>
 </html>
