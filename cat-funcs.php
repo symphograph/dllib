@@ -1,81 +1,5 @@
 <?php
 
-function auc_price($itemq, $item_id, $auc_price, $spec_price, $myprice, $user_id)
-{
-	//var_dump($user_id);
-	global $HardPersonal;
-	
-	$auc_price_info = PriceMode($item_id,$user_id)['auc_price'] ?? false;
-	
-	$myprice = $auc_price_info['user_id'] == $user_id;
-	if((!$spec_price) or in_array($item_id, $HardPersonal))
-	$auc_price = $auc_price_info['auc_price'];
-	$time = $auc_price_info['time'];
-	if($myprice) 
-		$who = 'вы видели'; 
-		else 
-		$who = 'кто-то видел';
-
-	if($time > 0)
-	$time = date('d.m.Y - H:i', strtotime($time)); else $time = 'Последний раз';
-	
-	echo '<div class="looked"><div class="lookedin"><hr>';
-	//Для итемов, которым обычный расчет не подходит
-	if($spec_price or in_array($item_id, $HardPersonal))
-	{
-		 
-		if(in_array($item_id, $HardPersonal)) 
-			$mess = '<br>Будем считать, что это стоит:<br>';
-		else 
-			$mess = '<br>Можно продать NPC за:<br>';
-
-	} 
-	else
-		$mess = '<br>'.$time.'<br> на аукционе '.$who.' по:<br>';
-	
-	echo $mess;
-	?>
-	<form action="edit/setprice.php" method="POST">
-	<div class="money_area_down">
-	<?php
-	MoneyLine($auc_price);
-	
-	if((!$spec_price) or in_array($item_id, $HardPersonal))
-	{
-		?>
-		<div style="margin-top: 5px; display: inline-block;"></div>
-		<br><br>
-		<input type="submit" class="crft_button" name="sendprice" value="Сохранить">
-		<?php
-	}
-	?>
-	</div>
-	<div class="money-line"><input type="hidden" name="setname" id="search_box" 
-	value="<?php echo $itemq?>" autocomplete="off" display="none">
-	<input type="hidden" name="item_id" id="search_box" 
-	value="<?php echo $item_id?>" autocomplete="off" display="none"></div>
-	</form></div></div>
-	<?php
-};
-
-function MoneyLine($auc_price,$item_id)
-{
-	$gol = strrev(substr(strrev($auc_price),4,10));
-	$sil = strrev(substr(strrev($auc_price),2,2));
-	$bro = strrev(substr(strrev($auc_price),0,2));
-	$img_gold = '<img src="img/gold.png" width="15" height="15" alt="gold"/>';
-	$img_silver = '<img src="img/silver.png" width="15" height="15" alt="gold"/>';
-	$img_bronze = '<img src="img/bronze.png" width="15" height="15" alt="gold"/>';
-	?>
-	<div class="money-line">
-	<input type="number" name="setgold" value= "<?php echo $gol;?>" id="gold_down" autocomplete="off"><?php echo $img_gold;?></div>
-	<div class="money-line">
-	<input type="number" name="setsilver" value= "<?php echo $sil;?>" id="silbro_down" autocomplete="off" max="99"><?php echo $img_silver;?></div>
-	<div class="money-line">
-	<input type="number" name="setbronze" value= "<?php echo $bro;?>" id="silbro_down" autocomplete="off" max="99"><?php echo $img_bronze;?></div>
-	<?php
-}
-
 ////Материалы
 function all_res($user_id, $mat_id, $mater_need2, $mat_deep)
 {  
@@ -298,6 +222,5 @@ function res($item_id, $craftsq, $x, $crafta, $icrft, $crdeep, $crftorder)
 	$crdeep[$item_id] =  $item_id;//Ключ нужен просто для уникального массива.
 	//return($crdeep);
 };
-
 
 ?>
