@@ -219,7 +219,7 @@ if($myip)
 	<?php
 }
 ?>
-    $('#all_info').on('click','#mitemname',function(){
+    $('#all_info').on('click','#mitemname, .item_name',function(){
         var txt = $(this).text();
         selectText(this.id);
         document.execCommand("copy");

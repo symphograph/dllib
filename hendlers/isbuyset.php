@@ -1,6 +1,6 @@
 <?php
 
-require_once '../includs/ip.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 $item_id = $_POST['item_id'] ?? $_GET['item_id'] ?? 0;
 $item_id = intval($item_id);
 if($item_id == 0) exit();

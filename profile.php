@@ -1,9 +1,9 @@
 <?php 
 include_once 'includs/usercheck.php';
-//include_once 'includs/user.php';
-$hrefself = '<a href="'.$_SERVER['PHP_SELF'].'?query=';
+
+//$hrefself = '<a href="'.$_SERVER['PHP_SELF'].'?query=';
 $ver = random_str(8);
-//$token = random_str(8);
+
 $sessmark = OnlyText($_COOKIE['sessmark']);	
 	if(iconv_strlen($sessmark) != 12)
 		die('error_sess');
