@@ -225,7 +225,6 @@ if($myip)
         document.execCommand("copy");
         $(this).html(txt +=' ');
         $(this).html(txt);
-
     });
     function selectText(elementId) {
         var doc = document,
