@@ -1,7 +1,7 @@
 <?php
 include_once 'includs/usercheck.php';
 if(!$myip) exit();
-include_once 'functions/pack_functs.php';
+
 
 
 ?>

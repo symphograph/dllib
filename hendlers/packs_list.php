@@ -4,8 +4,7 @@ if(empty($_POST))
 exit();
 
 include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functions.php';
-include '../functions/pack_functs.php';
-include '../functions/functs.php';
+include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functs.php';
 include_once $_SERVER['DOCUMENT_ROOT'].'/includs/config.php';
 $userinfo_arr = UserInfo();
 if(!$userinfo_arr)
