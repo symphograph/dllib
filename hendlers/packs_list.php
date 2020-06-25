@@ -235,7 +235,14 @@ user_crafts.craft_price,
 pack_prices.valuta_id,
 fresh_data.fresh_per,
 fresh_lvls.fresh_name,
-round(if(packs.pack_t_id=4,coal_price.auc_price/mul*pack_price,pack_price*(1+".($siol/100)."))*(1+fresh_data.fresh_per/100)*$per/100) as take,
+round(
+    if(packs.pack_t_id=4,
+        coal_price.auc_price/mul*pack_price,
+        pack_price/130*100*(1+".($siol/100)."))
+        *(1+fresh_data.fresh_per/100)
+        *$per/100
+        *1.02
+    ) as take,
 round(`pass_labor` * (100 - IFNULL(`save_or`,0)) / 100 + user_crafts.labor_total) AS `labor_all`
 FROM pack_prices 
 INNER JOIN items 

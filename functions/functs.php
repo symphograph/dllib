@@ -1,6 +1,6 @@
 <?php
 //Опшенсы простого селекта
-function SelectOpts($query, $col_val, $col_name, $sel_val, $default)
+function SelectOpts($query, $col_val, $col_name, $sel_val = false, $default = false)
 {	$selected = '';
  if($default)
 	echo '<option value="0">'.$default.'</option>';
@@ -593,5 +593,55 @@ function secToArray($secs)
 	$res['secs'] = $secs % 60;
 
 	return $res;
+}
+
+function FreshTimeSelect($item_id = false, $from_id = false)
+{
+    $per = '';
+    if($item_id)
+    {
+        $item_id = intval($item_id);
+        $from_id = intval($from_id);
+        $qwe = qwe("
+        SELECT 
+        fresh_data.fresh_tstart,
+        fresh_data.fresh_per,
+        fresh_data.fresh_lvl,
+        fresh_data.fresh_group,
+        fresh_data.fresh_type
+        FROM
+        packs
+        INNER JOIN pack_prices ON pack_prices.item_id= packs.item_id AND packs.item_id = '$item_id'
+        INNER JOIN zones ON zones.zone_id = pack_prices.zone_id AND pack_prices.zone_id = '$from_id'
+        INNER JOIN pack_types ON packs.pack_t_id = pack_types.pack_t_id AND pack_types.pack_t_id != 6
+        INNER JOIN fresh_data ON pack_types.fresh_group = fresh_data.fresh_group  
+        AND zones.fresh_type = fresh_data.fresh_type
+        GROUP BY fresh_data.fresh_tstart");
+
+    }else
+    {
+       $qwe = qwe("
+        Select fresh_tstart from fresh_data
+        GROUP BY fresh_tstart;
+        ");
+    }
+
+
+    foreach($qwe as $i)
+    {
+        $time = $i['fresh_tstart'];
+
+        if(($time/60) >= 24)
+            $format = "jд. H:i";
+        else
+            $format = "H:i";
+
+        $pack_time = date($format,$time*60-3600*3-3600*24);
+
+        if($item_id)
+            $per = ' '.$i['fresh_per'].'%';
+
+        ?><option value="<?php echo $time?>"><?php echo $pack_time.$per;?></option><?php
+    }
 }
 ?>

@@ -74,43 +74,16 @@ function PackTypeButtons()
 	</div>		
 	<hr>		
 </div>
-<!--<div class="timerow">
-<div id="package" class="package"></div>
-<div class="slidecontainer"><input type="range" min="0" max="2525" step="15" value="0" class="slider2" id="myRange2"></div>
-</div>-->
+<?php
 
-
-<!--<div class="itemprompt" data-title="Параметры для корректного расчета чистой прибыли">
-<input type="submit" class="crft_button" formaction="user_customs.php" name="customs" value="Настройки">
-</div>-->
+?>
 
 
 <div class="sortrow">
 	
 	<div class="freguency" title="Возраст пака">
 		<select name="pack_age" class="select_input" autocomplete="off" onchange="">
-		<?php
-			$freg_arr = qwe("
-            Select * from fresh_data
-            GROUP BY fresh_tstart;
-            ");
-			foreach($freg_arr as $i)
-			{
-                $time = $i['fresh_tstart'];
-
-                if(($time/60) >= 24)
-                    $format = "jд. H:i";
-                else
-                    $format = "H:i";
-
-                $pack_time = date($format,$time*60-3600*3-3600*24);
-
-				echo '<option value="'.($i['fresh_tstart']).'">';
-                echo $pack_time;
-				echo '</option>';
-				$selected = '';
-			}	
-		?>
+		    <?php FreshTimeSelect() ?>
 		</select>
 	</div>
 
@@ -128,7 +101,7 @@ function PackTypeButtons()
 		<div class="monsort">
 			<div class="nicon_out">
 				<input type="radio" id="sort_3" name="sort" value="3">
-				<label class="navicon" for="sort_3" style="background-image: url(img/icons/50/icon_item_0191.png);"></label>
+				<label class="navicon" for="sort_3" style="background-image: url(img/icons/50/quest/icon_item_quest023.png);"></label>
 				<div class="navname">Выручка</div>
 			</div>
 			<div class="profit_m">

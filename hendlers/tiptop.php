@@ -9,13 +9,19 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
 include_once '../includs/config.php';
 
 $qwe = qwe("
-SELECT max(tip_id) as max FROM tiptops  
+SELECT tip_id FROM tiptops  
 ");
 if(!$qwe or $qwe->num_rows == 0)
 	die;
-$qwe = mysqli_fetch_assoc($qwe);
-$max = $qwe['max'];
-$rand = random_int(1, $max);
+foreach ($qwe as $q)
+{
+    $arr[] = $q['tip_id'];
+}
+$rand = array_rand($arr);
+$rand = $arr[$rand];
+
+
+//$rand = random_int(1, $max);
 
 $qwe = qwe("
 SELECT * FROM tiptops 

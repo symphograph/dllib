@@ -1,0 +1,106 @@
+#rent{
+    max-width: 600px;
+
+}
+
+h1{
+    text-align: center;
+}
+
+#bill{
+    border: 1px solid;
+    border-radius: 4px;
+    width: 95%;
+    min-height: 10em;
+    height: max-content;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 1em;
+}
+
+select{
+    width: 95%;
+    text-align: left;
+}
+
+.selab2>div{
+
+    display: flex;
+    height: 2em;
+    align-content: center;
+    justify-content: space-between;
+}
+.selab2 select{
+    width: 9em;
+}
+.selab{
+    display: flex;
+    justify-content: flex-start;
+    height: 2em;
+}
+.selab2{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+
+}
+.selab2>*{
+    padding-top: 1em;
+}
+label>img{
+    height: 2em;
+    border: 1px solid;
+
+}
+
+input, select{
+    border-radius: 3px;
+}
+
+input[type="number"]{
+    border: none;
+    border: 1px solid;
+    border-color: #6c3f00;
+    font-size: 1em;
+    color: #6c3f00;
+    height: 2em;
+    width: 4em;
+    text-align: center;
+}
+
+.def_button{
+    /*width: 40%;*/
+    width: 3em;
+    background-size: 100% 100%;
+}
+label{
+    display: flex;
+    flex-wrap: nowrap;
+}
+label>span{
+    vertical-align: center;
+    margin: auto;
+}
+
+.perok{
+min-width: 50%;
+}
+
+.pinfo_row{
+    display: flex;
+    justify-content: space-between;
+    cursor: default;
+}
+
+.pharam{
+    text-align: left;
+}
+
+.value{
+    text-align: right;
+}
+
+#newprice{
+    width: 7em;
+}

@@ -50,7 +50,7 @@ function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzAB
 
 function printr($var) 
 {
-$myip = ($_SERVER['REMOTE_ADDR'] == '188.113.161.10');
+global $myip;
 if(!$myip)
 	return;
   echo '<pre>';
