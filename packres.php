@@ -46,7 +46,7 @@ $ver = random_str(8);
             <br>
             <a href="user_prices.php"><button class="def_button">Мои цены</button></a>
             <a href="user_customs.php"><button class="def_button">Настройки</button></a>
-            <a href="packpost.php"><button class="def_button">Пакулятор</button></a>
+            <a href="packpost.php"><button class="def_button">Пак-инфо</button></a>
 
         </div><br><hr>
         <div class="modes"></div>
