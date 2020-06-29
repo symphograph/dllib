@@ -1,4 +1,8 @@
-<?php 
+<?php
+header("Location: /packpost.php");
+die();
+
+
 require_once 'includs/usercheck.php';
 setcookie('path', 'routestime');
 
