@@ -5,10 +5,10 @@ if(!$item_id) die;
 $cooktime = time()+60*60*24*360;
 setcookie("item_id",$item_id,$cooktime,'/');
 require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
-include_once '../functions/functions.php';
-include_once '../functions/functs.php';
-include_once '../cat-funcs.php';
-include_once '../includs/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/functions/functions.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/functions/functs.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/functions/cat-funcs.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/config.php';
 
 $userinfo_arr = UserInfo();
 if(!$userinfo_arr)
@@ -89,8 +89,12 @@ $description = preg_replace("/ {2,}/"," ",$description);
 			else
 			{
 				echo $price_buy;
-				?><a href="catalog.php?item_id=<?php echo $valut_id?>">
-		<img src="img/icons/50/<?php echo IconLink($valut_id)?>.png" width="15" height="15" alt="<?php echo $valut_name?>"/></a><br><br><?php
+				?>
+				<a href="catalog.php?item_id=<?php echo $valut_id?>">
+		        <img src="img/icons/50/<?php echo IconLink($valut_id)?>.png" width="15" height="15" alt="<?php echo $valut_name?>"/>
+		        </a>
+		        <br><br>
+		        <?php
 					
 				if(!$personal)
 				MoneyForm($item_id);	
@@ -98,7 +102,6 @@ $description = preg_replace("/ {2,}/"," ",$description);
 			
 		}elseif($categ_id != 133)
 		{
-			
 			MoneyForm($item_id);	
 		}
 		
@@ -109,7 +112,8 @@ $description = preg_replace("/ {2,}/"," ",$description);
 			?><a href="/edit/item_off.php?item_id=<?php echo $item_id?>"><button class="def_button">отключить</button></a><br><?php
 		}
 		?>
-	<hr><br><a href="user_customs.php"><button class="def_button">Настройки</button></a>	
+	<hr><br>
+	<a href="user_customs.php"><button class="def_button">Настройки</button></a>
 	</div>
 	<div id="catalog_right">
 <?php
@@ -139,12 +143,21 @@ if($craftable)
 	$prof_q = qwe("SELECT * FROM `user_profs` WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
-	require_once '../edit/funct-obhod2.php';
-	include '../includs/recurs.php';
+	require_once $_SERVER['DOCUMENT_ROOT'].'/edit/funct-obhod2.php';
+	require_once $_SERVER['DOCUMENT_ROOT'].'/includs/recurs.php';
 	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 	DwnCraftList($globalitem_id);
 	?></div><?php
+	if(in_array($categ_id,[133]))
+	    {
+	        ?>
+	        <br><hr><br>
+	        <a href="/packpost.php?item_id=<?php echo $item_id?>">
+	            <button type="button" class="def_button">Пакулятор</button>
+	        </a> <?php
+	    }
+
 }else
 {
 	$refuse = IsRefuse($item_id);
@@ -375,12 +388,6 @@ function DwnCraftList($item_id)
 	 
 	 	if($i == 1 and !$personal)
 		{
-			
-			//$u_amount = intval($u_amount);
-		//if(!$u_amount) 
-			//var_dump($u_amount);
-			
-		 //var_dump($u_amount);
 			?>
 			<div id="isbuy">
 				<div class="isby">
@@ -623,41 +630,6 @@ LEFT JOIN `prof_lvls` ON `user_profs`.`lvl` = `prof_lvls`.`lvl`
 	$qwe = mysqli_fetch_assoc($qwe);
 	extract($qwe);
 	return ['pass_labor'=> $pass_labor2];
-}
-
-function MaCubiki($qwe,$u_amount,$craft_price)
-{
-	global $user_id;
-	$i = $money = 0;
-	$flowers = [2178, 3564, 3622,3627,3628,3659,3667,3671,3680,3684,3685,3711,3713,8009,14629,14630,14631,16268,16273,16290];
-	
-	foreach($qwe as $q)
-	{$i++;
-		extract($q);
-
-		 if($item_id == 500)
-		 {
-			 $money = $mater_need;
-			 continue;
-		 }
-		 if($mater_need < 0 and in_array($item_id,$flowers))
-			$matprice =	$craft_price;
-			else 
-		$matprice = UserMatPrice($item_id,$user_id);
-		$matprice = esyprice($matprice);
-		$matprice = htmlspecialchars($matprice);
-		 //var_dump($divisor);
-		$mater_need = round($mater_need*$u_amount,2);
-		$tooltip = $item_name.'<br>'.$mater_need.' шт по<br>'.$matprice;
-
-		if($mat_grade < 2 or !$mat_grade)
-		    $mat_grade = $basic_grade;
-
-		if(!$basic_grade) $basic_grade = 1;
-
-		Cubik($item_id,$icon,$mat_grade,$tooltip,$mater_need);
-	}
-	return $money;
 }
 
 function UpCraftList($item_id)

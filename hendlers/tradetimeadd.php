@@ -1,4 +1,5 @@
 <?php
+//var_dump($_POST);
 if(!isset($_POST['from_id'])) die();
 $from_id = intval($_POST['from_id']);
 if(!$from_id) die('Откуда?');
@@ -39,7 +40,11 @@ if(isset($_POST['buff']))
     $buff_3 = intval($buff_3);
 }
 if($transport != 1)
-    $buff_1 = 0;
+{
+    $buff_2 = 0;
+    $buff_3 = 0;
+}
+
 
 $qwe = qwe("
 Select * from user_routimes 
@@ -55,10 +60,13 @@ if($qwe and $qwe->num_rows > 0)
     $dur_id = EmptyIdFinder('user_routimes','dur_id');
 }
 
-qwe("
+$qwe = qwe("
 replace into user_routimes
-(dur_id,user_id, from_id, to_id, transport, buff_1, buff_2, buff_3,durway,time) VALUES 
+(dur_id,user_id, from_id, to_id, transport, buff_1, buff_2, buff_3,durway,time) 
+VALUES 
 ('$dur_id', '$user_id', '$from_id', '$to_id', '$transport', '$buff_1', '$buff_2', '$buff_3', '$time', now())
 ");
 
+if($qwe)
+    echo 'ok';
 ?>

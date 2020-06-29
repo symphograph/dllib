@@ -212,7 +212,6 @@ function istractor() {
         buff.hide(0);
 
     }
-
 }
 
 $(document).ready( function(){

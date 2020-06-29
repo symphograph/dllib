@@ -114,9 +114,9 @@ ORDER BY `isbased` DESC, ismybuy DESC, `prices`.`time` DESC
 //$checks = ['','checked'];
 
 
-UserPriceList($qwe);
+UserPriceList2($qwe);
 
-function UserPriceList($qwe)
+function UserPriceList2($qwe)
 {
 	global $puser_id, $user_id;
 	
@@ -161,38 +161,11 @@ window.onload = function() {
 $(".small_del").show();
 	
 };
-$('#rent').on('change','#folw',function(){
-	 
-	var condition = Number($(this).prop("checked"))+1;
 
-	//console.log(condition);
-	
-	$.ajax
-	({
-		url: "hendlers/setfolow.php", // путь к ajax файлу
-		type: "POST",      // тип запроса
-		dataType: "html",
-		cache: false,
-		data: {
-			sfolow_id: <?php echo $puser_id?>,
-			condition: condition
-		},
-		// Данные пришли
-		success: function(data) 
-		{
-			/*
-			$(okid).html(data);
-			$(okid).show();
-			setTimeout(function() {$(okid).hide('slow');}, 0);
-			*/
-		}
-	});
-});	
 	
 $('#all_info').on('input','.pr_inputs',function(){
 	
 	var form_id = $(this).get(0).form.id;
-	//var name = $(this).attr("name");
 	
 	SetPrice(form_id);
 	

@@ -46,8 +46,9 @@ $ver = random_str(8);
             <br>
             <a href="user_prices.php"><button class="def_button">Мои цены</button></a>
             <a href="user_customs.php"><button class="def_button">Настройки</button></a>
+            <a href="packpost.php"><button class="def_button">Пакулятор</button></a>
 
-        </div><hr>
+        </div><br><hr>
         <div class="modes"></div>
         <?php modes($mode); ?>
 
@@ -106,6 +107,7 @@ INNER JOIN items
 	ON items.item_id = tmp.item_id 
 	AND items.on_off 
 	AND items.item_id != 500
+    AND (!(items.valut_id = 500 AND items.is_trade_npc))
 LEFT JOIN prices 
 	ON prices.user_id = '$user_id' 
 	AND prices.item_id = items.item_id 
@@ -119,8 +121,8 @@ LEFT JOIN user_crafts
 $qwe = qwe($sql);
 
 $prof_q = qwe("SELECT * FROM `user_profs` where `user_id` ='$user_id'");
-include 'cat-funcs.php';
-include 'edit/funct-obhod2.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/functions/cat-funcs.php';
+include $_SERVER['DOCUMENT_ROOT'].'/edit/funct-obhod2.php';
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 foreach($qwe as $q)
@@ -142,50 +144,6 @@ $folows = Folows($user_id);
 $qwe = qwe($sql);
 UserPriceList($qwe);
 
-function UserPriceList($qwe)
-{
-
-	global $user_id,$userinfo_arr;
-    extract($userinfo_arr);
-	foreach($qwe as $q)
-	{
-		extract($q);
-
-        //var_dump($craft_price);
-     if($is_trade_npc and $valut_id == 500) continue;
-
-		?><div><?php
-
-		$isby = '';
-
-		if($craftable)
-			$isby = intval($isbest)+1;
-		if(!$time)
-			$time = '01-01-0000';
-
-
-        $iscolor = false;
-
-        $pr_arr = PriceMode($item_id,$user_id) ?? false;
-        if($pr_arr)
-        {
-            $auc_price = $pr_arr['auc_price'];
-            $time = $pr_arr['time'];
-            $iscolor = ColorPrice($pr_arr);
-        }
-
-		PriceCell($item_id,$auc_price,$item_name,$icon,$basic_grade,$time,$isby,$iscolor);
-
-        if ($craft_price)
-        {
-            $craft_price = esyprice($craft_price,15,1);
-            ?><div>Крафт:<?php echo $craft_price?></div><?php
-        }
-
-		?></div><?php
-	}
-
-}
 ?>
 </div>
 

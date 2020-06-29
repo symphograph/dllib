@@ -34,19 +34,8 @@ $crftorder[] = $item_id;
 	//echo implode(', ', $crdeep); exit();
 	$userbest =array();
     $b = mysqli_num_rows($querycrafts);
-/*
-	$selucrafts = "SELECT * FROM `user_crafts` WHERE `user_id` = '$user_id' and `isbest` > 1";
-	$quucrafts = qwe($selucrafts);
 
-	foreach($quucrafts as $ucr)
-	{
-		$userbest[$ucr['craft_id']] = $ucr['isbest'] ;
-		//$userbestaucprice[$ucr['craft_id']] =  $ucr['auc_price'];
-		//echo $ucr['craft_id'];
-	}
-	//print_r($userbest); exit();
-*/
-//Если есть непосчитанные рецепты, считаем
+
 if($b > 0)
 {
 	if(!isset($orcost))
@@ -61,7 +50,12 @@ if($b > 0)
 	
 
 
-    if(!in_array($_SERVER['SCRIPT_NAME'],['/hendlers/packs_list.php','/hendlers/isbuysets.php','/packres.php']))
+    if(!in_array($_SERVER['SCRIPT_NAME'],[
+        '/hendlers/packs_list.php',
+        '/hendlers/isbuysets.php',
+        '/packres.php',
+        '/hendlers/packpost/packpostmats.php'
+    ]))
     {
 
         if(count($lost)>0)

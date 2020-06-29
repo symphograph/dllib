@@ -5,6 +5,16 @@ if(!$myip) exit();
 include_once 'functions/functions.php';
 include_once 'includs/config.php';
 
+
+$a = 1;
+$b = '1';
+
+if(!$b)
+    echo 'no';
+else
+    echo 'yes';
+
+die();
 $item_id = 28971;
 $arr = AllPotentialMats($item_id);
 

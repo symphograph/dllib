@@ -67,8 +67,8 @@ if($shellprice)
 {
 	$shellprice = $shellprice['auc_price'];
 }
-include '../cat-funcs.php';
-include '../edit/funct-obhod2.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/functions/cat-funcs.php';
+include $_SERVER['DOCUMENT_ROOT'].'/edit/funct-obhod2.php';
 if(in_array(4,$types))
 {
         if(!$coalprice)
@@ -134,93 +134,9 @@ $craft_price = 1;
 $TradeLvl = ProfLvl($user_id,5);
 
 
-/*
 $query = qwe("
-SELECT *,
-ROUND(profit/labor_all,0) as profitor
-FROM
-(
-SELECT
-packjoin.item_id,
-items.item_name,
-items.icon,
-packjoin.side,
-packjoin.zone_id,
-packjoin.pack_t_id,
-packjoin.pack_type,
-packjoin.zone_name,
-packjoin.zone_to,
-(SELECT zone_name FROM zones WHERE zone_id = zone_to) as zname_to,
-fresh_lvls.fresh_name,
-packjoin.db_price,
-packjoin.quantity,
-packjoin.pack_sname,
-packjoin.`pass_labor2`,
-ROUND(packjoin.`pass_labor2` + user_crafts.labor_total,0) as labor_all,
-IF(packjoin.pack_t_id = 6,0,fresh_data.fresh_per) as fresh_per,
-packjoin.valuta_id,
-ROUND(packjoin.quantity*(IF(packjoin.valuta_id = 500,1,coal_price.auc_price))*IF(packjoin.valuta_id = 500,1,0.9)) as fresh_price,
-user_crafts.craft_price,
-user_crafts.labor_total,
-ROUND(packjoin.quantity*(IF(packjoin.valuta_id = 500,1,coal_price.auc_price))*IF(packjoin.valuta_id = 500,1,0.9)) - user_crafts.craft_price as profit
-FROM
-fresh_data
-INNER JOIN 
-(
-	SELECT pack_prices.item_id,  
-	pack_prices.zone_to,
-	zones.zone_id,
-	zones.side,
-	zones.zone_name,
-	fresh_data.fresh_lvl,
-	packs.pack_t_id,
-	fresh_data.fresh_type,
-	fresh_data.fresh_group,
-	packs.pack_type,
-	packs.pack_sname,
-	pack_prices.valuta_id,
-	fresh_data.fresh_tstart,
-	fresh_data.fresh_tstop,
-	pack_types.pass_labor,
-	round(`pass_labor` * (100 - IFNULL(`save_or`,0)) / 100,0) AS `pass_labor2`,
-	pack_prices.pack_price as db_price,
-	ROUND
-	(
-	    ROUND
-	     (
-	        pack_prices.pack_price/mul + 
-	        pack_prices.pack_price/mul * 
-	        IF(packs.pack_t_id = 6,1,`fresh_data`.`fresh_per`)/100
-	    )/130*
-	    IF(`pack_prices`.`valuta_id` = 500,".($per+$siol).",130)
-	) 
-	as `quantity`
-	FROM `fresh_data`
-	INNER JOIN zones ON zones.fresh_type = `fresh_data`.`fresh_type` AND `zones`.`side` = '$side'
-	INNER JOIN packs ON packs.zone_id = zones.zone_id AND `packs`.`pack_t_id` IN (".$typess.")
-	INNER JOIN pack_prices ON pack_prices.zone_id = zones.zone_id AND pack_prices.item_id = packs.item_id
-	INNER JOIN pack_types ON pack_types.pack_t_id = packs.pack_t_id and pack_types.fresh_group = fresh_data.fresh_group
-	LEFT JOIN `prof_lvls` ON `prof_lvls`.`lvl` = '$TradeLvl'
-	WHERE (fresh_data.fresh_lvl = '$pack_age')
-) as packjoin
-ON fresh_data.fresh_type = packjoin.fresh_type AND fresh_data.fresh_lvl = packjoin.fresh_lvl
-INNER JOIN items ON items.item_id = packjoin.item_id AND items.on_off = 1
-INNER JOIN fresh_lvls ON fresh_lvls.fresh_lvl = packjoin.fresh_lvl
-LEFT JOIN user_crafts ON user_crafts.item_id = items.item_id AND user_crafts.isbest > 0 AND `user_id` = '$user_id'
-LEFT JOIN (
-			SELECT 32103 as item_id, '$coalprice' as auc_price
-			UNION
-			SELECT 32106 as item_id, '$shellprice' as auc_price
-			) 
-as `coal_price`
-on coal_price.item_id = packjoin.valuta_id
-) as `tttmp`
-ORDER BY ".$sort);
-*/
-
-$query = qwe("
-SELECT *, take - craft_price as profit,
-ROUND((take - craft_price)/labor_all) as profitor
+SELECT *, take*coal_mul - craft_price as profit,
+ROUND((take*coal_mul - craft_price)/labor_all) as profitor
 FROM
 (SELECT 
 items.item_id,
@@ -230,19 +146,20 @@ pack_types.pack_t_name as pack_type,
 zs_from.zone_name,
 zones.zone_name as zname_to,
 pack_prices.zone_to,
-pack_prices.pack_price,
+round(pack_prices.pack_price/mul,0) as pack_price,
 user_crafts.craft_price,
 pack_prices.valuta_id,
 fresh_data.fresh_per,
 fresh_lvls.fresh_name,
 round(
-    if(packs.pack_t_id=4,
-        coal_price.auc_price/mul*pack_price,
-        pack_price/130*100*(1+".($siol/100)."))
-        *(1+fresh_data.fresh_per/100)
+    round(pack_price/130*100)
+        *if(packs.pack_t_id=4,1,(1+".($siol/100)."))
         *$per/100
+        *(1+fresh_data.fresh_per/100)
         *1.02
-    ) as take,
+        )
+ as take,
+ if(packs.pack_t_id=4,coal_price.auc_price/100,1) as coal_mul,
 round(`pass_labor` * (100 - IFNULL(`save_or`,0)) / 100 + user_crafts.labor_total) AS `labor_all`
 FROM pack_prices 
 INNER JOIN items 
@@ -279,17 +196,20 @@ $agent = get_browser(null, true);
 extract($agent);
 foreach($query as $v)
 {   $i++;
+
 	$craft_price = 0;
  	$zone_to = $v['zone_to'];
 	$item_id = $v['item_id'];
 	$freshency = $v['fresh_name'];
 	$fres_per = $v['fresh_per'];
 	$valuta = $v['valuta_id'];
+    $pack_price = $v['pack_price'];
+    $fresh_per = $v['fresh_per'];
 
 	if($valuta != 500)
-	 $price = $v['pack_price']/100;
+	    $price = round($v['take']/100);
 	else
-	 $price = $v['take'];
+	    $price = $v['take'];
 
 	$profit = $v['profit'];
 	$zname_from = $v['zone_name'];
@@ -302,8 +222,7 @@ foreach($query as $v)
  	$ProfitOr = $v['profitor'];
  	//var_dump($ProfitOr);
  	$ProfitOr_1 = esyprice($ProfitOr,10,1);
-	//$viruch = '<div class="itemprompt" data-title="Выручка">';
-	$price_row = '<div class="colz">'.$zname_to.'</div>'.'<div class="colz">'.$price_1.'</div>'.'<div class="colz">'.$profit_1.'</div>';
+
 
 
 	$pack_type = $v['pack_type'];
@@ -320,7 +239,7 @@ foreach($query as $v)
 	$pack_name = 'Вяленые припасы';
 	//$pack_name = $pack_name.'<br><span class="zname">'.$zname_from.'</span>';
 	$zone_name = $v['zone_name'];
-	 
+
 	 
 	 if (false): 
 		if($zone_name == $zone_name2 /*and $i<$numrows*/)
@@ -336,7 +255,7 @@ foreach($query as $v)
 			    $open = true;
 			}
 	 endif; 
-	    $item_link= str_replace(" ","+",$pack_name);
+	    //$item_link= str_replace(" ","+",$pack_name);
 	 	?>
 		<div class="pack_row<?php echo $n?>">
 			<div class="piconandpname">
@@ -351,7 +270,7 @@ foreach($query as $v)
 						<div itid="<?php echo $item_id?>" id="<?php echo $item_id.'_'.$zone_to?>" class="pack_icon" style="background-image: url(img/icons/50/<?php echo $v['icon']?>.png)">
 						
 				
-						<div class="itdigp"><?php echo $fres_per;?>%</div>
+						<div class="itdigp"><?php echo $fresh_per;?>%</div>
 					</div>
 				
 				
@@ -379,7 +298,15 @@ foreach($query as $v)
 				</div>
 			</div>
 			<div class="pprices">
-				<div class="pprice"><?php echo $price_1?></div>
+
+                <?php $tttip = SalaryLetter($per,$pack_price,$siol,$fresh_per,$item_id,$valuta);
+               // $tttip = 'jhjhfj';
+                ?>
+				<div class="pprice" data-tooltip="<?php echo htmlspecialchars($tttip);?>"><?php echo $price_1?>
+                    <a href="packpost.php?item_id=<?php echo $item_id?>">
+                        <img width="15px" src="../img/icons/50/quest/icon_item_quest023.png"/>
+                    </a>
+                </div>
 				<div class="pprice"><?php echo $profit_1.'<br>'.$ProfitOr_1.'/'.$imgor?></div>
 			</div>
 		</div>

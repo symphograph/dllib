@@ -386,9 +386,9 @@ function price_str($price,$valuta)
 		$price = $minus.$gold.$g_img.str_pad($silver, 2, "0", STR_PAD_LEFT).$s_img.str_pad($bronse, 2, "0", STR_PAD_LEFT).$br_img;
 	return($price);
 	}else
-	{   //$price = str_pad($price, 6, "0", STR_PAD_LEFT);
-		$v_img = '<img src="../img/'.$valuta.'.png?ver='.md5_file('../img/'.$valuta.'.png').'" width="10" height="10" alt="coal"/>';
-		//$s = sscanf($price, "%2d%2d%d", $gold, $silver, $bronse);
+	{
+		$v_img = '<img src="../img/'.$valuta.'.png?ver='.md5_file($_SERVER['DOCUMENT_ROOT'].'/img/'.$valuta.'.png').'" width="10" height="10" alt="coal"/>';
+
 		$price = $price.$v_img;
 		return($price);
 	}
@@ -684,7 +684,7 @@ function AvaGetAndPut($ava,$identy)
 	return $filename;
 }
 
-function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='',$iscolor = false)
+function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='',$iscolor = false,$amount='')
 {
 	if(!empty($time))
 		$time = date('d.m.Y',strtotime($time));
@@ -722,11 +722,17 @@ function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='',$is
 			
 		</div>
 		<div class="price_row">
+
+            <?php
+            Cubik($item_id,$icon,$grade,$item_name,$amount);
+            /*
 			<div class="itim" id="itim_<?php echo $item_id;?>" style="background-image: url('img/icons/50/<?php echo $icon;?>.png')">
 				<div class="grade" class="grade" data-tooltip="<?php echo $item_name?>" style="background-image: url(/img/grade/icon_grade<?php echo $grade?>.png)">
 					<div class="PrOk" id="PrOk_<?php echo $item_id;?>"></div>
 				</div>
 			</div>
+            */
+            ?>
 			<div class="price_pharams">
 				<div><span class="item_name" id="itname_<?php echo $item_name?>"><?php echo $item_name?></span>
 					<form id="pr_<?php echo $item_id;?>">
@@ -743,7 +749,7 @@ function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='',$is
 	<?php
 }
 
-function PriceCell2($item_id,$price,$item_name,$icon,$grade,$time='')
+function PriceCell2($item_id,$price,$item_name,$icon,$grade,$time='',$amount='')
 {
 	if(!empty($time))
 		$time = date('d.m.Y',strtotime($time));
@@ -751,11 +757,18 @@ function PriceCell2($item_id,$price,$item_name,$icon,$grade,$time='')
 	<div class="price_cell">
 		<span class="comdate"><?php echo $time?></span>
 		<div class="price_row">
+
+            <?php
+            /*
 			<div class="itim" id="itim_<?php echo $item_id;?>" style="background-image: url('img/icons/50/<?php echo $icon;?>.png')">
 				<div class="grade" class="grade" data-tooltip="<?php echo $item_name?>" style="background-image: url(/img/grade/icon_grade<?php echo $grade?>.png)">
 					<div class="PrOk" id="PrOk_<?php echo $item_id;?>"></div>
 				</div>
 			</div>
+            */
+
+            Cubik($item_id,$icon,$grade,$item_name,$amount);
+			?>
 			<div class="price_pharams">
 				<div><span class="item_name"><?php echo $item_name;?></span>
 						<div class="money_area_down">
@@ -1134,14 +1147,14 @@ function DependentItems($item_id, $arr=[],$i=0)
     return $arr;
 }
 
-function SelectZone($zone_start=0)
+function SelectZone($zone_start=0,$zone_selected = 0)
 {
     $zone_start = intval($zone_start);
     if(!$zone_start)
     {
         $qwe = qwe("
         select * from zones 
-        where zone_id < 30
+        where (zone_id < 30 or zone_id > 49)
         order by side, zone_name
         ");
 
@@ -1165,8 +1178,200 @@ function SelectZone($zone_start=0)
     foreach($qwe as $q)
     {
         extract($q);
-        ?><option value="<?php echo $zone_id?>"><?php echo $zone_name?></option><?php
+        $chk = '';
+        if($zone_id == $zone_selected)
+            $chk = ' selected ';
+        ?><option value="<?php echo $zone_id?>"<?php echo $chk?>><?php echo $zone_name?></option><?php
     }
     ?></select><?php
+}
+
+function MaCubiki($qwe,$u_amount,$craft_price)
+{
+    global $user_id;
+    $i = $money = 0;
+    $flowers = [2178, 3564, 3622,3627,3628,3659,3667,3671,3680,3684,3685,3711,3713,8009,14629,14630,14631,16268,16273,16290];
+
+    foreach($qwe as $q)
+    {$i++;
+        extract($q);
+
+        if($item_id == 500)
+        {
+            $money = $mater_need;
+            continue;
+        }
+
+        if($mater_need < 0 and in_array($item_id,$flowers))
+            $matprice =	$craft_price;
+        else
+            $matprice = UserMatPrice($item_id,$user_id);
+
+        $matpricevalue = $matprice;
+        $matprice = esyprice($matprice);
+        $matprice = htmlspecialchars($matprice);
+        //var_dump($divisor);
+        $mater_need = round($mater_need*$u_amount,2);
+        //var_dump($matprice);
+        if($matpricevalue)
+            $tooltip = $item_name.'<br>'.$mater_need.' шт по<br>'.$matprice;
+        else
+            $tooltip = $item_name.'<br>'.$mater_need.' шт<br>Цена не найдена.';
+
+        if(!$basic_grade) $basic_grade = 1;
+        if($mat_grade < 2 or !$mat_grade)
+            $mat_grade = $basic_grade;
+
+
+
+        Cubik($item_id,$icon,$mat_grade,$tooltip,$mater_need);
+    }
+    return $money;
+}
+
+function UserPriceList($qwe)
+{
+
+    global $user_id,$userinfo_arr;
+    $mater_need = '';
+    extract($userinfo_arr);
+    foreach($qwe as $q)
+    {
+        extract($q);
+        $auc_price = $time = 0;
+        //var_dump($craft_price);
+       //if($is_trade_npc and $valut_id == 500) continue;
+
+        ?><div class="price_object"><?php
+
+        $isby = '';
+
+        if($craftable)
+            $isby = intval($isbest)+1;
+
+
+
+        $iscolor = false;
+        //var_dump($item_id);
+        $pr_arr = PriceMode($item_id,$user_id) ?? false;
+        if($pr_arr)
+        {
+            $auc_price = $pr_arr['auc_price'];
+            $time = $pr_arr['time'];
+            $iscolor = ColorPrice($pr_arr);
+        }
+
+        if(!$time)
+            $time = '01-01-0000';
+
+        if($is_trade_npc and $valut_id == 500)
+            PriceCell2($item_id,$price_buy,$item_name,$icon,$basic_grade,'',$mater_need);
+        else
+            PriceCell($item_id,$auc_price,$item_name,$icon,$basic_grade,$time,$isby,$iscolor,$mater_need);
+
+
+        if ($craft_price)
+        {
+            $craft_price = esyprice($craft_price,15,1);
+            ?><div>Крафт:<?php echo $craft_price?></div><?php
+        }
+
+        ?></div><?php
+    }
+
+}
+
+function PackZoneFromId(int $item_id)
+{
+
+    $qwe = qwe("
+    SELECT zone_id FROM packs 
+    WHERE item_id = '$item_id'
+    ");
+    if(!$qwe or !$qwe->num_rows)
+        return [];
+
+    foreach ($qwe as $q)
+    {
+        $arr[] = $q['zone_id'];
+    }
+    return $arr;
+}
+
+function PackPercents($pack_price,$siol,$per,$fresh_per,$standart,$factlist = false)
+{
+    $salary = $pack_price/130*100*($per/100)*(1+$siol/100);
+    $salary = round($salary,0);
+
+    $Factory_list = $salary;
+    if($factlist)
+        return $Factory_list;
+
+    $salary = $salary*(1+$fresh_per/100);
+    $salary = round($salary,0);
+
+    $salary = $salary*(1+$standart/100);
+    $salary = round($salary,0);
+
+    return $salary;
+}
+
+function SalaryLetter($per, $pack_price, $siol, $fresh_per, $item_id, $valuta)
+{
+    ob_start();
+    if ($valuta != 500)
+        $siol = 0;
+
+    $salary = PackPercents($pack_price, $siol,$per,$fresh_per,2,0);
+    $Factory_list = PackPercents($pack_price, $siol,$per,$fresh_per,2,1);
+
+    $salary = price_str($salary, $valuta);
+
+    $pack_price = round($pack_price/130*100,0);
+    $pack_price = price_str($pack_price, $valuta);
+    $Factory_list = price_str($Factory_list, $valuta);
+    $freguency = 100+$fresh_per;
+
+
+    ?>
+
+    <div class="pinfo_row">
+        <span class="pharam"><b>Фактическая выручка</b></span>
+        <span class="value" data-tooltip="Сколько вы получите из письма"><b><?php echo $salary?></b></span>
+    </div>
+    <hr><br>
+    <div class="pinfo_row">
+        <span class="pharam">Оновная плата</span>
+        <span class="value" data-tooltip="Чистыми без всего при 100%"><?php echo $pack_price?></span>
+    </div>
+
+    <div class="pinfo_row">
+        <span class="pharam">Льгота</span>
+        <span class="value" data-tooltip="Сиоль"><?php echo $siol?>%</span>
+    </div>
+    <div class="pinfo_row">
+        <span class="pharam">Ставка</span>
+        <span class="value" data-tooltip="Текущий процент у торговца"><?php echo $per?>%</span>
+    </div>
+    <div class="pinfo_row">
+        <span class="pharam">Срок годности</span>
+        <span class="value" data-tooltip="Свежесть"><?php echo $freguency?>%</span>
+    </div>
+    <div class="pinfo_row">
+        <span class="pharam">Дополнительная надбавка</span>
+        <span class="value">2%</span>
+    </div>
+    <?php
+    if($valuta == 500)
+    {
+        ?>
+        <hr>
+        <div class="pinfo_row">
+        <span class="pharam">В списке фактории</span>
+        <span class="value" data-tooltip="Отображается в списке цен в фактории"><?php echo $Factory_list?></span>
+        </div>
+        <?php
+    }
+    return ob_get_clean();
 }
 ?>

@@ -15,7 +15,7 @@ if(!$myip) exit();
 <body>
 	
 <?php
-include 'cat-funcs.php';
+include $_SERVER['DOCUMENT_ROOT'].'/functions/cat-funcs.php';
 include 'edit/funct-obhod2.php';
 $server_group = ServerInfo($user_id);
 $server = ServerInfo($user_id, 'server');
