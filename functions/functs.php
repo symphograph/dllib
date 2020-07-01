@@ -381,8 +381,10 @@ $query = qwe("
 SELECT 
 `user_id`, 
 `user_nick`, 
+`avatar` as remote_avalink,
 `avafile`, 
 `mess`, 
+identy as midenty,
 `reports`.`time` 
 FROM `reports`
 INNER JOIN `mailusers` ON `user_id` = `mail_id`
@@ -391,7 +393,13 @@ if($query and mysqli_num_rows($query) > 0)
 {
 	foreach($query as $com)
 	{
-		$user_ava = $com['avafile'];
+		$avafile = $com['avafile'];
+
+		if($avafile and file_exists($_SERVER['DOCUMENT_ROOT'].'/img/avatars/'.$avafile))
+		    $puser_ava = $avafile;
+	    else
+            $puser_ava = AvaGetAndPut($com['remote_avalink'],$com['midenty']);
+
 		$mess = htmlspecialchars($com['mess']);
 		$mailnick = $com['user_nick'];
 		$date = date('d.m.Y', strtotime($com['time']));
@@ -399,7 +407,7 @@ if($query and mysqli_num_rows($query) > 0)
 	?>
 	<div class="comments_row">	
 		<div class="user_info">
-			<div class="navicon" style="background-image: url(img/avatars/<?php echo $user_ava;?>);"></div>
+			<div class="navicon" style="background-image: url(img/avatars/<?php echo $puser_ava;?>);"></div>
 			
 			
 		</div>
@@ -643,5 +651,18 @@ function FreshTimeSelect($item_id = false, $from_id = false)
 
         ?><option value="<?php echo $time?>"><?php echo $pack_time.$per;?></option><?php
     }
+}
+
+function is_image($filename) {
+	$img_types = ['','gif','jpeg','png','swf','psd','bmp','tiff','tiff'];
+  $is = @getimagesize($filename);
+	//var_dump(filesize($filename));
+
+  if ( !$is )
+	  return false;
+  if( !in_array($is[2], array(1,2,3)) )
+	  return false;
+
+  return $img_types[$is[2]];
 }
 ?>

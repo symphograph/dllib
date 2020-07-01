@@ -62,16 +62,5 @@ function file_force_contents($dir, $contents)
 	file_put_contents("$dir/$file", $contents);
 }
 
-function is_image($filename) {
-	$img_types = ['','gif','jpeg','png','swf','psd','bmp','tiff','tiff'];
-  $is = @getimagesize($filename);
-	//var_dump(filesize($filename));
-	
-  if ( !$is ) 
-	  return false;
-  if( !in_array($is[2], array(1,2,3)) ) 
-	  return false;
-	
-  return $img_types[$is[2]];
-}
+
 ?>

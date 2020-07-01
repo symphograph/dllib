@@ -679,7 +679,7 @@ function AvaGetAndPut($ava,$identy)
 		WHERE BINARY  `identy` = '$identy'
 		");
 	}else
-	    return false;
+	    return 'init_ava.png';
 
 	return $filename;
 }

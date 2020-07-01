@@ -30,36 +30,7 @@ $ver = random_str(8);
 <body>
 
 <?php include_once 'includs/header.php';
-$qwe = qwe("
-SELECT 
-`mail_id`, 
-`cnt`, 
-`first_name`, 
-`last_name`,
-`last_time`, 
-`email`, 
-`user_nick`, 
-`avatar`,
-`avafile`, 
-`mtime`, 
-(folows.folow_id > 0) as `isfolow`,
-`identy` as `midenty`,
-flwt.flws
-FROM
-(SELECT `user_id`, COUNT(*) as `cnt`, max(`time`) as `mtime` FROM `prices`
-WHERE `server_group` = '$server_group' /*AND `user_id` != '$user_id'*/
-AND `item_id` NOT in (".implode(',',IntimItems()).")
-GROUP BY `user_id`
-ORDER BY `time` DESC
-) as `tmp`
-INNER JOIN `mailusers` ON `mailusers`.`mail_id` = `tmp`.`user_id`
-AND `mailusers`.`email` LIKE '%@%' /*AND tmp.`cnt` > 2*/
-LEFT JOIN `folows` ON folow_id = `mail_id` AND `folows`.`user_id` = '$user_id'
-LEFT JOIN (SELECT count(*) as flws, user_id, folow_id  FROM `folows` GROUP BY folow_id) as flwt 
-ON `mail_id` = flwt.folow_id
-ORDER BY `isfolow` DESC, YEAR(`mtime`) DESC, MONTH(`mtime`) DESC, WEEK(`mtime`,1) DESC, (cnt>50) DESC, `mtime` DESC
-LIMIT 100
-");	  
+
 ?>
 <main>
 <div id="rent">
@@ -109,31 +80,60 @@ LIMIT 100
 
 //var_dump($device_type);
 $checks = ['','checked'];
+
+$qwe = qwe("
+SELECT 
+`mail_id`, 
+`cnt`, 
+`first_name`, 
+`last_name`,
+`last_time`, 
+`email`, 
+`user_nick`, 
+`avatar` as remote_avalink,
+`avafile`, 
+`mtime`, 
+(folows.folow_id > 0) as `isfolow`,
+`identy` as `midenty`,
+flwt.flws
+FROM
+(SELECT `user_id`, COUNT(*) as `cnt`, max(`time`) as `mtime` FROM `prices`
+WHERE `server_group` = '$server_group' /*AND `user_id` != '$user_id'*/
+AND `item_id` NOT in (".implode(',',IntimItems()).")
+GROUP BY `user_id`
+ORDER BY `time` DESC
+) as `tmp`
+INNER JOIN `mailusers` ON `mailusers`.`mail_id` = `tmp`.`user_id`
+AND `mailusers`.`email` LIKE '%@%' /*AND tmp.`cnt` > 2*/
+LEFT JOIN `folows` ON folow_id = `mail_id` AND `folows`.`user_id` = '$user_id'
+LEFT JOIN (SELECT count(*) as flws, user_id, folow_id  FROM `folows` GROUP BY folow_id) as flwt 
+ON `mail_id` = flwt.folow_id
+ORDER BY `isfolow` DESC, YEAR(`mtime`) DESC, MONTH(`mtime`) DESC, WEEK(`mtime`,1) DESC, (cnt>50) DESC, `mtime` DESC
+LIMIT 100
+");
+
 foreach($qwe as $q)
 {
 	$chk = '';
 	extract($q);
 	if($isfolow) $chk = 'checked';
 
-	if(!$avafile)
-		$avafile = UserInfo($midenty)['avatar'];
-	else 
-		$avafile = 'img/avatars/'.$avafile;
-	
-	if(!file_exists($avafile))
-        $avafile = AvaGetAndPut($avatar,$midenty);
-    if(!file_exists($avafile))
-		$avafile = '/img/init_ava.png';
+	if($avafile and file_exists($_SERVER['DOCUMENT_ROOT'].'/img/avatars/'.$avafile))
+		$puser_ava = $avafile;
+	else
+        $puser_ava = AvaGetAndPut($remote_avalink,$midenty);
+
+
 	if(!$user_nick) 
 		$user_nick = NickAdder($mail_id);
-	//var_dump($server_group);
+
 	?>
 	<div class="persrow">
 		
 		<div class="nicon_out">
 			
 			<a href="user_prices.php?puser_id=<?php echo $mail_id?>" data-tooltip="Смотреть цены">
-			<label class="navicon" for="<?php echo $mail_id?>" style="background-image: url(<?php echo $avafile?>);"></label>
+			<label class="navicon" for="<?php echo $mail_id?>" style="background-image: url(<?php echo '../img/avatars/'.$puser_ava?>);"></label>
 			</a>
 			<div class="persnames">
 				<div class="mailnick"><b><?php echo $user_nick?></b></div>
