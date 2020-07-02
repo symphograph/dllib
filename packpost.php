@@ -1,6 +1,7 @@
 <?php
-require_once 'includs/usercheck.php';
 setcookie('path', 'packpost');
+require_once 'includs/usercheck.php';
+
 
 $userinfo_arr = UserInfo();
 if (!$userinfo_arr){

@@ -2,6 +2,12 @@
 setcookie('path', 'packtable');
 include_once 'includs/usercheck.php';
 
+$userinfo_arr = UserInfo();
+if (!$userinfo_arr) {
+    header("Refresh: 0");
+    die();
+}
+
 $ver = random_str(8);
 $aa_ver = '6.5';
 ?>
