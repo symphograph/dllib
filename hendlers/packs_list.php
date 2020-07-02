@@ -188,7 +188,7 @@ INNER JOIN fresh_lvls on fresh_lvls.fresh_lvl = fresh_data.fresh_lvl
 ) as tmp
 ORDER BY ".$sort
 );
-//var_dump($types);
+
 $zone_name2 = '';
 $numrows = mysqli_num_rows($query);
 $i=0; $n=0; $open = false;
