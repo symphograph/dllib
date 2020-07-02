@@ -74,40 +74,38 @@ function Metka($ip,$BotName)
 	$datetime = date('Y-m-d H:i:s',$unix_time);
 	$cooktime = $unix_time+60*60*24*365*5;
 	$identy = random_str(12);
-	$sessmark = random_str(12);
-	if(empty($_COOKIE['identy']) or $BotName)
-	{
-		
-		if($BotName)
-		{
-			$query = qwe("SELECT * FROM `mailusers` WHERE `email` = '$BotName'");
-			if(mysqli_num_rows($query)>0)//Если бот уже записан
-			{
-				foreach($query as $q)
-				{$identy = $q['identy'];}
-				qwe("
-				UPDATE `mailusers` SET
-				`last_ip` = '$ip',
-				`last_time` = '$datetime'
-				WHERE BINARY `identy` = '$identy'");
-				
-			}else
-			{
-				//Записываем нового бота
-				$newid = EmptyIdFinder('mailusers');
-				qwe("
-				INSERT INTO `mailusers`
-				(`mail_id`, `identy`, `ip`, `time`, `last_ip`, `last_time`,`first_name`,`email`)
-				VALUES
-				('$newid' ,'$identy', '$ip', '$datetime','$ip','$datetime','$BotName','$BotName')
-				");
-				
-				
-			}
-			$userinfo_arr = UserInfo($identy);
-			return $userinfo_arr;
-		}
-		
+
+    if($BotName)
+    {
+        $query = qwe("SELECT * FROM `mailusers` WHERE `email` = '$BotName'");
+        if(mysqli_num_rows($query)>0)//Если бот уже записан
+        {
+            foreach($query as $q)
+            {$identy = $q['identy'];}
+            qwe("
+            UPDATE `mailusers` SET
+            `last_ip` = '$ip',
+            `last_time` = '$datetime'
+            WHERE BINARY `identy` = '$identy'");
+
+        }else
+        {
+            //Записываем нового бота
+            $newid = EmptyIdFinder('mailusers');
+            qwe("
+            INSERT INTO `mailusers`
+            (`mail_id`, `identy`, `ip`, `time`, `last_ip`, `last_time`,`first_name`,`email`)
+            VALUES
+            ('$newid' ,'$identy', '$ip', '$datetime','$ip','$datetime','$BotName','$BotName')
+            ");
+        }
+        setcookie('identy',$identy,$cooktime,'/','',true,true);
+        $userinfo_arr = UserInfo($identy);
+        return $userinfo_arr;
+    }
+
+    if(empty($_COOKIE['identy']))
+    {
 		
 		setcookie('identy',$identy,$cooktime,'/','',true,true);
 
@@ -118,12 +116,11 @@ function Metka($ip,$BotName)
 		VALUES
 		('$newid' ,'$identy', '$ip', '$datetime','$ip','$datetime')
 		");
-		
-		
-		
+
 		$userinfo_arr = UserInfo($identy);
 		
-	}else
+	}
+	else
 	{
 		$identy = OnlyText($_COOKIE['identy']);
 		
@@ -149,92 +146,104 @@ function Metka($ip,$BotName)
 			//Кука есть, данных в базе нет.
 			setcookie ("identy", "", time() - 3600);
 			//echo 'Authorization ERROR';
-			exit(header("Location: ".$_SERVER['PHP_SELF'], TRUE, 302));
-			return false;
+            header("Refresh: 0");
+			die();
 		}
 	}
-	
+
 	return $userinfo_arr;
 }
 
-function DeviceMark($user_id,$unix_time)
+function DeviceMark($user_id,$unix_time = 0)
 {
-	$unix_time = time();
-	$datetime = date('Y-m-d H:i:s',$unix_time);
-	$cooktime = $unix_time+60*60*24*365*5;
-	$ip = $_SERVER['REMOTE_ADDR'];
-	$agent = get_browser(null, true);
-	extract($agent);
-	
+    if(!$unix_time)
+	    $unix_time = time();
+
 	if(empty($_COOKIE['sessmark']))
 	{
+	    //Add new device
 		$sessmark = random_str(12);
-		
-		
-		$sess_id = EmptyIdFinder('sessions');
-		
-		$qwe = qwe("
-		INSERT INTO `sessions`
-		(sess_id, `user_id`, `sessmark`, `first_ip`, `last_ip`, `first_time`, `last_time`, `platform`,`browser`,`device_type`, `ismobiledevice`)
-		VALUES
-		('$sess_id' ,'$user_id', '$sessmark','$ip', '$ip', '$datetime', '$datetime', '$platform', '$browser', '$device_type', '$ismobiledevice' )
-		");
-		if(!$qwe) die('ERROR_sess');
-		setcookie('sessmark',$sessmark,$cooktime,'/','',true,true);
-		return true;
+        SetSess($user_id,$sessmark,$unix_time);
+        return true;
 	}
 	
-	//Если девайс помечен
+	//We know this device
 	$sessmark = OnlyText($_COOKIE['sessmark']);	
 	if(iconv_strlen($sessmark) != 12)
 	{
 		setcookie ("sessmark", "", time() - 3600);
-		exit(header("Location: ".$_SERVER['PHP_SELF'], TRUE, 302));	
+        header("Refresh: 0");
+		exit();
 	}
 	
 	
-	$qwe = qwe("SELECT * FROM `sessions` WHERE `sessmark` = '$sessmark' AND `user_id` = '$user_id'");
-	if(mysqli_num_rows($qwe)>0)
+	$qwe = qwe("
+    SELECT * FROM `sessions` 
+    WHERE `sessmark` = '$sessmark' 
+    AND `user_id` = '$user_id'");
+	if(!$qwe or $qwe->num_rows == 0)
 	{
-		$good = false;
-		foreach($qwe as $q)
-		{
-			$good = ($q['platform'] == $platform and $q['browser'] = $browser and $q['device_type'] = $device_type);
-			$sess_id = $q['sess_id'];
-		}
-		
-		if(!$good)
-		{
-			setcookie ("sessmark", "", time() - 3600);
-			exit(header("Location: ".$_SERVER['PHP_SELF'], TRUE, 302));	
-		}
-		
-		$qwe = qwe("
-		UPDATE `sessions`
-		SET   
-		`last_ip` = '$ip', 
-		`last_time` = '$datetime'
-		WHERE `sess_id` = '$sess_id'
-		");
-		if(!$qwe) die('ERROR_sess2');
-		setcookie('sessmark',$sessmark,$cooktime,'/','',true,true);
-		return true;
-	}
+        SetSess($user_id, $sessmark, $unix_time);
+        return true;
+    }
 
-	
-	
-		$sess_id = EmptyIdFinder('sessions');
-		
-		$qwe = qwe("
-		INSERT INTO `sessions`
-		(sess_id, `user_id`, `sessmark`, `first_ip`, `last_ip`, `first_time`, `last_time`, `platform`,`browser`,`device_type`, `ismobiledevice`)
-		VALUES
-		('$sess_id' ,'$user_id', '$sessmark','$ip', '$ip', '$datetime', '$datetime', '$platform', '$browser', '$device_type', '$ismobiledevice' )
-		");
-		if(!$qwe) die('ERROR_sess');
-		setcookie('sessmark',$sessmark,$cooktime,'/','',true,true);
-		return true;
-	
+    $good = false;
+    $agent = get_browser(null, true);
+    extract($agent);
+    foreach($qwe as $q)
+    {
+        $good = ($q['platform'] == $platform and $q['browser'] = $browser and $q['device_type'] = $device_type);
+        $sess_id = $q['sess_id'];
+    }
+
+    if(!$good)
+    {
+        setcookie ("sessmark", "", time() - 3600);
+        header("Refresh: 0");
+        die();
+    }
+
+    $datetime = date('Y-m-d H:i:s',$unix_time);
+    $ip = $_SERVER['REMOTE_ADDR'];
+
+    $qwe = qwe("
+    UPDATE `sessions`
+    SET   
+    `last_ip` = '$ip', 
+    `last_time` = '$datetime'
+    WHERE `sess_id` = '$sess_id'
+    ");
+    if(!$qwe) die('ERROR_sess2');
+
+    $cooktime = $unix_time+60*60*24*365*5;
+    setcookie('sessmark',$sessmark,$cooktime,'/','',true,true);
+    return true;
+}
+
+function SetSess($user_id,$sessmark,$unix_time)
+{
+    $agent = get_browser(null, true);
+    extract($agent);
+    $datetime = date('Y-m-d H:i:s',$unix_time);
+    $cooktime = $unix_time+60*60*24*365*5;
+    $sess_id = EmptyIdFinder('sessions');
+    $ip = $_SERVER['REMOTE_ADDR'];
+
+    $qwe = qwe("
+    INSERT INTO `sessions`
+    (
+     sess_id, `user_id`, `sessmark`, `first_ip`, `last_ip`, `first_time`,
+     `last_time`, `platform`,`browser`,`device_type`, `ismobiledevice`
+     )
+    VALUES
+    (
+     '$sess_id' ,'$user_id', '$sessmark','$ip', '$ip', '$datetime', 
+     '$datetime', '$platform', '$browser', '$device_type', '$ismobiledevice'
+     )
+    ");
+    if(!$qwe) die('ERROR_sess');
+    setcookie('sessmark',$sessmark,$cooktime,'/','',true,true);
+    return true;
 }
 
 function UserInfo($identy = '')
@@ -362,10 +371,7 @@ function is_bot()
         if (stripos($user_agent, $bot))
             return OnlyText($bot);
     }
-	/*
-	if($_SERVER['REMOTE_ADDR'] == '188.113.161.10')
-		return 'RomaBot';
-	*/
+
     return false;
 }
 

@@ -1,8 +1,8 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
-include_once $_SERVER['DOCUMENT_ROOT'].'/includs/config.php';
-include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functions.php';
-include_once $_SERVER['DOCUMENT_ROOT'].'/functions/functs.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/includs/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/functions/functions.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/functions/functs.php';
 
 $muser = $_POST['muser'] ?? 0;
 $muser = intval($muser);//Юзер, которого надо сделать основным на этом девайсе.
@@ -16,18 +16,21 @@ $user_id = $userinfo_arr['muser'];//Текущий юзер, который за
 $sessmark = OnlyText($_COOKIE['sessmark']);	
 	if(iconv_strlen($sessmark) != 12)
 		die('error_sess');
-$query = qwe("
-SELECT * FROM `sessions` WHERE `sessmark` = '$sessmark'
+
+$qwe = qwe("
+SELECT * FROM `sessions` 
+WHERE `sessmark` = '$sessmark'
 AND `user_id` = '$muser'
 ");
-if(mysqli_num_rows($query) != 1)
+if(!$qwe or $qwe->num_rows != 1)
 	die('error_user');
 
-$query = qwe("
-SELECT * FROM `mailusers` WHERE `mail_id` = '$muser'
+$qwe = qwe("
+SELECT * FROM `mailusers` 
+WHERE `mail_id` = '$muser'
 ");
-if(mysqli_num_rows($query) != 1) die('error_query');
-foreach($query as $q)
+if(!$qwe or $qwe->num_rows != 1) die('error_query');
+foreach($qwe as $q)
 {
 	$newIdenty = $q['identy'];
 }
