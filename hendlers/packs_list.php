@@ -159,7 +159,7 @@ round(
         *1.02
         )
  as take,
- if(packs.pack_t_id=4,coal_price.auc_price/100,1) as coal_mul,
+ if(packs.pack_t_id=4,round(coal_price.auc_price/100),1) as coal_mul,
 round(`pass_labor` * (100 - IFNULL(`save_or`,0)) / 100 + user_crafts.labor_total) AS `labor_all`
 FROM pack_prices 
 INNER JOIN items 
