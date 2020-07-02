@@ -149,14 +149,24 @@ if($craftable)
 	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 	DwnCraftList($globalitem_id);
 	?></div><?php
+
+
+
 	if(in_array($categ_id,[133]))
+    {
+        ?>
+        <br><hr><br>
+        <a href="/packpost.php?item_id=<?php echo $item_id?>">
+            <button type="button" class="def_button">Пакулятор</button>
+        </a> <?php
+    }
+	/*
+	if(isset($lost) and count($lost) > 0)
 	    {
-	        ?>
-	        <br><hr><br>
-	        <a href="/packpost.php?item_id=<?php echo $item_id?>">
-	            <button type="button" class="def_button">Пакулятор</button>
-	        </a> <?php
+	        echo '<hr><br>';
+	       MissedList($lost);
 	    }
+    */
 
 }else
 {
@@ -468,9 +478,18 @@ function DwnCraftList($item_id)
 			<div data-tooltip="Коэфициент приводящий друг к другу такие величины, как занимаемая площадь, интервал между сбором, себестоимость, получаемое количество, требуемое количество.">
 				<div class="crresults"><div><b>Коэф SPM:</b></div><div><b><?php echo $spmu?></b></div></div>	
 			</div>
-			<div>
-				<div class="crresults"><div>Интервал:</div><div><?php echo $sptime?></div></div>	
-			</div>
+
+			<?php
+			if($sptime)
+            {
+            ?>
+                <div>
+                <div class="crresults"><div>Интервал:</div><div><?php echo $sptime?></div></div>
+                </div>
+            <?php
+            }
+            ?>
+
 		</div>
 		<div class="craftinfo">
 			<div>
@@ -504,19 +523,31 @@ function DwnCraftList($item_id)
 	 			if(in_array($categ_id,[133]))
 				{
 					 
-					$pass_labor = $PackObject['pass_labor'];
+					$pass_labor = $PackObject['pass_labor2'];
 					?>
 					<div class="crresults">
 						<div>На сдачу:</div>
 						<div><?php echo $pass_labor.$imgor;?></div>
 					</div>
-					<div class="crresults"><div>На всё:</div><div><?php echo round($labor_total+$pass_labor,2).$imgor;?></div></div>
+					<div class="crresults">
+                        <div>На цепочку:</div>
+                        <div><?php echo round($labor_total,2).$imgor;?></div>
+					</div>
+					<div class="crresults">
+                        <div>На всё:</div>
+                        <div><?php echo round($labor_total+$pass_labor,2).$imgor;?></div>
+					</div>
 					<?php
 				}else
 				{
 					?>
-					<div class="crresults"><div>На 1 шт:</div><div><?php echo $labor_single.$imgor;?></div></div>
-					<div class="crresults"><div>На цепочку:</div><div><?php echo round($labor_total,2).$imgor;?></div></div>
+					<div class="crresults">
+					    <div>На 1 шт:</div><div><?php echo $labor_single.$imgor;?></div>
+					</div>
+					<div class="crresults">
+                        <div>На цепочку:</div>
+                        <div><?php echo round($labor_total,2).$imgor;?></div>
+					</div>
 					<?php
 				}
 				?>
@@ -551,9 +582,7 @@ function DwnCraftList($item_id)
 				if($qwe->num_rows>1 and (!$isbest))
 				$dtitle = 'Предпочитать этот';
 			}
-				
-				
-			
+
 			?>
 			<div class="main_itim" id="cr_<?php echo $craft_id?>" name="<?php echo $item_id?>" style="background-image: url(/img/icons/50/<?php echo $icon?>.png)">
 				<div class="grade" data-tooltip="<?php echo $dtitle?>" style="background-image: url(/img/grade/icon_grade<?php echo $basic_grade?>.png)">
@@ -601,35 +630,6 @@ function DwnCraftList($item_id)
 	}
 	
 
-}
-
-function PackObject($item_id)
-{
-	global $user_id;
-	$qwe = qwe("
-	SELECT
-packs.zone_id,
-packs.pack_sname,
-pack_types.pack_t_name,
-pack_types.pack_t_id,
-pack_types.pass_labor,
-zones.zone_name,
-zones.side,
-round(`pass_labor` * (100 - IFNULL(`save_or`,0)) / 100,0) AS `pass_labor2`
-FROM
-packs
-INNER JOIN pack_types ON packs.item_id = '$item_id' 
-AND pack_types.pack_t_id = packs.pack_t_id
-INNER JOIN zones ON packs.zone_id = zones.zone_id
-LEFT JOIN `user_profs` ON `user_profs`.`user_id` = '$user_id'
-AND `user_profs`.`prof_id` = 5
-LEFT JOIN `prof_lvls` ON `user_profs`.`lvl` = `prof_lvls`.`lvl`
-	");
-	if(!$qwe or $qwe->num_rows == 0) 
-		return false;
-	$qwe = mysqli_fetch_assoc($qwe);
-	extract($qwe);
-	return ['pass_labor'=> $pass_labor2];
 }
 
 function UpCraftList($item_id)

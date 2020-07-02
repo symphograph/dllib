@@ -76,7 +76,7 @@ if(isset($_GET['item_id']))
     <script type="text/javascript" src="js/packpost/packpost.js?ver=<?php echo md5_file('js/packpost/packpost.js')?>"></script>
     <script type="text/javascript" src="js/packpost/times.js?ver=<?php echo md5_file('js/packpost/times.js')?>"></script>
     <script type="text/javascript" src="js/packpost/prices.js?ver=<?php echo md5_file('js/packpost/prices.js')?>"></script>
-    <script type="text/javascript" src="js/setbuy.js?ver=<?php echo md5_file('js/setbuy.js')?>"></script>
+    <script type="text/javascript" src="js/packpost/setbuy.js?ver=<?php echo md5_file('js/packpost/setbuy.js')?>"></script>
     <?php if(!$ismobiledevice)
     {
         ?><script type="text/javascript" src="js/tooltips.js?ver=<?php echo md5_file('js/tooltips.js')?>"></script><?php
@@ -259,7 +259,7 @@ include_once 'pageb/footer.php'; ?>
 
         ZtoLoad(<?php echo $from_id;?>,<?php echo $to_id;?>);
         PackLoad(<?php echo $from_id;?>,<?php echo $item_id;?>);
-        //FreshTimeLoad('31858','18');
+
 
     };
 
@@ -288,6 +288,7 @@ if($myip)
                 //$("#bill").html(data);
                 console.log(data);
                 InfoLoad();
+
             }
         });
     }

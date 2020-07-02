@@ -61,10 +61,10 @@ foreach ($qwe as $q)
     <div class="perscell" id="row_<?php echo $dur_id?>">
         <div>
             <div class="nicon_out">
-                <label class="navicon" for="<?php echo $tuser_id?>" style="background-image: url(<?php echo $avafile?>);"></label>
+                <label class="navicon" style="background-image: url(<?php echo $avafile?>);"></label>
                 <div class="persnames">
                     <div class="mailnick"><b><?php echo $tuser_nick?></b></div>
-                    <div class="mailnick"><?php echo $durway.'мин'?></div>
+                    <div class="mailnick"><span><?php echo $durway?></span>мин</div>
                 </div>
             </div>
             <?php
@@ -78,6 +78,7 @@ foreach ($qwe as $q)
                 value="del"
                 onclick="DurDel(<?php echo $dur_id?>)"
                 data-tooltip="Удалить">
+                <input type="hidden" id="to_input" value="<?php echo $durway?>">
                 <?php
             }
             ?>
@@ -85,5 +86,4 @@ foreach ($qwe as $q)
     </div>
 <?php
 }
-
 ?>

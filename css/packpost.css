@@ -230,3 +230,8 @@ input[name="setgold"]{
 .prices{
     display: block;
 }
+
+#craft_price{
+    width: 100%;
+    text-align: center;
+}

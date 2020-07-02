@@ -84,7 +84,7 @@ input[name^="setsilver"],input[name^="setbr"] {
 	align-content: right;
 	border-radius: 4px;
 	/*background-color: rgba(226,222,198,0.00);*/
-	input:-webkit-outer-spin-button,; 	
+	/*input:-webkit-outer-spin-button;*/
 	text-align: right;
 }
 

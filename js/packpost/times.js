@@ -1,16 +1,17 @@
 $(window).load(function(){
     istractor();
     $(document).ready( function(){
-        $('#timeform').on('change','input[type=radio]',function()
+        $('#timeform').on('change, input','input[type=radio], input[type=checkbox]',function()
         {
             istractor();
+            LoadTimes();
         });
     });
 
     $('#timeform').on('input',function()
     {
         istractor();
-        LoadTimes();
+
     });
 
     $('#timeform').on('click','#sendtime',function()
@@ -22,6 +23,14 @@ $(window).load(function(){
 
 
 });
+
+function InTime(){
+    var intime = $("#to_input").val();
+    if(intime)
+        $("#time").val(intime);
+    else
+        $("#time").val('');
+}
 
 function LoadTimes(){
     $.ajax
@@ -36,6 +45,7 @@ function LoadTimes(){
         success: function(data )
         {
             $("#table_div").html(data );
+            InTime();
         }
     });
 }

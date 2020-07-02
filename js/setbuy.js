@@ -12,7 +12,7 @@ $('.prices').on('change', 'input[type=checkbox]', function(){
         url: 'hendlers/isbuysets.php',
 		type: "POST",
         success: function(data){
-            console.log('Сервер вернул:' + data);
+            //console.log('Сервер вернул:' + data);
 				if(data != "ok")
 				{
 					$(okid).html(data);
@@ -21,7 +21,8 @@ $('.prices').on('change', 'input[type=checkbox]', function(){
 				} else
 				{
 					$(okid).html("Ok");
-					$(okid).show(); 
+					$(okid).show();
+
 
 				}
 			//setTimeout(function() {$(okid).hide('slow');}, 2000);

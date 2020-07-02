@@ -108,8 +108,8 @@ if(isset($lost) and count($lost)>0)
 {
 
 	MissedList($lost);
-	qwe("delete FROM user_crafts where user_id = '$user_id' AND isbest < 2");
-	exit();
+	//qwe("delete FROM user_crafts where user_id = '$user_id' AND isbest < 2");
+	//exit();
 }
 
 

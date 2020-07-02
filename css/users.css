@@ -98,16 +98,17 @@ select {
 	/*border: none;*/
 	background: none;
 	color: #6c3f00;
-	height: 1em;
-	padding: 0.5em;
+	height: 1.5em;
+	padding: 0.2em;
 	box-sizing: content-box;
 	font-size: 1em;
 	outline: none;
 	text-align: right;
+	border: 1px solid;
 }
 select:hover {
-	
-	border: 1px solid;
+
+	border: 1px solid #8b734e;
 }
 .buttons {
 	display: flex;

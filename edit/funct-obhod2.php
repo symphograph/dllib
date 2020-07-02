@@ -189,7 +189,7 @@ function MissedList($lost)
 {
 	$lost = array_unique($lost);
 	//printr($lost);
-	?><p><b>Не хватает данных для завершения расчета.</b><br>Сообщите, пожалуйста, цены следующих предметов:<p><?php
+	?><p><b>Возможно, расчет не корректный.</b><br>Я не нашёл следующие цены:<p><?php
 	$hrefself = $_SERVER['PHP_SELF'];
 	$lostnames = ItemAny($lost,'item_name');
 	
@@ -627,6 +627,7 @@ function ToBuffer2($item_id)
 		SELECT 
 		items.item_id,
 		items.item_name,
+        items.categ_id,
 		crafts.craft_id,
 		crafts.dood_name,
 		crafts.result_amount,
@@ -666,8 +667,14 @@ function ToBuffer2($item_id)
 				if(!$isbest) $isbest = 1;
 			}else
 				$isbest = 0;
-			
-		 //var_dump($spmp);
+
+            if(in_array($categ_id,[133]))
+            {
+                $pass_labor = PackObject($item_id)['pass_labor2'] ?? 0;
+                $labor_price = PriceMode(2,$user_id)['auc_price'] ?? 0;
+
+                $craft_price = $craft_price + $pass_labor*$labor_price;
+            }
 		 	qwe("
 			REPLACE INTO `user_crafts` 
 			(`item_id` , `user_id`, `isbest`, `craft_id`, `craft_price`,`spmu`,`updated`) 

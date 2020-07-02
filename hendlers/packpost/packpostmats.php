@@ -31,6 +31,15 @@ if(!$craft_id)
     $craft_id = BestCraftForItem($user_id,$item_id);
 }
 
+$qwe = qwe("
+SELECT * from user_crafts
+where  user_id = $user_id 
+and craft_id = '$craft_id' 
+");
+$q = mysqli_fetch_assoc($qwe);
+?><div id="craft_price"><?php
+echo esyprice($q['craft_price']);
+?></div><?php
 
 $qwe = qwe("
 SELECT 
@@ -59,5 +68,9 @@ if((!$qwe) or (!$qwe->num_rows))
 
 ?><div class="pkmats_area">
 
-    <?php UserPriceList($qwe);  ?>
+<?php
+UserPriceList($qwe);
+?>
+
+
 </div>

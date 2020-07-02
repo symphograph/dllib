@@ -353,7 +353,7 @@ input[name^="setsilver"],input[name^="setbr"] {
 	text-align: right;
 	border-radius: 4px;
 	/*background-color: rgba(226,222,198,0.00);*/
-	input:-webkit-outer-spin-button; 	
+	/*input:-webkit-outer-spin-button;*/
 }
 
 .money-line input :hover{

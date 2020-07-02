@@ -54,7 +54,8 @@ if($b > 0)
         '/hendlers/packs_list.php',
         '/hendlers/isbuysets.php',
         '/packres.php',
-        '/hendlers/packpost/packpostmats.php'
+        '/hendlers/packpost/packpostmats.php',
+        '/hendlers/packpost/packobj.php',
     ]))
     {
 

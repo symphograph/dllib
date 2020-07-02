@@ -1380,4 +1380,35 @@ function SalaryLetter($per, $pack_price, $siol, $fresh_per, $item_id, $valuta)
     }
     return ob_get_clean();
 }
+
+function PackObject($item_id)
+{
+    global $user_id;
+    $qwe = qwe("
+	SELECT
+packs.zone_id,
+packs.pack_sname,
+pack_types.pack_t_name,
+pack_types.pack_t_id,
+pack_types.pass_labor,
+zones.zone_name,
+zones.side,
+round(`pass_labor` * (100 - IFNULL(`save_or`,0)) / 100,0) AS `pass_labor2`,
+uc.craft_price	       
+FROM
+packs
+INNER JOIN pack_types ON packs.item_id = '$item_id' 
+AND pack_types.pack_t_id = packs.pack_t_id
+INNER JOIN zones ON packs.zone_id = zones.zone_id
+LEFT JOIN `user_profs` ON `user_profs`.`user_id` = '$user_id'
+AND `user_profs`.`prof_id` = 5
+LEFT JOIN `prof_lvls` ON `user_profs`.`lvl` = `prof_lvls`.`lvl`
+LEFT JOIN user_crafts uc on packs.item_id = uc.item_id	
+and uc.isbest > 0 and uc.user_id = `user_profs`.`user_id`
+limit 1
+	");
+    if(!$qwe or $qwe->num_rows == 0)
+        return [];
+    return mysqli_fetch_assoc($qwe);
+}
 ?>

@@ -126,6 +126,7 @@ function MatsLoad() {
         success: function(data )
         {
             $("#maters").html(data );
+            $(".small_del").show();
 
         }
     });
