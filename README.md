@@ -1,6 +1,7 @@
 # dllib
 Tools for Archeage
 https://dllib.ru
+![screenshot of sample](https://dllib.ru./img/pack_info_screen.png)
 
 Works:
 1. Packing price table
