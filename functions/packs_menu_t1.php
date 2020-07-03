@@ -2,23 +2,7 @@
 
 $ps = [];
 if(!empty($_COOKIE['pack_settings']))
-{
 	$ps = unserialize($_COOKIE['pack_settings']);
-	//printr($pack_settings);
-	
-}
-?>
-<!--<div class="timerow">
-
-	<div class="slidecontainer"><input type="range" min="50" max="130" value="100" class="slider" id="myRange"></div>
-	
-</div>-->
-
-<?php
-function PackTypeButtons()
-{
-    //$qwe = qwe("select * from pack_types");
-}
 ?>
 
 <div class="select_row">
@@ -74,10 +58,6 @@ function PackTypeButtons()
 	</div>		
 	<hr>		
 </div>
-<?php
-
-?>
-
 
 <div class="sortrow">
 	
@@ -108,12 +88,10 @@ function PackTypeButtons()
 				<div class="nicon_out" data-tooltip="По прибыли">
 					<input type="radio" id="sort_0" name="sort" value="0" checked>
 					<label class="navicon" for="sort_0" style="background-image: url(/img/icons/50/icon_item_3229.png);"></label>
-					<!--<div class="navname">Прибыль</div>-->
 				</div>
 				<div class="nicon_out" data-tooltip="По прибыли на 1 ор.<br>С учетом всех ОР на все этапы крафта.">
 					<input type="radio" id="sort_4" name="sort" value="4" checked>
 					<label class="navicon" for="sort_4" style="background-image: url(/img/icons/50/2.png);"></label>
-					<!--<div class="navname">Прибыль с 1ор</div>-->
 				</div>
 			</div>
 		</div>

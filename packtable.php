@@ -109,16 +109,9 @@ function perselect($per)
 	}	
 ?>
 </div>
-	<!--<div class="thanks">За помощь в обновлении спасибо <a href="http://archeagecodex.com/ru" target="_blank" >archeagecodex</a></div>-->
-<!--<div class="thanks">*Прибыль рассчитывается исходя из настроек.<br>
-	</div>-->
 
 <div class="select_area">
-<?php 
-	include 'functions/packs_menu_t1.php';
-
-	//$per = $per+$siol;
-	?>
+<?php include 'functions/packs_menu_t1.php';?>
 </div>
 <div class="clear"></div>
 <hr>

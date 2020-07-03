@@ -237,93 +237,69 @@ foreach($query as $v)
 	$pack_name = 'Груз меда';
 	if($pack_name == 'Вяленые припасы Заболоченных низин')
 	$pack_name = 'Вяленые припасы';
-	//$pack_name = $pack_name.'<br><span class="zname">'.$zname_from.'</span>';
+
 	$zone_name = $v['zone_name'];
 
-	 
-	 if (false): 
-		if($zone_name == $zone_name2 /*and $i<$numrows*/)
-			
-			{ 
-				if($open) echo '</div><hr>';
-				?>
-				<div class="pack_row">
-	    			<div class="zone_row"><?php echo $zone_name;?></div>
-	    		</div>
-	    		<div class="zone_area">
-		    	<?php
-			    $open = true;
-			}
-	 endif; 
-	    //$item_link= str_replace(" ","+",$pack_name);
-	 	?>
-		<div class="pack_row<?php echo $n?>">
-			<div class="piconandpname">
-				
-			<?php
-			if($device_type != 'Desktop')
-				$hrefactive = 'onClick="return false;"';
- 			else 
-				$hrefactive = '';
-			?>
-			
-						<div itid="<?php echo $item_id?>" id="<?php echo $item_id.'_'.$zone_to?>" class="pack_icon" style="background-image: url(img/icons/50/<?php echo $v['icon']?>.png)">
-						
-				
-						<div class="itdigp"><?php echo $fresh_per;?>%</div>
-					</div>
-				
-				
- 				
-					<div id="pmats_<?php echo $item_id?>" class="pkmats_area">
-					<?php //PackMatsDisplay($item_id)?>
-					</div>
-				
-				
+    if($device_type != 'Desktop')
+        $hrefactive = 'onClick="return false;"';
+    else
+        $hrefactive = '';
+    ?>
 
-				<div class="pack_name">
-					<div class="pack_mname"><b><?php echo $pack_name;?></b></div>
-					<div class="znames">
-						<div class="znamesrows">
-							<div class="zname"></div>
-							<div class="zname"><?php echo $zname_from?></div>
-							<div class="zname"></div>
-						</div>
-						<div class="znamesrows">
-							<div class="zname2"></div>
-							<div class="zname2"></div>
-							<div class="zname2"><?php echo $zname_to?></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="pprices">
+    <div class="pack_row<?php echo $n?>">
+        <div class="piconandpname">
+            <div itid="<?php echo $item_id?>" id="<?php echo $item_id.'_'.$zone_to?>" class="pack_icon" style="background-image: url(img/icons/50/<?php echo $v['icon']?>.png)">
+                <div class="itdigp"><?php echo $fresh_per;?>%</div>
+            </div>
 
-                <?php $tttip = SalaryLetter($per,$pack_price,$siol,$fresh_per,$item_id,$valuta);
-               // $tttip = 'jhjhfj';
-                ?>
-				<div class="pprice" data-tooltip="<?php echo htmlspecialchars($tttip);?>"><?php echo $price_1?>
-                    <a href="packpost.php?item_id=<?php echo $item_id?>">
-                        <img width="15px" src="../img/icons/50/quest/icon_item_quest023.png"/>
-                    </a>
+            <div id="pmats_<?php echo $item_id?>" class="pkmats_area">
+                <?php //PackMatsDisplay($item_id)?>
+            </div>
+
+            <div class="pack_name">
+                <div class="pack_mname"><b><?php echo $pack_name;?></b></div>
+
+                <div class="znames">
+                    <div class="znamesrows">
+                        <div class="zname"></div>
+                        <div class="zname"><?php echo $zname_from?></div>
+                        <div class="zname"></div>
+                    </div>
+                    <div class="znamesrows">
+                        <div class="zname2"></div>
+                        <div class="zname2"></div>
+                        <div class="zname2"><?php echo $zname_to?></div>
+                    </div>
                 </div>
-				<div class="pprice"><?php echo $profit_1.'<br>'.$ProfitOr_1.'/'.$imgor?></div>
-			</div>
-		</div>
-		<hr>
-		<?php
-		//echo $price_row;
-	 
-	    //echo '</div>';
-		//if($open and $i == $numrows)
-		//echo '</div>';
-		$zone_name2 = $zone_name;
-	 	$n++;
-		if($n==2) $n=0;
-		//$price_1=$price_2=$price_3='';
+            </div>
+
+
+        </div>
+        <div class="pprices">
+            <?php $tttip = SalaryLetter($per,$pack_price,$siol,$fresh_per,$item_id,$valuta); ?>
+            <div class="pprice" data-tooltip="<?php echo htmlspecialchars($tttip);?>">
+                <?php echo $price_1?>
+                <a href="/packpost.php?item_id=<?php echo $item_id?>">
+                    <img width="15px" src="../img/icons/50/quest/icon_item_quest023.png"/>
+                </a>
+            </div>
+            <div class="pprice"><?php echo $profit_1.'<br>'.$ProfitOr_1.'/'.$imgor?></div>
+        </div>
+    </div>
+
+<hr>
+<?php
+$zone_name2 = $zone_name;
+
+if($n == 0)
+    $n++;
+else
+    $n = 0;
 }
-	echo '<div>';
-	
+?>
+
+<div>
+<?php
 function ProfLvl($user_id,$prof_id)
 {
 	$qwe = qwe("

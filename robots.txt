@@ -8,3 +8,4 @@ Disallow: *sort=
 Disallow: *view=
 Disallow: *utm=
 Crawl-Delay: 5
+Clean-param: query_id /catalog.php
