@@ -20,7 +20,7 @@ include_once 'functions/functions.php';
 
 $start_id = 8000735;
 $stop_id = 8000787;
-$limit = 200;
+$limit = 1000;
 
 
 /*
@@ -33,7 +33,7 @@ foreach($qlast as $q)
 */
 
 $qlist = qwe("
-SELECT * FROM `New_crafts_65` 
+SELECT * FROM `New_crafts_6.5.3` 
 /*WHERE result_item_id in (SELECT item_id FROM New_items60)*/
 WHERE craft_id > (SELECT item_id FROM parsed_last)
 /*LIMIT 5*/
@@ -84,8 +84,7 @@ foreach($qlist as $qq)
 	//if(IsCraftDeletedInBD($rec))
 		//continue;
 	
-	$icrfts2++;
-	if($icrfts2 > $limit) break;
+
 	
 	$plink = 'http://archeagecodex.com/ru/recipe/'.$rec;
 	sleep(1);
@@ -109,7 +108,8 @@ foreach($qlist as $qq)
 	{
 		//echo 'Рецепт пуст<hr>'; 
 		continue;
-	}else
+	}
+	//else
 	//echo 'Id: '.$craft_id.' | '.'';
 	?>
 	Id: <a href="https://archeagecodex.com/ru/recipe/<?php echo $craft_id?>/"><?php echo $craft_id?></a>
@@ -262,6 +262,7 @@ foreach($qlist as $qq)
 			
 			
 		}
+
 		$i++;
 	}
 	
@@ -292,6 +293,9 @@ foreach($qlist as $qq)
 	unset($itmarr);
 	unset($arr);
 	echo '<hr>';
+
+    $icrfts2++;
+    if($icrfts2 > $limit) break;
 }
 echo 'Время выполнения скрипта: '.(microtime(true) - $start).' сек.';
 

@@ -44,10 +44,18 @@ WHERE `result_item_id` NOT IN
 GROUP BY `result_item_id`
 LIMIT 10
 ");*/
+/*
 $qwe = qwe("
-SELECT * FROM `New items 6.5`
+SELECT * FROM `New_items_6.5.3`
 WHERE item_id > (SELECT item_id FROM parsed_last)
-LIMIT 100
+");
+*/
+
+$qwe = qwe("
+SELECT * FROM `items`
+WHERE item_id = '$start_id' /*(SELECT item_id FROM parsed_last)*/
+AND (item_id <  1000000 or item_id > 8000000)
+/*LIMIT 10*/
 ");
 if((!$qwe) or $qwe->num_rows == 0)
 	die('no items');
@@ -57,7 +65,7 @@ $ver = random_str(8);
 //{
 foreach($qwe as $q)
 {
- 
+
 	$itm = $q['item_id'];
  	$new = 1;
  	$new = (!IsItemExistInBD($itm));
@@ -65,25 +73,25 @@ foreach($qwe as $q)
 	$i++;
  	//if($i>100) break;
 	qwe("UPDATE `parsed_last` SET `item_id` = '$itm' WHERE `id` = 1");
-	
+
 	echo '<hr>';
 	$plink = 'http://archeagecodex.com/ru/item/'.$itm;
  //echo $itm;
 	sleep(1);
 	$somepage = curl($plink);
-	
+
 
 	$is_trade_npc = 0;
-	
+
 	if(!$somepage) echo 'error';
- //var_dump($somepage);
+
 	preg_match_all('#<td colspan="2">ID:(.+?)<div class="addon_info">#is', $somepage, $arr);
-	
+
 	if(!$arr[0][0]) {echo 'Предмет пуст<hr>'; continue;}
 	else
 	$table = $arr[0][0];
 	$price_type = '';
-	
+
 	$item_id = AboutCraft('#ID: (.+?)td>#is', 'digits', $table);
 	$item_id = intval($item_id);
 	//echo 'Id: '.$itm.' | ';
@@ -94,12 +102,8 @@ foreach($qwe as $q)
 	if($item_id != $itm) {echo 'Предмет пуст<hr>'; continue;}
 	$item_name = AboutCraft('#id="item_name"(.+?)</span>#is', 'item_names', $table);
 	if(preg_match('/deprecated|test|Тест: |тестовый|NO_NAME|Не используется/ui',$item_name)) continue;
-	
-	
-		
-	
-	
-	
+
+
 	echo $item_name.'<br>';
 	//if(!$new) continue;
 	//exit();
@@ -112,7 +116,7 @@ foreach($qwe as $q)
 	$category = AboutCraft('#<td class="item-icon">(.+?)<br>#is', 'letters', $table);
  	if(array_search($category,['TESTitem','TESTNPC Packs','TESTBody Pack','TESTitem']))
 		continue;
- 
+
  	$categ_id = 1;
  	echo $category.'<br>';
  	$querycat = qwe("SELECT `id` FROM `item_categories` WHERE `name` = '$category'");
@@ -120,11 +124,11 @@ foreach($qwe as $q)
 	{
 		$categ_id = $qc['id'];
 	}
- 
- 	
 
- 	
-	
+
+
+
+
 	if(preg_match('/deprecated|test|тестовый|NO_NAME|Не используется/ui',$category)) continue;
 	//echo '<p>'.$category.'</p>';
 
@@ -151,15 +155,20 @@ foreach($qwe as $q)
 	{
 		$price_sale = 0;
 	}
-	
+
 	$price_type = AboutCraft('#Стоимость:(.+?)</tr>#is', 'price_type', $table);
 	//echo '<p>'.$price_type.'</p>';
- 	$valut_id = ValutID($price_type);
-	
+ 	$valut_id = intval(ValutID($price_type));
+
 	if(preg_match('/Можно приобрести/',$table) or ($valut_id and $valut_id !=500))
 	{
 		$is_trade_npc = 1;
-		//echo 'Можно купить у NPC';
+		if($price_sale > 0 and !$valut_id)
+        {
+            $valut_id = 500;
+            $price_type = 'gold';
+        }
+
 	}
 
 	$personal = 0;
@@ -185,36 +194,40 @@ foreach($qwe as $q)
 		VALUES
 		('$item_id', '$atom_to', '$atoms')");
 	}
- 
-	
- 	
- 	
+
+
+
+
  	if($new)
 	qwe("REPLACE INTO `items` 
 	(`item_id`, `price_buy`, `price_type`, `valut_id`, `price_sale`, `is_trade_npc`, `category`, `categ_id` , `item_name`, `description`, `personal`, `basic_grade`) 
 	VALUES 
 	('$item_id', '$price_buy', '$price_type', '$valut_id', '$price_sale', '$is_trade_npc', '$category', '$categ_id', '$item_name', '$description', '$personal', '$grade')");
-	
+
  	else
  	qwe("UPDATE `items` SET 
 	`price_buy` = '$price_buy', 
 	`price_type` = '$price_type', 
-	`price_sale` = '$price_sale', 
-	`is_trade_npc` = '$is_trade_npc', 
-	`item_name` = '$item_name', 
-	`description` = '$description', 
-	`personal` = '$personal', 
-	`basic_grade` = '$grade'
+	`price_sale` = '$price_sale',
+    `valut_id` = '$valut_id',
+	/*`is_trade_npc` = '$is_trade_npc',*/ 
+	`item_name` = '$item_name',
+	/*`personal` = '$personal', */
+	/*`basic_grade` = '$grade',*/
+    `description` = '$description'
 	WHERE `item_id` = '$item_id'
 	");
-	
+
+
 	$iconfile = ParsIcons($item_id);
 	if($iconfile)
 	{
-		
+
 		?><div style="width: 40px; height: 40px; background-image: url(<?php echo 'img/icons/50/'.$iconfile.'.png?ver='.$ver?>)"></div><?php
 	}
-	
+
+
+
 	if($new)
 		echo 'Добавил';
 	else
@@ -225,6 +238,13 @@ foreach($qwe as $q)
 	unset($arr);
 	*/
 }
+
+function ParsItemObject($item_id)
+{
+
+}
+
+
 echo 'Время выполнения скрипта: '.(microtime(true) - $start).' сек.';
 
 

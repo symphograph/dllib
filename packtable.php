@@ -1,6 +1,6 @@
 <?php
 setcookie('path', 'packtable');
-include_once 'includs/usercheck.php';
+require_once 'includs/usercheck.php';
 
 $userinfo_arr = UserInfo();
 if (!$userinfo_arr) {
@@ -9,7 +9,7 @@ if (!$userinfo_arr) {
 }
 
 $ver = random_str(8);
-$aa_ver = '6.5';
+$aa_ver = '6.5.3';
 ?>
 
 
@@ -18,7 +18,7 @@ $aa_ver = '6.5';
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="yandex-verification" content="4878c37eb34cedcf" />
+<meta name="yandex-verification" content="<?php echo $yandex_key?>" />
 <meta name = "description" content = "Таблица цен на паки в Archeage <?php echo $aa_ver?>"/>
   <meta name = "keywords" content = "товары фактории, паки <?php echo $aa_ver?>, archeage, архейдж, аркейдж, региональные товары, таблица паков, сколько стоят паки, цена паков" />
 <title>Таблица цен на паки <?php echo $aa_ver?></title>

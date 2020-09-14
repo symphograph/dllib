@@ -164,7 +164,12 @@ function PriceType($output)
 	{
 		$price_type = 'Звездный ролл';
 	}
-	
+
+    if(preg_match('#item--8001661#',$output))
+    {
+        $price_type = 'Арткоин';
+    }
+
 	if(preg_match('/alt="bronze"/',$output))
 	{
 		$price_type = 'gold';
