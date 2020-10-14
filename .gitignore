@@ -122,7 +122,7 @@ ucli.key
 vc_hdrs.h
 
 ##### SVN
-.svn/
+#.svn/
 
 ##### Mercurial
 .hg/
