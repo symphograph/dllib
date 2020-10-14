@@ -492,7 +492,8 @@ About
 ip.php
 .htaccess
 .idea
-/cgi-bin/
+cgi-bin
 mailru.php
 /logs/
-/global/
+/public_html/global/
+avatars
