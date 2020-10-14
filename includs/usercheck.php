@@ -1,8 +1,8 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/includs/ip.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/includs/config.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/functions/functions.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/functions/functs.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
 $BotName = is_bot();
 if(empty($_COOKIE['identy']) and (!$BotName))
 CookieTest();

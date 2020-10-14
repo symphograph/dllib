@@ -75,7 +75,7 @@ function qwe($sql)
 // Процедура записи в лог фаил для записи ошибок
 function writelog($typelog, $log_text) 
 {
-	$log = fopen($_SERVER['DOCUMENT_ROOT'].'/logs/'.$typelog.'.txt','a+');
+	$log = fopen($_SERVER['DOCUMENT_ROOT'].'/../logs/'.$typelog.'.txt','a+');
 	fwrite($log, "$log_text\r\n");
 	fclose($log);
 }

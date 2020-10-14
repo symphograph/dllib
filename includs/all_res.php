@@ -64,7 +64,6 @@ if($all_res)
 	<?php	
 }
 
-
 $all_trash = AllResShow($u_amount,1);
 if($trash and $all_trash)
 {
