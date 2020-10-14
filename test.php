@@ -6,19 +6,11 @@ include_once 'functions/functions.php';
 include_once 'includs/config.php';
 
 
-$a = 1;
-$b = '1';
 
-if(!$b)
-    echo 'no';
-else
-    echo 'yes';
-
-die();
-$item_id = 28971;
+$item_id = 8319;
 $arr = AllPotentialMats($item_id);
 
-function AllPotentialMats($item_id, $arr=[],$i=0)
+function AllPotentialMats(int $item_id, array $arr=[], int $i=0)
 {
     $i = intval($i);
     $i++;
@@ -49,7 +41,7 @@ function AllPotentialMats($item_id, $arr=[],$i=0)
         //echo $id.'<br>';
         $arr[] = $id;
         if($craftable)
-            $arr = ParentItems($id, $arr,$i);
+            $arr = AllPotentialMats($id, $arr,$i);
     }
     $arr = array_unique($arr);
     sort($arr);
@@ -67,6 +59,5 @@ foreach ($qwe as $q)
     extract($q);
     echo $item_name.'<br>';
 }
-
 ?>
 

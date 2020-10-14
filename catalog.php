@@ -1,8 +1,8 @@
 <?php
-include_once 'includs/usercheck.php';
+require_once 'includs/usercheck.php';
 setcookie('path', 'catalog');
-//include_once 'includs/user.php';
-$hrefself = '<a href="'.$_SERVER['PHP_SELF'].'?query=';
+
+
 $ver = random_str(8);
 
 $item_sgroup = $_GET['item_sgroup'] ?? 1;
