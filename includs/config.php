@@ -10,6 +10,7 @@ if(preg_match('/www./',$server_name))
 	header("Location: https://".$server_name."/".$ref);
 	exit();
 }
+
 function dbconnect() 
 {
 	global $dbLink, $myip, $connects;
@@ -79,5 +80,6 @@ function writelog($typelog, $log_text)
 	fwrite($log, "$log_text\r\n");
 	fclose($log);
 }
+
 dbconnect();
 ?>

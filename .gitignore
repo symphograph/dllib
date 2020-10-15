@@ -494,6 +494,4 @@ ip.php
 .idea
 cgi-bin
 mailru.php
-/logs/
 /public_html/global/
-avatars
