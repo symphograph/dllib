@@ -1,0 +1,16 @@
+{
+  "name": "vendor_name/DlLib",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Roma",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "ext-mysqli": "*",
+    "ext-iconv": "*"
+  }
+}
