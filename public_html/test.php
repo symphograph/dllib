@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 <?php
+$tstart = microtime(true);
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
 if(!$myip) exit();
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
@@ -7,57 +8,41 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
 
 
 
-$item_id = 8319;
-$arr = AllPotentialMats($item_id);
-
-function AllPotentialMats(int $item_id, array $arr=[], int $i=0)
-{
-    $i = intval($i);
-    $i++;
-
-    $qwe = qwe("
-    SELECT 
-    crafts.craft_id,
-    items.item_id,
-    items.item_name,
-    items.craftable
-    FROM craft_materials
-    inner join items on craft_materials.item_id = items.item_id
-    AND craft_materials.result_item_id = '$item_id'
-    AND items.on_off
-    AND craft_materials.mater_need > 0
-    inner join crafts on crafts.craft_id = craft_materials.craft_id
-	AND crafts.on_off
-    ");
-    if(!$qwe or $qwe->num_rows == 0)
-        return [];
-
-    foreach ($qwe as $q)
-    {
-
-        $id = $q['item_id'];
-        $craftable = $q['craftable'];
-        //if(!$craftable) continue;
-        //echo $id.'<br>';
-        $arr[] = $id;
-        if($craftable)
-            $arr = AllPotentialMats($id, $arr,$i);
-    }
-    $arr = array_unique($arr);
-    sort($arr);
-    return $arr;
-}
-//printr($arr);
-
-$qwe = qwe("
-SELECT * from items
-WHERE item_id
-IN (".implode(', ',$arr).")
-");
+$qwe = qwe("SELECT item_id FROM items WHERE on_off AND item_id >= 32103 AND ismat LIMIT 100");
 foreach ($qwe as $q)
 {
-    extract($q);
-    echo $item_name.'<br>';
+    $item_id = $q['item_id'];
+    $Item = new Item($item_id);
+    $arr = $Item->AllPotentialResults($item_id);
+    $str = implode(', ',$arr);
+    ?><details><summary><?php echo $Item->item_name?></summary><?php
+    ListResult($arr);
+    ?></details><?php
+    echo count($arr).'<br>';
 }
+
+
+
+
+function ListResult(array $arr)
+{
+    if(!count($arr))
+        return false;
+    $str = implode(', ',$arr);
+
+    $qwe = qwe("
+    SELECT * from `items`
+    WHERE item_id
+    IN ( $str )
+    ORDER BY item_name
+    ");
+    foreach ($qwe as $q)
+    {
+        extract($q);
+        echo $item_name.'<br>';
+    }
+}
+
+echo '<br><br>'. (microtime(true) - $tstart);
 ?>
 
