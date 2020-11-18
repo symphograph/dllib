@@ -181,7 +181,7 @@ function DeviceMark($user_id,$unix_time = 0)
     SELECT * FROM `sessions` 
     WHERE `sessmark` = '$sessmark' 
     AND `user_id` = '$user_id'");
-	if(!$qwe or $qwe->num_rows == 0)
+	if(!$qwe or !$qwe->num_rows)
 	{
         SetSess($user_id, $sessmark, $unix_time);
         return true;
@@ -189,6 +189,7 @@ function DeviceMark($user_id,$unix_time = 0)
 
     $good = false;
     $agent = get_browser(null, true);
+
     extract($agent);
     foreach($qwe as $q)
     {

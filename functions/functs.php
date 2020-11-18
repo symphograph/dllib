@@ -278,7 +278,7 @@ function ItemsFromAlterValutes($valut_id)
 function MaxValuta($valut_id)
 {
 	$maximums = [
-	3 => 700,
+	3 => 12001,
 	4 => 8000,
 	6 => 501,
 	23633 => 2000

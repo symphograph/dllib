@@ -129,6 +129,7 @@
 	display: block;
 	background-repeat: no-repeat;
 		}
+
    #gold {
 	border-color: #e2dec6; 
 	border-width:0;
@@ -136,14 +137,15 @@
 	color: #6c3f00;
 	margin-left: 19px;
 	margin-bottom: 20px;
-	align-content: right;
+	/*align-content: right;*/
 	/*border-radius: 4px;*/
 	width: 83px;
 	/*height: 12px;*/
-	input::-webkit-outer-spin-button,; 	
+	/*input::-webkit-outer-spin-button;*/
 	text-align: right;
 }
 	#silbro {
+
 	margin-left: 25px;
 	margin-bottom: 5px;
 	border-color: #e2dec6; 
@@ -151,25 +153,26 @@
 	text-align: right;	
 	background-color: rgba(226,222,198,0.00);
 	color: #6c3f00;
-	align-content: left;
 	border-radius: 4px;
 	width: 25px;
 	min-width: 20px;
 	/*height: 12px;*/
-	input::-webkit-outer-spin-button,}
+	input:-webkit-outer-spin-button;
+	}
+
 	#gold_down {
+
 	border-color: #e2dec6;
 	border-width: 0;
 	background-color: rgba(226,222,198,0.00);
 	color: #6c3f00;
 	margin-right: 15px;
 	margin-bottom: 3px;
-	align-content: right;
+	text-align: right;
 	/*border-radius: 4px;*/
 	width: 87px;
 	/*height: 12px;*/
-	input::-webkit-outer-spin-button,; 	
-	text-align: right;
+	/*input::-webkit-outer-spin-button;*/
 }
 	#silbro_down {
 	margin-right: 25px;
@@ -179,12 +182,13 @@
 	text-align: right;	
 	background-color: rgba(226,222,198,0.00);
 	color: #6c3f00;
-	align-content: left;
+	/*align-content: left;*/
 	border-radius: 4px;
 	width: 30px;
 	min-width: 25px;
 	height: 12px;
-	input::-webkit-outer-spin-button,}
+	/*input::-webkit-outer-spin-button;*/
+	}
 	
 	#staff {
 	margin-left: 25px;

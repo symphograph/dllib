@@ -12,6 +12,7 @@
   "require": {
     "ext-mysqli": "*",
     "ext-iconv": "*",
-    "ext-gmp": "*"
+    "ext-gmp": "*",
+    "ext-curl": "*"
   }
 }
