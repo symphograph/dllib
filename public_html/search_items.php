@@ -12,7 +12,7 @@ WHERE (
 `item_name` LIKE '%".$query."%')
 AND `item_name` is not Null  
 AND `on_off` = 1 
-ORDER BY `craftable` DESC, `ismat` DESC, `item_id`, `category`, `item_name`, `personal` LIMIT 0, 50");
+ORDER BY `craftable` DESC, `ismat` DESC, `category`, `item_name`, `personal`, `item_id` LIMIT 0, 50");
 while($data = mysqli_fetch_assoc($request))
 {
 	$name = $data['item_name'];
