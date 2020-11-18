@@ -242,8 +242,9 @@ function MoneyForm($item_id)
 	{
 		$puser_id = $prarr['user_id'];
 		$prnick = AnyById($puser_id,'mailusers','user_nick')[$puser_id];
+		$Server = new Server($user_id);
 		$time = $prarr['time'];
-		$time = date('d.m.Y H:m',strtotime($time)).'<br>';
+		$time = date('d.m.Y',strtotime($time)) .' <span style="color: #3E454C">' . $Server->name . '</span><br>';
 		$auc_price = $prarr['auc_price'];
 		//var_dump($prnick);
 		if($prarr['user_id'] == $user_id)

@@ -115,8 +115,9 @@ function UserAucPrice($item_id,$user_id,$only = false,$friends = [])
 function ServerInfo($user_id,$what = 'server_group')
 {
 	
-	$defaults = ['server_group' => 2,'server' => 9];
-	$query = qwe("SELECT `server`, `server_group` 
+	$defaults = ['server_group' => 2,'server' => 9,'server_name' => 'Сервер ?'];
+	//Занятно. Я изобрел класс.=)
+	$query = qwe("SELECT `server`, `server_group`, server_name 
 	FROM `user_servers`
 	INNER JOIN `servers` 
 	ON `user_servers`.`server` = `servers`.`id`
@@ -174,9 +175,9 @@ function MoneyLineBL($auc_price,$item_id,$color = 'white',$is_show = 0)
 
 function esyprice($total,$size = 15,$only = false)
 {
-	$gold = '<img src="img/gold.png" width="'.$size.'" height="'.$size.'" alt="g"/>';
-	$silver = '<img src="img/silver.png" width="'.$size.'" height="'.$size.'" alt="s"/>';
-	$bronze = '<img src="img/bronze.png" width="'.$size.'" height="'.$size.'" alt="b"/>';
+	$gold = '<img src="img/gold.png" style="width: 0.9em; height: 0.9em" alt="g"/>';
+	$silver = '<img src="img/silver.png" style="width: 0.9em; height: 0.9em" alt="s"/>';
+	$bronze = '<img src="img/bronze.png" style="width: 0.9em; height: 0.9em" alt="b"/>';
 	$gol= strrev(substr(strrev($total),4,10));
 	if($gol == 0) $gold = '';
 		$sil = strrev(substr(strrev($total),2,2));
