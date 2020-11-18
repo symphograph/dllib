@@ -274,16 +274,23 @@ optarity: 0,1;
 	
 }
 
-.searcharea input[type="text"] {
+#search_box {
+	font-size: 14px;
+	height: 2.5em;
+	line-height: 2em;
 	color: #6c3f00;
 	border: none;
 	background: none;
 	background-image: url("../img/reward2.png");
-	padding: 10px 2em 8px 2em;
+	padding: 0 4em 0 2em;
 	outline: none;
 	background-repeat: no-repeat;
-	width: 300px;
-	background-size: 270px 33px;
+	width: 22em;
+	background-size: 22em 2.5em;
+}
+
+#search_box:focus {
+	background-image: url("../img/reward.png");
 }
 
 #isbuy input[type="number"] {
@@ -311,9 +318,7 @@ input[type='number'] {
 	
 
 }
-.searcharea input[type="text"]:focus {
-	background-image: url("../img/reward.png");
-}
+
 
 #search_advice_wrapper{
 	/*margin-top: 50px;	*/	

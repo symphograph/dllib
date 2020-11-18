@@ -86,12 +86,13 @@ foreach($qwe as $q)
 ?>
 		</div>
 	<div class="searcharea">
-		
 		<div class="search">
 			<div id="snav"><div id="searchbtn"></div></div>
-			<div><input type="text" id="search_box" name="squery" value="" autocomplete="off"/>
-		<div id="search_advice_wrapper"></div>
-		</div></div>
+			<div>
+                <input type="search" id="search_box" name="squery" value="" autocomplete="off"/>
+		        <div id="search_advice_wrapper"></div>
+		    </div>
+        </div>
 	</div>
 	<div id="tiptop"></div>
 	
