@@ -53,9 +53,9 @@ WHERE item_id > (SELECT item_id FROM parsed_last)
 
 $qwe = qwe("
 SELECT * FROM `items`
-WHERE item_id = '$start_id' /*(SELECT item_id FROM parsed_last)*/
+WHERE item_id = '$start_id' /*(SELECT item_id FROM parsed_last)
 AND (item_id <  1000000 or item_id > 8000000)
-/*LIMIT 10*/
+LIMIT 1*/
 ");
 if((!$qwe) or $qwe->num_rows == 0)
 	die('no items');
@@ -159,9 +159,10 @@ foreach($qwe as $q)
 	$price_type = AboutCraft('#Стоимость:(.+?)</tr>#is', 'price_type', $table);
 	//echo '<p>'.$price_type.'</p>';
  	$valut_id = intval(ValutID($price_type));
-
-	if(preg_match('/Можно приобрести/',$table) or ($valut_id and $valut_id !=500))
+   // printr(htmlspecialchars($somepage));
+	if(preg_match('/Можно приобрести|Продаётся у NPC/',$somepage) or ($valut_id and $valut_id !=500))
 	{
+	    echo 'hghfgh';
 		$is_trade_npc = 1;
 		if($price_sale > 0 and !$valut_id)
         {
@@ -171,6 +172,7 @@ foreach($qwe as $q)
 
 	}
 
+    die($is_trade_npc);
 	$personal = 0;
 	if(preg_match('/Персональный предмет/',$table))
 	{

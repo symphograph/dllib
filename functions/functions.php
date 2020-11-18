@@ -569,8 +569,8 @@ function UserMatPrice($item_id,$user_id,$craftignor = false)
 	}
 	
 	if($craftable and (!$craftignor))
-		{return UserCraftPrice($item_id,$user_id); echo $item_name;}
-	
+		return UserCraftPrice($item_id,$user_id);
+
 	return PriceMode($item_id,$user_id)['auc_price'] ?? false;
 }
 
@@ -801,7 +801,21 @@ function PriceSolo($item_id,$user_id)
 	AND `server_group` = '$server_group'
 	");
 	if(!$qwe or $qwe->num_rows == 0)
-		return false;//Конкретно вы ничего не указали. Зыните.
+    {
+        if(!IsValuta($item_id) and in_array($item_id,IntimItems()))
+        {
+            $arr =  ItemAny($item_id,'price_sale');
+            if($arr)
+            {
+                $price = array_shift($arr);
+                $price = intval($price);
+                if($price)
+                    return ['auc_price'=>$price,'user_id'=>1,'time'=>'2020-02-22'];
+            }
+        }
+        return false;
+    }
+
 	$qwe = mysqli_fetch_assoc($qwe);
 	//var_dump($qwe['auc_price']);
 	return ['auc_price' => $qwe['auc_price'],'user_id'=>$user_id,'time'=>$qwe['time']];
@@ -927,14 +941,21 @@ function PriceMode2($item_id,$user_id)
 	
 	if(in_array($item_id,IntimItems()))
 	{
-		$price = PriceSolo($item_id,$user_id);
-		if($price)
-			return $price;
+		$arr = PriceSolo($item_id,$user_id);
+		if($arr)
+			return $arr;
 	}
 		
 	return PriceWithFrends($item_id,$user_id);
 }
+function IsValuta(int $item_id) : bool
+{
+    $qwe = qwe("SELECT * FROM valutas WHERE valut_id = '$item_id'");
+    if($qwe and $qwe->num_rows)
+        return true;
 
+    return false;
+}
 function PriceMode($item_id,$user_id)
 {
 	global $mode;

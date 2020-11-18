@@ -58,14 +58,9 @@
 	color: #6c3f00;
 	-moz-opacity: 0.95;
 	opacity: 0.95;
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha"(Opacity=95);
-
-
-
-
-
-			filter: progid:DXImageTransform.Microsoft.Alpha(opacity=95);
-	filter: alpha(opacity=95);
+	-ms-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=95);
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=95);
+	/*filter: alpha(opacity=95);*/
 	z-index: 999;
 	position: relative;	
 	top: 24px;

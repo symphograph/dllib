@@ -124,12 +124,7 @@ function rescost($rv, $forlost)
 		
 		if($isbest == 3)
 		{
-			//if($isbest == 3)
-				$price = UserMatPrice($mater,$user_id,1);
-			//else
-				//$price = $key['craft_price'];
-			
-			
+            $price = UserMatPrice($mater,$user_id,1);
 			$matsum = $mater_need*$price;
 			$sum = $sum+$matsum;
 			
@@ -171,10 +166,7 @@ function rescost($rv, $forlost)
 			//echo '<p>откопал в промежуточных: '.$mater_name.' '.$price.'</p>';
 		}elseif(!$key['craftable'])
 			$lost[] = $mater;
-		//$forlostnames[$mater_name] = $mater;
-		
-		
-		
+
 		$matsum = $mater_need*$price;
 		$sum = $sum+$matsum;
 		
