@@ -133,7 +133,7 @@ $('#search_advice_wrapper').on('click','div',function(){LoadItem(this.id)});
 });
 
 function key_activate(n){
-	$('#search_advice_wrapper div').eq(suggest_selected-1).removeClass('active');
+	$('#search_advice_wrapper .advice_variant').removeClass('active');
 
 	if(n == 1 && suggest_selected < suggest_count){
 		suggest_selected++;
@@ -142,12 +142,12 @@ function key_activate(n){
 	}
 
 	if(suggest_selected > 0){
-		$('#search_advice_wrapper div').eq(suggest_selected-1).addClass('active');
+		$('#search_advice_wrapper .advice_variant').eq(suggest_selected-1).addClass('active');
 		//$("#search_box").val($('#search_advice_wrapper div').eq(suggest_selected-1).text() );
 		//var attribute = $('#search_advice_wrapper div').getAttribute('data-id');
 		//$("#search_box").val($('#search_advice_wrapper div').eq(suggest_selected-1).data('id') );
 		//$('#search_box').val($(this).eq(suggest_selected-1).text());
-		$("#search_box").val($('#search_advice_wrapper div').eq(suggest_selected-1).text() );
+		$("#search_box").val($('#search_advice_wrapper .saw_name').eq(suggest_selected-1).text() );
 	} else {
 		$("#search_box").val(input_initial_value );
 	}

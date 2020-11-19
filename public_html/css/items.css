@@ -340,12 +340,18 @@ input[type='number'] {
 }
 
 #search_advice_wrapper .advice_variant{
-			
+	font-size: 16px;
 	cursor: pointer;
-	/*padding: 5px;*/
+	display: flex;
+	justify-content: flex-start;
 	text-align: left;
 	border-bottom-color: rgba(172,160,107,1.00);
 	border-spacing: 1px 0px;
+}
+
+.advice_variant .saw_notes{
+	font-size: 12px;
+	color: #404040;
 }
 
 #search_advice_wrapper .advice_variant:hover{

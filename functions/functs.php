@@ -666,4 +666,45 @@ function is_image($filename) {
 
   return $img_types[$is[2]];
 }
+
+function SearchWrapVariant(object $data)
+{
+    $item_name = $data->item_name;
+	$item_id = $data->item_id;
+	$icon = $data->icon;
+	$personal = intval($data->personal);
+    $craftable = intval($data->craftable);
+
+
+    ob_start();
+    $personals = ['','Персональный'];
+    $crafts = ['','Крафтабельный'];
+    ?>
+    <div class="advice_variant" id="<?php echo $item_id?>" data-id="<?php echo $item_id?>">
+        <img id="icon" width="40px" height="40px" src="img/icons/50/<?php echo $icon?>.png">
+        <div>
+            <div class="saw_name"><?php echo $item_name?></div>
+            <div class="saw_notes"><?php echo $personals[$personal]?></div>
+            <div class="saw_notes"><?php echo $crafts[$craftable]?></div>
+        </div>
+    </div>
+    <hr>
+    <?php
+    return trim(one_line(ob_get_clean()));
+
+}
+
+function one_line($buffer)
+{
+// удалить пробелы между html тегами, кроме <pre>
+	$buffer = preg_replace('/(?:(?<=\>)|(?<=\/\>))\s+(?=\<\/?)/', '', $buffer);
+	/*
+	if (FALSE === strpos($buffer, '<pre')) {
+ $buffer = preg_replace('/\s+/', ' ', $buffer);
+	}
+	*/
+// удалить новые строки,за которыми пробелы
+	//$buffer = preg_replace('/[\t\r]\s+/', ' ', $buffer);
+	return $buffer;
+}
 ?>
