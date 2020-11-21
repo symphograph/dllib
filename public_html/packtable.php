@@ -9,7 +9,7 @@ if (!$userinfo_arr) {
 }
 
 $ver = random_str(8);
-$aa_ver = '6.5.3';
+$aa_ver = '7.0';
 ?>
 
 
