@@ -26,10 +26,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/filefuncts.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
 
-$start_id = $_POST['start_id'] ?? 0;
-$start_id = intval($start_id);
-$stop_id = $_POST['stop_id'] ?? $start_id;
-$stop_id = intval($stop_id);
+
 //if(!$start_id) die;
 //if(!$stop_id) die;
 //var_dump($stop_id);
@@ -46,17 +43,18 @@ LIMIT 10
 ");*/
 /*
 $qwe = qwe("
-SELECT * FROM `New_items_6.5.3`
-WHERE item_id > (SELECT item_id FROM parsed_last)
+SELECT * FROM `New_items_70`
+WHERE item_id >= (SELECT item_id FROM parsed_last)
+LIMIT 100
 ");
 */
 
 $qwe = qwe("
-SELECT * FROM `items`
-WHERE item_id = '$start_id' /*(SELECT item_id FROM parsed_last)
-AND (item_id <  1000000 or item_id > 8000000)
-LIMIT 1*/
+SELECT item_id FROM craft_materials WHERE item_id NOT in 
+(SELECT item_id FROM items)
+GROUP BY item_id
 ");
+
 if((!$qwe) or $qwe->num_rows == 0)
 	die('no items');
 $i = 0;
@@ -162,17 +160,15 @@ foreach($qwe as $q)
    // printr(htmlspecialchars($somepage));
 	if(preg_match('/Можно приобрести|Продаётся у NPC/',$somepage) or ($valut_id and $valut_id !=500))
 	{
-	    echo 'hghfgh';
 		$is_trade_npc = 1;
 		if($price_sale > 0 and !$valut_id)
         {
             $valut_id = 500;
             $price_type = 'gold';
         }
-
 	}
 
-    die($is_trade_npc);
+
 	$personal = 0;
 	if(preg_match('/Персональный предмет/',$table))
 	{
@@ -211,7 +207,7 @@ foreach($qwe as $q)
 	`price_buy` = '$price_buy', 
 	`price_type` = '$price_type', 
 	`price_sale` = '$price_sale',
-    `valut_id` = '$valut_id',
+    /*`valut_id` = '$valut_id',*/
 	/*`is_trade_npc` = '$is_trade_npc',*/ 
 	`item_name` = '$item_name',
 	/*`personal` = '$personal', */
@@ -247,7 +243,7 @@ function ParsItemObject($item_id)
 }
 
 
-echo 'Время выполнения скрипта: '.(microtime(true) - $start).' сек.';
+echo '<br><br>Время выполнения скрипта: '.(microtime(true) - $start).' сек.';
 
 
 ?>

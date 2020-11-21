@@ -33,9 +33,9 @@ foreach($qlast as $q)
 */
 
 $qlist = qwe("
-SELECT * FROM `New_crafts_6.5.3` 
+SELECT * FROM `New_Crafts_70` 
 /*WHERE result_item_id in (SELECT item_id FROM New_items60)*/
-WHERE craft_id > (SELECT item_id FROM parsed_last)
+WHERE craft_id >= (SELECT item_id FROM parsed_last)
 /*LIMIT 5*/
 ");
 
@@ -50,15 +50,12 @@ foreach($qlist as $qq)
 	
 	$new = true;
 	$rec = $qq['craft_id'];
+    $result_amount = $qq['result_amount'];
+    $prof_need = $qq['prof_need'];
 	$on_off = 1;
 	
 	qwe("UPDATE `parsed_last` SET `item_id` = '$rec' WHERE `id` = 1");
-	/*
-	//Пропускаем неиспользуемые рецепты
-	$ignorq = qwe("SELECT * FROM deleted_crafts50 WHERE craft_id = '$rec'");
-	if(mysqli_num_rows($ignorq)>0)
-		continue;
-	*/
+
 	
 	$query = qwe("SELECT `craft_id`, `on_off` FROM `crafts`
 	WHERE `craft_id` = '$rec'");
@@ -132,10 +129,8 @@ foreach($qlist as $qq)
 	$table = $arr[0][0];
 	//print_r($table);
 	/*
-	$prof_need = AboutCraft('#Требуемый уровень ремесла: (.+?)<br>#is', 'prof_need', $table);
-	echo '<p>p_need: '.$prof_need.'</p>';
+
 	*/
-	$prof_need = $qq['prof_need'];
 
 
 	$profession = AboutCraft('#Ремесло: (.+?)<br>#is', 'letters', $table);
@@ -195,7 +190,7 @@ foreach($qlist as $qq)
 		if(preg_match('/deprecated|test|тестовый/',$item_name)) break;
 		
 		
-		if(!($amount>0)) break;
+		if(!$amount) break;
 		if($i < $cnt)
 		{
 			//Если это материалы рецепта
@@ -235,7 +230,7 @@ foreach($qlist as $qq)
 				'$profession',
 				'$prof_id',
 				'$prof_need', 
-				'$amount', 
+				'$result_amount', 
 				'$craft_time',
 				'$mat_grade')
 				");
