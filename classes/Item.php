@@ -198,10 +198,10 @@ class Item
             $id = $q['item_id'];
             if(in_array($id,$arr))
                 continue;
-            $ismat = $q['ismat'];
+
             $arr[] = $id;
 
-            if($ismat)
+            if($q['ismat'])
                 $arr = self::AllPotentialResults($id, $arr,$i);
         }
         return $arr;
