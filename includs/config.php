@@ -13,28 +13,7 @@ if(preg_match('/www./',$server_name))
 function dbconnect() 
 {
 	global $dbLink, $myip, $connects;
-	
-	/*
-	if(!isset($connects))
-	$connects = 
-	[
-		'test.dllib.ru'=>
-		[
-			['dbHost' => 'localhost'],
-			['dbName' => 'xxxxxx'],
-			['dbUser' => 'xxxxxx'],
-			['dbPass' => 'xxxxxx']
-		],
-		
-		'dllib.ru'=>
-		[
-			['dbHost' => 'localhost'],
-			['dbName' => 'xxxxxx'],
-			['dbUser' => 'xxxxxx'],
-			['dbPass' => 'xxxxxx']
-		]	
-	];
-	*/
+
 	$server_name = $_SERVER['SERVER_NAME'];
 	
 	foreach($connects[$server_name] as $db)
