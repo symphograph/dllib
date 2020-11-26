@@ -3,9 +3,9 @@
 
 class Server
 {
-    public int $id;
-    public string $name;
-    public int $group;
+    public int $id = 9;
+    public string $name = 'Сервер?';
+    public int $group = 2;
 
     public function __construct($user_id)
     {
