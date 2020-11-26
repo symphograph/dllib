@@ -7,7 +7,7 @@ class Server
     public string $name = 'Сервер?';
     public int $group = 2;
 
-    public function __construct($user_id)
+    public function __construct(int $user_id)
     {
         $qwe = qwe("SELECT `server`, `server_group`, server_name 
         FROM `user_servers`
