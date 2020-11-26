@@ -224,6 +224,7 @@ function DeviceMark($user_id,$unix_time = 0)
 function SetSess($user_id,$sessmark,$unix_time)
 {
     $agent = get_browser(null, true);
+    if(!$agent) die('agent');
     extract($agent);
     $datetime = date('Y-m-d H:i:s',$unix_time);
     $cooktime = $unix_time+60*60*24*365*5;

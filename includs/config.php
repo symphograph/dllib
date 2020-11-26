@@ -1,6 +1,5 @@
 <?php
 $server_name = $_SERVER['SERVER_NAME'];
-
 if(preg_match('/www./',$server_name))
 {
 	$server_name = str_replace('www.','',$server_name);
