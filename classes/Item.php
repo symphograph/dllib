@@ -4,9 +4,10 @@
 class Item
 {
     public int $item_id;
-    public $price_type;
     public $valut_id;
+    public $price_buy;
     public $price_sale;
+    public $is_trade_npc;
     public $category;
     public $item_name;
     public $description;
@@ -23,20 +24,33 @@ class Item
     public $forup_grade;
     public $icon;
     public $md5_icon;
+    public $valut_name;
+    public $sgr_id;
 
-    public function __construct(int $item_id)
+    public function getFromDB(int $item_id)
     {
         $qwe = qwe("
-        SELECT * FROM `items` 
-        WHERE `item_id` = '$item_id'
+        SELECT
+        items.*,
+        item_categories.item_group,
+        item_categories.`name` as category,
+        valutas.valut_name,
+        `item_subgroups`.`sgr_id`
+        FROM
+        items
+        INNER JOIN item_categories ON items.categ_id = `item_categories`.`id`
+        AND `items`.`on_off` = 1 AND `items`.`item_id` = '$item_id'
+        LEFT JOIN `valutas` ON `valutas`.`valut_id` = `items`.`valut_id`
+        LEFT JOIN `item_groups` ON `item_groups`.id = item_categories.item_group
+        LEFT JOIN `item_subgroups` ON `item_subgroups`.sgr_id = `item_groups`.sgr_id
         ");
         if(!$qwe or !$qwe->num_rows)
             return false;
         $q = mysqli_fetch_object($qwe);
 
         $this->item_id = $item_id;
-        $this->price_type = $q->price_type;
         $this->valut_id = $q->valut_id;
+        $this->price_buy = $q->price_buy;
         $this->price_sale = $q->price_sale;
         $this->category = $q->category;
         $this->item_name = $q->item_name;
@@ -54,6 +68,9 @@ class Item
         $this->forup_grade = $q->forup_grade;
         $this->icon = $q->icon;
         $this->md5_icon = $q->md5_icon;
+        $this->valut_name = $q->valut_name;
+        $this->sgr_id = $q->sgr_id;
+        $this->is_trade_npc = $q->is_trade_npc;
 
         return true;
     }

@@ -23,7 +23,7 @@ class Craft
     public $grade;
     public $mins;
     public $spm;
-
+    public array $mats;
 
     public function __construct(int $craft_id)
     {
@@ -37,7 +37,7 @@ class Craft
         $this->craft_id = $q->craft_id;
         $this->rec_name = $q->rec_name;
         $this->dood_id = $q->dood_id;
-        $this->dood_name = $q->ood_name;
+        $this->dood_name = $q->dood_name;
         $this->result_item_id = $q->result_item_id;
         $this->result_item_name = $q->result_item_name;
         $this->labor_need = $q->labor_need;
@@ -54,8 +54,27 @@ class Craft
         $this->grade = $q->grade;
         $this->mins = $q->mins;
         $this->spm = $q->spm;
-
+        $this->mats = self::getMats();
         return true;
+    }
+
+    public function getMats() : array
+    {
+        $mats = [];
+        $qwe = qwe("
+        SELECT * FROM craft_materials 
+        WHERE craft_id = '$this->craft_id'
+        ");
+        foreach ($qwe as $q)
+        {
+            $q = (object) $q;
+            $mat = new Mat();
+            $mat->mat_id = $q->item_id;
+            $mat->mater_need = $q->mater_need;
+            $mat->need_grade = $q->mat_grade;
+            $mats[$mat->mat_id] = $mat;
+        }
+        return $mats;
     }
 
 

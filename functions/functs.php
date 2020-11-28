@@ -355,7 +355,7 @@ function Cubik($item_id,$icon,$grade = 1,$tooltip = '',$dig_in=false)
 {
 	if(!empty($tooltip))
 		$tooltip = 'data-tooltip="'.$tooltip.'"';
-	if($dig_in !== false and !empty($dig_in))
+	if($dig_in and !empty($dig_in))
 		$dig_in = '<div class="matneed">'.$dig_in.'</div>';
 	else
 		$dig_in = '';

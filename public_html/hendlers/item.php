@@ -17,56 +17,25 @@ if(!$userinfo_arr)
 extract($userinfo_arr);
 $user_id = $muser;
 
-$qwe = qwe("
-SELECT
-items.item_id,
-items.item_name,
-items.description,
-items.craftable,
-items.ismat,
-items.basic_grade,
-items.icon,
-items.categ_id,
-items.personal,
-items.ismat,
-item_categories.item_group,
-item_categories.`name` as category,
-is_trade_npc,
-items.valut_id,
-valutas.valut_name,
-price_buy,
-`item_subgroups`.`sgr_id`
-FROM
-items
-INNER JOIN item_categories ON items.categ_id = `item_categories`.`id`
-AND `items`.`on_off` = 1 AND `items`.`item_id` = '$item_id'
-LEFT JOIN `valutas` ON `valutas`.`valut_id` = `items`.`valut_id`
-LEFT JOIN `item_groups` ON `item_groups`.id = item_categories.item_group
-LEFT JOIN `item_subgroups` ON `item_subgroups`.sgr_id = `item_groups`.sgr_id
-");
-if(!$qwe or $qwe->num_rows == 0) die('Не вижу данных');
-foreach($qwe as $q)
-	extract($q);
-
-//echo mb_detect_encoding($description);
-$description = mysqli_real_escape_string($dbLink,$description);
-
+$Item = new Item();
+$Item->getFromDB($item_id);
+$description = $Item->description;
 $regex = '/((?<=\p{Ll})\p{Lu}|\p{Lu}(?=\p{Ll}))/ui';
 $description = preg_replace( $regex, ' $1', $description );
 $description = preg_replace("/ {2,}/"," ",$description);
-//$description = replace($description, ' ', $regex  );
+$description = htmlentities($description);
 	?>
 <div id="catalog_area">
 	<div class="item_descr_area">
 		<?php if($myip) echo $item_id?>
 		<div class="nicon">
-			<div class="itim" id="itim_<?php echo $item_id?>" style="background-image: url(/img/icons/50/<?php echo $icon?>.png)">
-				<div class="grade" style="background-image: url(/img/grade/icon_grade<?php echo $basic_grade?>.png)"></div>
+			<div class="itim" id="itim_<?php echo $item_id?>" style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
+				<div class="grade" style="background-image: url('/img/grade/icon_grade<?php echo $Item->basic_grade?>.png')"></div>
 			</div>
 			<div class="itemname">
-				<div id="mitemname"><b><?php echo $item_name?></b></div>
-				<div class="comdate"><?php if($personal) echo 'Персональный предмет'?></div>
-				<div class="mcateg" id="categ_<?php echo $categ_id?>" sgroup="<?php echo $sgr_id?>"><?php echo $category?></div>
+				<div id="mitemname"><b><?php echo $Item->item_name?></b></div>
+				<div class="comdate"><?php if($Item->personal) echo 'Персональный предмет'?></div>
+				<div class="mcateg" id="categ_<?php echo $Item->categ_id?>" sgroup="<?php echo $Item->sgr_id?>"><?php echo $Item->category?></div>
 			</div>	
 		</div>
 		<hr><br>
@@ -80,27 +49,27 @@ $description = preg_replace("/ {2,}/"," ",$description);
 		<hr>
 		
 		<?php 
-		if($is_trade_npc)
+		if($Item->is_trade_npc)
 		{
 			
 			echo 'Продается у NPC:<br>';
-			if($valut_id == 500)
-				echo esyprice($price_buy);
+			if($Item->valut_id == 500)
+				echo esyprice($Item->price_buy);
 			else
 			{
-				echo $price_buy;
+				echo $Item->price_buy;
 				?>
-				<a href="catalog.php?item_id=<?php echo $valut_id?>">
-		        <img src="img/icons/50/<?php echo IconLink($valut_id)?>.png" width="15" height="15" alt="<?php echo $valut_name?>"/>
+				<a href="catalog.php?item_id=<?php echo $Item->valut_id?>">
+		        <img src="img/icons/50/<?php echo IconLink($Item->valut_id)?>.png" width="15" height="15" alt="<?php echo $Item->valut_name?>"/>
 		        </a>
 		        <br><br>
 		        <?php
 					
-				if(!$personal)
+				if(!$Item->personal)
 				MoneyForm($item_id);	
 			}
 			
-		}elseif($categ_id != 133)
+		}elseif($Item->categ_id != 133)
 		{
 			MoneyForm($item_id);	
 		}
@@ -117,7 +86,7 @@ $description = preg_replace("/ {2,}/"," ",$description);
 	</div>
 	<div id="catalog_right">
 <?php
-if($ismat)	
+if($Item->ismat)
 {
 	?><p><b>Используется в рецептах:</b></p>
 		<div class="up_craft_area"><?php
@@ -131,7 +100,7 @@ else
 			 
 
 	
-if($craftable)
+if($Item->craftable)
 {
 	?><hr>
 	<div class="dcraft_craft_area" id="dcraft_craft_area">
@@ -147,12 +116,12 @@ if($craftable)
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/recurs.php';
 	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
-	DwnCraftList($globalitem_id);
+	DwnCraftList($Item);
 	?></div><?php
 
 
 
-	if(in_array($categ_id,[133]))
+	if(in_array($Item->categ_id,[133]))
     {
         ?>
         <br><hr><br>
@@ -175,8 +144,8 @@ if($craftable)
 		RefuseList($refuse);
 	else
 		echo 'Некрафтабельно';
-	if(($is_trade_npc and $valut_id !=500) or  in_array($item_id,[3,4,5,6,23633]))
-		ValutInfo($q);
+	if(($Item->is_trade_npc and $Item->valut_id !=500) or  in_array($item_id,[3,4,5,6,23633]))
+		ValutInfo($Item);
 }
 ?>
         </div>
@@ -185,17 +154,16 @@ if($craftable)
 <?php
 Comments($userinfo_arr,$item_id);
 
-function ValutInfo($q)
+function ValutInfo($Item)
 {
 	global $user_id;
-	extract($q);
-	$mvalut = $valut_id;
+	$mvalut = $Item->valut_id;
+	$valut_name = $Item->valut_name;
 	//Касательно Чести, Рем Репутации, итд.
-	if(in_array($item_id,[2,3,4,5,6,23633]))
+	if(in_array($Item->item_id,[2,3,4,5,6,23633]))
 	{
-		$valut_name = $item_name;
-		$mvalut = $item_id;
-			
+		$valut_name = $Item->item_name;
+		$mvalut = $Item->item_id;
 	}
 	$val_link = '<a href="catalog.php?item_id='.$mvalut.'">
 		<img src="img/icons/50/'.$mvalut.'.png" width="15" height="15" alt="'.$valut_name.'"/></a>';
@@ -203,7 +171,7 @@ function ValutInfo($q)
 	ItemsFromAlterValutes($mvalut);
 	?>
 	<br><br>
-	<h3><?php echo $item_name?>: конвертация в золото.</h3>
+	<h3><?php echo $Item->item_name?>: конвертация в золото.</h3>
 	*Следует учесть, что калькулятор не принимает в расчет предметы, позволяющие конвертировать валюту оптом.<br>
 	Медиана:
 	
@@ -327,10 +295,10 @@ function IsRefuse($item_id)
 	return $arr;
 }
 
-function DwnCraftList($item_id)
+function DwnCraftList($Item)
 {
 	$best_types = ['','Выбран руру','Выбран вами', 'Покупается'];
-	
+	$item_id = $Item->item_id;
 	global $user_id, $mat_deep, $myip, $trash;
 	$money = 0;
 	$qwe = qwe("
@@ -382,11 +350,10 @@ function DwnCraftList($item_id)
 	$imgor = '<img src="../img/icons/50/2.png" width="15px" height="15px"/>';
 	foreach($qwe as $q)
 	{$i++;
-		global $icon, $basic_grade;
 		extract($q);
 	 	
-	 	if(!$basic_grade) $basic_grade = 1;
-		$craft_name = $rec_name ?? $result_item_name;
+	 	if(!$Item->basic_grade) $basic_grade = 1;
+		$craft_name = $rec_name ?? $Item->item_name;
 	 	//$u_amount = $result_amount;
 	 	$u_amount = 1;
 	 	if($i == 1)
@@ -397,7 +364,7 @@ function DwnCraftList($item_id)
 			}	
 		}
 	 
-	 	if($i == 1 and !$personal)
+	 	if($i == 1 and !$Item->personal)
 		{
 			?>
 			<div id="isbuy">
@@ -571,7 +538,7 @@ function DwnCraftList($item_id)
 		INNER JOIN items ON items.item_id = craft_materials.item_id
 		AND craft_materials.craft_id = '$craft_id'
 		");
-		if($qwe2->num_rows > 0)
+		if($qwe2->num_rows)
 		{
 			//var_dump($isbest);
 			if($isbest > 1)
@@ -585,8 +552,8 @@ function DwnCraftList($item_id)
 			}
 
 			?>
-			<div class="main_itim" id="cr_<?php echo $craft_id?>" name="<?php echo $item_id?>" style="background-image: url(/img/icons/50/<?php echo $icon?>.png)">
-				<div class="grade" data-tooltip="<?php echo $dtitle?>" style="background-image: url(/img/grade/icon_grade<?php echo $basic_grade?>.png)">
+			<div class="main_itim" id="cr_<?php echo $craft_id?>" name="<?php echo $item_id?>" style="background-image: url(/img/icons/50/<?php echo $Item->icon?>.png)">
+				<div class="grade" data-tooltip="<?php echo $dtitle?>" style="background-image: url(/img/grade/icon_grade<?php echo $Item->basic_grade?>.png)">
 					<div class="matneed"><?php echo $result_amount*$u_amount?></div>
 				</div>
 			</div>

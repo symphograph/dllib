@@ -27,7 +27,10 @@ function perselect($per)
 
     ?></select><?php
 }
-$ssiol = 5; $x_siol = '<b>X</b>'; $siol_on_off = 0; $siol_title = 'Включить Сиоль';
+$ssiol = 5;
+$x_siol = '<b>X</b>';
+$siol_on_off = 0;
+$siol_title = 'Включить Сиоль';
 
 
 
@@ -76,7 +79,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';
                     <div class="siol">
                         <div class="nicon_out ">
                             <a href="/user_customs.php">
-                            <label class="navicon" for="usercustoms" style="background-image: url(../img/icons/50/icon_item_0060.png);"></label>
+                            <label class="navicon" for="usercustoms" style="background-image: url('img/icons/50/icon_item_0060.png');"></label>
                             </a>
                             <div class="navname">Настройки</div>
                         </div>
@@ -85,7 +88,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';
                     <div class="siol">
                         <div class="nicon_out ">
                             <a href="/packres.php">
-                            <label class="navicon" style="background-image: url(../img/icons/50/icon_item_1314.png);"></label>
+                            <label class="navicon" style="background-image: url('img/icons/50/icon_item_1314.png');"></label>
                             </a>
                             <div class="navname">Ресурсы для паков</div>
                         </div>
@@ -93,7 +96,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';
                     <div class="siol">
                         <div class="nicon_out ">
                             <input type="checkbox" id="siol" name="siol" value="5">
-                            <label class="navicon" for="siol" style="background-image: url(../img/icons/50/icon_item_3368.png);"></label>
+                            <label class="navicon" for="siol" style="background-image: url('img/icons/50/icon_item_3368.png');"></label>
                             <div class="navname">Сиоль</div>
                         </div>
                     </div>
