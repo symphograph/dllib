@@ -340,7 +340,7 @@ function is_bot()
 	$user_agent = $_SERVER['HTTP_USER_AGENT'];
 
 	if(empty($user_agent)) 
-	return false;
+	    return false;
     
     
     $bots = 
@@ -1252,9 +1252,9 @@ function MaCubiki($qwe,$u_amount,$craft_price)
         //var_dump($divisor);
         $mater_need = round($q->mater_need*$u_amount,2);
 
-        $how = 'Куплено, Получено';
+        $how = 'Цена пользователя';
         if (UserCraftPrice($q->item_id,$user_id))
-            $how = 'Скрафчено';
+            $how = 'Цена крафта';
         $how = '<span style="color: gray">' .$how.'</span>';
         $how = htmlspecialchars($how);
 
