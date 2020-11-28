@@ -25,26 +25,6 @@ $ismobiledevice = $agent['ismobiledevice'];
 
 $based_prices = '32103,32106,2,3,4,23633,32038,8007,32039,3712,27545,41488';
 
-function ProfUnEmper($user_id)
-{
-	$prof_q = qwe("SELECT * FROM `user_profs` where `user_id` ='$user_id'");
-	if(mysqli_num_rows($prof_q) > 0)
-		return false;
-	$query = qwe("
-	SELECT *
-	FROM `profs`
-	WHERE `used` = 1");
-	foreach($query as $q)
-	{
-		extract($q);
-		qwe("
-		REPLACE INTO `user_profs` 
-		(`user_id`, `prof_id`, `lvl`) 
-		VALUES 
-		('$user_id', '$prof_id', 0)");
-	}
-	return true;
-}
 
 function CookieTest()
 {

@@ -11,12 +11,12 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
 
 $userinfo_arr = UserInfo();
-if(!$userinfo_arr)
+$User = new User();
+if(!$User->getByGlobal())
 	die('<span style="color: red">Oh!<span>');
-//printr($userinfo_arr);
-extract($userinfo_arr);
-$user_id = $muser;
 
+$user_id = $User->user_id;
+$mode = $User->mode;
 $Item = new Item();
 $Item->getFromDB($item_id);
 $description = $Item->description;
@@ -152,7 +152,7 @@ if($Item->craftable)
     </div>
 </div>
 <?php
-Comments($userinfo_arr,$item_id);
+Comments($User,$item_id);
 
 function ValutInfo($Item)
 {
@@ -212,7 +212,7 @@ function MoneyForm($item_id)
 		$prnick = AnyById($puser_id,'mailusers','user_nick')[$puser_id];
 		$Server = new Server($user_id);
 		$time = $prarr['time'];
-		$time = date('d.m.Y',strtotime($time)) .' <span style="color: #3E454C">' . $Server->name . '</span><br>';
+		$time = date('d.m.Y',strtotime($time)) .' <span style="color: #3E454C" data-tooltip="Выбрать в настройках"><a href="user_customs.php">' . $Server->name . '</span><br>';
 		$auc_price = $prarr['auc_price'];
 		//var_dump($prnick);
 		if($prarr['user_id'] == $user_id)
@@ -250,9 +250,9 @@ function IconLink($item_id)
 	SELECT `icon` FROM `items`
 	WHERE `item_id` = '$item_id'
 	");
-	$qwe = mysqli_fetch_assoc($qwe);
-	extract($qwe);
-	return $icon;
+	$q = mysqli_fetch_assoc($qwe);
+
+	return $q['icon'];
 }
 
 function RefuseList($items)

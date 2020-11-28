@@ -18,8 +18,12 @@ class User
     public string $user_nick;
     public string $avafile;
     public int $mode;
+    public int $server = 9;
+    public int $server_group = 2;
+    public bool $uncustomed;
+    public $ismobiledevice;
 
-    public function __construct(int $user_id)
+    public function getById(int $user_id)
     {
         $qwe = qwe("SELECT * FROM mailusers WHERE mail_id = '$user_id'");
         if(!$qwe or !$qwe->num_rows)
@@ -44,6 +48,29 @@ class User
         $this->avafile = $q->avafile;
         $this->mode =  $q->mode;
 
+        return true;
+    }
+
+    public function getByGlobal()
+    {
+        $arr = UserInfo();
+        if (!$arr)
+            return false;
+        $arr = (object) $arr;
+        $user_id = $arr->user_id;
+        $this->user_id = $arr->user_id;
+        $this->identy = $arr->identy;
+        $this->server_group = $arr->server_group;
+        $this->server = $arr->server;
+        $this->fname = $arr->fname;
+        $this->avatar = $arr->avatar;
+        $this->email = $arr->email;
+        $this->siol = $arr->siol ?? 0;
+        $this->user_nick = $arr->user_nick;
+        $this->uncustomed = ProfUnEmper($user_id);
+        $this->mode = $arr->mode;
+        $this->agent = get_browser(null, true);
+        $this->ismobiledevice = $this->agent['ismobiledevice'];
         return true;
     }
 

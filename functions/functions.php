@@ -293,6 +293,7 @@ function UserInfo($identy = '')
 	foreach($query as $q)
 	{
 		$userinfo_arr['muser'] = $q['mail_id'];
+        $userinfo_arr['user_id'] = $q['mail_id'];
 		$userinfo_arr['identy'] = $identy;
 		$userinfo_arr['server'] = $q['server'] ?? 9;
 		$userinfo_arr['server_group'] = $q['server_group'] ?? 2;
@@ -327,7 +328,8 @@ function UserInfo($identy = '')
 		}
 
 		$userinfo_arr['email'] = $q['email'] ?? false;
-		$userinfo_arr['siol'] = intval($q['siol']);	
+		$userinfo_arr['siol'] = intval($q['siol']);
+		//TODO Сиоль приходит формы и работает в паках. Но база этого не помнит!
 	}
 		
 
@@ -1454,5 +1456,27 @@ limit 1
     if(!$qwe or $qwe->num_rows == 0)
         return [];
     return mysqli_fetch_assoc($qwe);
+}
+
+function ProfUnEmper(int $user_id)
+{
+    $prof_q = qwe("SELECT * FROM `user_profs` where `user_id` ='$user_id'");
+    if($prof_q and $prof_q->num_rows)
+        return false;
+
+    $query = qwe("
+	SELECT *
+	FROM `profs`
+	WHERE `used` = 1");
+    foreach($query as $q)
+    {
+        $q = (object) $q;
+        qwe("
+		REPLACE INTO `user_profs` 
+		(`user_id`, `prof_id`, `lvl`) 
+		VALUES 
+		('$user_id', '$q->prof_id', 0)");
+    }
+    return true;
 }
 ?>

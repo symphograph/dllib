@@ -369,10 +369,9 @@ function Cubik($item_id,$icon,$grade = 1,$tooltip = '',$dig_in=false)
 	<?php
 }
 
-function Comments($userinfo_arr,$item_id)
+function Comments($User,$item_id)
 {
-	extract($userinfo_arr);
-	//printr($userinfo_arr);
+
 ?>
 	<div class="comments">
 		<h4>Комментарии</h4><hr>
@@ -432,12 +431,12 @@ else
 
 <?php
 
-if($email)
+if($User->email)
 {
 ?>
 <div class="user_info">
 	<a href="profile.php">
-	<div class="navicon" style="background-image: url(<?php echo $avatar;?>);"></div>
+	<div class="navicon" style="background-image: url(<?php echo $User->avatar;?>);"></div>
 	</a>
 	</div>
 	<div class="comment">
