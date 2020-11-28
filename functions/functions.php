@@ -511,21 +511,19 @@ function PriceValidator($array=[])
 function UserCraftPrice($item_id,$user_id)
 {
 	$qwe = qwe("
-	SELECT * FROM `user_crafts` 
+	SELECT `craft_price` FROM `user_crafts` 
 	WHERE `user_id` = '$user_id' 
 	AND `item_id` = '$item_id'
-	AND `isbest` > 0
+	AND `isbest` in (1,2)
 	ORDER BY `isbest` DESC
 	LIMIT 1
 	");
-	if(!$qwe) return false;
-	if($qwe->num_rows == 0) return false;
-	$qwe = mysqli_fetch_assoc($qwe);
-	extract($qwe);
-	if($isbest == 3)
-		return PriceMode($item_id,$user_id)['auc_price'] ?? false;
-	
-	return $craft_price;
+	if(!$qwe or !$qwe->num_rows)
+	    return false;
+
+	$q = mysqli_fetch_object($qwe);
+
+	return $q->craft_price;
 }
 
 function ResultItemId($craft_id)
@@ -539,27 +537,27 @@ function ResultItemId($craft_id)
 		return $q['result_item_id'];
 }
 
-function UserMatPrice($item_id,$user_id,$craftignor = false)
+function UserMatPrice(int $item_id,int $user_id,$craftignor = false)
 {
-	
+    if($item_id == 500)
+        return 1;
+
 	$qwe = qwe("
 	SELECT * FROM `items` 
 	WHERE `item_id` = '$item_id'
 	");
-	if(!$qwe) return false;
-	if($qwe->num_rows == 0) return false;
-	$qwe = mysqli_fetch_assoc($qwe);
-	extract($qwe);
-	if($item_id == 500)
-		return 1;
-	
-	
-	
-	if($is_trade_npc)
+	if(!$qwe or !$qwe->num_rows)
+	    return false;
+
+	$q = mysqli_fetch_object($qwe);
+
+
+
+	if($q->is_trade_npc)
 	{
-		$valut_id = $valut_id ?? 500;
+		$valut_id = $q->valut_id ?? 500;
 		if($valut_id == 500)
-			return $price_buy;
+			return $q->price_buy;
 		
 		$matprice = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 		if($matprice)
@@ -567,11 +565,16 @@ function UserMatPrice($item_id,$user_id,$craftignor = false)
 
 		$matprice = PriceMode($valut_id,$user_id)['auc_price'] ?? false;
 		if($matprice)
-			return $matprice * $price_buy;	
+			return $matprice * $q->price_buy;
 	}
 	
-	if($craftable and (!$craftignor))
-		return UserCraftPrice($item_id,$user_id);
+	if($q->craftable and (!$craftignor))
+    {
+        $matprice = UserCraftPrice($item_id,$user_id);
+        if($matprice)
+            return $matprice;
+    }
+
 
 	return PriceMode($item_id,$user_id)['auc_price'] ?? false;
 }
@@ -1223,37 +1226,50 @@ function MaCubiki($qwe,$u_amount,$craft_price)
 
     foreach($qwe as $q)
     {$i++;
-        extract($q);
+        //extract($q);
+        $q = (object) $q;
 
-        if($item_id == 500)
+        if($q->item_id == 500)
         {
-            $money = $mater_need;
+            $money = $q->mater_need;
             continue;
         }
 
-        if($mater_need < 0 and in_array($item_id,$flowers))
+        if($q->mater_need < 0 and in_array($q->item_id,$flowers))
             $matprice =	$craft_price;
         else
-            $matprice = UserMatPrice($item_id,$user_id);
+            $matprice = UserMatPrice($q->item_id,$user_id);
+
+
 
         $matpricevalue = $matprice;
         $matprice = esyprice($matprice);
         $matprice = htmlspecialchars($matprice);
         //var_dump($divisor);
-        $mater_need = round($mater_need*$u_amount,2);
-        //var_dump($matprice);
+        $mater_need = round($q->mater_need*$u_amount,2);
+
+        $how = 'Куплено, Получено';
+        if (UserCraftPrice($q->item_id,$user_id))
+            $how = 'Скрафчено';
+        $how = '<span style="color: gray">' .$how.'</span>';
+        $how = htmlspecialchars($how);
+
         if($matpricevalue)
-            $tooltip = $item_name.'<br>'.$mater_need.' шт по<br>'.$matprice;
+            $tooltip = $q->item_name.'<br>'.$mater_need.' шт по<br>'.$matprice.$how;
         else
-            $tooltip = $item_name.'<br>'.$mater_need.' шт<br>Цена не найдена.';
-
-        if(!$basic_grade) $basic_grade = 1;
-        if($mat_grade < 2 or !$mat_grade)
-            $mat_grade = $basic_grade;
+            $tooltip = $q->item_name.'<br>'.$mater_need.' шт<br>Цена не найдена.';
 
 
+        if(!$q->basic_grade)
+            $q->basic_grade = 1;
 
-        Cubik($item_id,$icon,$mat_grade,$tooltip,$mater_need);
+
+        if($q->mat_grade < 2 or !$q->mat_grade)
+            $q->mat_grade = $q->basic_grade;
+
+
+
+        Cubik($q->item_id,$q->icon,$q->mat_grade,$tooltip,$mater_need);
     }
     return $money;
 }

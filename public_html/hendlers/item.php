@@ -665,10 +665,15 @@ function Cubiki($qwe)
 	{
 		extract($q);
 		if(!$basic_grade) $basic_grade = 1;
+		$iconpath = '/img/icons/50/'.$icon.'.png';
+		$icon_md5 = md5_file($_SERVER['DOCUMENT_ROOT'].$iconpath);
+		$icon_url = $iconpath.'?ver='.$icon_md5;
 		?>
 		
 		
-			<div class="itim" id="itim_<?php echo $item_id?>" style="background-image: url(/img/icons/50/<?php echo $icon?>.png)">
+			<div class="itim"
+			id="itim_<?php echo $item_id?>"
+			style="background-image: url(<?php echo $icon_url?>)">
 				<div class="grade" class="grade" data-tooltip="<?php echo $item_name?>" style="background-image: url(/img/grade/icon_grade<?php echo $basic_grade?>.png)">
 					
 				</div>
