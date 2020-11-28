@@ -82,7 +82,8 @@ $description = htmlentities($description);
 		}
 		?>
 	<hr><br>
-	<a href="user_customs.php"><button class="def_button">Настройки</button></a>
+	<a href="user_customs.php"><button class="def_button">Настройки</button></a><br>
+	<a href="user_prices.php"><button class="def_button">Мои цены</button></a>
 	</div>
 	<div id="catalog_right">
 <?php
@@ -370,7 +371,7 @@ function DwnCraftList($Item)
 			<div id="isbuy">
 				<div class="isby">
 					<input type="radio" <?php if($isbest != 3) echo 'checked';?> id="ib_<?php echo $item_id?>" name="isbuy" value="1"/>
-					<label class="navicon" for="ib_<?php echo $item_id?>" style="background-image: url(../img/profs/Обработка_камня.png);"></label>
+					<label class="navicon" for="ib_<?php echo $item_id?>" data-tooltip="Использовать для расчетов себестоимость<br>Считать по крафту" style="background-image: url(../img/profs/Обработка_камня.png);"></label>
 					<span>Крафтить</span>
 				</div>
 				<div>x
@@ -379,7 +380,7 @@ function DwnCraftList($Item)
 				<div class="isby">
 					<span>Покупать</span>
 					<input type="radio" <?php if($isbest == 3) echo 'checked';?> id="is_<?php echo $item_id?>" name="isbuy" value="3"/>
-					<label class="navicon" for="is_<?php echo $item_id?>" style="background-image: url(../img/perdaru2.png);"></label>
+					<label class="navicon" for="is_<?php echo $item_id?>" data-tooltip="Использовать мою цену для расчетов" style="background-image: url(../img/perdaru2.png);"></label>
 				</div>
 			</div>
 			<?php
