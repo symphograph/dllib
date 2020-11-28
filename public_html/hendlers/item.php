@@ -277,21 +277,21 @@ function RefuseList($items)
 	?></div><?php
 }
 
-function IsRefuse($item_id)
+function IsRefuse(int $item_id)
 {
 	$qwe = qwe("
-	SELECT * 
+	SELECT result_item_id 
 	FROM craft_materials
 	WHERE item_id = '$item_id'
 	AND mater_need < 0
 	");
-	if(!$qwe) return false;
-	if($qwe->num_rows == 0) return false;
+	if(!$qwe or !$qwe->num_rows)
+	    return false;
+
 	$arr = [];
 	foreach($qwe as $q)
 	{
-		extract($q);
-		$arr[] = $result_item_id;
+		$arr[] = $q['result_item_id'];
 	}
 	return $arr;
 }

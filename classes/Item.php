@@ -53,7 +53,7 @@ class Item
         $this->price_buy = $q->price_buy;
         $this->price_sale = $q->price_sale;
         $this->category = $q->category;
-        $this->item_name = $q->item_name;
+        $this->item_name = htmlentities($q->item_name);
         $this->description = $q->description;
         $this->on_off = $q->on_off;
         $this->personal = $q->personal;

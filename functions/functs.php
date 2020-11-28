@@ -668,7 +668,7 @@ function is_image($filename) {
 
 function SearchWrapVariant(object $data)
 {
-    $item_name = $data->item_name;
+    $item_name = htmlspecialchars($data->item_name, ENT_QUOTES, 'UTF-8');
 	$item_id = $data->item_id;
 	$icon = $data->icon;
 	$personal = intval($data->personal);
