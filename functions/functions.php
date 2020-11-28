@@ -1254,7 +1254,7 @@ function MaCubiki($qwe,$u_amount,$craft_price)
 
         $how = 'Цена пользователя';
         if (UserCraftPrice($q->item_id,$user_id))
-            $how = 'Цена крафта';
+            $how = 'Себестоимость (крафт)';
         $how = '<span style="color: gray">' .$how.'</span>';
         $how = htmlspecialchars($how);
 
