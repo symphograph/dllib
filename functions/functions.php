@@ -186,16 +186,15 @@ function DeviceMark($user_id,$unix_time = 0)
         SetSess($user_id, $sessmark, $unix_time);
         return true;
     }
+    $q = mysqli_fetch_object($qwe);
 
-    $good = false;
     $agent = get_browser(null, true);
+    $agent = (object) $agent;
 
-    extract($agent);
-    foreach($qwe as $q)
-    {
-        $good = ($q['platform'] == $platform and $q['browser'] = $browser and $q['device_type'] = $device_type);
-        $sess_id = $q['sess_id'];
-    }
+
+    $good = ($q->platform == $agent->platform and $q->browser == $agent->browser and $q->device_type == $agent->device_type);
+    $sess_id = $q->sess_id;
+
 
     if(!$good)
     {
@@ -225,7 +224,8 @@ function SetSess($user_id,$sessmark,$unix_time)
 {
     $agent = get_browser(null, true);
     if(!$agent) die('agent');
-    extract($agent);
+    $agent = (object) $agent;
+
     $datetime = date('Y-m-d H:i:s',$unix_time);
     $cooktime = $unix_time+60*60*24*365*5;
     $sess_id = EmptyIdFinder('sessions');
@@ -240,7 +240,7 @@ function SetSess($user_id,$sessmark,$unix_time)
     VALUES
     (
      '$sess_id' ,'$user_id', '$sessmark','$ip', '$ip', '$datetime', 
-     '$datetime', '$platform', '$browser', '$device_type', '$ismobiledevice'
+     '$datetime', '$agent->platform', '$agent->browser', '$agent->device_type', '$agent->ismobiledevice'
      )
     ");
     if(!$qwe) die('ERROR_sess');
@@ -305,7 +305,7 @@ function UserInfo($identy = '')
 		elseif($q['email'])
 		{
 			$ava = $q['avatar'];
-			include_once($_SERVER['DOCUMENT_ROOT'].'/functions/filefuncts.php');
+			include_once($_SERVER['DOCUMENT_ROOT'].'/../functions/filefuncts.php');
 			$avafile = AvaGetAndPut($ava,$identy);
 			if($avafile)
 				$userinfo_arr['avatar'] = 'img/avatars/'.$avafile;
@@ -381,33 +381,36 @@ function price_str($price,$valuta)
 {
 	$minus = '';
 	if($price < 0)
-	{$price = $price*-1; $minus = '<span style="color: red"><b>-</b></span>';}
-	if($valuta == 500)
-	{   $price = str_pad($price, 6, "0", STR_PAD_LEFT);
-		$g_img = '<img src="../img/gold.png" width="10" height="10" alt="gold"/>';
-		$s_img = '<img src="../img/silver.png" width="10" height="10" alt="silver"/>';
-		$br_img = '<img src="../img/bronze.png" width="10" height="10" alt="bronze"/>';
-	 	if($price < 1000000)
-		$s = sscanf($price, "%2d%2d%d", $gold, $silver, $bronse);
-	 	else
-		$s = sscanf($price, "%3d%2d%d", $gold, $silver, $bronse);
-		$price = $minus.$gold.$g_img.str_pad($silver, 2, "0", STR_PAD_LEFT).$s_img.str_pad($bronse, 2, "0", STR_PAD_LEFT).$br_img;
-	return($price);
-	}else
 	{
-		$v_img = '<img src="../img/'.$valuta.'.png?ver='.md5_file($_SERVER['DOCUMENT_ROOT'].'/img/'.$valuta.'.png').'" width="10" height="10" alt="coal"/>';
-
-		$price = $price.$v_img;
-		return($price);
+	    $price = $price*-1;
+	    $minus = '<span style="color: red"><b>-</b></span>';
 	}
-		 return($price);
+	if($valuta == 500)
+	{
+	    //$price = str_pad($price, 6, "0", STR_PAD_LEFT);
+		$g_img = '<img src="img/gold.png" width="10" height="10" alt="gold"/>';
+		$s_img = '<img src="img/silver.png" width="10" height="10" alt="silver"/>';
+		$br_img = '<img src="img/bronze.png" width="10" height="10" alt="bronze"/>';
 
+
+	 	if($price < 1000000)
+		    $s = sscanf($price, "%2d%2d%d", $gold, $silver, $bronse);
+	 	else
+		    $s = sscanf($price, "%3d%2d%d", $gold, $silver, $bronse);
+
+
+        return $minus.$gold.$g_img.str_pad($silver, 2, "0", STR_PAD_LEFT).$s_img.str_pad($bronse, 2, "0", STR_PAD_LEFT).$br_img;
+
+	}
+
+    $v_img = '<img src="../img/'.$valuta.'.png?ver='.md5_file($_SERVER['DOCUMENT_ROOT'].'/img/'.$valuta.'.png').'" width="10" height="10" alt="coal"/>';
+
+    return $price.$v_img;
 }
 
 function EmptyIdFinder($table,$colname = false)
 {
-	$table = $table;
-	
+
 	//Проверям, что это ключевой столбец и что он один.
 	$qwe = qwe("SHOW KEYS FROM `$table` WHERE Key_name = 'PRIMARY'");
 	if(!$qwe or mysqli_num_rows($qwe) != 1)
@@ -430,12 +433,13 @@ function EmptyIdFinder($table,$colname = false)
 	";
 
 	$qwe = qwe($sql);
-	if($qwe->num_rows >0)
-	{
-		foreach($qwe as $q)
-			return $q['empty_id'];
-	}else
-	return 1;
+	if($qwe->num_rows)
+    {
+        foreach($qwe as $q)
+            return $q['empty_id'];
+    }
+
+    return 1;
 }
 
 function dbCleaner()
@@ -462,15 +466,15 @@ function dbCleaner()
 	(SELECT `item_id` FROM `items` WHERE `on_off` = 0)
 	");
 
-	$qwe = qwe("SELECT * FROM user_crafts WHERE isbest = 3");
+	$qwe = qwe("SELECT user_id, item_id FROM user_crafts WHERE isbest = 3");
 	foreach ($qwe as $q)
     {
-        extract($q);
+        $q = (object) $q;
         qwe("
         REPLACE INTO user_buys
         (user_id, item_id)
         values 
-        ('$user_id', '$item_id')
+        ('$q->user_id', '$q->item_id')
         ");
     }
 
@@ -1209,11 +1213,11 @@ function SelectZone($zone_start=0,$zone_selected = 0)
 
     foreach($qwe as $q)
     {
-        extract($q);
+        $q = (object) $q;
         $chk = '';
-        if($zone_id == $zone_selected)
+        if($q->zone_id == $zone_selected)
             $chk = ' selected ';
-        ?><option value="<?php echo $zone_id?>"<?php echo $chk?>><?php echo $zone_name?></option><?php
+        ?><option value="<?php echo $q->zone_id?>"<?php echo $chk?>><?php echo $q->zone_name?></option><?php
     }
     ?></select><?php
 }
@@ -1278,11 +1282,12 @@ function UserPriceList($qwe)
 {
 
     global $user_id,$userinfo_arr;
-    $mater_need = '';
-    extract($userinfo_arr);
+
+    $ua = $userinfo_arr;
+    $ua = (object) $ua;
     foreach($qwe as $q)
     {
-        extract($q);
+        $q = (object) $q;
         $auc_price = $time = 0;
         //var_dump($craft_price);
        //if($is_trade_npc and $valut_id == 500) continue;
@@ -1291,14 +1296,14 @@ function UserPriceList($qwe)
 
         $isby = '';
 
-        if($craftable)
-            $isby = intval($isbest)+1;
+        if($q->craftable)
+            $isby = intval($q->isbest)+1;
 
 
 
         $iscolor = false;
         //var_dump($item_id);
-        $pr_arr = PriceMode($item_id,$user_id) ?? false;
+        $pr_arr = PriceMode($q->item_id,$user_id) ?? false;
         if($pr_arr)
         {
             $auc_price = $pr_arr['auc_price'];
@@ -1309,16 +1314,16 @@ function UserPriceList($qwe)
         if(!$time)
             $time = '01-01-0000';
 
-        if($is_trade_npc and $valut_id == 500)
-            PriceCell2($item_id,$price_buy,$item_name,$icon,$basic_grade,'',$mater_need);
+        if($q->is_trade_npc and $q->valut_id == 500)
+            PriceCell2($q->item_id,$q->price_buy,$q->item_name,$q->icon,$q->basic_grade,'','');
         else
-            PriceCell($item_id,$auc_price,$item_name,$icon,$basic_grade,$time,$isby,$iscolor,$mater_need);
+            PriceCell($q->item_id,$auc_price,$q->item_name,$q->icon,$q->basic_grade,$time,$isby,$iscolor,'');
 
 
-        if ($craft_price)
+        if ($q->craft_price)
         {
-            $craft_price = esyprice($craft_price,15,1);
-            ?><div>Крафт:<?php echo $craft_price?></div><?php
+            $esyprice = esyprice($q->craft_price,15,1);
+            ?><div>Крафт:<?php echo $esyprice?></div><?php
         }
 
         ?></div><?php
