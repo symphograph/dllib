@@ -404,7 +404,7 @@ function price_str($price,$valuta)
 
         return $minus.$gold.$g_img.str_pad($silver, 2, "0", STR_PAD_LEFT).$s_img.str_pad($bronse, 2, "0", STR_PAD_LEFT).$br_img;
         */
-        return $minus.esyprice($price);
+        return $minus . esyprice($price,15,1);
 	}
 
     $v_img = '<img src="../img/'.$valuta.'.png?ver='.md5_file($_SERVER['DOCUMENT_ROOT'].'/img/'.$valuta.'.png').'" width="10" height="10" alt="coal"/>';
