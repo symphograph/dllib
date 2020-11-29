@@ -304,47 +304,13 @@ function DwnCraftList($Item)
 	$money = 0;
 	$qwe = qwe("
 	SELECT
-	`crafts`.`craft_id`,
-	`crafts`.`dood_id`,
-	`crafts`.`dood_name`,
-	`crafts`.`result_item_id`,
-	`crafts`.`result_item_name`,
-	`crafts`.`rec_name`,
-	`crafts`.`labor_need`,
-	round(`labor_need` * (100 - IFNULL(`save_or`,0)) / 100,0) AS `labor_need2`,
-	round(`labor_need` * (100 - IFNULL(`save_or`,0)) / 100/ `result_amount`,2) AS `labor_single`,
-	`crafts`.`result_amount`,
-	`crafts`.`craft_time`,
-	`crafts`.`prof_id`,
-	`crafts`.`mins`,
-	`user_crafts`.`craft_price`,
-	`user_crafts`.`isbest`,
-	`user_crafts`.`labor_total`,
-	`user_crafts`.`spmu`,
-	(SELECT SUM(spmu) FROM user_crafts WHERE `user_id` = '$user_id' AND item_id = '$item_id') as sumspm,
-	`crafts`.`rec_name`,
-	`user_profs`.`lvl`,
-	`prof_lvls`.`min`,
-	`prof_lvls`.`max`,
-	`prof_lvls`.`save_or`,
-	`prof_lvls`.`save_time`,
-	`profs`.`profession`,
-	`profs`.`used`,
-	`items`.`personal`,
-	`items`.`categ_id`
+	`crafts`.`craft_id`
 	FROM
 		`crafts`
 	INNER JOIN `user_crafts` ON `crafts`.`craft_id` = `user_crafts`.`craft_id`
 	AND `user_crafts`.`user_id` = '$user_id'
 	AND `user_crafts`.`item_id` = '$item_id'
 	AND `crafts`.`on_off` = 1
-	LEFT JOIN `user_profs` ON `user_crafts`.`user_id` = `user_profs`.`user_id`
-	AND `crafts`.`prof_id`= `user_profs`.`prof_id`
-	LEFT JOIN `prof_lvls` ON `user_profs`.`lvl` = `prof_lvls`.`lvl`
-	INNER JOIN `profs` ON `profs`.`prof_id` = `crafts`.`prof_id`
-	INNER JOIN `items` ON `items`.`item_id` = `crafts`.`result_item_id`
-	
-	AND `items`.`on_off` = 1
 	ORDER BY `isbest` DESC, `spmu`,`craft_price`
 	");
 	$i=0;
