@@ -553,7 +553,7 @@ function DwnCraftList($Item)
 			}
 
 			?>
-			<div class="main_itim" id="cr_<?php echo $craft_id?>" name="<?php echo $item_id?>" style="background-image: url(/img/icons/50/<?php echo $Item->icon?>.png)">
+			<div class="main_itim" id="cr_<?php echo $craft_id?>" name="<?php echo $item_id?>" style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
 				<div class="grade" data-tooltip="<?php echo $dtitle?>" style="background-image: url(/img/grade/icon_grade<?php echo $Item->basic_grade?>.png)">
 					<div class="matneed"><?php echo $result_amount*$u_amount?></div>
 				</div>

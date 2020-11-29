@@ -1244,7 +1244,7 @@ function MaCubiki($qwe,$u_amount,$craft_price)
         if($q->mater_need < 0 and in_array($q->item_id,$flowers))
             $matprice =	$craft_price;
         else
-            $matprice = UserMatPrice($q->item_id,$user_id);
+            $matprice = UserMatPrice($q->item_id,$user_id,($q->mater_need < 0));
 
 
 
