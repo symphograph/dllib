@@ -389,6 +389,7 @@ function price_str($price,$valuta)
 	}
 	if($valuta == 500)
 	{
+	    /*
 	    //$price = str_pad($price, 6, "0", STR_PAD_LEFT);
 		$g_img = '<img src="img/gold.png" width="10" height="10" alt="gold"/>';
 		$s_img = '<img src="img/silver.png" width="10" height="10" alt="silver"/>';
@@ -402,7 +403,8 @@ function price_str($price,$valuta)
 
 
         return $minus.$gold.$g_img.str_pad($silver, 2, "0", STR_PAD_LEFT).$s_img.str_pad($bronse, 2, "0", STR_PAD_LEFT).$br_img;
-
+        */
+        return $minus.esyprice($price);
 	}
 
     $v_img = '<img src="../img/'.$valuta.'.png?ver='.md5_file($_SERVER['DOCUMENT_ROOT'].'/img/'.$valuta.'.png').'" width="10" height="10" alt="coal"/>';
@@ -1378,7 +1380,6 @@ function SalaryLetter($per, $pack_price, $siol, $fresh_per, $item_id, $valuta)
     $Factory_list = PackPercents($pack_price, $siol,$per,$fresh_per,2,1);
 
     $salary = price_str($salary, $valuta);
-
     $pack_price = round($pack_price/130*100,0);
     $pack_price = price_str($pack_price, $valuta);
     $Factory_list = price_str($Factory_list, $valuta);
@@ -1475,7 +1476,7 @@ function ProfUnEmper(int $user_id)
 		REPLACE INTO `user_profs` 
 		(`user_id`, `prof_id`, `lvl`) 
 		VALUES 
-		('$user_id', '$q->prof_id', 0)");
+		('$user_id', '$q->prof_id', 1)");
     }
     return true;
 }
