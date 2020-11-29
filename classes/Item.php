@@ -3,18 +3,18 @@
 
 class Item
 {
-    public int $item_id;
+    public int $id;
     public $valut_id;
     public $price_buy;
     public $price_sale;
     public $is_trade_npc;
-    public $category;
-    public $item_name;
+    public string $category;
+    public $name;
     public $description;
-    public $on_off;
-    public $personal;
-    public $craftable;
-    public $ismat;
+    public int $on_off;
+    public int $personal;
+    public int $craftable;
+    public int $ismat;
     public $categ_id;
     public $categ_pid;
     public $slot;
@@ -26,6 +26,7 @@ class Item
     public $md5_icon;
     public $valut_name;
     public $sgr_id;
+    public int $auc_price = 0;
 
     public function getFromDB(int $item_id)
     {
@@ -48,12 +49,12 @@ class Item
             return false;
         $q = mysqli_fetch_object($qwe);
 
-        $this->item_id = $item_id;
+        $this->id = $item_id;
         $this->valut_id = $q->valut_id;
         $this->price_buy = $q->price_buy;
         $this->price_sale = $q->price_sale;
         $this->category = $q->category;
-        $this->item_name = htmlentities($q->item_name);
+        $this->name = htmlentities($q->item_name);
         $this->description = $q->description;
         $this->on_off = $q->on_off;
         $this->personal = $q->personal;
@@ -84,7 +85,7 @@ class Item
         $crafts = [];
         $qwe = qwe("
         SELECT `craft_id` FROM `crafts` 
-        WHERE `result_item_id` = '$this->item_id'
+        WHERE `result_item_id` = '$this->id'
         AND `on_off`
         ");
         if(!$qwe or !$qwe->num_rows)
@@ -141,7 +142,7 @@ class Item
 
     function AllPotentialCrafts()
     {
-        $items = self::AllPotentialMats($this->item_id);
+        $items = self::AllPotentialMats($this->id);
         if(!count($items))
             return [];
         $str = implode(',',$items);
@@ -164,7 +165,7 @@ class Item
      */
     public function getPrimaryMats()
     {
-        $mats = self::AllPotentialMats($this->item_id);
+        $mats = self::AllPotentialMats($this->id);
         if(!count($mats))
             return [];
 

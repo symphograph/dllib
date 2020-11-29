@@ -15,7 +15,7 @@ $User = new User();
 if(!$User->getByGlobal())
 	die('<span style="color: red">Oh!<span>');
 
-$user_id = $User->user_id;
+$user_id = $User->id;
 $mode = $User->mode;
 $Item = new Item();
 $Item->getFromDB($item_id);
@@ -33,7 +33,7 @@ $description = htmlentities($description);
 				<div class="grade" style="background-image: url('/img/grade/icon_grade<?php echo $Item->basic_grade?>.png')"></div>
 			</div>
 			<div class="itemname">
-				<div id="mitemname"><b><?php echo $Item->item_name?></b></div>
+				<div id="mitemname"><b><?php echo $Item->name?></b></div>
 				<div class="comdate"><?php if($Item->personal) echo 'Персональный предмет'?></div>
 				<div class="mcateg" id="categ_<?php echo $Item->categ_id?>" sgroup="<?php echo $Item->sgr_id?>"><?php echo $Item->category?></div>
 			</div>	
@@ -161,10 +161,10 @@ function ValutInfo($Item)
 	$mvalut = $Item->valut_id;
 	$valut_name = $Item->valut_name;
 	//Касательно Чести, Рем Репутации, итд.
-	if(in_array($Item->item_id,[2,3,4,5,6,23633]))
+	if(in_array($Item->id,[2,3,4,5,6,23633]))
 	{
-		$valut_name = $Item->item_name;
-		$mvalut = $Item->item_id;
+		$valut_name = $Item->name;
+		$mvalut = $Item->id;
 	}
 	$val_link = '<a href="catalog.php?item_id='.$mvalut.'">
 		<img src="img/icons/50/'.$mvalut.'.png" width="15" height="15" alt="'.$valut_name.'"/></a>';
@@ -172,7 +172,7 @@ function ValutInfo($Item)
 	ItemsFromAlterValutes($mvalut);
 	?>
 	<br><br>
-	<h3><?php echo $Item->item_name?>: конвертация в золото.</h3>
+	<h3><?php echo $Item->name?>: конвертация в золото.</h3>
 	*Следует учесть, что калькулятор не принимает в расчет предметы, позволяющие конвертировать валюту оптом.<br>
 	Медиана:
 	
@@ -299,7 +299,7 @@ function IsRefuse(int $item_id)
 function DwnCraftList($Item)
 {
 	$best_types = ['','Выбран руру','Выбран вами', 'Покупается'];
-	$item_id = $Item->item_id;
+	$item_id = $Item->id;
 	global $user_id, $mat_deep, $myip, $trash;
 	$money = 0;
 	$qwe = qwe("
@@ -351,10 +351,16 @@ function DwnCraftList($Item)
 	$imgor = '<img src="../img/icons/50/2.png" width="15px" height="15px"/>';
 	foreach($qwe as $q)
 	{$i++;
-		extract($q);
-	 	
+		//extract($q);
+		$Craft = new Craft($q['craft_id']);
+		$Craft->InitForUser($user_id);
+	 	if(!$Craft->setCountedData($user_id))
+	 	    continue;
 
-		$craft_name = $rec_name ?? $Item->item_name;
+	 	$isbest = $Craft->isbest;
+	 	$Prof = new Prof();
+	 	$Prof->InitForUser($Craft->prof_id,$user_id);
+		$craft_name = $Craft->rec_name ?? $Item->name;
 	 	//$u_amount = $result_amount;
 	 	$u_amount = 1;
 	 	if($i == 1)
@@ -392,8 +398,8 @@ function DwnCraftList($Item)
 	 	//var_dump($auc_price);
 	 	if($auc_price)
 		{
-			$profit = round(($auc_price*0.9 - $craft_price),0);
-			$labor_total = floatval($labor_total);
+			$profit = round(($auc_price*0.9 - $Craft->craft_price),0);
+			$labor_total = floatval($Craft->labor_total);
 			if($labor_total)
 			{
 				$profitor = round(($profit/$labor_total),0);
@@ -404,7 +410,7 @@ function DwnCraftList($Item)
 			$profit = esyprice($profit);	
 		} else
 		$profitor = $profit = 'Не вижу цену';
-	 	$sptime = SPTime($mins);
+	 	$sptime = SPTime($Craft->mins);
 
 		
 		?>
@@ -424,15 +430,15 @@ function DwnCraftList($Item)
 		</div>
 		<div class="craftinfo">
 			<div>
-				<div class="crresults"><div><img src="img/profs/<?php echo str_replace(" ","_",$profession)?>.png" width="20px" height="20px"><?php echo $profession?></div></div>	
+				<div class="crresults"><div><img src="img/profs/<?php echo str_replace(" ","_",$Prof->name)?>.png" width="20px" height="20px"><?php echo $Prof->name?></div></div>
 			</div>
 			<div>
-				<div class="crresults"><div><?php echo $dood_name?></div></div>	
+				<div class="crresults"><div><?php echo $Craft->dood_name?></div></div>
 			</div>
 		</div>
 		<div class="craftinfo">
 			<div data-tooltip="Коэфициент приводящий друг к другу такие величины, как занимаемая площадь, интервал между сбором, себестоимость, получаемое количество, требуемое количество.">
-				<div class="crresults"><div><b>Коэф SPM:</b></div><div><b><?php echo $spmu?></b></div></div>	
+				<div class="crresults"><div><b>Коэф SPM:</b></div><div><b><?php echo $Craft->spmu?></b></div></div>
 			</div>
 
 			<?php
@@ -449,9 +455,9 @@ function DwnCraftList($Item)
 		</div>
 		<div class="craftinfo">
 			<div>
-				<div class="crresults"><div>Себестоимость 1 шт:</div><div><?php echo esyprice($craft_price);?></div></div>
+				<div class="crresults"><div>Себестоимость 1 шт:</div><div><?php echo esyprice($Craft->craft_price);?></div></div>
 					<?php 
-	 			if(in_array($categ_id,[133]))
+	 			if(in_array($Item->categ_id,[133]))
 				{
 					$PackObject = PackObject($item_id);
 					?>
@@ -471,12 +477,12 @@ function DwnCraftList($Item)
 			<div>
 				<div class="crresults">
 					<div>На рецепт:</div>
-					<div><?php echo $labor_need2.$imgor;?>
+					<div><?php echo $Craft->labor_need2.$imgor;?>
 						
 					</div>
 				</div>
 				<?php 
-	 			if(in_array($categ_id,[133]))
+	 			if(in_array($Item->categ_id,[133]))
 				{
 					 
 					$pass_labor = $PackObject['pass_labor2'];
@@ -487,22 +493,22 @@ function DwnCraftList($Item)
 					</div>
 					<div class="crresults">
                         <div>На цепочку:</div>
-                        <div><?php echo round($labor_total,2).$imgor;?></div>
+                        <div><?php echo round($Craft->labor_total,2).$imgor;?></div>
 					</div>
 					<div class="crresults">
                         <div>На всё:</div>
-                        <div><?php echo round($labor_total+$pass_labor,2).$imgor;?></div>
+                        <div><?php echo round($Craft->labor_total+$pass_labor,2).$imgor;?></div>
 					</div>
 					<?php
 				}else
 				{
 					?>
 					<div class="crresults">
-					    <div>На 1 шт:</div><div><?php echo $labor_single.$imgor;?></div>
+					    <div>На 1 шт:</div><div><?php echo $Craft->labor_single.$imgor;?></div>
 					</div>
 					<div class="crresults">
                         <div>На цепочку:</div>
-                        <div><?php echo round($labor_total,2).$imgor;?></div>
+                        <div><?php echo round($Craft->labor_total,2).$imgor;?></div>
 					</div>
 					<?php
 				}
@@ -524,7 +530,7 @@ function DwnCraftList($Item)
 		items.basic_grade
 		FROM `craft_materials`
 		INNER JOIN items ON items.item_id = craft_materials.item_id
-		AND craft_materials.craft_id = '$craft_id'
+		AND craft_materials.craft_id = '$Craft->id'
 		");
 		if($qwe2->num_rows)
 		{
@@ -540,16 +546,16 @@ function DwnCraftList($Item)
 			}
 
 			?>
-			<div class="main_itim" id="cr_<?php echo $craft_id?>" name="<?php echo $item_id?>" style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
+			<div class="main_itim" id="cr_<?php echo $Craft->id?>" name="<?php echo $item_id?>" style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
 				<div class="grade" data-tooltip="<?php echo $dtitle?>" style="background-image: url(/img/grade/icon_grade<?php echo $Item->basic_grade?>.png)">
-					<div class="matneed"><?php echo $result_amount*$u_amount?></div>
+					<div class="matneed"><?php echo $Craft->result_amount*$u_amount?></div>
 				</div>
 			</div>
 			<div class="matarea">
 			<div class="matrow">
 			<?php
 			//$divisor = $result_amount/$u_amount;
-			$money = MaCubiki($qwe2,$u_amount,$craft_price);
+			$money = MaCubiki($qwe2,$u_amount,$Craft->craft_price);
 			?></div><?php
 			if($money)
 			{
@@ -562,7 +568,7 @@ function DwnCraftList($Item)
 		?></div><?php
 	 	if($myip)
 		{
-			?><a href="edit/recedit.php?query=<?php echo $craft_id?>" target="_blank">Править</a><?php
+			?><a href="edit/recedit.php?query=<?php echo $Craft->id?>" target="_blank">Править</a><?php
 		}
 		?>
 		<hr><?php
@@ -573,9 +579,9 @@ function DwnCraftList($Item)
 			qwe("DELETE FROM `craft_all_trash` WHERE `user_id` = '$user_id'");
 			$mats = array();
 			?><div><?php
-			all_res($user_id, $item_id, $result_amount*$u_amount, $mat_deep);
+			all_res($user_id, $item_id, $Craft->result_amount*$u_amount, $mat_deep);
 			if($trash)
-			all_trash($user_id, $item_id, $result_amount*$u_amount, $mat_deep);
+			all_trash($user_id, $item_id, $Craft->result_amount*$u_amount, $mat_deep);
 			
 			//if($mat_deep > 1)
 			include $_SERVER['DOCUMENT_ROOT'].'/../includs/all_res.php';

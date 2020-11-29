@@ -3,7 +3,7 @@
 
 class User
 {
-    public int $user_id;
+    public int $id;
     public string $first_name;
     public string $last_name;
     public int $age;
@@ -17,6 +17,8 @@ class User
     public int $siol;
     public string $user_nick;
     public string $avafile;
+    public string $first_ip;
+    public string $last_ip;
     public int $mode;
     public int $server = 9;
     public int $server_group = 2;
@@ -30,7 +32,7 @@ class User
             return false;
         $q = mysqli_fetch_object($qwe);
 
-        $this->user_id = $user_id;
+        $this->id = $user_id;
         $this->first_name = $q->first_name;
         $this->last_name = $q->last_name;
         $this->age = $q->age;
@@ -39,7 +41,7 @@ class User
         $this->last_time = $q->last_time;
         $this->avatar = $q->avatar;
         $this->mailnick = $q->mailnick;
-        $this->ip = $q->ip;
+        $this->first_ip = $q->ip;
         $this->last_ip = $q->last_ip;
         $this->identy = $q->identy;
         $this->token = $q->token;
@@ -62,7 +64,7 @@ class User
             return false;
         $arr = (object) $arr;
         $user_id = $arr->user_id;
-        $this->user_id = $arr->user_id;
+        $this->id = $arr->user_id;
         $this->identy = $arr->identy;
         $this->server_group = $arr->server_group;
         $this->server = $arr->server;

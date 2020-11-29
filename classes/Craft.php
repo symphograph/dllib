@@ -3,7 +3,7 @@
 
 class Craft
 {
-    public $craft_id;
+    public $id;
     public $rec_name;
     public $dood_id;
     public $dood_name;
@@ -24,17 +24,27 @@ class Craft
     public $mins;
     public $spm;
     public array $mats;
+    public int $isbest = 0;
+
+    //ОР с учетом прокачки профы у юзера
+    public int $labor_need2 = 0;
+
+    //ОР на один рецепт с учетом прокачки профы у юзера
+    public float $labor_single = 0;
+    public float $labor_total = 0;
+    public int $spmu = 0;
+    public int $craft_price = 0;
 
     public function __construct(int $craft_id)
     {
         $craft_id = intval($craft_id);
-        $qwe = qwe("SELECT * FROM crafts WHERE on_off AND craft_id = $craft_id");
+        $qwe = qwe("SELECT * FROM crafts WHERE on_off AND craft_id = '$craft_id'");
         if(!$qwe or !$qwe->num_rows)
             return false;
         $q = mysqli_fetch_object($qwe);
 
 
-        $this->craft_id = $q->craft_id;
+        $this->id = $q->craft_id;
         $this->rec_name = $q->rec_name;
         $this->dood_id = $q->dood_id;
         $this->dood_name = $q->dood_name;
@@ -63,23 +73,52 @@ class Craft
         $mats = [];
         $qwe = qwe("
         SELECT * FROM craft_materials 
-        WHERE craft_id = '$this->craft_id'
+        WHERE craft_id = '$this->id'
         ");
         foreach ($qwe as $q)
         {
             $q = (object) $q;
             $mat = new Mat();
-            $mat->mat_id = $q->item_id;
+            $mat->id = $q->item_id;
             $mat->mater_need = $q->mater_need;
             $mat->need_grade = $q->mat_grade;
-            $mats[$mat->mat_id] = $mat;
+            $mats[$mat->id] = $mat;
         }
         return $mats;
     }
 
-    public function setForUser(int $user_id)
+    public function InitForUser(int $user_id)
     {
+        $Prof = new Prof();
+        $Prof->InitForUser($this->id, $user_id);
 
+        $labor_need2 = $this->labor_need*((100 - $Prof->save_or) * 0.01);
+        $labor_need2 = round($labor_need2,0);
+
+        $labor_single = $labor_need2 / $this->result_amount;
+        $labor_single = round($labor_single,2);
+
+        $this->labor_need2 = $labor_need2;
+        $this->labor_single = $labor_single;
+
+    }
+
+    public function setCountedData(int $user_id)
+    {
+        $qwe = qwe("SELECT * FROM user_crafts 
+        WHERE user_id = '$user_id'
+        AND craft_id = '$this->id'
+        ") ;
+        if(!$qwe or !$qwe->num_rows)
+            return false;
+        $q = mysqli_fetch_object($qwe);
+
+        $this->isbest = $q->isbest;
+        $this->spmu = $q->spmu;
+        $this->craft_price = $q->craft_price;
+        $this->labor_total = $q->labor_total;
+
+        return true;
     }
 
 }

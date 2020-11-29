@@ -250,6 +250,7 @@ function SetSess($user_id,$sessmark,$unix_time)
 
 function UserInfo($identy = '')
 {
+    $userinfo_arr = false;
 	if(is_bot())
 	{
 		$identy = 'oJOffNqzrQZY';

@@ -3,7 +3,7 @@
 
 class Mat
 {
-    public int $mat_id;
+    public int $id;
     public int $result_id;
     public int $need_grade = 1;
     public int $craft_id;
@@ -12,6 +12,6 @@ class Mat
 
     public function Cubik()
     {
-        Cubik($this->mat_id,'',$this->need_grade,'',$this->mater_need);
+        Cubik($this->id,'',$this->need_grade,'',$this->mater_need);
     }
 }

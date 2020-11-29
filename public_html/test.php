@@ -7,34 +7,38 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
 
-
+/*
 $User = new User();
 $User->getByGlobal();
 
-$Prof = new Prof();
-$Prof->InitForUser(4,$User->user_id);
-printr($Prof);
-
-die();
-$Craft = new Craft(8000266);
-$mats = $Craft->mats;
-foreach ($mats as $mat)
+$qwe = qwe("SELECT * FROM crafts WHERE on_off");
+foreach ($qwe as $q)
 {
-    $mat->Cubik();
-    //printr($mat);
+
+    $Craft = new Craft($q['craft_id']);
+    $Craft->InitForUser($User->id);
+    ?><details><summary><?php echo $Craft->rec_name?></summary><?php
+    printr($Craft);
+    ?></details><br><?php
+
 }
+
+
+echo '<br><br>'. (microtime(true) - $tstart);
 die();
+*/
 $qwe = qwe("SELECT item_id FROM items WHERE on_off AND item_id >= 32103 AND ismat LIMIT 100");
 foreach ($qwe as $q)
 {
     $item_id = $q['item_id'];
-    $Item = new Item($item_id);
-    $arr = $Item->AllPotentialResults($item_id);
-    $str = implode(', ',$arr);
-    ?><details><summary><?php echo $Item->item_name?></summary><?php
-    ListResult($arr);
+    $Item = new Item();
+    $Item->getFromDB($item_id);
+    //$arr = $Item->AllPotentialResults($item_id);
+    //$str = implode(', ',$arr);
+    ?><details><summary><?php echo $Item->name?></summary><?php
+    printr($Item);
     ?></details><?php
-    echo count($arr).'<br>';
+   // echo count($arr).'<br>';
 }
 
 
