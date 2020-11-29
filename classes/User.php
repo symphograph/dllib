@@ -48,6 +48,10 @@ class User
         $this->avafile = $q->avafile;
         $this->mode =  $q->mode;
 
+        $Server = new Server($user_id);
+        $this->server = $Server->id;
+        $this->server_group = $Server->group;
+
         return true;
     }
 

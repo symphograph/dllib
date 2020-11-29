@@ -10,7 +10,10 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
 
 $User = new User();
 $User->getByGlobal();
-printr($User);
+
+$Prof = new Prof();
+$Prof->InitForUser(4,$User->user_id);
+printr($Prof);
 
 die();
 $Craft = new Craft(8000266);

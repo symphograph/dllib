@@ -217,7 +217,6 @@ foreach($query as $v)
 
 	$price_1 = price_str($price,$valuta);
 	$profit_1 = price_str($profit,500);
- 
  	$labor_all = $v['labor_all'];
  	$ProfitOr = $v['profitor'];
  	//var_dump($ProfitOr);

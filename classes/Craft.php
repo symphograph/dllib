@@ -77,5 +77,9 @@ class Craft
         return $mats;
     }
 
+    public function setForUser(int $user_id)
+    {
+
+    }
 
 }

@@ -353,7 +353,7 @@ function DwnCraftList($Item)
 	{$i++;
 		extract($q);
 	 	
-	 	if(!$Item->basic_grade) $basic_grade = 1;
+
 		$craft_name = $rec_name ?? $Item->item_name;
 	 	//$u_amount = $result_amount;
 	 	$u_amount = 1;
@@ -404,21 +404,8 @@ function DwnCraftList($Item)
 			$profit = esyprice($profit);	
 		} else
 		$profitor = $profit = 'Не вижу цену';
-	 	$sptime = '';
-	 	if($mins)
-		{
-			$m = $mins;
-			$h = floor($m/60);
-			$m = $m-$h*60;
+	 	$sptime = SPTime($mins);
 
-			$d = floor($h/24);
-			$h = $h-$d*24;
-			if($d>0) 
-				$d = $d.'д.+';
-			else 
-				$d = '';
-			$sptime = $d.$h.':'.$m;
-		}
 		
 		?>
 		<div class="crresults">
@@ -599,6 +586,24 @@ function DwnCraftList($Item)
 	}
 	
 
+}
+
+function SPTime($mins)
+{
+    if(!$mins)
+        return '';
+
+    $m = $mins;
+    $h = floor($m/60);
+    $m = $m-$h*60;
+
+    $d = floor($h/24);
+    $h = $h-$d*24;
+    if($d>0)
+        $d = $d.'д.+';
+    else
+        $d = '';
+    return $d.$h.':'.$m;
 }
 
 function UpCraftList($item_id)
