@@ -495,3 +495,4 @@ ip.php
 cgi-bin
 mailru.php
 /public_html/global/
+/logs/
