@@ -2,7 +2,7 @@
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
 if(empty($_POST))
 exit();
-
+$tstart = microtime(true);
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
@@ -99,7 +99,7 @@ foreach($packs_q as $pack)
 	CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q);
 
 	unset($total, $itog, $craft_id, $rec_name, $item_id, $forlostnames, $orcost, $repprice, $honorprice, $dzprice, $soverprice, $mat_deep,
-		$crafts, $crdeep, $deeptmp, $craftsq, $icrft,$crftorder,$craftarr);
+		$crafts, $crdeep, $deeptmp, $craftsq, $icrft, $craftarr);
 }
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
@@ -299,6 +299,11 @@ else
 
 <div>
 <?php
+
+if ($myip)
+    echo '<br><br>'. (microtime(true) - $tstart);
+
+
 function ProfLvl($user_id,$prof_id)
 {
 	$qwe = qwe("

@@ -155,17 +155,10 @@ function all_trash($user_id, $mat_id, $mater_need2, $mat_deep)
 
 /**
  * Для выяснения всех необходимых итемов для расчета всего дерева.
- * @param $item_id
- * @param $craftsq
- * @param $x
- * @param $crafta
- * @param $icrft
- * @param $crdeep
- * @param $crftorder
  */
-function res($item_id, $craftsq, $x, $crafta, $icrft, $crdeep, $crftorder)
+function res($item_id, $craftsq, $x, $crafta, $icrft, $crdeep)
 {
-	global $crafts, $crdeep, $deeptmp, $craftsq, $icrft, $crftorder, $user_id;
+	global $crafts, $crdeep, $deeptmp, $craftsq, $icrft, $user_id;
 	$cr =0;
 	$deeptmp= $deeptmp+1;
 
@@ -207,15 +200,13 @@ function res($item_id, $craftsq, $x, $crafta, $icrft, $crdeep, $crftorder)
 		 $need = $v['mater_need'];
 		 $needs[] = $need;
 		 //echo $v['item_name'].'<br>';
-		 $crafts[] = $craft;
 		 $crdeep[$mat_id] =  $mat_id;//Ключ нужен просто для уникального массива.
 		 $count_crafts = mysqli_num_rows($craftsq);
 		 $cr++;
 		if($count_crafts > 0 and $need > 0)
 		{
-			$crftorder[] = $mat_id;
 			$icrft++;
-			res($item_id, $craftsq, $x, $crafta, $icrft, $crdeep, $crftorder);
+			res($item_id, $craftsq, $x, $crafta, $icrft, $crdeep);
 		}
 		$crafta = $craft;
 	};

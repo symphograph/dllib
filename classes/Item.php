@@ -28,6 +28,7 @@ class Item
     public $sgr_id;
     public int $auc_price = 0;
 
+
     public function getFromDB(int $item_id)
     {
         $qwe = qwe("
@@ -132,9 +133,9 @@ class Item
             $id = $q['item_id'];
             if(in_array($id,$arr))
                 continue;
-            $craftable = $q['craftable'];
+
             $arr[] = $id;
-            if($craftable)
+            if($q['craftable'])
                 $arr = self::AllPotentialMats($id, $arr,$i);
         }
         return $arr;
@@ -142,20 +143,24 @@ class Item
 
     function AllPotentialCrafts()
     {
+        $crafts = self::getCrafts();
+
         $items = self::AllPotentialMats($this->id);
         if(!count($items))
-            return [];
+            return $crafts;
+
         $str = implode(',',$items);
 
         $qwe = qwe("SELECT craft_id FROM crafts WHERE result_item_id IN ( $str )");
         if(!$qwe or !$qwe->num_rows)
-            return [];
+            return $crafts;
 
-        $crafts = [];
         foreach ($qwe as $q)
         {
             $crafts[] = $q['craft_id'];
         }
+        sort($crafts);
+
         return $crafts;
     }
 

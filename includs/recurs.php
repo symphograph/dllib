@@ -8,41 +8,43 @@ WHERE `result_item_id` = '$item_id'
 $count_mats = mysqli_num_rows($craftsq);
 
 //echo '<p>Надо посчитать:'.$count_mats.' итемов</p>';
-
+$MainItem = new Item;
+$MainItem->getFromDB($item_id);
+$crdeep = $MainItem->AllPotentialCrafts();
+//printr($crdeep);
 $x = 1;
 $icrft = 0;
 $crafta = 0;
-$crafts = [];
-$crdeep = [];
+//$crdeep = [];
 if(!isset($lost))
 	$lost = [];
 $deep = 0;
 $forlost = array(); 
-$crftorder[] = $item_id;
-	///Выясняем всё что нужно для дерева рецептов.
-	res($item_id, $craftsq, $x, $crafta, $icrft, $crdeep, $crftorder);
 
-   ///Массив необходимого получен. Запрашиваем рецепты, которые ещё не считали:
-	$selcrafts = "
-	SELECT * from `crafts` 
-	WHERE `on_off` = 1  
-	AND 
-		`result_item_id` IN (".(implode(', ', $crdeep)).") 
-	ORDER BY 
-		`deep` DESC, `result_item_id`";
-	$querycrafts = qwe($selcrafts);
-	//echo implode(', ', $crdeep); exit();
-	$userbest =array();
-    $b = mysqli_num_rows($querycrafts);
+///Выясняем всё что нужно для дерева рецептов.
+//res($item_id, $craftsq, $x, $crafta, $icrft, $crdeep);
+
+///Получаем рецепты в правильном порядке
+
+$crft_str = implode(',', $crdeep);
+$selcrafts = "
+SELECT * from `crafts` 
+WHERE `on_off` 
+AND 
+    `craft_id` IN ( $crft_str ) 
+ORDER BY 
+    `deep` DESC, `result_item_id`";
+$querycrafts = qwe($selcrafts);
 
 
-if($b > 0)
+if($querycrafts and $querycrafts->num_rows)
 {
 	if(!isset($orcost))
 	$orcost = PriceMode(2,$user_id)['auc_price'] ?? false;
 	
-	foreach($querycrafts as $key){	
-	$craftkeys1[$key['result_item_id']][] = $key['craft_id'];
+	foreach($querycrafts as $key)
+	{
+	    $craftkeys1[$key['result_item_id']][] = $key['craft_id'];
 	}
 	//printr($craftkeys1);
 	
@@ -69,6 +71,6 @@ if($b > 0)
 		
 	$i = 0;
 }
-//if(isset($craftarr))
+if(isset($craftarr))
     AllOrRecurs($craftarr,$user_id);
 ?>

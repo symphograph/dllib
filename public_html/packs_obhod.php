@@ -32,7 +32,7 @@ foreach($packs_q as $pack)
 	PacksObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q);
 	
 	unset($total, $itog, $craft_id, $rec_name, $item_id, $lost, $forlostnames, $orcost, $repprice, $honorprice, $dzprice, $soverprice, $mat_deep, 
-		$crafts, $crdeep, $deeptmp, $craftsq, $icrft,$crftorder);
+		$crafts, $crdeep, $deeptmp, $craftsq, $icrft);
 }
 
 

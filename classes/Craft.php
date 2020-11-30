@@ -31,7 +31,11 @@ class Craft
 
     //ОР на один рецепт с учетом прокачки профы у юзера
     public float $labor_single = 0;
+
+    //ОР на всю цепочку крафта
     public float $labor_total = 0;
+
+
     public int $spmu = 0;
     public int $craft_price = 0;
 

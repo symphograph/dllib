@@ -59,59 +59,6 @@ function Comment($string)
 	return($string);
 }
 
-function UserAucPrice($item_id,$user_id,$only = false,$friends = [])
-{
-	$friends = [3085];
-	$server_group = ServerInfo($user_id);
-	if(count($friends)>0)
-	{
-		$friendlist = $user_id.','.implode(',',$friends);
-		$and = '`user_id` IN ('.$friendlist.')';
-	}else
-	{
-		$and = "`user_id` = '$user_id'";
-	}
-	//var_dump($and);
-	$query = qwe("SELECT * FROM `prices` WHERE 
-	`item_id` = '$item_id' 
-	AND ".$and." AND 
-	`server_group` = '$server_group'
-	order by `time` DESC LIMIT 1");
-	if($query and mysqli_num_rows($query) > 0)
-	{
-		foreach($query as $q)
-		{
-			$auc_info['auc_price'] = $q['auc_price'];
-			$auc_info['time'] = $q['time'];
-			$auc_info['myprice'] = ($q['user_id'] == $user_id);
-			$auc_info['isfriend'] = in_array($q['user_id'],$friends);
-		}
-		return $auc_info;
-	}
-	
-	if($only) 
-		return null;
-	
-	$query = qwe("SELECT * FROM `prices` WHERE 
-	`item_id` = '$item_id' AND  
-	`server_group` = '$server_group'
-	order by `time` DESC LIMIT 1");
-	if(mysqli_num_rows($query) > 0)
-	{
-		foreach($query as $q)
-		{
-			$auc_info['auc_price'] = $q['auc_price'];
-			$auc_info['time'] = $q['time'];
-			$auc_info['myprice'] = false;
-			$auc_info['isfriend'] = false;
-			$auc_info['price_autor'] = $q['user_id'];
-		}
-		return($auc_info);
-	}
-	else
-	return(false);
-}
-
 function ServerInfo($user_id,$what = 'server_group')
 {
 	

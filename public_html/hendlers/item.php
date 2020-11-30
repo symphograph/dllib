@@ -117,6 +117,7 @@ if($Item->craftable)
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/recurs.php';
 	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+	//printr($Item);
 	DwnCraftList($Item);
 	?></div><?php
 
@@ -300,6 +301,7 @@ function DwnCraftList($Item)
 {
 	$best_types = ['','Выбран руру','Выбран вами', 'Покупается'];
 	$item_id = $Item->id;
+
 	global $user_id, $mat_deep, $myip, $trash;
 	$money = 0;
 	$qwe = qwe("

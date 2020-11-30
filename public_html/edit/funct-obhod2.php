@@ -2,7 +2,7 @@
 function CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q)
 {
 	global $total, $itog, $craft_id, $rec_name, $item_id, $lost, $forlostnames, $orcost, $mat_deep, 
-		$crafts, $crdeep, $deeptmp, $craftsq, $icrft,$crftorder;
+		$crafts, $crdeep, $deeptmp, $craftsq, $icrft;
 	include $_SERVER['DOCUMENT_ROOT'].'/../includs/recurs.php';
 	//echo $item_id.'<br>';
 }

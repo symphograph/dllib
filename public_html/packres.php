@@ -135,7 +135,7 @@ foreach($qwe as $q)
     CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q);
 
     unset($total, $itog, $craft_id, $rec_name, $item_id, $forlostnames, $orcost, $repprice, $honorprice, $dzprice, $soverprice, $mat_deep,
-        $crafts, $crdeep, $deeptmp, $craftsq, $icrft,$crftorder,$craftarr);
+        $crafts, $crdeep, $deeptmp, $craftsq, $icrft,$craftarr);
 }
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
