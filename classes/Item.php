@@ -27,6 +27,8 @@ class Item
     public $valut_name;
     public $sgr_id;
     public int $auc_price = 0;
+    public array $crafts = [];
+    public array $potential_crafts = [];
 
 
     public function getFromDB(int $item_id)
@@ -96,6 +98,7 @@ class Item
         {
             $crafts[] = $q['craft_id'];
         }
+        $this->crafts = $crafts;
         return $crafts;
     }
 
@@ -143,7 +146,10 @@ class Item
 
     function AllPotentialCrafts()
     {
-        $crafts = self::getCrafts();
+        if(!count($this->crafts))
+            $crafts = self::getCrafts();
+        else
+            $crafts = $this->crafts;
 
         $items = self::AllPotentialMats($this->id);
         if(!count($items))
@@ -151,7 +157,10 @@ class Item
 
         $str = implode(',',$items);
 
-        $qwe = qwe("SELECT craft_id FROM crafts WHERE result_item_id IN ( $str )");
+        $qwe = qwe("
+        SELECT craft_id FROM crafts 
+        WHERE result_item_id IN ( $str )
+        ");
         if(!$qwe or !$qwe->num_rows)
             return $crafts;
 
@@ -160,7 +169,7 @@ class Item
             $crafts[] = $q['craft_id'];
         }
         sort($crafts);
-
+        $this->potential_crafts = $crafts;
         return $crafts;
     }
 
@@ -230,9 +239,28 @@ class Item
         return $arr;
     }
 
-    function getPrice(int $user_id)
+    public function CraftsByDeep()
     {
+        if(!count($this->potential_crafts))
+            $this->potential_crafts = self::AllPotentialCrafts();
 
+        $str = implode(',', $this->potential_crafts);
+        $qwe = qwe("
+        SELECT result_item_id, craft_id from `crafts` 
+        WHERE `on_off` 
+        AND 
+            `craft_id` IN ( $str ) 
+        ORDER BY 
+            `deep` DESC, `result_item_id`");
+        if(!$qwe or !$qwe->num_rows)
+            return [];
 
+        $arr = [];
+        foreach($qwe as $q)
+        {
+            $arr[$q['result_item_id']][] = $q['craft_id'];
+        }
+
+        return $arr;
     }
 }

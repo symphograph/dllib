@@ -23,7 +23,7 @@ class Craft
     public $grade;
     public $mins;
     public $spm;
-    public array $mats;
+    public array $mats = [];
     public int $isbest = 0;
 
     //ОР с учетом прокачки профы у юзера

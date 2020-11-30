@@ -78,7 +78,7 @@ foreach($query as $q)
 		CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q);
 		echo $item_id;
 		unset($total, $itog, $craft_id, $rec_name, $item_id, $lost, $forlostnames, $orcost, $repprice, $honorprice, $dzprice, $soverprice, $mat_deep, 
-			$crafts, $crdeep, $deeptmp, $craftsq, $icrft);
+			$crafts, $deeptmp, $craftsq, $icrft);
 	}
 
 ?>

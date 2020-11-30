@@ -2,7 +2,7 @@
 function CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q)
 {
 	global $total, $itog, $craft_id, $rec_name, $item_id, $lost, $forlostnames, $orcost, $mat_deep, 
-		$crafts, $crdeep, $deeptmp, $craftsq, $icrft;
+		$crafts, $deeptmp, $craftsq, $icrft;
 	include $_SERVER['DOCUMENT_ROOT'].'/../includs/recurs.php';
 	//echo $item_id.'<br>';
 }
@@ -462,18 +462,12 @@ $query = qwe("SELECT
 	");
 	
 	$arritog2 = mysqli_fetch_assoc($query);
-	$result_amount = $arritog2['result_amount'];
-	$delimetr = 1;
-	//if($allor_deep == 0)
-	//	$delimetr = 1;
-	//else
-		$delimetr = 'current_craft.current_amount';
-	//$mater_exponent = $mater_exponent / $result_amount;
+
 	$or = $arritog2['or'];
 	//$or = round($or);
 	//echo '<p>'.$arritog2['result_item_name'].' | '.$or.' | '.$allor_deep.'</p>';
 	//$mater_exponent = 1;
-$query2 = qwe("
+    $query2 = qwe("
 	SELECT 
 	maters.item_id as mat_id,
 	maters.mater_need,
@@ -483,7 +477,7 @@ $query2 = qwe("
 	crafts.result_amount as child_amount,
 	`profs`.`prof_id`,
 	`profs`.`profession`,
-	round(`labor_need` * (100 - IFNULL(`save_or`,0)*`used`) / 100 / crafts.result_amount * maters.mater_need * '$mater_exponent' / ".$delimetr.",2) AS `mat_or`,
+	round(`labor_need` * (100 - IFNULL(`save_or`,0)*`used`) / 100 / crafts.result_amount * maters.mater_need * '$mater_exponent' / current_craft.current_amount,2) AS `mat_or`,
 	current_craft.current_amount
 	from
 	(SELECT * 
@@ -499,36 +493,23 @@ $query2 = qwe("
 	AND `crafts`.`prof_id`= `user_profs`.`prof_id`
 	LEFT JOIN `prof_lvls` ON `user_profs`.`lvl` = `prof_lvls`.`lvl`
 	");
-if(mysqli_num_rows($query2)>0)
-{
-	$allor_deep++;
-	
-	foreach($query2 as $q2)
-	{
-		
-		extract($q2);
-		//echo 'expo '.$item_name.' '.$mater_exponent.'<br>';
-		//$mater_exponent = round($mater_exponent,10);
-		$arr_or[] = $mat_or;
-		//$exponent_maters[] = $mater_exponent;
-		AllOr($chcraft_id,$user_id,$mater_exponent,$arr_or,$allor_deep);
-		
-	}
-	
-	//printr($arr_or);
-	
-}//else
-//$mater_exponent = 0;
-//$arr_or[] = $or;
-//$all_or = round($or/$result_amount,2);
-//var_dump($arr_or);
+    if(mysqli_num_rows($query2)>0)
+    {
+        $allor_deep++;
 
+        foreach($query2 as $q2)
+        {
 
-//qwe("UPDATE `user_crafts` SET `labor_total` = '$all_ordb' WHERE `user_id` = '$user_id' AND `craft_id`='$craft_id'");	
+            extract($q2);
+            //echo 'expo '.$item_name.' '.$mater_exponent.'<br>';
+            //$mater_exponent = round($mater_exponent,10);
+            $arr_or[] = $mat_or;
+            //$exponent_maters[] = $mater_exponent;
+            AllOr($chcraft_id,$user_id,$mater_exponent,$arr_or,$allor_deep);
 
+        }
 
-
-//return $all_or;
+    }
 }
 
 function AllOrRecurs($craftarr,$user_id)
