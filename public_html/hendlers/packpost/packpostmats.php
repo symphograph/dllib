@@ -14,7 +14,10 @@ extract($p); //Никогда так не делайте.
 
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
-//printr($p);
+if(!isset($user_id) or !$user_id)
+    die();
+$User = new User();
+$User->getById($user_id);
 
 $craft_id = BestCraftForItem($user_id,$item_id);
 if(!$craft_id)
@@ -24,7 +27,7 @@ if(!$craft_id)
     qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
     require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
-    require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/recurs.php';
+    CraftsObhod($item_id,$dbLink,$User->id,$User->server_group,$User->server,$prof_q);
     qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
     qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 

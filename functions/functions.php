@@ -973,7 +973,12 @@ function IsValuta(int $item_id) : bool
 function PriceMode($item_id,$user_id)
 {
 	global $mode;
-	//var_dump($mode);
+	if(!isset($mode))
+    {
+        $User = new User();
+        $User->getById($user_id);
+        $mode = $User->mode;
+    }
 	
 	if($mode == 1)
 	{

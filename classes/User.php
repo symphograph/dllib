@@ -6,7 +6,7 @@ class User
     public int $id;
     public string $first_name;
     public string $last_name;
-    public int $age;
+    public $age;
     public string $email;
     public string $time;
     public string $last_time;

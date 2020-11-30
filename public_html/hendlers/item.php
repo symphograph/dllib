@@ -10,7 +10,6 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
 
-$userinfo_arr = UserInfo();
 $User = new User();
 if(!$User->getByGlobal())
 	die('<span style="color: red">Oh!<span>');
@@ -114,7 +113,7 @@ if($Item->craftable)
 	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/recurs.php';
+	CraftsObhod($item_id,$dbLink,$user_id,$User->server_group,$User->server,$prof_q);
 	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 	//printr($Item);

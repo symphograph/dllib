@@ -1,21 +1,52 @@
 ﻿<?php
 function CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q)
 {
-	global $total, $itog, $craft_id, $rec_name, $item_id, $lost, $forlostnames, $orcost, $mat_deep, 
+	global $total, $itog, $craft_id, $rec_name, $item_id, $lost, $orcost, $mat_deep,
 		$crafts, $deeptmp, $craftsq, $icrft;
-	include $_SERVER['DOCUMENT_ROOT'] . '/../includs/recurs.php';
-	//echo $item_id.'<br>';
+    $MainItem = new Item;
+    $MainItem->getFromDB($item_id);
+    $craftkeys1 = $MainItem->CraftsByDeep();
+
+    if(!isset($lost))
+        $lost = [];
+
+
+    if(count($craftkeys1))
+    {
+        if(!isset($orcost))
+            $orcost = PriceMode(2,$user_id)['auc_price'] ?? false;
+
+        $craftarr = CraftsBuffering($craftkeys1);
+
+        if(!in_array($_SERVER['SCRIPT_NAME'],[
+            '/hendlers/packs_list.php',
+            '/hendlers/isbuysets.php',
+            '/packres.php',
+            '/hendlers/packpost/packpostmats.php',
+            '/hendlers/packpost/packobj.php',
+        ]))
+        {
+
+            if(count($lost)>0)
+            {
+                MissedList($lost);
+                exit();
+            }
+        }
+    }
+    if(isset($craftarr))
+        AllOrRecurs($craftarr,$user_id);
 }
 
 function rescost($rv, $forlost)
 {
-	global $craft_id, $rec_name, $item_id, $lost, $forlostnames, $trash, $user_id, $orcost;
+	global $craft_id, $rec_name, $lost, $item_id, $trash, $user_id, $orcost;
 	if(!isset($orcost))
 	$orcost = PriceMode(2,$user_id)['auc_price'] ?? false;
-	 $lvl = 0;
-		$craft_id = $rv;
-	//echo '<p>'.$craft_id.'</p>';
-		$qitog = qwe("SELECT
+
+    $craft_id = $rv;
+
+    $qitog = qwe("SELECT
 	`crafts`.`craft_id`,
 	`crafts`.`dood_id`,
 	`crafts`.`dood_name`,
@@ -47,19 +78,13 @@ function rescost($rv, $forlost)
 	$arritog = mysqli_fetch_assoc($qitog);
 	$itog = $arritog['result_amount'];
 	$or = $arritog['labor_need'];
-	$res_name = $arritog['result_item_name'];
 	$item_id = $arritog['result_item_id'];
 	$rec_name = $arritog['rec_name'];
-	$profession = $arritog['profession'];
-	$prof_id = $arritog['prof_id'];
 	$used = $arritog['used'];
 	
 	if($used > 0)
 		$or = $arritog['labor_need2'];
-	
-	$total_or = $or;
-	$dood = $arritog['dood_name'];
-	
+
 	if($arritog['dood_name'] == 'Лаборатория')
 		$itog = $itog*1.1;
 	
@@ -113,9 +138,6 @@ function rescost($rv, $forlost)
 		$mater = $key['item_id'];
 		$mater_need = $key['mater_need'];
 		if($mater_need == 0) continue;
-		$foundprice = false;
-		$mater_name = $key['item_name'];
-		$personal = $key['personal'];
 		$isbest = $key['isbest'];
 		
 		//echo $mater_name.'<br>';
@@ -155,12 +177,7 @@ function rescost($rv, $forlost)
 			}
 		}
 		
-		/*
-		if(isset($forlost[$mater]))
-			{$price = $forlost[$mater]; /*echo '<p>откопал в промежуточных: '.$mater_name.' '.$price.'</p>';*///}
-		/*elseif((!$key['craftable']))
-				//$lost[] = $mater;
-		*/
+
 		if($key['buffer_price'])
 		{
 			$price = $key['buffer_price'];
@@ -171,12 +188,12 @@ function rescost($rv, $forlost)
 		$matsum = $mater_need*$price;
 		$sum = $sum+$matsum;
 		
- }
+    }
 	//echo '<p>Ор-ов: '.$or.' по '.$orcost.'</p>';
 	$total = $sum+$or*$orcost;
 	$sumspm = round($sumspm/$itog);
 	return [round($total/$itog),$sumspm];
-};
+}
 
 function MissedList($lost)
 {

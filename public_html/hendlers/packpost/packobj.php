@@ -7,13 +7,15 @@ if(!$item_id) die();
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
 if(!isset($user_id) or !$user_id)
     die();
+$User = new User();
+$User->getById($user_id);
 
 $prof_q = qwe("SELECT * FROM `user_profs` WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/recurs.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
+CraftsObhod($item_id,$dbLink,$user_id,$User->server_group,$User->server,$prof_q);
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 
