@@ -68,7 +68,7 @@ if($shellprice)
 	$shellprice = $shellprice['auc_price'];
 }
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
-include $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
 if(in_array(4,$types))
 {
         if(!$coalprice)
@@ -88,21 +88,23 @@ WHERE `item_id` not in (SELECT `item_id` FROM `user_crafts` WHERE user_id = '$us
 AND `side` = '$side'
 AND `item_id` in (SELECT `item_id` FROM `packs` WHERE `pack_t_id` IN (".$typess."))
 ");
-//if(mysqli_num_rows($packs_q)>0)
-//echo 'Надо подождать';
-
-qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
-qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
-foreach($packs_q as $pack)
+if($packs_q and $packs_q->num_rows)
 {
-	$itemq = $item_id = $pack['item_id'];
-	CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q);
+    qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
+    qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+    foreach($packs_q as $pack)
+    {
+        $itemq = $item_id = $pack['item_id'];
+        CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q);
 
-	unset($total, $itog, $craft_id, $rec_name, $item_id, $forlostnames, $orcost, $repprice, $honorprice, $dzprice, $soverprice, $mat_deep,
-		$crafts, $deeptmp, $craftsq, $icrft, $craftarr);
+        unset($total, $itog, $craft_id, $rec_name, $item_id, $forlostnames, $orcost, $repprice, $honorprice, $dzprice, $soverprice, $mat_deep,
+            $crafts, $deeptmp, $craftsq, $icrft, $craftarr);
+    }
+    qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
+    qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 }
-qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
-qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+
+
 
 if(isset($lost) and count($lost)>0)
 {
