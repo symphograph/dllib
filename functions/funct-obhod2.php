@@ -1,5 +1,5 @@
 ﻿<?php
-function CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q)
+function CraftsObhod($item_id, $user_id)
 {
 	global $total, $itog, $craft_id, $rec_name, $item_id, $lost, $orcost, $mat_deep,
 		$crafts, $deeptmp, $craftsq, $icrft;

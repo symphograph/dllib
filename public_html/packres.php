@@ -132,7 +132,7 @@ foreach($qwe as $q)
     if(!$q['craftable']) continue;
     if($q['is_trade_npc'] and $q['valut_id'] == 500) continue;
     $itemq = $item_id = $q['item_id'];
-    CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q);
+    CraftsObhod($item_id, $user_id);
 
     unset($total, $itog, $craft_id, $rec_name, $item_id, $forlostnames, $orcost, $repprice, $honorprice, $dzprice, $soverprice, $mat_deep,
         $crafts, $deeptmp, $craftsq, $icrft,$craftarr);

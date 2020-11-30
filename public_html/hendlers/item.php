@@ -113,7 +113,7 @@ if($Item->craftable)
 	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
-	CraftsObhod($item_id,$dbLink,$user_id,$User->server_group,$User->server,$prof_q);
+	CraftsObhod($item_id, $user_id);
 	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 	//printr($Item);

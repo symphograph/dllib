@@ -95,7 +95,7 @@ if($packs_q and $packs_q->num_rows)
     foreach($packs_q as $pack)
     {
         $itemq = $item_id = $pack['item_id'];
-        CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q);
+        CraftsObhod($item_id, $user_id);
 
         unset($total, $itog, $craft_id, $rec_name, $item_id, $forlostnames, $orcost, $repprice, $honorprice, $dzprice, $soverprice, $mat_deep,
             $crafts, $deeptmp, $craftsq, $icrft, $craftarr);

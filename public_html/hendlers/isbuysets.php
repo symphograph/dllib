@@ -38,7 +38,7 @@ if($val)
         $prof_q = qwe("SELECT * FROM `user_profs` WHERE `user_id` = '$User->id'");
 		require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
         require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
-        CraftsObhod($item_id,$dbLink,$User->id,$User->server_group,$User->server,$prof_q);
+        CraftsObhod($item_id, $User->id);
 		$craft_id = BestCraftForItem($User->id,$item_id);
 		if(!$craft_id) die('craft_error');
     }
