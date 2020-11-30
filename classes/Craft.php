@@ -3,7 +3,7 @@
 
 class Craft
 {
-    public $id;
+    public int $id;
     public $rec_name;
     public $dood_id;
     public $dood_name;
@@ -12,7 +12,7 @@ class Craft
     public $labor_need;
     public $profession;
     public $prof_need;
-    public $result_amount;
+    public int $result_amount;
     public $on_off;
     public $isbottom;
     public $dood_group;
@@ -25,6 +25,7 @@ class Craft
     public $spm;
     public array $mats = [];
     public int $isbest = 0;
+    public int $orcost = 250;
 
     //ОР с учетом прокачки профы у юзера
     public int $labor_need2 = 0;
@@ -34,7 +35,6 @@ class Craft
 
     //ОР на всю цепочку крафта
     public float $labor_total = 0;
-
 
     public int $spmu = 0;
     public int $craft_price = 0;
@@ -58,6 +58,10 @@ class Craft
         $this->profession = $q->profession;
         $this->prof_need = $q->prof_need;
         $this->result_amount = $q->result_amount;
+
+        if($q->dood_id == 9131)
+            $this->result_amount = $q->result_amount * 1.1;
+
         $this->on_off = $q->on_off;
         $this->isbottom = $q->isbottom;
         $this->dood_group = $q->dood_group;
@@ -105,6 +109,7 @@ class Craft
         $this->labor_need2 = $labor_need2;
         $this->labor_single = $labor_single;
 
+        $this->orcost = PriceMode(2,$user_id)['auc_price'] ?? 250;
     }
 
     public function setCountedData(int $user_id)
@@ -122,7 +127,82 @@ class Craft
         $this->craft_price = $q->craft_price;
         $this->labor_total = $q->labor_total;
 
+
         return true;
     }
 
+    public function rescost($user_id) : array
+    {
+
+        $groupcraft = GroupCraft($this);
+        if($groupcraft)
+        {
+            $this->craft_price = round($groupcraft / $this->result_amount);
+            return [$this->craft_price,0];
+        }
+
+
+
+        //Запрашиваем про материалы
+        $qwe = qwe(
+            "SELECT 
+        `items`.`craftable`, 
+        `craft_materials`.`mater_need`,
+       `craft_materials`.`mat_grade`,
+        `items`.`item_name`, 
+        `items`.`price_buy`, 
+        `items`.`price_sale`, 
+        `items`.`price_type`, 
+        `items`.`is_trade_npc`, 
+        `items`.`item_id` as `id`, 
+        `items`.`forup_grade`,
+        `items`.`categ_id`,
+        `items`.`personal`,
+        `user_crafts`.`isbest`,
+        `user_crafts`.`craft_price`,
+        craft_buffer2.spm*craft_materials.mater_need as spm2,
+        craft_buffer2.craft_price as buffer_price
+        FROM 
+        `craft_materials`
+        INNER JOIN `items`
+        ON `items`.`item_id` = `craft_materials`.`item_id`
+        AND `craft_materials`.`craft_id` = '$this->id'
+        AND `items`.`ismat`
+        AND `items`.`on_off`
+        LEFT JOIN `user_crafts` 
+        ON `items`.`item_id` = `user_crafts`.`item_id`
+        AND `user_crafts`.`user_id` = '$user_id'
+        AND `user_crafts`.`isbest` > 0
+        LEFT JOIN craft_buffer2 
+        ON `craft_materials`.`item_id` = craft_buffer2.item_id
+        AND craft_buffer2.user_id = '$user_id'
+        ORDER BY `id`");
+        $sum = $sumspm = 0;
+        foreach($qwe as $q)
+        {
+
+            $mat = new Mat;
+            $mat->InitForCraft($q,$user_id);
+            //printr($mat);
+            $spm2 = $mat->spm2;
+
+            $mater_need = $mat->mater_need;
+            if($mater_need == 0) continue;
+
+
+            //echo $q['item_name'].'<br>';
+            //var_dump($q['buffer_price']);
+            if($mater_need > 0)
+                $sumspm = $sumspm + $spm2;
+
+            $sum += ($mater_need * $mat->price);
+
+        }
+        //echo '<p>Ор-ов: '.$this->labor_need2.' по '.$this->orcost.'</p>';
+        $crftprice = $sum + ($this->labor_need2 * $this->orcost);
+        $crftprice = round($crftprice / $this->result_amount);
+        $this->craft_price = $crftprice;
+        $sumspm = round($sumspm / $this->result_amount);
+        return [$crftprice,$sumspm];
+    }
 }

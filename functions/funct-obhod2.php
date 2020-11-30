@@ -1,8 +1,7 @@
 ﻿<?php
 function CraftsObhod($item_id, $user_id)
 {
-	global $total, $itog, $craft_id, $rec_name, $item_id, $lost, $orcost, $mat_deep,
-		$crafts, $deeptmp, $craftsq, $icrft;
+	global $lost, $orcost;
     $MainItem = new Item;
     $MainItem->getFromDB($item_id);
     $craftkeys1 = $MainItem->CraftsByDeep();
@@ -17,6 +16,7 @@ function CraftsObhod($item_id, $user_id)
             $orcost = PriceMode(2,$user_id)['auc_price'] ?? false;
 
         $craftarr = CraftsBuffering($craftkeys1);
+        //printr($craftarr);
 
         if(!in_array($_SERVER['SCRIPT_NAME'],[
             '/hendlers/packs_list.php',
@@ -38,162 +38,7 @@ function CraftsObhod($item_id, $user_id)
         AllOrRecurs($craftarr,$user_id);
 }
 
-function rescost($rv, $forlost)
-{
-	global $craft_id, $rec_name, $lost, $item_id, $trash, $user_id, $orcost;
-	if(!isset($orcost))
-	$orcost = PriceMode(2,$user_id)['auc_price'] ?? false;
 
-    $craft_id = $rv;
-
-    $qitog = qwe("SELECT
-	`crafts`.`craft_id`,
-	`crafts`.`dood_id`,
-	`crafts`.`dood_name`,
-	`crafts`.`result_item_id`,
-	`crafts`.`result_item_name`,
-	`crafts`.`labor_need`,
-	round(`labor_need` * (100 - IFNULL(`save_or`,0)*`used`) / 100,0) AS `labor_need2`,
-	`crafts`.`result_amount`,
-	`crafts`.`craft_time`,
-	`crafts`.`prof_id`,
-	`crafts`.`rec_name`,
-	`user_profs`.`lvl`,
-	`prof_lvls`.`min`,
-	`prof_lvls`.`max`,
-	`prof_lvls`.`save_or`,
-	`prof_lvls`.`save_time`,
-	`profs`.`profession`,
-	`profs`.`used`
-	FROM
-		`crafts`
-	LEFT JOIN `user_profs` ON `user_profs`.`prof_id` = `crafts`.`prof_id`
-	AND `crafts`.`on_off` = 1
-	AND `user_profs`.`user_id` = '$user_id'
-	AND `crafts`.`prof_id`= `user_profs`.`prof_id`
-	LEFT JOIN `prof_lvls` ON `user_profs`.`lvl` = `prof_lvls`.`lvl`
-	LEFT JOIN `profs` ON `profs`.`prof_id` = `crafts`.`prof_id`
-	WHERE `crafts`.`craft_id` = '$craft_id'");
-
-	$arritog = mysqli_fetch_assoc($qitog);
-	$itog = $arritog['result_amount'];
-	$or = $arritog['labor_need'];
-	$item_id = $arritog['result_item_id'];
-	$rec_name = $arritog['rec_name'];
-	$used = $arritog['used'];
-	
-	if($used > 0)
-		$or = $arritog['labor_need2'];
-
-	if($arritog['dood_name'] == 'Лаборатория')
-		$itog = $itog*1.1;
-	
-	$groupcraft = GroupCraft($arritog,$or);
-	if($groupcraft)
-	{
-		$total = $groupcraft;
-		return [round($total/$itog),0];
-	}
-		  
-	
-	
-	//Запрашиваем про материалы
-	$query2 = qwe(
-	"SELECT 
-	`items`.`craftable`, 
-	`craft_materials`.`mater_need`,
-	`items`.`item_name`, 
-	`items`.`price_buy`, 
-	`items`.`price_sale`, 
-	`items`.`price_type`, 
-	`items`.`is_trade_npc`, 
-	`items`.`item_id`, 
-	`items`.`forup_grade`,
-	`items`.`categ_id`,
-	`items`.`personal`,
-	`user_crafts`.`isbest`,
-	`user_crafts`.`craft_price`,
-	craft_buffer2.spm*craft_materials.mater_need as spm2,
-	craft_buffer2.craft_price as buffer_price
-	FROM 
-	`craft_materials`
-	INNER JOIN `items`
-	ON `items`.`item_id` = `craft_materials`.`item_id`
-	AND `craft_materials`.`craft_id` = '$craft_id'
-	AND `items`.`ismat` = 1 
-	AND `items`.`on_off` = '1'
-	LEFT JOIN `user_crafts` 
-	ON `items`.`item_id` = `user_crafts`.`item_id`
-	AND `user_crafts`.`user_id` = '$user_id'
-	AND `user_crafts`.`isbest` > 0
-	LEFT JOIN craft_buffer2 
-	ON `craft_materials`.`item_id` = craft_buffer2.item_id
-	AND craft_buffer2.user_id = '$user_id'
-	ORDER BY `item_id`");
-	$sum = $sumspm = 0;
-	foreach($query2 as $key)
-	{
-		$price = 0;
-		$spm2 = intval($key['spm2']);
-		$mater = $key['item_id'];
-		$mater_need = $key['mater_need'];
-		if($mater_need == 0) continue;
-		$isbest = $key['isbest'];
-		
-		//echo $mater_name.'<br>';
-		//var_dump($key['buffer_price']);
-		if($mater_need > 0)
-		$sumspm = $sumspm+$spm2;
-		
-		if($isbest == 3)
-		{
-            $price = UserMatPrice($mater,$user_id,1);
-			$matsum = $mater_need*$price;
-			$sum = $sum+$matsum;
-			
-			continue;
-		}
-		/*
-		if($key['forup_grade'] > 0)//Если ингредиент цветной. 
-		{
-		
-		///Отложим эту функцию до лучших времен.=(
-			$grade = $key['forup_grade'];
-			//echo '<p>Цветной материал</p>';
-		}
-		*/	
-		if($mater_need < 0)
-			$trash = 1;
-		if($mater_need < 0 or (!$key['craftable']))
-		{
-			$user_aucprice = UserMatPrice($mater,$user_id,($mater_need < 0));
-			if($user_aucprice)
-			{
-				$price = $user_aucprice;
-				$matsum = $mater_need*$price;
-				$sum = $sum+$matsum;
-				
-				continue;
-			}
-		}
-		
-
-		if($key['buffer_price'])
-		{
-			$price = $key['buffer_price'];
-			//echo '<p>откопал в промежуточных: '.$mater_name.' '.$price.'</p>';
-		}elseif(!$key['craftable'])
-			$lost[] = $mater;
-
-		$matsum = $mater_need*$price;
-		$sum = $sum+$matsum;
-		
-    }
-	//echo '<p>Ор-ов: '.$or.' по '.$orcost.'</p>';
-	$total = $sum+$or*$orcost;
-	$sumspm = round($sumspm/$itog);
-	return [round($total/$itog),$sumspm];
-}
 
 function MissedList($lost)
 {
@@ -251,24 +96,29 @@ function MissedList($lost)
 	}
 }
 
-function GroupCraft($arritog,$or)
+function GroupCraft(object $Craft)
 {
-	global $lost, $orcost, $itog, $user_id, $forlost;
-	extract($arritog);
+
+	global $lost, $user_id;
+	//extract($arritog);
 	$qwe = qwe("
 	SELECT `item_name`, `amount`, sum(`amount`) as `sum`
 	FROM `craft_groups` 
 	WHERE `group_id` = 
-	(SELECT `group_id` FROM `craft_groups` WHERE `craft_id` = '$craft_id')");
-	if(!$qwe) return false;
-	if($qwe->num_rows == 0) return false;
+	(SELECT `group_id` FROM `craft_groups` WHERE `craft_id` = '$Craft->id')
+	");
+	if(!$qwe or !$qwe->num_rows)
+	    return false;
+
 	$gcr = mysqli_fetch_assoc($qwe);
 	$am_sum = $gcr['sum'];
 	if(!$am_sum ) return false;
-	//var_dump($result_amount);
-	$itog = $result_amount;
+
+	$itog = $Craft->result_amount;
 	$cr_part = $itog/$am_sum;
 	$itog = $itog/$cr_part;
+
+
 	$qwe = qwe("
 	SELECT 
 	`craft_materials`.`item_id` as mater,
@@ -280,7 +130,7 @@ function GroupCraft($arritog,$or)
 	FROM `craft_materials`
 	INNER JOIN `items` 
 	ON `craft_materials`.`item_id` = `items`.`item_id`
-	AND `craft_materials`.`craft_id` = '$craft_id' 
+	AND `craft_materials`.`craft_id` = '$Craft->id' 
 	AND `craft_materials`.`mater_need` > 0
 	LEFT JOIN `user_crafts` 
 	ON `items`.`item_id` = `user_crafts`.`item_id`
@@ -290,56 +140,48 @@ function GroupCraft($arritog,$or)
 	$sum = 0; $price = 0;
 	 foreach($qwe as $gcr)
 	 {
-		extract($gcr);
+		//extract($gcr);
+         $gcr = (object) $gcr;
 		
-		if($isbest)
+		if($gcr->isbest)
 		{
 			//echo $mater.' '.$mater_need.'ыапаывапыв</p>';
-			if($isbest == 3)
-				$price = UserMatPrice($mater,$user_id,1);
+			if($gcr->isbest == 3)
+				$price = UserMatPrice($gcr->mater, $user_id,1);
 			else
-				$price = $craft_price;
+				$price = $gcr->craft_price;
 			
 			$price_type = 'gold';
-			$matsum = $mater_need*$price;
-			$sum = $sum+$matsum;
+			$matsum = $gcr->mater_need * $price;
+			$sum = $sum + $matsum;
 			continue;
 		}
 		 
-		if(!$craftable)
+		if(!$gcr->craftable)
 		{
 			
-			$user_aucprice = UserMatPrice($mater,$user_id,1);
+			$user_aucprice = UserMatPrice($gcr->mater,$user_id,1);
 			if($user_aucprice)
 			{
 				$price = $user_aucprice;
-				$price_type = 'gold';
-				$matsum = $mater_need*$price;
-				$sum = $sum+$matsum;
+				$matsum = $gcr->mater_need * $price;
+				$sum = $sum + $matsum;
 				continue;
 			}
 		}
 		
 
-		if(!$price)
-		{
-			if(isset($forlost[$mater]))
-			{
-				$price = $forlost[$mater]; 
-				//echo '<p>откопал в промежуточных: '.$mater.' '.$price.'</p>';
-			}
-			else 
-			{if(!$craftable) $lost[] = $mater;}
+		if(!$price and !$gcr->craftable)
+            $lost[] = $gcr->mater;
 
-		}
-		 
-		$matsum = $mater_need*$price;
-		$sum = $sum+$matsum;
+
+		$matsum = $gcr->mater_need * $price;
+		$sum = $sum + $matsum;
 
 	}
 	//echo '<p>Итм-ов: '.$or.' по '.$orcost.'</p>';
 	
-	$total = $sum+$or*$orcost;
+	$total = $sum + $Craft->labor_need2 * $Craft->orcost;
 	
 	//echo $total.'<br>';
 	 return $total;	
@@ -464,10 +306,10 @@ global $arr_or, $allor_deep, $mater_exponent;
 function CraftsBuffering($craftkeys1)
 {
 	global $user_id,$complited;
-    //$craftarr = [];
 	if(!isset($complited))
 		$complited = [];
-	$mycost = 0;
+
+
 	//printr($craftkeys1);
 	foreach($craftkeys1 as $item_id => $crafts)
 	{
@@ -475,8 +317,11 @@ function CraftsBuffering($craftkeys1)
 			continue;
 		foreach($crafts as $key => $craft_id)
 		{
-			//$complited[$craft_id];
-			$rescost = rescost($craft_id, []);
+            $Craft = new Craft($craft_id);
+            $Craft->InitForUser($user_id);
+
+
+			$rescost = $Craft->rescost($user_id);
 			$mycost = $rescost[0];
 			$matspm = $rescost[1];
 			qwe("
