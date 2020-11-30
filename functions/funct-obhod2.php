@@ -6,6 +6,7 @@ function CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q)
 	include $_SERVER['DOCUMENT_ROOT'] . '/../includs/recurs.php';
 	//echo $item_id.'<br>';
 }
+
 function rescost($rv, $forlost)
 {
 	global $craft_id, $rec_name, $item_id, $lost, $forlostnames, $trash, $user_id, $orcost;
@@ -327,32 +328,6 @@ function GroupCraft($arritog,$or)
 	 return $total;	
 }
 
-function SumOr($item_id, $user_id, $best_arr)
-{
-	//var_dump($best_arr);
-	$bestcraft_str = implode(' ,',$best_arr);
-	$query = qwe("SELECT sum(`labor_need`) as `sum_or`,
-	`crafts`.`prof_id`,
-	`prof_lvls`.`lvl`,
-	`prof_lvls`.`save_or`,
-	`profs`.`used`,
-	round(sum(`labor_need`)- (sum(`labor_need`)*IFNULL(`save_or`,0)/100)*`used`,0) as `total_sumor`
-	FROM 
-	`crafts` 
-	LEFT JOIN `user_profs` ON `user_profs`.`prof_id` =  `crafts`.`prof_id`
-	LEFT JOIN `prof_lvls` ON `prof_lvls`.`lvl` = `user_profs`.`lvl`
-	LEFT JOIN `profs` ON `profs`.`prof_id` = `user_profs`.`prof_id`
-	WHERE `craft_id` IN 
-	($bestcraft_str)
-	GROUP BY `prof_id`");
-
-	foreach($query as $sumors)
-	{
-		$sumor = $sumors['sum_or'];
-		echo $sumor.'<br>';
-	}
-}
-
 function UserTree($query2, $user_id)
 {
 	
@@ -508,6 +483,7 @@ function CraftsBuffering($craftkeys1)
 	else
 	    return [];
 }
+
 function ToBuffer2($item_id)
 {
 	global $user_id;
