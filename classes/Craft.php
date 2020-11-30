@@ -94,7 +94,7 @@ class Craft
     public function InitForUser(int $user_id)
     {
         $Prof = new Prof();
-        $Prof->InitForUser($this->id, $user_id);
+        $Prof->InitForUser($this->prof_id, $user_id);
 
         $labor_need2 = $this->labor_need*((100 - $Prof->save_or) * 0.01);
         $labor_need2 = round($labor_need2,0);
