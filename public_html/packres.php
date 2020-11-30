@@ -122,7 +122,7 @@ $qwe = qwe($sql);
 
 $prof_q = qwe("SELECT * FROM `user_profs` where `user_id` ='$user_id'");
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
-include $_SERVER['DOCUMENT_ROOT'].'/edit/funct-obhod2.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 foreach($qwe as $q)

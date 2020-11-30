@@ -68,7 +68,7 @@ if($shellprice)
 	$shellprice = $shellprice['auc_price'];
 }
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
-include $_SERVER['DOCUMENT_ROOT'].'/edit/funct-obhod2.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
 if(in_array(4,$types))
 {
         if(!$coalprice)

@@ -3,7 +3,7 @@ function CraftsObhod($item_id,$dbLink,$user_id,$server_group,$server,$prof_q)
 {
 	global $total, $itog, $craft_id, $rec_name, $item_id, $lost, $forlostnames, $orcost, $mat_deep, 
 		$crafts, $deeptmp, $craftsq, $icrft;
-	include $_SERVER['DOCUMENT_ROOT'].'/../includs/recurs.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/../includs/recurs.php';
 	//echo $item_id.'<br>';
 }
 function rescost($rv, $forlost)
@@ -327,87 +327,6 @@ function GroupCraft($arritog,$or)
 	 return $total;	
 }
 
-function BestCraftWay($query, $user_id, $all_or,$mater_need)
-{
-	$mats = $crafts = array();
-	//static $all_or;
-	
-	foreach($query as $v)
-	{
-		$mat_id = $v['item_id'];
-		$mats[] = $mat_id;
-		$pmater_need = $v['mater_need']*$mater_need;
-		$query2 = qwe("SELECT
-		`crafts`.`craft_id`,
-		`crafts`.`result_item_id`,
-		`crafts`.`result_item_name`,
-		`crafts`.`labor_need`,
-		`labor_need` * (100 - IFNULL(`save_or`,0)*`used`) / 100 / `result_amount` AS `or`,
-		`crafts`.`result_amount`,
-		`crafts`.`craft_time`,
-		`crafts`.`prof_id`,
-		`user_crafts`.`isbest`,
-		`user_profs`.`lvl`,
-		`prof_lvls`.`min`,
-		`prof_lvls`.`max`,
-		`prof_lvls`.`save_or`,
-		`prof_lvls`.`save_time`,
-		`profs`.`used`
-		FROM 
-		`crafts`
-		INNER JOIN `user_crafts` ON `crafts`.`craft_id` = `user_crafts`.`craft_id`
-		AND `user_crafts`.`user_id` = '$user_id'
-		AND `user_crafts`.`item_id` = '$mat_id'
-		AND `user_crafts`.`isbest` in (1,2)
-		AND `crafts`.`on_off` = 1
-		LEFT JOIN `user_profs` ON `user_crafts`.`user_id` = `user_profs`.`user_id`
-		AND `crafts`.`prof_id`= `user_profs`.`prof_id`
-		LEFT JOIN `prof_lvls` ON `user_profs`.`lvl` = `prof_lvls`.`lvl`
-		INNER JOIN `profs` ON `profs`.`prof_id` = `crafts`.`prof_id`
-		");
-		$arritog = mysqli_fetch_assoc($query2);
-		$result_amount = $arritog['result_amount'];
-		$craft_id = $arritog['craft_id'];
-		$crafts[] = $craft_id;
-		$or = $arritog['or'];
-		$low_or = $or*$pmater_need/$result_amount;
-		$low_or = round($low_or,2);
-		$all_or = $all_or + $low_or;
-		$all_or = round($all_or,2);
-		
-		$querymat = qwe("
-		SELECT * FROM `craft_materials` 
-		WHERE `craft_id` = '$craft_id'
-		AND `mater_need`*1 > 0
-		AND `item_id` in
-		(
-			SELECT `item_id` FROM `user_crafts` 
-			WHERE `user_id` = '$user_id' 
-			AND `isbest` in(1,2)
-		)");
-		if(mysqli_num_rows($querymat)>0)
-		foreach($querymat as $qm)
-		{
-			$mat_id = $qm['item_id'];
-			BestCraftWay($query, $user_id, $all_or,$pmater_need);
-		}
-		
-	echo '<p>'.$arritog['result_item_name'].' | '.$low_or.'</p>';	
-	}
-	if(count($crafts) > 0)
-	{
-		$craft_str = implode(',',$crafts);
-		//echo $craft_str;
-			
-			
-			
-		
-		
-	}
-	return($all_or);
-
-}
-
 function SumOr($item_id, $user_id, $best_arr)
 {
 	//var_dump($best_arr);
@@ -432,8 +351,6 @@ function SumOr($item_id, $user_id, $best_arr)
 		$sumor = $sumors['sum_or'];
 		echo $sumor.'<br>';
 	}
-	
-	
 }
 
 function UserTree($query2, $user_id)

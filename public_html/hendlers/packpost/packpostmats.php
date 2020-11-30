@@ -23,7 +23,7 @@ if(!$craft_id)
     qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
     qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
     require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
-    require_once $_SERVER['DOCUMENT_ROOT'].'/edit/funct-obhod2.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
     require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/recurs.php';
     qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
     qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
