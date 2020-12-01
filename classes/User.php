@@ -24,6 +24,7 @@ class User
     public int $server_group = 2;
     public bool $uncustomed;
     public $ismobiledevice;
+    public int $orcost = 250;
 
     public function getById(int $user_id)
     {
