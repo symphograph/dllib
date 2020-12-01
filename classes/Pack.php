@@ -3,11 +3,12 @@
 
 class Pack extends Item
 {
-    public int $from = 0;
-    public int $to = 0;
+    public int $z_from = 0;
+    public string $z_from_name = 'Откуда';
+    public int $z_to = 0;
+    public string $z_to_name = 'Куда';
     public int $tid = 0;
-    public string $tname = 'Тип не определен';
-
+    public string $tname = 'Тип пака';
     public int $facprice = 0;
 
     public function getFromDB(int $item_id)
