@@ -109,7 +109,7 @@ if($Item->craftable)
 	//Надо посчитать оптималный
 	$globalitem_id = $item_id;
 	$trash = false;
-	$prof_q = qwe("SELECT * FROM `user_profs` WHERE `user_id` = '$user_id'");
+
 	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
@@ -122,7 +122,7 @@ if($Item->craftable)
 
 
 
-	if(in_array($Item->categ_id,[133]))
+	if($Item->ispack)
     {
         ?>
         <br><hr><br>

@@ -29,6 +29,7 @@ class Item
     public int $auc_price = 0;
     public array $crafts = [];
     public array $potential_crafts = [];
+    public bool $ispack = false;
 
 
     public function getFromDB(int $item_id)
@@ -75,6 +76,7 @@ class Item
         $this->valut_name = $q->valut_name;
         $this->sgr_id = $q->sgr_id;
         $this->is_trade_npc = $q->is_trade_npc;
+        $this->ispack = ($this->categ_id == 133);
 
         return true;
     }
