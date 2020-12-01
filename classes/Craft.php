@@ -212,11 +212,11 @@ class Craft
         global $lost, $user_id;
         //extract($arritog);
         $qwe = qwe("
-	SELECT `item_name`, `amount`, sum(`amount`) as `sum`
-	FROM `craft_groups` 
-	WHERE `group_id` = 
-	(SELECT `group_id` FROM `craft_groups` WHERE `craft_id` = '$Craft->id')
-	");
+        SELECT `item_name`, `amount`, sum(`amount`) as `sum`
+        FROM `craft_groups` 
+        WHERE `group_id` = 
+        (SELECT `group_id` FROM `craft_groups` WHERE `craft_id` = '$Craft->id')
+        ");
         if(!$qwe or !$qwe->num_rows)
             return false;
 
@@ -230,23 +230,23 @@ class Craft
 
 
         $qwe = qwe("
-	SELECT 
-	`craft_materials`.`item_id` as mater,
-	`craft_materials`.`mater_need`,
-	`items`.`craftable`,
-	`items`.`personal`,
-	`user_crafts`.`isbest`,
-	`user_crafts`.`craft_price`
-	FROM `craft_materials`
-	INNER JOIN `items` 
-	ON `craft_materials`.`item_id` = `items`.`item_id`
-	AND `craft_materials`.`craft_id` = '$Craft->id' 
-	AND `craft_materials`.`mater_need` > 0
-	LEFT JOIN `user_crafts` 
-	ON `items`.`item_id` = `user_crafts`.`item_id`
-	AND `user_crafts`.`user_id` = '$user_id'
-	AND `user_crafts`.`isbest` > 0
-	");
+        SELECT 
+        `craft_materials`.`item_id` as mater,
+        `craft_materials`.`mater_need`,
+        `items`.`craftable`,
+        `items`.`personal`,
+        `user_crafts`.`isbest`,
+        `user_crafts`.`craft_price`
+        FROM `craft_materials`
+        INNER JOIN `items` 
+        ON `craft_materials`.`item_id` = `items`.`item_id`
+        AND `craft_materials`.`craft_id` = '$Craft->id' 
+        AND `craft_materials`.`mater_need` > 0
+        LEFT JOIN `user_crafts` 
+        ON `items`.`item_id` = `user_crafts`.`item_id`
+        AND `user_crafts`.`user_id` = '$user_id'
+        AND `user_crafts`.`isbest` > 0
+        ");
         $sum = 0; $price = 0;
         foreach($qwe as $gcr)
         {
