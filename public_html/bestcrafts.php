@@ -57,7 +57,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/../includs/user_configs.php';
 include_once 'pageb/header.html';
 include_once 'cat-funcs.php';
 include_once 'edit/funct-obhod2.php';
-$prof_q = qwe("SELECT * FROM `user_profs` where `user_id` ='$user_id'");
+
 $query = qwe("
 SELECT 
 `crafts`.`craft_id`,

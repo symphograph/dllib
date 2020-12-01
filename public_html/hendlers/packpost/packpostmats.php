@@ -22,7 +22,6 @@ $User->getById($user_id);
 $craft_id = BestCraftForItem($user_id,$item_id);
 if(!$craft_id)
 {
-    $prof_q = qwe("SELECT * FROM `user_profs` WHERE `user_id` = '$user_id'");
     qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
     qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
     require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';

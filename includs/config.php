@@ -12,7 +12,7 @@ if(preg_match('/www./',$server_name))
 
 function dbconnect() 
 {
-	global $dbLink, $myip, $connects;
+	global $dbLink, $connects;
 
 	$server_name = $_SERVER['SERVER_NAME'];
 	

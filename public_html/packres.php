@@ -120,7 +120,7 @@ LEFT JOIN user_crafts
 	";
 $qwe = qwe($sql);
 
-$prof_q = qwe("SELECT * FROM `user_profs` where `user_id` ='$user_id'");
+
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
@@ -131,11 +131,9 @@ foreach($qwe as $q)
     if($q['craft_price']) continue;
     if(!$q['craftable']) continue;
     if($q['is_trade_npc'] and $q['valut_id'] == 500) continue;
-    $itemq = $item_id = $q['item_id'];
-    CraftsObhod($item_id, $user_id);
 
-    unset($total, $itog, $craft_id, $rec_name, $item_id, $forlostnames, $orcost, $repprice, $honorprice, $dzprice, $soverprice, $mat_deep,
-        $crafts, $deeptmp, $craftsq, $icrft,$craftarr);
+    CraftsObhod($q['item_id'], $user_id);
+
 }
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");

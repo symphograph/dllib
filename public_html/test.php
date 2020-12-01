@@ -7,26 +7,13 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
 
-/*
-$User = new User();
-$User->getByGlobal();
 
-$qwe = qwe("SELECT * FROM crafts WHERE on_off");
-foreach ($qwe as $q)
-{
-
-    $Craft = new Craft($q['craft_id']);
-    $Craft->InitForUser($User->id);
-    ?><details><summary><?php echo $Craft->rec_name?></summary><?php
-    printr($Craft);
-    ?></details><br><?php
-
-}
-
-
-echo '<br><br>'. (microtime(true) - $tstart);
 die();
-*/
+$Pack = new Pack();
+$Pack->getFromDB(31901);
+printr($Pack);
+
+
 $qwe = qwe("SELECT item_id FROM items WHERE on_off AND item_id >= 32103 AND ismat LIMIT 100");
 foreach ($qwe as $q)
 {

@@ -81,8 +81,6 @@ if(in_array(4,$types))
 	
 //Запускаем расчет себестоимостей.
 
-//$server = ServerInfo($user_id, 'server');
-$prof_q = qwe("SELECT * FROM `user_profs` where `user_id` ='$user_id'");
 $packs_q = qwe("SELECT DISTINCT `item_id` FROM `packs` 
 WHERE `item_id` not in (SELECT `item_id` FROM `user_crafts` WHERE user_id = '$user_id')
 AND `side` = '$side'
@@ -94,11 +92,7 @@ if($packs_q and $packs_q->num_rows)
     qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
     foreach($packs_q as $pack)
     {
-        $itemq = $item_id = $pack['item_id'];
-        CraftsObhod($item_id, $user_id);
-
-        unset($total, $itog, $craft_id, $rec_name, $item_id, $forlostnames, $orcost, $repprice, $honorprice, $dzprice, $soverprice, $mat_deep,
-            $crafts, $deeptmp, $craftsq, $icrft, $craftarr);
+        CraftsObhod($pack['item_id'], $user_id);
     }
     qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
     qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
