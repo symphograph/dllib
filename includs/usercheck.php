@@ -31,9 +31,12 @@ function CookieTest()
 	if(!empty($_COOKIE["test"]))
 	{
 		if(!empty($_GET["cookie"]))
-		header("Location: $_SERVER[PHP_SELF]");
-		else
-		return true;
+        {
+            header("Location: {$_SERVER['SCRIPT_NAME']}");
+            die();
+        }
+
+        return true;
 	}
 	
   
@@ -42,7 +45,7 @@ function CookieTest()
 		// посылаем заголовок переадресации на страницу,
 		// с которой будет предпринята попытка установить cookie 
 		setcookie("test","1");
-		header("Location: $_SERVER[PHP_SELF]?cookie=1");
+		header("Location: {$_SERVER['SCRIPT_NAME']}?cookie=1");
 		// устанавливаем cookie с именем "test"
 	  	exit();
 	}

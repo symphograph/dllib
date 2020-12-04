@@ -29,5 +29,8 @@ class Pack extends Item
             return false;
         $q = mysqli_fetch_object($qwe);
 
+        $this->tid = $q->pack_t_id;
+        $this->tname = $q->pack_t_name;
+
     }
 }

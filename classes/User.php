@@ -81,4 +81,9 @@ class User
         return true;
     }
 
+    function getByIdenty()
+    {
+
+    }
+
 }

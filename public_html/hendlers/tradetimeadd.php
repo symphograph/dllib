@@ -50,7 +50,7 @@ $qwe = qwe("
 Select * from user_routimes 
 where (user_id, from_id, to_id, transport, buff_1, buff_2, buff_3) 
           = 
-      ($user_id, $from_id, $to_id, $transport, $buff_1, $buff_2, $buff_3)");
+      ('$user_id', '$from_id', '$to_id', '$transport', '$buff_1', '$buff_2', '$buff_3')");
 if($qwe and $qwe->num_rows > 0)
 {
     $qwe = mysqli_fetch_assoc($qwe);

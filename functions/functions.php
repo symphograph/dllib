@@ -962,6 +962,7 @@ function PriceMode2($item_id,$user_id)
 		
 	return PriceWithFrends($item_id,$user_id);
 }
+
 function IsValuta(int $item_id) : bool
 {
     $qwe = qwe("SELECT * FROM valutas WHERE valut_id = '$item_id'");
@@ -970,6 +971,7 @@ function IsValuta(int $item_id) : bool
 
     return false;
 }
+
 function PriceMode($item_id,$user_id)
 {
 	global $mode;
