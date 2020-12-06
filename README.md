@@ -12,3 +12,5 @@ Works:
 
 Does not work:
 Enchantment simulation
+
+If you want to deploy this application for development and testing, you should rename /includs/ip_tmp.php to /includs/ip.php and customize it for your environment.
