@@ -3,8 +3,11 @@ $tiptop = $_POST['tiptop'] ?? 0;
 $tiptop = intval($tiptop);
 if($tiptop != 1)
 	die();
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+
 
 $qwe = qwe("
 SELECT tip_id FROM tiptops  

@@ -1,7 +1,10 @@
 <?php
 if(!isset($_POST)) die();
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-if(!$myip) die('ff');
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+if(!$cfg->myip) die('ff');
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
 $p = [];
 foreach ($_POST as $k => $v)

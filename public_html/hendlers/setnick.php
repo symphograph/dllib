@@ -7,10 +7,11 @@ if(!$nick)
 
 $reports = ['<span style="color: red">ой!<span>','ок'];
 	
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+
 //printr($_SERVER);
 $ptoken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? 0;
 $ptoken = OnlyText($ptoken);

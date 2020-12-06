@@ -1,12 +1,13 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+
 $BotName = is_bot();
 if(empty($_COOKIE['identy']) and (!$BotName))
 CookieTest();
-$userinfo_arr = Metka($ip,$BotName);
+$userinfo_arr = Metka($BotName);
 
 $user_id = $userinfo_arr['muser'];
 

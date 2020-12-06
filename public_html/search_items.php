@@ -1,11 +1,13 @@
 ﻿<?php
 if(empty($_GET['query'])) die();
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php'; // Подключение к БД.
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+
 $query = mysqli_real_escape_string($dbLink,$_GET['query']);
-$array = array();
+$array = [];
 
 $qwe  = qwe("
 SELECT `category`, `item_name`, `personal`, `craftable`, `item_id`, `icon`

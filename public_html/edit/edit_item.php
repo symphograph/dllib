@@ -1,9 +1,11 @@
 <?php 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-if(!$myip)  exit();
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+if(!$cfg->myip)  exit();
+
+
 $userinfo_arr = UserInfo();
 if(!$userinfo_arr)
 	die('<span style="color: red">Oh!<span>');

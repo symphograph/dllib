@@ -24,7 +24,7 @@ include_once '../pageb/header.html';
 if(empty($_POST['item_id']))
 exit();
 
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php'; // Подключение к БД.
+	 // Подключение к БД.
  $craft_id = $_POST['craft_id'];
 $q_craft = qwe("SELECT * FROM crafts where craft_id = '$craft_id'");
 $q_maters = qwe("SELECT * FROM craft_materials where craft_id = '$craft_id'");

@@ -23,10 +23,11 @@ if(!empty($_COOKIE['packpost']))
     $pitem_id = intval($pitem_id);
 }
 */
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+
 
 $qwe = qwe(" 
 select 

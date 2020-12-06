@@ -188,7 +188,7 @@ $('#snav').on('click','#backbtn',function(){
 
 	
 <?php
-if($myip)
+if($cfg->myip)
 {
 	?>
 	function UpdateItem(item_id)

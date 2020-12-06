@@ -9,7 +9,7 @@ if($ip == '37.194.65.246'){
 error_reporting(E_ALL);}
 else exit();
 $start = microtime(true);
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+
 $craftq = qwe("SELECT * FROM `crafts` where `on_off` = 1 order by `deep` DESC");
 $matsq = qwe("SELECT * FROM `craft_materials` where craft_id > 0");
 //$itemsq = qwe("SELECT * FROM `items` `on_off` = 1");

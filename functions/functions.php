@@ -50,8 +50,8 @@ function random_str($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzAB
 
 function printr($var) 
 {
-global $myip;
-if(!$myip)
+global $cfg;
+if(!$cfg->myip)
 	return;
   echo '<pre>';
   print_r($var);
@@ -66,7 +66,7 @@ function OnlyText($string)
 	return($string);
 }
 
-function Metka($ip,$BotName)
+function Metka($BotName)
 {
 	//проверяем, помечен ли юзер
 	//если не помечен, метим
@@ -75,6 +75,7 @@ function Metka($ip,$BotName)
 	$cooktime = $unix_time+60*60*24*365*5;
 	$identy = random_str(12);
 
+    $ip = $_SERVER['REMOTE_ADDR'];
     if($BotName)
     {
         $query = qwe("SELECT * FROM `mailusers` WHERE `email` = '$BotName'");

@@ -1,7 +1,10 @@
 <?php 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
 $timestart = $_SERVER["REQUEST_TIME_FLOAT"];
-if(!$myip) exit;
+if(!$cfg->myip) exit;
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
 
 if(isset($_GET['exit']))
@@ -13,7 +16,7 @@ if(isset($_GET['exit']))
 	}
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+
 
 include_once $_SERVER['DOCUMENT_ROOT'].'/../includs/user.php';
 

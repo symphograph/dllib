@@ -4,10 +4,11 @@ $item_id = intval($item_id);
 if($item_id == 0)
 	die();
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+
 
 $userinfo_arr = UserInfo();
 if(!$userinfo_arr)

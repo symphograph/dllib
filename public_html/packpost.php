@@ -265,7 +265,7 @@ include_once 'pageb/footer.php'; ?>
     };
 
 <?php
-if($myip)
+if($cfg->myip)
 {
 ?>
     $(document).ready( function() {

@@ -1,6 +1,9 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-if(!$myip) exit();
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+if(!$cfg->myip) exit();
 ?>
 <!doctype html>
 <html lang="ru">
@@ -9,8 +12,6 @@ if(!$myip) exit();
 <title>Категории</title>
 </head>
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
 $query = qwe("SELECT * FROM `item_groups` WHERE `id` !=19 ORDER BY `name`");
 $sel_group_id = 0;
 if(!empty($_POST['item_group']))

@@ -4,11 +4,11 @@ $item_id = intval($_POST['item_id']);
 if(!$item_id) die;
 $cooktime = time()+60*60*24*360;
 setcookie("item_id",$item_id,$cooktime,'/');
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
 
 $User = new User();
 if(!$User->getByGlobal())
@@ -26,7 +26,7 @@ $description = htmlentities($description);
 	?>
 <div id="catalog_area">
 	<div class="item_descr_area">
-		<?php if($myip) echo $item_id?>
+		<?php if($cfg->myip) echo $item_id?>
 		<div class="nicon">
 			<div class="itim" id="itim_<?php echo $item_id?>" style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
 				<div class="grade" style="background-image: url('/img/grade/icon_grade<?php echo $Item->basic_grade?>.png')"></div>
@@ -73,7 +73,7 @@ $description = htmlentities($description);
 			MoneyForm($item_id);	
 		}
 		
-		if($myip)
+		if($cfg->myip)
 		{
 			?><a href="/edit/recedit.php?addrec=<?php echo $item_id?>" target="_blank"><button class="def_button">Добавить рецепт</button></a><br><?php
 			?><a href="/edit/edit_item.php?item_id=<?php echo $item_id?>"><button class="def_button">Править итем</button></a><br><?php
@@ -301,7 +301,7 @@ function DwnCraftList($Item)
 	$best_types = ['','Выбран руру','Выбран вами', 'Покупается'];
 	$item_id = $Item->id;
 
-	global $user_id, $mat_deep, $myip, $trash;
+	global $user_id, $mat_deep, $cfg, $trash;
 	$money = 0;
 	$qwe = qwe("
 	SELECT
@@ -533,7 +533,7 @@ function DwnCraftList($Item)
 		else
 			echo 'Не нашел материалы';
 		?></div><?php
-	 	if($myip)
+	 	if($cfg->myip)
 		{
 			?><a href="edit/recedit.php?query=<?php echo $Craft->id?>" target="_blank">Править</a><?php
 		}

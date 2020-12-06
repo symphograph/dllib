@@ -8,7 +8,7 @@ exit();};
 if(isset($_POST['NPC_off']))
 {$item_id = $_POST['item_id'];
 $user = $_POST['nick'];
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+
 qwe("UPDATE `items` SET `is_trade_npc` = '0' WHERE `item_id` = '$item_id'");
 qwe("INSERT INTO updates (item_id, user, time, edit_type) VALUES ('$item_id', '$user', now(), 'NPC_off')");
 echo '<center>Предмет '.$_POST['item_id'].' теперь нельзя купить у NPC</center>';}

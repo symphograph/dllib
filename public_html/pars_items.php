@@ -2,8 +2,11 @@
 <?php
 $start = microtime(true);
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-if(!$myip) exit();
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+if(!$cfg->myip) exit();
 $start_id = $_POST['start_id'] ?? 0;
 $start_id = intval($start_id);
 $stop_id = $_POST['stop_id'] ?? $start_id;
@@ -20,11 +23,10 @@ if(!$stop_id)
 </form>
 <?php
 if(empty($_POST['go'])) exit();
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/pars_functs.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/filefuncts.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
+
 
 
 //if(!$start_id) die;

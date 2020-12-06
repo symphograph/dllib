@@ -1,31 +1,33 @@
 <?php
-$ip = $_SERVER['REMOTE_ADDR'];
+return (object) [
+    'ip' => $_SERVER['REMOTE_ADDR'],
+    'myip' => ($_SERVER['REMOTE_ADDR'] === '127.0 0.1'),
+    'server_ip' => ($_SERVER['REMOTE_ADDR'] === '127.0 0.1'),
+    'yandex_key' => '4878c37eb34cedcf',
+    'connects' =>
+        [
+            'dev.domen.ru'=>
+                [
+                    'Host' => 'localhost',
+                    'Name' => 'dbaseName',
+                    'User' => 'root',
+                    'Pass' => ''
+                ],
 
-$myip = ($ip == '000.000.000.00');
+            'test.domen.ru'=>
+                [
+                    'Host' => 'localhost',
+                    'Name' => 'dbaseName',
+                    'User' => 'root',
+                    'Pass' => ''
+                ],
 
-
-if($myip)
-{
-	ini_set('display_errors',1);
-	error_reporting(E_ALL);
-};
-
-$connects = 
-[
-	'test.dllib.ru'=>
-	[
-		['dbHost' => 'localhost'],
-		['dbName' => 'xxxxx'],
-		['dbUser' => 'xxxxx'],
-		['dbPass' => 'xxxxx']
-	],
-
-	'dllib.ru'=>
-	[
-		['dbHost' => 'localhost'],
-		['dbName' => 'xxxxx'],
-		['dbUser' => 'xxxxx'],
-		['dbPass' => 'xxxxx']
-	]	
+            'domen.ru'=>
+                [
+                    'Host' => 'localhost',
+                    'Name' => 'dbaseName',
+                    'User' => 'root',
+                    'Pass' => ''
+                ]
+        ]
 ];
-?>

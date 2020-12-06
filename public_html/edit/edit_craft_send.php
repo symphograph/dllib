@@ -7,9 +7,12 @@
 
 <body>
 <?php
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
-if(!$myip) exit();
+	if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+
+if(!$cfg->myip) exit();
 
 	if(isset($_POST['cancel'])) {echo 'Отменено<br>'; exit();};
 	
@@ -20,7 +23,7 @@ if(!empty($_POST['craft_id']))
 	else exit();
 	$result_item_name = $_POST['result_item_name'];
     $craft_id = $_POST['craft_id'];
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+
 	$result_amount = $_POST['result_amount'];
 	$prof = $_POST['prof'];
 	$dood_name = $_POST['dood_name'];

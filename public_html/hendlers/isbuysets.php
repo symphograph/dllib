@@ -1,6 +1,9 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
 
 $vals = ['false','true'];
 $val = $_POST['value'] ?? 0;
@@ -15,9 +18,7 @@ $item_id = intval($item_id);
 if($item_id == 0) exit('id');
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+
 
 $User = new User();
 if(!$User->getByGlobal())

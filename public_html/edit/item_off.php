@@ -1,10 +1,13 @@
 ﻿<?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-if(!$myip) exit();
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+if(!$cfg->myip) exit();
 //var_dump($_GET);
 if(!empty($_GET['item_id']))
 {$item_id = intval($_GET['item_id']);
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+
 qwe("UPDATE `items` SET `on_off` = '0' WHERE `item_id` = '$item_id'");
 
 echo '<center>Предмет '.$item_id.' отключен</center>';}

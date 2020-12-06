@@ -1,7 +1,10 @@
 <?php
 if(empty($_POST['sendprice']))
 exit();
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
 //var_dump($_POST);
 //die;
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';

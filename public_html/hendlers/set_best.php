@@ -1,15 +1,13 @@
 <?php
 //var_dump($_POST); die;
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
 $craft_id = $_POST['craft_id'] ?? $_GET['craft_id'] ?? 0;
 $craft_id = intval($craft_id);
 if($craft_id == 0) exit();
 //var_dump($_POST);
-
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
 
 $userinfo_arr = UserInfo();
 if(!$userinfo_arr)

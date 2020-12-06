@@ -1,8 +1,10 @@
 <?php 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
-if(!$myip) exit(); 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+if(!$cfg->myip) exit();
+
 ?>
 <html lang="ru">
 <head>
@@ -17,7 +19,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
 <?php
 include_once '../pageb/header.html';
 	if(!empty($_GET['off']))
-	{   require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+	{
 		$craft_id = intval($_GET['off']);
 	    $url_from = $_SERVER['HTTP_REFERER'];
 		qwe("UPDATE `crafts` SET `on_off` = 0 WHERE `craft_id` = '$craft_id'");
@@ -29,7 +31,7 @@ include_once '../pageb/header.html';
 		
 if(empty($_GET['query']) and empty($_GET['addrec']))
 exit();
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php'; // Подключение к БД.
+	 // Подключение к БД.
  if(!empty($_GET['addrec']))
  {
 	 $item_id = intval($_GET['addrec']);

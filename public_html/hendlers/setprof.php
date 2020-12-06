@@ -1,9 +1,11 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
 if(empty($_POST['prof_id']))
 exit();
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+
 $userinfo_arr = UserInfo();
 if(!$userinfo_arr)
 	die('<span style="color: red">Oh!<span>');

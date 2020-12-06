@@ -1,7 +1,7 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
 setcookie('path', 'routestime');
-if(!$myip) die();
+if(!$cfg->myip) die();
 $userinfo_arr = UserInfo();
 if (!$userinfo_arr){
     header("Refresh: 0");

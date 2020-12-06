@@ -1,11 +1,12 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/ip.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
 if(empty($_POST))
 exit();
 $tstart = microtime(true);
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functions.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/functs.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/config.php';
+
 $userinfo_arr = UserInfo();
 if(!$userinfo_arr)
 	die('<span style="color: red">Oh!<span>');
@@ -296,7 +297,7 @@ else
 <div>
 <?php
 
-if ($myip)
+if ($cfg->myip)
     echo '<br><br>'. (microtime(true) - $tstart);
 
 

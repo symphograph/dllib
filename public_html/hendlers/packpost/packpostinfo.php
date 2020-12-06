@@ -68,7 +68,7 @@ extract($qwe);
 
 echo SalaryLetter($per,$pack_price,$psiol,$fresh_per,$item_name,$valuta);
 
-if($myip)
+if($cfg->myip)
 {
     $Factory_list = PackPercents($pack_price,$siol,$per,$fresh_per,2,1);
 

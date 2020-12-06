@@ -1,8 +1,8 @@
 <?php
-$server_name = $_SERVER['SERVER_NAME'];
-if(preg_match('/www./',$server_name))
+
+if(preg_match('/www./',$_SERVER['SERVER_NAME']))
 {
-	$server_name = str_replace('www.','',$server_name);
+	$server_name = str_replace('www.','',$_SERVER['SERVER_NAME']);
 	$ref=$_SERVER["QUERY_STRING"];
 	if ($ref!="") $ref="?".$ref;
 	header("HTTP/1.1 301 Moved Permanently");
@@ -10,20 +10,30 @@ if(preg_match('/www./',$server_name))
 	exit();
 }
 
+if(!isset($cfg))
+	$cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+
+if($cfg->myip)
+{
+	ini_set('display_errors',1);
+	error_reporting(E_ALL);
+};
+
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/functions/functions.php';
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/functions/functs.php';
+
+
 function dbconnect() 
 {
-	global $dbLink, $connects;
+	global $dbLink, $cfg;
 
-	$server_name = $_SERVER['SERVER_NAME'];
-	
-	foreach($connects[$server_name] as $db)
-	{
-		extract($db);
-	}
-	
+	if(!isset($cfg))
+		$cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+
+	$db = (object) $cfg->connects[$_SERVER['SERVER_NAME']];
 
 	if (!isset($dbLink)) 
-		$dbLink = mysqli_connect ($dbHost, $dbUser,$dbPass,$dbName)
+		$dbLink = mysqli_connect ($db->Host, $db->User,$db->Pass,$db->Name)
 		or die("<center><h1>Don't connect with database!!!</h1></center>");
 }
 
