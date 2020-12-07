@@ -1,10 +1,26 @@
 <?php
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/filefuncts.php';
+
+
+if(empty($_COOKIE['identy']))
+{
+    header("Refresh: 0");
+    exit();
+}
+
 $identy = OnlyText($_COOKIE['identy']);
 if(iconv_strlen($identy) != 12)
-exit('Missed Cookies');
-///jhjgfhjhgfhjhgfhjhfhjhgfghjhgf
+{
+    die('Cookie Error');
+}
+
+
+$secret = (object) $cfg->mailru_secrets[$_SERVER['SERVER_NAME']];
 class Utils {
     public static function redirect($uri = '') {
         header("HTTP/1.1 301 Moved Permanently");
@@ -15,7 +31,7 @@ class Utils {
 
 class PathHelper {
 	// путь по умолчанию
-	const DEFAULT_PATH = '../catalog.php';
+	const DEFAULT_PATH = '../packtable.php';
 
 	// массив разрешенных значений, чтобы избежать неожиданных значений в куки
 	const PATH_WHITELIST = array(
@@ -23,7 +39,9 @@ class PathHelper {
 		'catalog' => '../catalog.php',
 		'user_customs' => '../user_customs.php',
 		'users' => '../users.php',
-		'user_prices' => '../user_prices.php'
+		'user_prices' => '../user_prices.php',
+        'routestime' => '../routestime.php',
+        'packpost' => '../packpost.php'
     );
 
 	// название параметра в URL
@@ -63,28 +81,7 @@ class PathHelper {
 			}
 }
 
-$domen = $_SERVER['SERVER_NAME'];
-$uri_calback = 'https://'.$domen.'/oauth/mailru.php';
-
-$secrets['dllib.ru'] = [
-			'app_id'=>000000,
-			'app_private' => 'xxxxxxxxxxxxxxxxxx',
-			'app_secret' => 'xxxxxxxxxxxxxxxxxxxxx',
-			'uri_calback' => $uri_calback
-		   ];
-$secrets['test.dllib.ru'] = [
-			'app_id'=>000000,
-			'app_private' => 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-			'app_secret' => 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-			'uri_calback' => $uri_calback
-		   ];
-$secret = $secrets[$domen];
 class OAuthMailRu {
-
-    const APP_ID = 000000; //ID приложения
-    const APP_PRIVATE = 'xxxxxxxxxxxxxxx'; //Приватный ключ
-    const APP_SECRET = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxx'; //Защищенный ключ
-    const URL_CALLBACK = 'https://dllib.ru/oauth/mailru.php'; //URL, на который произойдет перенаправление после авторизации
     const URL_AUTHORIZE = 'https://connect.mail.ru/oauth/authorize';
     const URL_GET_TOKEN = 'https://connect.mail.ru/oauth/token';
     const URL_API = 'https://www.appsmail.ru/platform/api';
@@ -95,25 +92,23 @@ class OAuthMailRu {
 
     public static function goToAuth($secret)
     {
+        $uri_calback = 'https://'.$_SERVER['SERVER_NAME'].'/oauth/mailru.php';
     	$url = self::URL_AUTHORIZE .
-            '?client_id=' . $secret['app_id'] .
+            '?client_id=' . $secret->app_id .
             '&response_type=code' .
-            '&redirect_uri=' . urlencode($secret['uri_calback']);
-/*
-        if (!empty($state)) {
-        	$url .= '&state=' . urlencode($state);
-        }
-*/
+            '&redirect_uri=' . urlencode($uri_calback);
+
         Utils::redirect($url);
     }
 
     public static function getToken($code,$secret) {
+        $uri_calback = 'https://'.$_SERVER['SERVER_NAME'].'/oauth/mailru.php';
         $data = array(
-            'client_id' => $secret['app_id'],
-            'client_secret' => $secret['app_secret'],
+            'client_id' => $secret->app_id,
+            'client_secret' => $secret->app_secret,
             'grant_type' => 'authorization_code',
             'code' => trim($code),
-            'redirect_uri' => $secret['uri_calback']
+            'redirect_uri' => $uri_calback
         );
 
         // формируем post-запрос
@@ -141,7 +136,7 @@ class OAuthMailRu {
 
     public static function getUser($secret) {
         $request_params = array(
-            'app_id' => $secret['app_id'],
+            'app_id' => $secret->app_id,
             'method' => 'users.getInfo',
             'secure' => 1,
             'session_key' => self::$token,
@@ -155,7 +150,7 @@ class OAuthMailRu {
 
         $url = self::URL_API .
             '?' . http_build_query($request_params).
-            '&sig=' . md5($params . $secret['app_secret']);
+            '&sig=' . md5($params . $secret->app_secret);
 
         if (!($user = @file_get_contents($url))) {
             return false;
@@ -185,8 +180,7 @@ if (!empty($_GET['error'])) {
      * Если да, то можно просто авторизовать его и не запрашивать его данные.
      */
     $user = OAuthMailRu::getUser($secret);
-    //var_dump($user);
-	//echo '<br><br>';
+
 	foreach($user as $v)
 	{
 	//$uid = $v->uid;
@@ -201,11 +195,13 @@ if (!empty($_GET['error'])) {
 	$unix_time = time();
 	$datetime = date('Y-m-d H:i:s',$unix_time);
 	$cooktime = $unix_time+60*60*24*365*5;
-	
-	$checkmail="SELECT `mail_id`, `email`, `identy` from `mailusers` where `email`='$email'";
+
+
+	$checkmail="SELECT `mail_id`, `email`, `identy`, `user_nick` from `mailusers` where `email`='$email'";
 	$query= qwe($checkmail);
-	if(mysqli_num_rows($query)>0)//Это значит, что у него уже есть identy
+	if($query and $query->num_rows)//Это значит, что у него уже есть identy
 	{
+
 		foreach($query as $qid)
 		{
 			$native_identy = $qid['identy'];
@@ -215,9 +211,10 @@ if (!empty($_GET['error'])) {
 		{
 			$uid = $key['mail_id'];
 		}
-		//Очищаем нунужный mail_id, который дали ему при установке куки.
+		//Очищаем ненужный mail_id, который дали ему при установке куки.
 		qwe("DELETE FROM `mailusers` WHERE `mail_id` = '$uid'");
-		
+
+        $identy = $native_identy;
 
 		$upd_sql="UPDATE `mailusers` SET 
 		`first_name` = '$fname', 
@@ -225,12 +222,12 @@ if (!empty($_GET['error'])) {
 		`avatar` = '$ava', 
 		`mailnick` = '$mailnick', 
 		`last_time` = '$datetime', 
-		`last_ip` = '$ip'
+		`last_ip` = '$cfg->ip'
 		WHERE `email` = '$email'";
 		qwe($upd_sql);
 		
 		//Возвращаем родную куку. (в плане безопасности надо еще подумать)
-		setcookie('identy',$native_identy,$cooktime,'/','',true,true);
+		setcookie('identy',$identy,$cooktime,'/','',true,true);
 		
 	}else 
 	{
@@ -242,24 +239,30 @@ if (!empty($_GET['error'])) {
 		`avatar` = '$ava', 
 		`mailnick` = '$mailnick', 
 		`last_time` = '$datetime', 
-		`last_ip` = '$ip',
+		`last_ip` = '$cfg->ip',
 		`email` = '$email'
 		WHERE BINARY  `identy` = '$identy'";
 		qwe($upd_sql);
 	}
-	
-	AvaGetAndPut($ava,$identy);
-	//qwe("UPDATE `identy` SET `mail_id` = '$uid' WHERE BINARY `identy` = '$identy'");
-	//setcookie('fname', $fname, time()+3600*24*7, "/");
-	//setcookie('mailid', $uid, time()+3600*24*7, "/");
-	//setcookie('avatar', $ava, time()+3600*24*7, "/");
-	
+
+    AvaGetAndPut($ava,$identy);
+
+    $qwe = qwe("
+    SELECT * FROM `mailusers` 
+    WHERE BINARY `identy` = '$identy'"
+    );
+	foreach ($qwe as $q)
+    {
+        $mail_id = $q['mail_id'];
+        $user_nick = $q['user_nick'];
+    }
+
+    if(!$user_nick)
+        $user_nick = NickAdder($mail_id);
+
+
 }
 
-//Заодно почистим бд от мусора.
-//dbCleaner();
-
 $url = PathHelper::restorePath();
-//exit();
-echo '<meta http-equiv="refresh" content="0; url='.$url.'">';
-//exit();
+header("Location: ".$url);
+exit();
