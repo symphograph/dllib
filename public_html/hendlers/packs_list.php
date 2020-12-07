@@ -18,13 +18,16 @@ $user_id = $muser;
 
 $pack_age = $_POST['pack_age'] ?? 0;
 $pack_age = intval($pack_age);
+
 $per = $_POST['perc'] ?? 0;
 $per = intval($per);
+
 $side = $_POST['side'] ?? 0;
 $side = intval($side);
+
 $siol = $_POST['siol'] ?? 0;
-//$qsort = intval($siol);
-$side = intval($side);
+$siol = intval($siol);
+
 $qsort = $_POST['sort'] ?? 0;
 $qsort = intval($qsort);
 
@@ -174,9 +177,9 @@ INNER JOIN fresh_data ON fresh_data.fresh_type = zs_from.fresh_type AND pack_typ
  AND '$pack_age' between fresh_data.fresh_tstart and fresh_data.fresh_tstop 
 LEFT JOIN user_crafts ON user_crafts.user_id = '$user_id' AND pack_prices.item_id = user_crafts.item_id AND user_crafts.isbest
 LEFT JOIN (
-			SELECT 32103 as item_id, ROUND($coalprice*0.9) as auc_price
+			SELECT 32103 as item_id, ROUND({$coalprice} * 0.9) as auc_price
 			UNION
-			SELECT 32106 as item_id, ROUND($shellprice*0.9) as auc_price
+			SELECT 32106 as item_id, ROUND({$shellprice} * 0.9) as auc_price
 			) 
 as `coal_price`
 on coal_price.item_id = pack_prices.valuta_id

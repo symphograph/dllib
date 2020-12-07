@@ -493,6 +493,5 @@ ip.php
 .htaccess
 .idea
 cgi-bin
-mailru.php
 /public_html/global/
 /logs/

@@ -8,7 +8,9 @@ if(!isset($cfg)) {
 }
 if (!$cfg->myip)
     die();
-print_r(MYCONFIG);
+$secret = (object) $cfg->mailru_secrets[$_SERVER['SERVER_NAME']];
+printr($secret);
+
 
 
 

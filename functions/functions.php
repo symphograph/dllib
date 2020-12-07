@@ -68,12 +68,12 @@ function OnlyText($string)
 
 function Metka($BotName)
 {
-	//проверяем, помечен ли юзер
-	//если не помечен, метим
+	//проверяем, помним ли юзера
+	//если нет, запоминаем
 	$unix_time = time();
 	$datetime = date('Y-m-d H:i:s',$unix_time);
 	$cooktime = $unix_time+60*60*24*365*5;
-	$identy = random_str(12);
+
 
     $ip = $_SERVER['REMOTE_ADDR'];
     if($BotName)
@@ -107,7 +107,7 @@ function Metka($BotName)
 
     if(empty($_COOKIE['identy']))
     {
-		
+        $identy = random_str(12);
 		setcookie('identy',$identy,$cooktime,'/','',true,true);
 
 		$newid = EmptyIdFinder('mailusers');
@@ -686,7 +686,12 @@ function AvaGetAndPut($ava,$identy)
 {
 	$file = random_str(8);
 	$tmp = $_SERVER['DOCUMENT_ROOT'].'/imgtmp/'.$file.'.tmp';
-	//var_dump($tmp);
+
+	global $cfg;
+	if(in_array($identy,$cfg->broken_avas))
+	    return 'init_ava.png';
+
+
 	$img = curl($ava);
 
 	file_put_contents($tmp, $img);
