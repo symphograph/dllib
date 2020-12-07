@@ -206,7 +206,7 @@ class Craft
         return [$crftprice,$sumspm];
     }
 
-    function GroupCraft(object $Craft)
+    public function GroupCraft(object $Craft)
     {
 
         global $lost, $user_id;
@@ -261,7 +261,7 @@ class Craft
                 else
                     $price = $gcr->craft_price;
 
-                $price_type = 'gold';
+
                 $matsum = $gcr->mater_need * $price;
                 $sum = $sum + $matsum;
                 continue;

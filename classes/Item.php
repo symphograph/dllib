@@ -111,7 +111,7 @@ class Item
      * @return array
      * Возможные материалы (включая дочерние)
      */
-    function AllPotentialMats(int $item_id, array $arr=[], int $i=0)
+    public function AllPotentialMats(int $item_id, array $arr=[], int $i=0)
     {
         $i = intval($i);
         $i++;
@@ -146,7 +146,7 @@ class Item
         return $arr;
     }
 
-    function AllPotentialCrafts()
+    public function AllPotentialCrafts()
     {
         if(!count($this->crafts))
             $crafts = self::getCrafts();
@@ -202,7 +202,7 @@ class Item
      * @return array
      * Первичные некрафтабельные материалы
      */
-    function AllPotentialResults(int $item_id, array $arr=[], int $i=0)
+    public function AllPotentialResults(int $item_id, array $arr=[], int $i=0)
     {
         $i = intval($i);
         $i++;

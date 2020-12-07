@@ -11,7 +11,7 @@ if(!isset($cfg)) {
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
 
 $User = new User();
-if(!$User->getByGlobal())
+if(!$User->ByIdenty())
 	die('<span style="color: red">Oh!<span>');
 
 $user_id = $User->id;

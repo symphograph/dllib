@@ -984,7 +984,7 @@ function PriceMode($item_id,$user_id)
 	if(!isset($mode))
     {
         $User = new User();
-        $User->getById($user_id);
+        $User->ById($user_id);
         $mode = $User->mode;
     }
 	

@@ -21,7 +21,7 @@ if($item_id == 0) exit('id');
 
 
 $User = new User();
-if(!$User->getByGlobal())
+if(!$User->ByIdenty())
     die('<span style="color: red">Oh!<span>');
 //extract($userinfo_arr);
 //$user_id = $muser;

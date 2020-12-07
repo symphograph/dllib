@@ -17,7 +17,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
 if(!isset($user_id) or !$user_id)
     die();
 $User = new User();
-$User->getById($user_id);
+$User->ById($user_id);
 
 $craft_id = BestCraftForItem($user_id,$item_id);
 if(!$craft_id)

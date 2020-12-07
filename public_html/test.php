@@ -8,8 +8,10 @@ if(!isset($cfg)) {
 }
 if (!$cfg->myip)
     die();
-$secret = (object) $cfg->mailru_secrets[$_SERVER['SERVER_NAME']];
-printr($secret);
+
+$User = new User();
+$User->ByIdenty();
+printr($User);
 
 
 
