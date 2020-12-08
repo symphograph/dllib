@@ -30,7 +30,7 @@ if(!$userinfo_arr)
 	die();
 
 extract($userinfo_arr);
-$user_id = $muser;
+$user_id = $User->id;
 
 if($folow)
 {

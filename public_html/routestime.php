@@ -3,7 +3,13 @@ header("Location: /packpost.php");
 die();
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+$User = new User;
+$User->check();
+$user_id = $User->id;
 setcookie('path', 'routestime');
 
 $userinfo_arr = UserInfo();

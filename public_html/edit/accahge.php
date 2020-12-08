@@ -9,9 +9,9 @@ $muser = $_POST['muser'] ?? 0;
 $muser = intval($muser);//Юзер, которого надо сделать основным на этом девайсе.
 if($muser == 0) die;
 
-$userinfo_arr = UserInfo();
-if(!$userinfo_arr) die;
-$user_id = $userinfo_arr['muser'];//Текущий юзер, который залогинен с этого девайса.
+$User = new User;
+if(!$User->byIdenty()) die;
+$user_id = $User->id;//Текущий юзер, который залогинен с этого девайса.
 
 //Проверяем, что акаунт, который юзер хочет сделать основным, логинился на этом девайсе.
 $sessmark = OnlyText($_COOKIE['sessmark']);	

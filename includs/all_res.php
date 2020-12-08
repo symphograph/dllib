@@ -1,7 +1,7 @@
 <?php
 function AllResShow($u_amount,$trash = false)
 {
-	global $user_id;
+	global $User;
 	$table = 'craft_all_mats';
 	if($trash) 
 		$table = 'craft_all_trash';
@@ -16,7 +16,7 @@ function AllResShow($u_amount,$trash = false)
 	`items`.`basic_grade`
 	FROM `".$table."`
 	INNER JOIN `items` ON `".$table."`.`mat_id` = `items`.`item_id`
-	WHERE `user_id` = '$user_id'
+	WHERE `user_id` = '$User->id'
 	GROUP BY `mat_id`
 	ORDER BY `categ_id`
 	");
@@ -32,7 +32,7 @@ function AllResShow($u_amount,$trash = false)
 		$sum = $v['sum'];
 		$basic_grade = $v['basic_grade'];
 		$item_name = $v['item_name'];
-		$matprice = UserMatPrice($mat_id,$user_id,$sum<0);
+		$matprice = UserMatPrice($mat_id,$User->id,$sum<0);
 		$matprice = esyprice($matprice);
 		$matprice = htmlspecialchars($matprice);
 		if($mat_id != 500)

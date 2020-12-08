@@ -26,7 +26,7 @@ $rand = $arr[$rand];
 $qwe = qwe("
 SELECT * FROM tiptops 
 WHERE tip_id  = '$rand'");
-if(!$qwe or $qwe->num_rows == 0)
+if(!$qwe or !$qwe->num_rows)
 	die('sql');
 $qwe = mysqli_fetch_assoc($qwe);
 echo $qwe['tip_text'];

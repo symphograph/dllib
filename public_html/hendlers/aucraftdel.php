@@ -10,11 +10,10 @@ if(!isset($cfg)) {
 }
 
 
-$userinfo_arr = UserInfo();
-if(!$userinfo_arr)
+$User = new User;
+if(!$User->byIdenty())
 	die();
-extract($userinfo_arr);
-$user_id = $muser;
+$user_id = $User->id;
 
 $sql = "
 DELETE FROM `user_crafts` 

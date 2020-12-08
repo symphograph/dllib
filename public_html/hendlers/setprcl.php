@@ -6,7 +6,7 @@ if($item_id == 0)
 	die();
 
 $reports = ['<span style="color: red">ой!<span>','ок'];
-
+$report = 1;
 
 	
 if(!isset($cfg)) {
@@ -14,17 +14,10 @@ if(!isset($cfg)) {
     require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 }
 
-
-
-
-
-$userinfo_arr = UserInfo();
-
-$report = 1;
-if(!$userinfo_arr)
+$User = new User;
+if(!$User->byIdenty())
 	die($reports[0]);
-extract($userinfo_arr);
-$user_id = $muser;
+$user_id = $User->id;
 
 if(!empty($_POST['del']) and $_POST['del'] == 'del')
 {
@@ -32,7 +25,7 @@ if(!empty($_POST['del']) and $_POST['del'] == 'del')
 	DELETE FROM `prices`
 	WHERE `user_id` = '$user_id'
 	AND `item_id` = '$item_id'
-	AND `server_group` = '$server_group';
+	AND `server_group` = '$User->server_group';
 	");
 	if(!$qwe)
 		$report = 0;
@@ -46,7 +39,7 @@ if(!empty($_POST['del']) and $_POST['del'] == 'del')
 	$query = qwe("REPLACE INTO `prices` 
 	(`user_id`, `item_id`, `auc_price`, `server_group`,`time`)
 	VALUES 
-	('$user_id', '$item_id', '$setprise', '$server_group', now())");
+	('$user_id', '$item_id', '$setprise', '$User->server_group', now())");
 	if(!$query)
 		$report = 0;
 }

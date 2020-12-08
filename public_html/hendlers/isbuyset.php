@@ -13,11 +13,11 @@ $isbuy = intval($isbuy);
 if($isbuy == 0) exit();
 
 
-$userinfo_arr = UserInfo();
-if(!$userinfo_arr)
+$User = new User;
+if(!$User->byIdenty())
 	die('<span style="color: red">Oh!<span>');
 extract($userinfo_arr);
-$user_id = $muser;
+$user_id = $User->id;
 //$item_id = ResultItemId($craft_id);
 if($isbuy == 3)
 {

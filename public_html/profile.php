@@ -5,6 +5,7 @@ if(!isset($cfg)) {
 }
 $User = new User;
 $User->check();
+$user_id = $User->id;
 
 $ver = random_str(8);
 

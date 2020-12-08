@@ -6,12 +6,10 @@ if(!isset($cfg)) {
 if(!$cfg->myip)  exit();
 
 
-$userinfo_arr = UserInfo();
-if(!$userinfo_arr)
+$User = new User;
+if(!$User->byIdenty())
 	die('<span style="color: red">Oh!<span>');
-//printr($userinfo_arr);
-extract($userinfo_arr);
-$user_id = $muser;
+$user_id = $User->id;
 ?>
 <!DOCTYPE HTML>
 <html lang="ru">

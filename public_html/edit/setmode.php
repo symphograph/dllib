@@ -2,7 +2,13 @@
 //var_dump($_POST);
 if(!isset($_POST['mode']))
 	exit();
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+$User = new User;
+$User->check();
+$user_id = $User->id;
 $setmode = intval($_POST['mode']);
 $setmode = $setmode ?? 1;
 qwe("UPDATE `mailusers` SET `mode` = '$setmode' WHERE BINARY `identy` = '$identy'");

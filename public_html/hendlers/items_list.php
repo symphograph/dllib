@@ -52,7 +52,7 @@ ORDER BY `item_name`
 ";
 
 $qwe = qwe($sql);
-if($qwe->num_rows)
+if(!$qwe or !$qwe->num_rows)
  die('Ничего не найдено');
 foreach($qwe as $q)
 {

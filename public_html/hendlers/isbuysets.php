@@ -23,10 +23,8 @@ if($item_id == 0) exit('id');
 $User = new User();
 if(!$User->byIdenty())
     die('<span style="color: red">Oh!<span>');
-//extract($userinfo_arr);
-//$user_id = $muser;
+
 $user_id = $User->id;
-//$mode = $User->mode;
 if($val)
 {
 	$auc_price = PriceMode($item_id,$User->id)['auc_price'] ?? false;

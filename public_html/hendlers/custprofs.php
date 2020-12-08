@@ -5,11 +5,11 @@ if(!isset($cfg)) {
 }
 
 
-$userinfo_arr = UserInfo();
-if(!$userinfo_arr)
+$User = new User;
+if(!$User->byIdenty())
 	die('<span style="color: red">Oh!<span>');
-extract($userinfo_arr);
-$user_id = $muser;
+
+$user_id = $User->id;
 ?>
 <div class="prof_area">
 

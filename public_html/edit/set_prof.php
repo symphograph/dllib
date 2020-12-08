@@ -1,5 +1,11 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+$User = new User;
+$User->check();
+$user_id = $User->id;
 
 if(!preg_match('/user_customs.php/', $_SERVER['HTTP_REFERER']))
 {echo '<meta http-equiv="refresh" content="0; url=../index.php">'; exit();};

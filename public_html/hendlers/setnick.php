@@ -23,7 +23,7 @@ if(!$userinfo_arr)
 	die();
 extract($userinfo_arr);
 
-$user_id = $muser;
+$user_id = $User->id;
 $token = AskToken();
 
 if((!$token) or (!$ptoken) or $ptoken != $token)

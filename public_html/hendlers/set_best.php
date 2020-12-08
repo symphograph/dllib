@@ -10,13 +10,12 @@ if(!isset($cfg)) {
 
 //var_dump($_POST);
 
-$userinfo_arr = UserInfo();
-if(!$userinfo_arr)
+$User = new User;
+if(!$User->byIdenty())
 	die('<span style="color: red">Oh!<span>');
-extract($userinfo_arr);
-$user_id = $muser;
+
+$user_id = $User->id;
 $item_id = ResultItemId($craft_id);
-//$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 $isbest = isBest($craft_id);
 if($isbest)
 {
@@ -55,8 +54,7 @@ function isBest($craft_id)
 	AND `user_id` = '$user_id'
 	");
 	if((!$qwe) or ($qwe->num_rows == 0)) return false;
-	$qwe = mysqli_fetch_assoc($qwe);
-	extract($qwe);
-	return $isbest;
+	$q = mysqli_fetch_object($qwe);
+	return $q->isbest;
 }
 ?>

@@ -10,7 +10,8 @@ if (!$cfg->myip)
     die();
 
 $User = new User();
-$User->Check();
+$User->check();
+$user_id = $User->id;
 printr($User);
 
 

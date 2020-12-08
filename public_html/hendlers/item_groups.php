@@ -7,11 +7,11 @@ if(!isset($cfg)) {
 }
 
 
-$userinfo_arr = UserInfo();
-if(!$userinfo_arr)
+$User = new User;
+if(!$User->byIdenty())
 	die('<span style="color: red">Oh!<span>');
-extract($userinfo_arr);
-$user_id = $muser;
+
+$user_id = $User->id;
 
 $cat_id = $_POST['categ_id'] ?? 0;
 $cat_id = intval($cat_id);

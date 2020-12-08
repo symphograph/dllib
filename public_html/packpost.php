@@ -7,6 +7,7 @@ if(!isset($cfg)) {
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/filefuncts.php';
 $User = new User();
 $User->check();
+$user_id = $User->id;
 
 $ver = random_str(8);
 
@@ -115,7 +116,7 @@ order by side, zone_name
                 <div class="contentblock">
                     <form id="form">
                         <label class="selab">
-                            <img class="selicon" src="../img/packmaker.png?ver=2" data-tooltip="Откуда">
+                            <img class="selicon" src="img/packmaker.png?ver=2" data-tooltip="Откуда">
                             <select id='zfrom' name="from_id" autocomplete="off">
                                 <option value="100">Все локации</option>
                                 <?php SelectOpts($qwe,'zone_id','zone_name',$from_id); ?>
@@ -129,7 +130,7 @@ order by side, zone_name
                         </label>
 
                         <label class="selab">
-                            <img class="selicon" src="../img/perdaru2.png" data-tooltip="Куда">
+                            <img class="selicon" src="img/perdaru2.png" data-tooltip="Куда">
                             <select id="zto" name="to_id" autocomplete="off"></select>
                         </label>
                         <div class="selab2">
@@ -235,7 +236,7 @@ include_once 'pageb/footer.php'; ?>
 
 <script type='text/javascript'>
 
-
+//TODO Этот скрипт надо переделать и вынести в файл
 
     $(document).keypress(
         function(event){

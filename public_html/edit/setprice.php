@@ -7,7 +7,13 @@ if(!isset($cfg)) {
 }
 //var_dump($_POST);
 //die;
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+$User = new User;
+$User->check();
+$user_id = $User->id;
 
 $setprise = PriceValidator([$_POST['setgold'],$_POST['setsilver'],$_POST['setbronze']]);
 //var_dump($setprise);

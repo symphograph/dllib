@@ -7,8 +7,12 @@ $to_id = $_POST['to_id'] ?? 0;
 $to_id = intval($to_id);
 if(!$to_id) die('Куда?');
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
-if(!$user_id) die('user_id');
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+$User = new User;
+if(!$User->byIdenty()) die('user_id');
 
 $ptoken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? 0;
 $ptoken = OnlyText($ptoken);
@@ -50,7 +54,7 @@ $qwe = qwe("
 Select * from user_routimes 
 where (user_id, from_id, to_id, transport, buff_1, buff_2, buff_3) 
           = 
-      ('$user_id', '$from_id', '$to_id', '$transport', '$buff_1', '$buff_2', '$buff_3')");
+      ('$User->id', '$from_id', '$to_id', '$transport', '$buff_1', '$buff_2', '$buff_3')");
 if($qwe and $qwe->num_rows > 0)
 {
     $qwe = mysqli_fetch_assoc($qwe);
@@ -64,7 +68,7 @@ $qwe = qwe("
 replace into user_routimes
 (dur_id,user_id, from_id, to_id, transport, buff_1, buff_2, buff_3,durway,time) 
 VALUES 
-('$dur_id', '$user_id', '$from_id', '$to_id', '$transport', '$buff_1', '$buff_2', '$buff_3', '$time', now())
+('$dur_id', '$User->id', '$from_id', '$to_id', '$transport', '$buff_1', '$buff_2', '$buff_3', '$time', now())
 ");
 
 if($qwe)

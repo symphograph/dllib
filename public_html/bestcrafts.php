@@ -5,7 +5,13 @@ if(!isset($cfg)) {
 }
 $timestart = $_SERVER["REQUEST_TIME_FLOAT"];
 if(!$cfg->myip) exit;
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+$User = new User;
+$User->check();
+$user_id = $User->id;
 
 if(isset($_GET['exit']))
 	{

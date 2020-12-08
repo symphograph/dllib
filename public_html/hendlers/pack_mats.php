@@ -9,13 +9,12 @@ if(!isset($cfg)) {
 }
 
 
-$userinfo_arr = UserInfo();
-if(!$userinfo_arr)
+$User = new User;
+if(!$User->byIdenty())
 	die('<span style="color: red">Oh!<span>');
 
-extract($userinfo_arr);
-$user_id = $muser;
-PackMatsDisplay($item_id,$user_id);
+$user_id = $User->id;
+PackMatsDisplay($item_id,$User->id);
 
 function PackMatsDisplay($item_id,$user_id)
 {
@@ -47,11 +46,11 @@ function PackMatsDisplay($item_id,$user_id)
 	$pack_id = $item_id; 
 	foreach($query as $q)
 	{
-		extract($q);
+		$q = (object) $q;
 		?>
 		
-		<div class="maticon" style="background-image: url(img/icons/50/<?php echo $icon?>.png)">
-			<div class="itdigit"><?php echo $mater_need?></div>
+		<div class="maticon" style="background-image: url(img/icons/50/<?php echo $q->icon?>.png)">
+			<div class="itdigit"><?php echo $q->mater_need?></div>
 		</div>
 		
 		<?php

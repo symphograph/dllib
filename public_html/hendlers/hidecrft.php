@@ -2,7 +2,12 @@
 if(empty($_POST['craft_id']))
 exit();
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+$User = new User;
+$User->byIdenty();
 
 $craft_id = intval($_POST['craft_id']);
 

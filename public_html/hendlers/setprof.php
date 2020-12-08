@@ -6,8 +6,8 @@ if(!isset($cfg)) {
 if(empty($_POST['prof_id']))
 exit();
 
-$userinfo_arr = UserInfo();
-if(!$userinfo_arr)
+$User = new User;
+if(!$User->byIdenty())
 	die('<span style="color: red">Oh!<span>');
 $prof_id = intval($_POST['prof_id']);
 $lvl = intval($_POST['lvl']);

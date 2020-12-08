@@ -7,14 +7,11 @@ if(empty($_POST))
 exit();
 $tstart = microtime(true);
 
-$userinfo_arr = UserInfo();
-if(!$userinfo_arr)
+$User = new User;
+if(!$User->byIdenty())
 	die('<span style="color: red">Oh!<span>');
 
-
-//die;
-extract($userinfo_arr);
-$user_id = $muser;
+$user_id = $User->id;
 
 $pack_age = $_POST['pack_age'] ?? 0;
 $pack_age = intval($pack_age);
