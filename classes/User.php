@@ -120,7 +120,7 @@ class User
         return true;
     }
 
-    private function isCookieble()
+    private function isCookieble() : bool
     {
         if(!empty($_COOKIE["test"]))
         {
@@ -155,11 +155,11 @@ class User
         if(self::isBot())
             return true;
 
-        if(!self::isCookieble())
-            return false;
-
         if(empty($_COOKIE['identy']))
         {
+            if(!self::isCookieble())
+                return false;
+
             self::newUser();
             return true;
         }
@@ -184,7 +184,7 @@ class User
         die();
     }
 
-    public function byIdenty(string $identy = '')
+    public function byIdenty(string $identy = '') : bool
     {
 
         if(empty($identy))
@@ -224,7 +224,71 @@ class User
         return true;
     }
 
-    public function ByQwe(object $q)
+    public function authByEmail() : bool
+    {
+        if(!$this->email)
+            return false;
+
+        $qwe = qwe("
+        SELECT * 
+        from `mailusers` 
+        where `email` = '$this->email'
+        ");
+        if(!$qwe or !$qwe->num_rows) {
+           return self::regNewMail();
+        }
+
+        $q = mysqli_fetch_object($qwe);
+
+        return self::authKnownUser($q);
+    }
+
+    private function authKnownUser($q)
+    {
+        //Заменяем текущий identy тем, что привязан к мылу.
+        $this->identy = $q->identy;
+
+        //Очищаем ненужный mail_id, который дали ему при установке куки.
+        qwe("DELETE FROM `mailusers` WHERE `mail_id` = '$this->id'");
+
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $qwe = qwe("UPDATE `mailusers` SET 
+            `first_name` = '$this->fname', 
+            `last_name` = '$this->last_name', 
+            `avatar` = '$this->avatar', 
+            `mailnick` = '$this->mailnick', 
+            `last_time` = NOW(), 
+            `last_ip` = '$ip'
+            WHERE `mail_id` = '$q->mail_id'
+            ");
+        if(!$qwe)
+            return false;
+
+        $cooktime = time() + (60*60*24*365*5);
+        setcookie('identy',$this->identy,$cooktime,'/','',true,true);
+        return true;
+    }
+
+    private function regNewMail()
+    {
+        $qwe = qwe("
+            UPDATE `mailusers` SET 
+            `first_name` = '$this->fname', 
+            `last_name` = '$this->last_name', 
+            `avatar` = '$this->avatar', 
+            `mailnick` = '$this->mailnick', 
+            `last_time` = '$this->last_time', 
+            `last_ip` = '$this->last_time',
+            `email` = '$this->email'
+            WHERE `mail_id` = '$this->id'
+            ");
+        if(!$qwe)
+            return false;
+
+        return true;
+    }
+
+    private function ByQwe(object $q)
     {
         $this->age = $q->age;
         $this->avafile = $q->avafile ?? '';

@@ -5,20 +5,9 @@ if(!isset($cfg)) {
 }
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/filefuncts.php';
 $User = new User();
-$User->check();
-
-if(empty($_COOKIE['identy']))
-{
-    header("Refresh: 0");
-    exit();
+if(!$User->check()) {
+    die('Error Authentication');
 }
-
-$identy = OnlyText($_COOKIE['identy']);
-if(iconv_strlen($identy) != 12)
-{
-    die('Cookie Error');
-}
-
 
 $secret = (object) $cfg->mailru_secrets[$_SERVER['SERVER_NAME']];
 class Utils {
@@ -185,82 +174,15 @@ if (!empty($_GET['error'])) {
 	{
 	//$uid = $v->uid;
 	//echo '<br><br>'.$uid;
-	$fname = $v ->first_name;
-	$lname = $v ->last_name;
-	$email = $v ->email;
-	$ava = $v ->pic_50;
-	$mailnick = $v ->nick;
-	}
-	
-	$unix_time = time();
-	$datetime = date('Y-m-d H:i:s',$unix_time);
-	$cooktime = $unix_time+60*60*24*365*5;
-
-
-	$checkmail="SELECT `mail_id`, `email`, `identy`, `user_nick` from `mailusers` where `email`='$email'";
-	$query= qwe($checkmail);
-	if($query and $query->num_rows)//Это значит, что у него уже есть identy
-	{
-
-		foreach($query as $qid)
-		{
-			$native_identy = $qid['identy'];
-		}
-		$qoldidenty = qwe("SELECT * FROM `mailusers` WHERE BINARY `identy` = '$identy'");
-		foreach($qoldidenty as $key)
-		{
-			$uid = $key['mail_id'];
-		}
-		//Очищаем ненужный mail_id, который дали ему при установке куки.
-		qwe("DELETE FROM `mailusers` WHERE `mail_id` = '$uid'");
-
-        $identy = $native_identy;
-
-		$upd_sql="UPDATE `mailusers` SET 
-		`first_name` = '$fname', 
-		`last_name` = '$lname', 
-		`avatar` = '$ava', 
-		`mailnick` = '$mailnick', 
-		`last_time` = '$datetime', 
-		`last_ip` = '$cfg->ip'
-		WHERE `email` = '$email'";
-		qwe($upd_sql);
-		
-		//Возвращаем родную куку. (в плане безопасности надо еще подумать)
-		setcookie('identy',$identy,$cooktime,'/','',true,true);
-		
-	}else 
-	{
-		
-		//Такого мыла нет. Дописываем мыло временному юзеру и делаем его постоянным.
-		$upd_sql="UPDATE `mailusers` SET 
-		`first_name` = '$fname', 
-		`last_name` = '$lname', 
-		`avatar` = '$ava', 
-		`mailnick` = '$mailnick', 
-		`last_time` = '$datetime', 
-		`last_ip` = '$cfg->ip',
-		`email` = '$email'
-		WHERE BINARY  `identy` = '$identy'";
-		qwe($upd_sql);
+	$User->fname = $v ->first_name;
+	$User->last_name = $v ->last_name;
+	$User->email = $v ->email;
+	$User->avatar = $v ->pic_50;
+	$User->mailnick = $v ->nick;
 	}
 
-    AvaGetAndPut($ava,$identy);
-
-    $qwe = qwe("
-    SELECT * FROM `mailusers` 
-    WHERE BINARY `identy` = '$identy'"
-    );
-	foreach ($qwe as $q)
-    {
-        $mail_id = $q['mail_id'];
-        $user_nick = $q['user_nick'];
-    }
-
-    if(!$user_nick)
-        $user_nick = NickAdder($mail_id);
-
-
+    if(!$User->authByEmail())
+        die('Myauth Error');
 }
 
 $url = PathHelper::restorePath();
