@@ -129,7 +129,7 @@ class User
                 header("Location: {$_SERVER['SCRIPT_NAME']}");
                 die();
             }
-            setcookie("test","",time() - 3600);
+            //setcookie("test","",time() - 3600);
             return true;
         }
 
