@@ -126,11 +126,10 @@ class User
         {
             if(!empty($_GET["cookie"]))
             {
-                setcookie("test","",time() - 3600);
                 header("Location: {$_SERVER['SCRIPT_NAME']}");
                 die();
             }
-
+            setcookie("test","",time() - 3600);
             return true;
         }
 
