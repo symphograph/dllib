@@ -290,7 +290,7 @@ class User
 
     private function ByQwe(object $q)
     {
-        $this->age = $q->age;
+        $this->age = $q->age ?? 0;
         $this->avafile = $q->avafile ?? '';
         $this->avatar = $q->avatar ?? '';
         $this->email = $q->email ?? false;
@@ -301,7 +301,7 @@ class User
         $this->identy = $q->identy;
         $this->last_ip = $q->last_ip ?? '';
         $this->last_name = $q->last_name ?? '';
-        $this->last_time = $q->last_time;
+        $this->last_time = $q->last_time ?? '';
         $this->mailnick = $q->mailnick ?? '';
         $this->mode = $q->mode ?? 1;
         $this->server = $q->server ?? 9;
@@ -361,9 +361,11 @@ class User
 
     public function persRow($q)
     {
-        self::byId($q->mail_id);
-        self::iniAva();
         global $User;
+        $q->server_group = $User->server_group;
+        self::ByQwe($q);
+        self::iniAva();
+
 
 
         $chk = '';

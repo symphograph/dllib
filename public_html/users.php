@@ -77,19 +77,15 @@ $ver = random_str(8);
                     </details><br>
                     <form method="post" id="fol_form">
                     <?php
+                    $IntimString = implode(',',IntimItems());
 
                     //var_dump($device_type);
                     $checks = ['','checked'];
 
                     $qwe = qwe("
                     SELECT 
-                        `mail_id`, 
-                        `cnt`, 
-                        `first_name`, 
-                        `last_name`,
-                        `last_time`, 
-                        `email`, 
-                        `user_nick`, 
+                        mailusers.*,
+                        `cnt`,
                         `avatar` as remote_avalink,
                         `avafile`, 
                         `mtime`, 
@@ -98,13 +94,13 @@ $ver = random_str(8);
                         flwt.flws
                         FROM
                         (SELECT `user_id`, COUNT(*) as `cnt`, max(`time`) as `mtime` FROM `prices`
-                        WHERE `server_group` = '$User->server_group' /*AND `user_id` != '$User->id'*/
-                        AND `item_id` NOT in (".implode(',',IntimItems()).")
+                        WHERE `server_group` = '$User->server_group'
+                        AND `item_id` NOT in ( $IntimString )
                         GROUP BY `user_id`
                         ORDER BY `time` DESC
                         ) as `tmp`
                         INNER JOIN `mailusers` ON `mailusers`.`mail_id` = `tmp`.`user_id`
-                        AND `mailusers`.`email` LIKE '%@%' /*AND tmp.`cnt` > 2*/
+                        AND `mailusers`.`email` LIKE '%@%'
                         LEFT JOIN `folows` ON folow_id = `mail_id` AND `folows`.`user_id` = '$User->id'
                         LEFT JOIN (SELECT count(*) as flws, user_id, folow_id  FROM `folows` GROUP BY folow_id) as flwt 
                         ON `mail_id` = flwt.folow_id

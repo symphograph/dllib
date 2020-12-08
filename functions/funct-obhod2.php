@@ -101,7 +101,7 @@ function UserTree($query2, $user_id)
 	
 }
 
-function AllOr($craft_id,$user_id,$mater_exponent = 1,$arr_or = [],$allor_deep)
+function AllOr(int $craft_id,int $user_id,$mater_exponent = 1,$arr_or = [],$allor_deep = 0)
 {
 global $arr_or, $allor_deep, $mater_exponent;
 
@@ -124,9 +124,7 @@ $query = qwe("SELECT
 	$arritog2 = mysqli_fetch_assoc($query);
 
 	$or = $arritog2['or'];
-	//$or = round($or);
-	//echo '<p>'.$arritog2['result_item_name'].' | '.$or.' | '.$allor_deep.'</p>';
-	//$mater_exponent = 1;
+
     $query2 = qwe("
 	SELECT 
 	maters.item_id as mat_id,
@@ -257,7 +255,7 @@ function CraftsBuffering($craftkeys1)
 
 function ToBuffer2($item_id)
 {
-	global $user_id;
+	global $User;
 	$qwe = qwe("
 		SELECT  * , ROUND(if(tmp.kry>0,SQRT(tmp.kry),SQRT(tmp.kry*-1)*-1)) as spmp
 		FROM(
@@ -278,10 +276,10 @@ function ToBuffer2($item_id)
 		INNER JOIN craft_buffer
 		ON craft_buffer.craft_id = crafts.craft_id
 		AND crafts.result_item_id = '$item_id'
-		AND craft_buffer.user_id = '$user_id'
+		AND craft_buffer.user_id = '$User->id'
 		INNER JOIN items ON items.item_id = crafts.result_item_id
 		LEFT JOIN user_crafts ON user_crafts.craft_id = crafts.craft_id
-		AND user_crafts.user_id = '$user_id'
+		AND user_crafts.user_id = '$User->id'
 		AND user_crafts.isbest > 1
 		) as tmp
 		ORDER BY isbest DESC, deep DESC, item_id, spmp, craft_price, result_amount DESC
@@ -291,26 +289,26 @@ function ToBuffer2($item_id)
 		$i = 0;
 		foreach($qwe as $q)
 		{$i++;
-			extract($q);
-		 	$isbest = intval($isbest);
+			$q = (object) $q;
+		 	$isbest = intval($q->isbest);
 		 	if($i == 1)
 			{
 				 qwe("
 				REPLACE INTO craft_buffer2
 				(user_id,craft_id, item_id, craft_price, spm)
 				VALUES
-				('$user_id','$craft_id','$item_id','$craft_price','$spm')
+				('$User->id','$q->craft_id','$item_id','$q->craft_price','$q->spm')
 				");
 				if(!$isbest) $isbest = 1;
 			}else
 				$isbest = 0;
 
-            if(in_array($categ_id,[133]))
+            if(in_array($q->categ_id,[133]))
             {
                 $pass_labor = PackObject($item_id)['pass_labor2'] ?? 0;
-                $labor_price = PriceMode(2,$user_id)['auc_price'] ?? 0;
+                $labor_price = PriceMode(2,$User->id)['auc_price'] ?? 0;
 
-                $craft_price = $craft_price + $pass_labor*$labor_price;
+                $craft_price = $q->craft_price + $pass_labor*$labor_price;
             }
 		 	qwe("
 			REPLACE INTO `user_crafts` 
@@ -318,11 +316,11 @@ function ToBuffer2($item_id)
 			VALUES 
 			(
 			'$item_id', 
-			'$user_id', 
+			'$User->id', 
 			'$isbest', 
-			'$craft_id', 
-			'$craft_price',
-			'$spmp',
+			'$q->craft_id', 
+			'$q->craft_price',
+			'$q->spmp',
 			now()
 			)");
 		}
