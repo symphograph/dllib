@@ -24,7 +24,7 @@ $mode = $userinfo_arr['mode'];
 $agent = get_browser(null, true);
 $ismobiledevice = $agent['ismobiledevice'];
 
-$based_prices = '32103,32106,2,3,4,23633,32038,8007,32039,3712,27545,41488';
+
 
 
 function CookieTest()
@@ -33,6 +33,7 @@ function CookieTest()
 	{
 		if(!empty($_GET["cookie"]))
         {
+            setcookie("test","1");
             header("Location: {$_SERVER['SCRIPT_NAME']}");
             die();
         }

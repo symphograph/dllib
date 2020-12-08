@@ -407,55 +407,6 @@ if($User->email)
 <?php
 }
 
-function ServerSelect()
-{
-	global $server;
-	$query = qwe("
-	SELECT * 
-	FROM `servers` 
-	ORDER BY 
-		server_group, server_name
-	");
-	/*
-	$i = $old = 0;
-	ob_start();
-	foreach($query as $q)
-	{$i++;
-	 	
-	 	extract($q);
-	 	
-	 	if($server_group != $old)
-		{
-			if($i > 1)
-				echo '</ul>';
-			
-			echo '<ul>';
-		}
-			
-	 
-		echo '<li>'.$server_name.'</li>';
-	
-		$old = $server_group;
-	}
-	echo '</ul>';
-	$slist = ob_get_contents();
-	ob_end_clean();
-	$tooltip = 'Аукционные группы:<br>'.$slist;
-	$tooltip = htmlspecialchars($tooltip);
-	*/
-	$tooltip = '';
-	?>
-	<form method="POST" data-tooltip="<?php echo $tooltip?>" action="serverchange.php" name="server">
-		<select name="serv" id="server" class="server" onchange="this.form.submit()">
-		<?php
-		
-		SelectOpts($query, 'id', 'server_name', $server, false);	
-		?>
-		</select>
-	</form>
-	<?php
-}
-
 function SetToken()
 {
 	global $user_id;
@@ -652,5 +603,21 @@ function one_line($buffer)
 // удалить новые строки,за которыми пробелы
 	//$buffer = preg_replace('/[\t\r]\s+/', ' ', $buffer);
 	return $buffer;
+}
+
+function addScript(string $file)
+{
+    $ver = md5_file($_SERVER['DOCUMENT_ROOT'].'/'.$file);
+    $path = $file . '?ver=' . $ver;
+    ?><script type="text/javascript" src="<?php echo $path?>"></script><?php
+}
+
+function CssMeta(array $css_arr)
+{
+    $root = $_SERVER['DOCUMENT_ROOT'];
+    foreach ($css_arr as $css)
+    {
+        ?><link href="css/<?php echo $css?>?ver=<?php echo md5_file($root.'/css/'.$css)?>" rel="stylesheet"><?php
+    }
 }
 ?>

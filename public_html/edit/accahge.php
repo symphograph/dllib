@@ -39,5 +39,5 @@ $unix_time = time();
 $datetime = date('Y-m-d H:i:s',$unix_time);
 $cooktime = $unix_time+60*60*24*365*5;
 setcookie('identy',$newIdenty,$cooktime,'/','',true,true);
-header("Location: /profile.php");
+header("Location: /profile.js.php");
 ?>

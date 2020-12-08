@@ -1,9 +1,11 @@
 <?php
 setcookie('path', 'packtable');
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
-
-$userinfo_arr = UserInfo();
-if (!$userinfo_arr) {
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+$User = new User();
+if (!$User->check()) {
     header("Refresh: 0");
     die();
 }
@@ -34,7 +36,7 @@ $siol_title = 'Включить Сиоль';
 
 
 
-if($siol == 5)
+if($User->siol == 5)
 {
     $ssiol = 0;
     $x_siol = ' ';
@@ -49,7 +51,7 @@ if($siol == 5)
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="yandex-verification" content="<?php echo $yandex_key?>" />
+<meta name="yandex-verification" content="<?php echo $cfg->yandex_key?>" />
 <meta name = "description" content = "Таблица цен на паки в Archeage <?php echo $aa_ver?>"/>
   <meta name = "keywords" content = "товары фактории, паки <?php echo $aa_ver?>, archeage, архейдж, аркейдж, региональные товары, таблица паков, сколько стоят паки, цена паков" />
 <title>Таблица цен на паки <?php echo $aa_ver?></title>
@@ -57,11 +59,6 @@ if($siol == 5)
 <link href="css/default.css?ver=<?php echo md5_file('css/default.css')?>" rel="stylesheet">
 <link href="css/packtable.css?ver=<?php echo md5_file('css/packtable.css')?>" rel="stylesheet">
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
-<?php if(!$ismobiledevice)
-{
-	?><script type="text/javascript" src="js/tooltips.js?ver=<?php echo md5_file('js/tooltips.js')?>"></script><?php
-}
-?>
 </head>
 
 <body>
@@ -116,7 +113,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';
         <div class="jdunarea">
             <div id="jdun" class="jdun">
                 <h2>Считаю...</h2>
-                <div class="rot" style="background-image: url(../img/perdaru.png)"></div>
+                <div class="rot" style="background-image: url(img/perdaru.png)"></div>
             </div>
         </div>
 
@@ -130,8 +127,14 @@ include $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';
     <div class="clear"></div>
 </main>
 
-<?php include_once 'pageb/footer.php'; ?>
+<?php
+include_once 'pageb/footer.php';
 
-<script type="text/javascript" src="js/packtable.js?ver=<?php echo md5_file('js/packtable.js')?>"></script>
+addScript('js/packtable.js');
+if(!$User->ismobiledevice)
+    addScript('js/tooltips.js');
+
+
+?>
 </body>
 </html>

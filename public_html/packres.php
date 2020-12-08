@@ -41,7 +41,7 @@ $ver = random_str(8);
 	<div class="navcustoms">
 	    <h2>Ресурсы для паков</h2><br>
         <div class="prmenu">
-            <?php ServerSelect();?>
+            <?php $User->ServerSelect();?>
 
             <br>
             <a href="user_prices.php"><button class="def_button">Мои цены</button></a>

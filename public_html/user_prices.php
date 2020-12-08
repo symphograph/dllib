@@ -1,19 +1,17 @@
 <?php 
 require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
 setcookie('path', 'user_prices');
-//$user_id = $muser;
-//$hrefself = '<a href="'.$_SERVER['PHP_SELF'].'?query=';
+$User = new User();
+$User->byIdenty();
 $ver = random_str(8);
-/*
-$sessmark = OnlyText($_COOKIE['sessmark']);	
-	if(iconv_strlen($sessmark) != 12)
-		die('error_sess');
-*/
-//if(!$email) exit;
 
-$puser_id = $_GET['puser_id'] ?? $user_id;
+
+$puser_id = $_GET['puser_id'] ?? $User->id;
 $puser_id = intval($puser_id);
+if(!$puser_id)
+    die();
 
+$based_prices = '32103,32106,2,3,4,23633,32038,8007,32039,3712,27545,41488';
 
 ?>
 <!doctype html>
@@ -29,12 +27,7 @@ $puser_id = intval($puser_id);
 <link href="css/user_prices.css?ver=<?php echo md5_file('css/user_prices.css')?>" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript" src="js/setbuy.js?ver=<?php echo md5_file('js/setbuy.js')?>"></script>
-<?php if(!$ismobiledevice)
-{
-	?><script type="text/javascript" src="js/tooltips.js?ver=<?php echo md5_file('js/tooltips.js')?>"></script><?php
-}
-?>
+
 </head>
 
 <body>
@@ -49,13 +42,13 @@ $puser_nick = AnyById($puser_id,'mailusers','user_nick')[$puser_id];
 	<div class="navcustoms">
 	<h2>Цены пользователя <?php echo $puser_nick?></h2><br>
 	<div class="prmenu">
-	<?php ServerSelect();
+	<?php $User->ServerSelect();
 
-if($puser_id != $user_id)
+if($puser_id != $User->id)
 {
 	$valutignor = 'AND `prices`.`item_id` NOT in ('.implode(',',IntimItems()).')';
 	$chks = ['','checked'];
-	$chk = intval(IsFolow($user_id,$puser_id));
+	$chk = intval(IsFolow($User->id,$puser_id));
 	?>
 	<label for="folw" data-tooltip="Если цена этого пользователя новее Вашей, она будет использована в расчетах.">
 	Доверять этим ценам
@@ -104,9 +97,9 @@ items.craftable
 FROM `prices`
 INNER JOIN `items` ON `items`.`item_id` = `prices`.`item_id`
 AND `prices`.`user_id` = '$puser_id'
-AND `prices`.`server_group` = '$server_group'
+AND `prices`.`server_group` = '$User->server_group'
 ".$valutignor."
-LEFT JOIN user_crafts ON user_crafts.user_id = '$user_id' AND user_crafts.item_id = `prices`.`item_id`
+LEFT JOIN user_crafts ON user_crafts.user_id = '$User->id' AND user_crafts.item_id = `prices`.`item_id`
 AND user_crafts.isbest > 0
 ORDER BY `isbased` DESC, ismybuy DESC, `prices`.`time` DESC
 ");
@@ -140,101 +133,17 @@ function UserPriceList2($qwe)
 }
 ?>
 </div>
-
-
-
 </div>
 </div></div>
 </div></div>
 </main>
-<?php 
-function MyPrices($user_id)
-{
-	
-}
+<?php
+include_once 'pageb/footer.php';
 
-include_once 'pageb/footer.php'; ?>
+addScript('js/setbuy.js');
+if(!$ismobiledevice)
+    addScript('js/tooltips.js');
+addScript('user-prices.js');
+?>
 </body>
-<script type='text/javascript'>
-window.onload = function() {
-
-$(".small_del").show();
-	
-};
-
-	
-$('#all_info').on('input','.pr_inputs',function(){
-	
-	var form_id = $(this).get(0).form.id;
-	
-	SetPrice(form_id);
-	
-});
-	
-function SetPrice(form_id)
-{ 
-	var form = $("#"+form_id);
-	
-	var item_id = form_id.slice(3);
-	var okid = "#PrOk_"+item_id;
-
-	$.ajax
-	({
-		url: "hendlers/setprcl.php", // путь к ajax файлу
-		type: "POST",      // тип запроса
-
-		data: form.serialize(),
-		
-		dataType: "html",
-		cache: false,
-		// Данные пришли
-		success: function(data ) 
-		{
-			$(okid).html(data );
-			$(okid).show(); 
-			setTimeout(function() {$(okid).hide('slow');}, 0);
-			$("#prdel_"+item_id).show();
-		}
-	});
-}
-
-$('#all_info').on('click','.small_del',function(){
-	//Удаляет цену юзера
-	var form_id = $(this).get(0).form.id;
-	var item_id = form_id.slice(3);
-	var okid = "#PrOk_"+item_id;
-
-	$.ajax
-	({
-		url: "hendlers/setprcl.php", // путь к ajax файлу
-		type: "POST",      // тип запроса
-
-		data: 
-			{
-				del: 'del',
-				item_id: item_id
-			},
-		
-		dataType: "html",
-		cache: false,
-		// Данные пришли
-		success: function(data ) 
-		{
-			$(okid).html(data );
-			$(okid).show(); 
-			setTimeout(function() {$(okid).hide('slow');}, 0);
-			
-			$("#prdel_"+item_id).hide('slow');
-			$("#"+form_id).find("input[type=number]").val("");
-		}
-	});
-	
-});
-	
-$('#all_info').on('click','.itim',function(){
-	var item_id = $(this).attr('id').slice(5);
-	var url = 'catalog.php?item_id='+item_id;
-	window.location.href = url;
-});
-</script>
 </html>

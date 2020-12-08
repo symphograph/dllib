@@ -1,7 +1,15 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
 setcookie('path', 'catalog');
-
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/filefuncts.php';
+$User = new User();
+if (!$User->check()) {
+    header("Refresh: 0");
+    die();
+}
 
 $ver = random_str(8);
 
@@ -11,24 +19,20 @@ $item_sgroup = $item_sgroup ?? 1;
 
 $item_id = $_GET['item_id'] ?? $_GET['query_id'] ?? 0;
 $item_id = intval($item_id);
-if($item_id  and !$BotName)
+if($item_id  and !$User->isbot)
 {
 	$cooktime = time()+60*60*24*360;
 	setcookie("item_id",$item_id,$cooktime);
 	header("Location: catalog.php"); exit;
 }
 
-if(!empty($_GET['query']) and !$BotName)
+if(!empty($_GET['query']) and !$User->isbot)
 	{header("Location: catalog.php"); exit;}
 
 if(!empty($_COOKIE['item_id']))
 {
 	$item_id = intval($_COOKIE['item_id']);
 }
-
-//$sgroupWays = ['basedprices','custprofs','userprofile'];
-//$sgroupWay = $sgroupWays[$item_sgroup];
-//jjjj
 ?>
 <!doctype html>
 <html lang="ru">
@@ -39,15 +43,12 @@ if(!empty($_COOKIE['item_id']))
   <meta name = "keywords" content = "Умный калькулятор, крафкулятор, archeage, архейдж, крафт" />
   <meta name=“robots” content=“index, nofollow”>
 <title>Предметы</title>
-<link href="css/default.css?ver=<?php echo md5_file('css/default.css')?>" rel="stylesheet">
-<link href="css/items.css?ver=<?php echo md5_file('css/items.css')?>" rel="stylesheet">
-<link href="css/right_nav.css?ver=<?php echo md5_file('css/right_nav.css')?>" rel="stylesheet">
-<link href="css/catalog_area.css?ver=<?php echo md5_file('css/catalog_area.css')?>" rel="stylesheet">
+    <?php CssMeta(['default.css','items.css','right_nav.css','catalog_area.css']);?>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript" src="js/search.js?ver=<?php echo md5_file('js/search.js')?>"></script>
 
-<?php if(!$ismobiledevice)
+<?php if(!$User->ismobiledevice)
 {
 	?><script type="text/javascript" src="js/tooltips.js?ver=<?php echo md5_file('js/tooltips.js')?>"></script><?php
 }
@@ -72,17 +73,16 @@ WHERE `visible_ui` > 0
 ");	
 foreach($qwe as $q)
 {
-	extract($q);
+	$q = (object) $q;
 ?>
-	<div onClick="ContentLoad('<?php echo $sgr_id?>')">
-	<div class="navicon" data-tooltip="<?php echo htmlspecialchars($description)?>" style="background-image: url(../img/icons/50/<?php echo $icon?>);"></div>
-	<div class="navname"><?php echo $sgr_name?></div>
+	<div onClick="ContentLoad('<?php echo $q->sgr_id?>')">
+	<div class="navicon" data-tooltip="<?php echo htmlspecialchars($q->description)?>" style="background-image: url(img/icons/50/<?php echo $q->icon?>);"></div>
+	<div class="navname"><?php echo $q->sgr_name?></div>
 	</div>
 <?php
 }
-		$agent = get_browser(null, true);
-		$ismobiledevice = $agent['ismobiledevice'];
-		//var_dump($ismobiledevice);
+
+
 ?>
 		</div>
 	<div class="searcharea">
@@ -99,9 +99,7 @@ foreach($qwe as $q)
 
 	<div id="rent_in" class="rent_in">
 
-	
-	
-	
+
 	<div class="all_info_area" id="all_info_area">
 	<div class="all_info" id="all_info">
 	<input type="hidden" id="current" name="current" value="<?php echo $item_id?>">
@@ -126,20 +124,15 @@ foreach($qwe as $q)
 	</div>
 	
 	</div>
-<!--<div class="clear"></div>-->
-
 </div>
-<!--<div class="clear"></div>-->
 </div>
 </main>
 <?php include_once 'pageb/footer.php';?>
-</body>
 <script type="text/javascript" src="js/Catalog.js?ver=<?php echo md5_file('js/Catalog.js')?>"></script>
+</body>
+
 <script type='text/javascript'>
-	//window.onresize = function(event) {
-   	//document.write('Разрешение экрана: <b>'+window.screen.availWidth+'×'+window.screen.availHeight+'px.</b>'); 
-//}
-	
+
 window.onload = function() {
 	<?php 
 	if($item_id)
@@ -155,7 +148,7 @@ $('#all_info').on('change','input[name="cat_id"], input[name="view"]',function()
 	$('#search_box').val('');
 	QueryItems();
 	<?php
-	if($ismobiledevice)
+	if($User->ismobiledevice)
 	{
 	?>
 		$('#nav-toggle').prop('checked',false);
@@ -169,10 +162,9 @@ $('#all_info').on('change','input[name="cat_id"], input[name="view"]',function()
 $('#snav').on('click','#backbtn',function(){
 	var sgr_id = $('#sgr_id').val();
 	var cat_id = $('#categ_id').val();
-	//console.log(sgr_id+'_'+cat_id);
-	//ContentLoad(sgr_id,cat_id);
+
 	<?php
-	if(!$ismobiledevice)
+	if(!$User->ismobiledevice)
 	{
 	?>
 		$('#nav-toggle').prop('checked',true);
@@ -239,12 +231,5 @@ if($cfg->myip)
             selection.addRange(range);
         }
     }
-/*
- $('body').on( {
-   'mouseenter':function() { console.log("enter"); },
-   'mouseleave':function() { console.log("leave"); }
-});*/
-
 </script>
-
 </html>

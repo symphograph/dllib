@@ -8,7 +8,7 @@ require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
 if(!isset($user_id) or !$user_id)
     die();
 $User = new User();
-$User->ById($user_id);
+$User->byId($user_id);
 
 
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");

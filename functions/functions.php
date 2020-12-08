@@ -92,6 +92,7 @@ function Metka($BotName)
         }else
         {
             //Записываем нового бота
+            $identy = random_str(12);
             $newid = EmptyIdFinder('mailusers');
             qwe("
             INSERT INTO `mailusers`
@@ -984,7 +985,7 @@ function PriceMode($item_id,$user_id)
 	if(!isset($mode))
     {
         $User = new User();
-        $User->ById($user_id);
+        $User->byId($user_id);
         $mode = $User->mode;
     }
 	
