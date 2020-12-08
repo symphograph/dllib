@@ -495,3 +495,4 @@ ip.php
 cgi-bin
 /public_html/global/
 /logs/
+/imgtmp/
