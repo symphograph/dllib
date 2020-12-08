@@ -11,12 +11,10 @@ if(!isset($cfg)) {
     require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 }
 
-
-$userinfo_arr = UserInfo();
-if(!$userinfo_arr)
+$User = new User();
+if(!$User->byIdenty())
 	die('<span style="color: red">Oh!<span>');
-extract($userinfo_arr);
-$user_id = $muser;
+
 
 $view = $_POST['view'] ?? 0;
 $view = intval($view);
@@ -47,7 +45,7 @@ item_subgroups.sgr_name
 FROM
 items
 INNER JOIN item_categories ON items.categ_id = `item_categories`.`id`
-AND `items`.`on_off` = 1 ".$and."
+AND `items`.`on_off` = 1 $and
 INNER JOIN `item_groups` ON `item_categories`.`item_group` = item_groups.id
 INNER JOIN item_subgroups ON item_groups.sgr_id = item_subgroups.sgr_id
 ORDER BY `item_name`
