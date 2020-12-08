@@ -1,8 +1,11 @@
-<?php 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
+<?php
 setcookie('path', 'user_prices');
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
 $User = new User();
-$User->byIdenty();
+$User->check();
 $ver = random_str(8);
 
 
@@ -56,7 +59,7 @@ if($puser_id != $User->id)
 	</label>
 	
 	<?php
-	if($ismobiledevice)
+	if($User->ismobiledevice)
 	{
 		echo '<p>Если цена этого пользователя новее Вашей, она будет использована в расчетах.</p>';
 	}
@@ -111,22 +114,22 @@ UserPriceList2($qwe);
 
 function UserPriceList2($qwe)
 {
-	global $puser_id, $user_id;
+	global $puser_id, $User;
 	
 	foreach($qwe as $q)
 	{
-		extract($q);
+		$q = (object) $q;
 		?><div><?php
 
 		$chk = $isby = '';
 
-		if($craftable)
-			$isby = intval($isbest)+1;
+		if($q->craftable)
+			$isby = intval($q->isbest)+1;
 
-		if($puser_id == $user_id)		
-		PriceCell($item_id,$auc_price,$item_name,$icon,$basic_grade,$time,$isby);
+		if($puser_id == $User->id)
+		PriceCell($q->item_id,$q->auc_price,$q->item_name,$q->icon,$q->basic_grade,$q->time,$isby);
 		else
-		PriceCell2($item_id,$auc_price,$item_name,$icon,$basic_grade,$time);
+		PriceCell2($q->item_id,$q->auc_price,$q->item_name,$q->icon,$q->basic_grade,$q->time);
 		?>
 		</div><?php
 	}	
@@ -141,9 +144,9 @@ function UserPriceList2($qwe)
 include_once 'pageb/footer.php';
 
 addScript('js/setbuy.js');
-if(!$ismobiledevice)
+if(!$User->ismobiledevice)
     addScript('js/tooltips.js');
-addScript('user-prices.js');
+addScript('js/user-prices.js');
 ?>
 </body>
 </html>

@@ -1300,17 +1300,12 @@ function MaCubiki($qwe,$u_amount,$craft_price)
 function UserPriceList($qwe)
 {
 
-    global $user_id,$userinfo_arr;
+    global $User;
 
-    $ua = $userinfo_arr;
-    $ua = (object) $ua;
     foreach($qwe as $q)
     {
         $q = (object) $q;
         $auc_price = $time = 0;
-        //var_dump($craft_price);
-       //if($is_trade_npc and $valut_id == 500) continue;
-
         ?><div class="price_object"><?php
 
         $isby = '';
@@ -1322,7 +1317,7 @@ function UserPriceList($qwe)
 
         $iscolor = false;
         //var_dump($item_id);
-        $pr_arr = PriceMode($q->item_id,$user_id) ?? false;
+        $pr_arr = PriceMode($q->item_id,$User->id) ?? false;
         if($pr_arr)
         {
             $auc_price = $pr_arr['auc_price'];

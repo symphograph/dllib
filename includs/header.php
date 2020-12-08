@@ -5,6 +5,12 @@ $path = str_replace('.php','',$path);
 function pajeHeader()
 {
     global $User;
+    if(!isset($User))
+    {
+        $User = new User();
+        $User->check();
+    }
+
     $User->iniAva();
     $first_name = $User->fname;
     $user_nick = $User->user_nick ?? $first_name;

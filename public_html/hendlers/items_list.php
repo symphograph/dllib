@@ -52,7 +52,7 @@ ORDER BY `item_name`
 ";
 
 $qwe = qwe($sql);
-if(!($qwe->num_rows > 0))
+if($qwe->num_rows)
  die('Ничего не найдено');
 foreach($qwe as $q)
 {
@@ -73,51 +73,44 @@ else
 
 function Kvadratikami($qwe)
 {
-	global $dbLink;
 	?><div class="items_bar"><?php
 	foreach($qwe as $q)
 	{
-		extract($q);
+		$q = (object) $q;
 	
 		?>
-		<?php /*?><input type="radio" name="item_id" value="<?php echo $item_id?>"><?php */?>
-	
-			<div class="itim"   id="itim_<?php echo $item_id?>" style="background-image: url(/img/icons/50/<?php echo $icon?>.png?ver=<?php echo $md5_icon?>)">
+			<div class="itim"   id="itim_<?php echo $q->item_id?>" style="background-image: url(/img/icons/50/<?php echo $q->icon?>.png?ver=<?php echo $q->md5_icon?>)">
 				<div class="grade" 
 					 data-tooltip="
 					<?php 
-						echo $item_name; 
-						if($personal) 
+						echo $q->item_name;
+						if($q->personal)
 							echo '<br><span class=comdate>Персональный</span>';
-						if($craftable)
+						if($q->craftable)
 							echo '<br><span class=comdate>Есть рецепт</span>';
 					?>"  
-					 style="background-image: url(/img/grade/icon_grade<?php echo $basic_grade?>.png)">
+					 style="background-image: url(/img/grade/icon_grade<?php echo $q->basic_grade?>.png)">
 				</div>
 			</div>
-		
-	<?php
+	    <?php
 	}
 	?></div><?php
 }
 
 function Strokami($qwe)
 {
-	global $dbLink;
-	
 	?><div class="items_list"><?php
 	foreach($qwe as $q)
 	{
-		extract($q);
-		$icon = mysqli_real_escape_string($dbLink,$icon);
+        $q = (object) $q;
 		?>
 		<div class="item_row">
-			<label class="nicon" id="<?php echo $item_id?>">
-				<input type="radio" name="item_id" value="<?php echo $item_id?>">
-				<div class="itim" id="itim_<?php echo $item_id?>" style="background-image: url(/img/icons/50/<?php echo $icon?>.png)">
-					<div class="grade" style="background-image: url(/img/grade/icon_grade<?php echo $basic_grade?>.png)"></div>
+			<label class="nicon" id="<?php echo $q->item_id?>">
+				<input type="radio" name="item_id" value="<?php echo $q->item_id?>">
+				<div class="itim" id="itim_<?php echo $q->item_id?>" style="background-image: url(/img/icons/50/<?php echo $q->icon?>.png)">
+					<div class="grade" style="background-image: url(/img/grade/icon_grade<?php echo $q->basic_grade?>.png)"></div>
 				</div>
-				<div class="itemname"><?php echo $item_name?></div>
+				<div class="itemname"><?php echo $q->item_name?></div>
 			</label>
 		</div>
 		<?php

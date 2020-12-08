@@ -1,10 +1,11 @@
-<?php 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
+<?php
 setcookie('path', 'packres');
-
-$userinfo_arr = UserInfo();
-extract($userinfo_arr);
-
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+}
+$User = new User();
+$User->check();
 $ver = random_str(8);
 
 ?>
@@ -17,24 +18,14 @@ $ver = random_str(8);
   <meta name = "keywords" content = "Умный калькулятор, archeage, архейдж, крафт" />
   <meta name=“robots” content=“index, nofollow”>
 <title>Ресурсы для паков</title>
-<link href="css/default.css?ver=<?php echo md5_file('css/default.css')?>" rel="stylesheet">
-<link href="css/user_prices.css?ver=<?php echo md5_file('css/user_prices.css')?>" rel="stylesheet">
+    <?php CssMeta(['default.css','user_prices.css']);?>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript" src="js/setbuy.js?ver=<?php echo md5_file('js/setbuy.js')?>"></script>
-<?php if(!$ismobiledevice)
-{
-	?><script type="text/javascript" src="js/tooltips.js?ver=<?php echo md5_file('js/tooltips.js')?>"></script><?php
-}
-?>
 </head>
 
 <body>
 
-<?php include_once $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';
-//$puser_nick = AnyById($puser_id,'mailusers','user_nick')[$puser_id];
-	  
-?>
+<?php include_once $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php'; ?>
 <main>
 <div id="rent">
 
@@ -50,7 +41,7 @@ $ver = random_str(8);
 
         </div><br><hr>
         <div class="modes"></div>
-        <?php modes($mode); ?>
+        <?php modes($User->mode); ?>
 
         <div class="PrColorsInfo">
             <span style="background-color:#f35454">Чужая цена</span>
@@ -109,11 +100,11 @@ INNER JOIN items
 	AND items.item_id != 500
     AND (!(items.valut_id = 500 AND items.is_trade_npc))
 LEFT JOIN prices 
-	ON prices.user_id = '$user_id' 
+	ON prices.user_id = '$User->id' 
 	AND prices.item_id = items.item_id 
-	AND prices.server_group = '$server_group'
+	AND prices.server_group = '$User->server_group'
 LEFT JOIN user_crafts 
-	ON user_crafts.user_id = '$user_id' 
+	ON user_crafts.user_id = '$User->id' 
 	AND user_crafts.item_id = items.item_id 
 	AND user_crafts.isbest > 0
 	ORDER BY isbuy DESC, item_name
@@ -123,8 +114,8 @@ $qwe = qwe($sql);
 
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
-qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
-qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+qwe("DELETE FROM craft_buffer WHERE `user_id` = '$User->id'");
+qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$User->id'");
 foreach($qwe as $q)
 {
     //extract($q);
@@ -132,13 +123,13 @@ foreach($qwe as $q)
     if(!$q['craftable']) continue;
     if($q['is_trade_npc'] and $q['valut_id'] == 500) continue;
 
-    CraftsObhod($q['item_id'], $user_id);
+    CraftsObhod($q['item_id'], $User->id);
 
 }
-qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
-qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+qwe("DELETE FROM craft_buffer WHERE `user_id` = '$User->id'");
+qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$User->id'");
 
-$folows = Folows($user_id);
+$folows = Folows($User->id);
 $qwe = qwe($sql);
 UserPriceList($qwe);
 
@@ -168,90 +159,12 @@ function CraftPriceForItem($item_id,$user_id)
     return $qwe['craft_price'];
 }
 
-include_once 'pageb/footer.php'; ?>
+include_once 'pageb/footer.php';
+addScript('js/setbuy.js');
+if(!$User->ismobiledevice)
+    addScript('js/tooltips.js');
+addScript('js/packres.js');
+?>
 </body>
-<script type='text/javascript'>
-window.onload = function() {
 
-$(".small_del").show();
-	
-};
-
-	
-$('#all_info').on('input','.pr_inputs',function(){
-	
-	var form_id = $(this).get(0).form.id;
-	//var name = $(this).attr("name");
-	
-	SetPrice(form_id);
-	
-});
-	
-function SetPrice(form_id)
-{ 
-	var form = $("#"+form_id);
-	
-	var item_id = form_id.slice(3);
-	var okid = "#PrOk_"+item_id;
-
-	$.ajax
-	({
-		url: "hendlers/setprcl.php", // путь к ajax файлу
-		type: "POST",      // тип запроса
-
-		data: form.serialize(),
-		
-		dataType: "html",
-		cache: false,
-		// Данные пришли
-		success: function(data ) 
-		{
-			$(okid).html(data );
-			$(okid).show(); 
-			setTimeout(function() {$(okid).hide('slow');}, 0);
-			$("#prdel_"+item_id).show();
-		}
-	});
-}
-
-
-$('#all_info').on('click','.small_del',function(){
-	//Удаляет цену юзера
-	var form_id = $(this).get(0).form.id;
-	var item_id = form_id.slice(3);
-	var okid = "#PrOk_"+item_id;
-
-	$.ajax
-	({
-		url: "hendlers/setprcl.php", // путь к ajax файлу
-		type: "POST",      // тип запроса
-
-		data: 
-			{
-				del: 'del',
-				item_id: item_id
-			},
-		
-		dataType: "html",
-		cache: false,
-		// Данные пришли
-		success: function(data ) 
-		{
-			$(okid).html(data );
-			$(okid).show(); 
-			setTimeout(function() {$(okid).hide('slow');}, 0);
-			
-			$("#prdel_"+item_id).hide('slow');
-			$("#"+form_id).find("input[type=number]").val("");
-		}
-	});
-	
-});
-	
-$('#all_info').on('click','.itim',function(){
-	var item_id = $(this).attr('id').slice(5);
-	var url = 'catalog.php?item_id='+item_id;
-	window.location.href = url;
-});
-</script>
 </html>
