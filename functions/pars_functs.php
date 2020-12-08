@@ -212,19 +212,16 @@ function ParsIcons($item_id)
 	$file = str_replace("\\",'/',$file);
 	$plink = 'https://archeagecodex.com/items/'.$file.'.png';
 	
-	/*?><img src="<?php echo $plink?>"><?php*/
-		//die;
+
 	$file = strip_tags($file);
-	//echo $file.'<br>';
-	$tmp = 'imgtmp/'.$file.'.png';
+
+	$tmp = dirname($_SERVER['DOCUMENT_ROOT']).'/imgtmp/'.$file.'.png';
 	$img = curl($plink);
-	//var_dump($img); die;
+
 	
-		//die;
+
 	file_force_contents($tmp, $img);
-	
-	//echo $tmp.'<br>'; die;
-	//echo $img;die;
+
 	if(!is_image($tmp))
 	{
 		echo 'img_error<br>';
@@ -242,11 +239,7 @@ function ParsIcons($item_id)
 		`md5_icon` = '$imghash'
 		WHERE `item_id` = '$item_id'
 		");
-	/*?><img src="<?php echo $path?>"><?php*/
-	/*?><div style="width: 45px; height: 45px; background-image: url(<?php echo $path?>)"></div><?php*/
-		//die;
-		
-	
+
 	return $file;
 	
 }

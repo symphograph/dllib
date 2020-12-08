@@ -686,7 +686,7 @@ function NickAdder($mail_id)
 function AvaGetAndPut($ava,$identy)
 {
 	$file = random_str(8);
-	$tmp = $_SERVER['DOCUMENT_ROOT'].'/imgtmp/'.$file.'.tmp';
+	$tmp = dirname($_SERVER['DOCUMENT_ROOT']).'/imgtmp/'.$file.'.tmp';
 
 	global $cfg;
 	if(in_array($identy,$cfg->broken_avas))
@@ -698,6 +698,7 @@ function AvaGetAndPut($ava,$identy)
 	file_put_contents($tmp, $img);
 	
 	$is = is_image($tmp);
+	unlink($tmp);
 	if($is)
 	{
 		$filename = md5($img).'.'.$is;

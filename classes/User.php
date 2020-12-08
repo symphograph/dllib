@@ -299,7 +299,7 @@ class User
         $this->fname = $q->first_name ?? 'Незнакомец';
         $this->id = $q->mail_id;
         $this->identy = $q->identy;
-        $this->last_ip = $q->last_ip;
+        $this->last_ip = $q->last_ip ?? '';
         $this->last_name = $q->last_name ?? '';
         $this->last_time = $q->last_time;
         $this->mailnick = $q->mailnick ?? '';
