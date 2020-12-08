@@ -214,7 +214,7 @@ global $arr_or, $allor_deep, $mater_exponent;
 
 function CraftsBuffering($craftkeys1)
 {
-	global $user_id,$complited;
+	global $User,$complited;
 	if(!isset($complited))
 		$complited = [];
 
@@ -227,17 +227,17 @@ function CraftsBuffering($craftkeys1)
 		foreach($crafts as $key => $craft_id)
 		{
             $Craft = new Craft($craft_id);
-            $Craft->InitForUser($user_id);
+            $Craft->InitForUser($User->id);
 
 
-			$rescost = $Craft->rescost($user_id);
+			$rescost = $Craft->rescost($User->id);
 			$mycost = $rescost[0];
 			$matspm = $rescost[1];
 			qwe("
 			REPLACE INTO `craft_buffer` 
 			(user_id, craft_id, craft_price, matspm)
 			VALUES
-			('$user_id', '$craft_id', '$mycost', '$matspm')
+			('$User->id', '$craft_id', '$mycost', '$matspm')
 			");
 			$craftarr[] = $craft_id;
 		}

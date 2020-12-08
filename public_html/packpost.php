@@ -1,15 +1,12 @@
 <?php
 setcookie('path', 'packpost');
-require_once $_SERVER['DOCUMENT_ROOT'].'/../includs/usercheck.php';
-
-
-$userinfo_arr = UserInfo();
-if (!$userinfo_arr){
-    header("Refresh: 0");
-    die();
+if(!isset($cfg)) {
+    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 }
-
-extract($userinfo_arr);
+require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/filefuncts.php';
+$User = new User();
+$User->check();
 
 $ver = random_str(8);
 
@@ -52,8 +49,6 @@ if(isset($_GET['item_id']))
     header("Location: packpost.php");
     exit();
 }
-//printr($from_ar);
-//var_dump($from_id);
 
 ?>
 <!doctype html>
@@ -78,7 +73,7 @@ if(isset($_GET['item_id']))
     <script type="text/javascript" src="js/packpost/times.js?ver=<?php echo md5_file('js/packpost/times.js')?>"></script>
     <script type="text/javascript" src="js/packpost/prices.js?ver=<?php echo md5_file('js/packpost/prices.js')?>"></script>
     <script type="text/javascript" src="js/packpost/setbuy.js?ver=<?php echo md5_file('js/packpost/setbuy.js')?>"></script>
-    <?php if(!$ismobiledevice)
+    <?php if(!$User->ismobiledevice)
     {
         ?><script type="text/javascript" src="js/tooltips.js?ver=<?php echo md5_file('js/tooltips.js')?>"></script><?php
     }
@@ -151,7 +146,7 @@ order by side, zone_name
                                 <div class="siol">
                                     <div class="nicon_out ">
                                         <input type="checkbox" id="siol" name="psiol" value="<?php echo $psiol?>" <?php if($psiol) echo ' checked ';?>>
-                                        <label class="navicon" for="siol" style="background-image: url(../img/icons/50/icon_item_3368.png);"></label>
+                                        <label class="navicon" for="siol" style="background-image: url(img/icons/50/icon_item_3368.png);"></label>
                                     </div>
                                 </div>
                             </div>
@@ -244,7 +239,7 @@ include_once 'pageb/footer.php'; ?>
 
     $(document).keypress(
         function(event){
-            if (event.which == '13') {
+            if (event.which === '13') {
                 event.preventDefault();
                 $('input').blur();
             }
@@ -252,8 +247,7 @@ include_once 'pageb/footer.php'; ?>
 
     $('#all_info').on('click','.itim',function(){
         var item_id = $(this).attr('id').slice(5);
-        var url = 'catalog.php?item_id='+item_id;
-        window.location.href = url;
+        window.location.href = 'catalog.php?item_id=' + item_id;
     });
 
     window.onload = function() {
