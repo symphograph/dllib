@@ -12,7 +12,6 @@ $ver = random_str(8);
 <!doctype html>
 <html lang="ru">
 <head>
-
 <meta charset="utf-8">
 <meta name = "description" content = "Калькулятор себестоимости ресурсов Archeage." />
   <meta name = "keywords" content = "Умный калькулятор, archeage, архейдж, крафт" />
