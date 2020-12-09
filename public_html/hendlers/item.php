@@ -521,7 +521,7 @@ function DwnCraftList($Item)
 			<div class="matarea">
 			<div class="matrow">
 			<?php
-			//$divisor = $result_amount/$u_amount;
+
 			$money = MaCubiki($qwe2,$u_amount,$Craft->craft_price);
 			?></div><?php
 			if($money)
@@ -609,23 +609,24 @@ function Cubiki($qwe)
 {
 	foreach($qwe as $q)
 	{
-		extract($q);
-		if(!$basic_grade) $basic_grade = 1;
-		$iconpath = '/img/icons/50/'.$icon.'.png';
+		$q = (object) $q;
+
+		$basic_grade = $q->basic_grade;
+		if(!$q->basic_grade)
+		    $basic_grade = 1;
+
+		$iconpath = '/img/icons/50/'.$q->icon.'.png';
 		$icon_md5 = md5_file($_SERVER['DOCUMENT_ROOT'].$iconpath);
 		$icon_url = $iconpath.'?ver='.$icon_md5;
 		?>
-		
-		
+
 			<div class="itim"
-			id="itim_<?php echo $item_id?>"
+			id="itim_<?php echo $q->item_id?>"
 			style="background-image: url(<?php echo $icon_url?>)">
-				<div class="grade" class="grade" data-tooltip="<?php echo $item_name?>" style="background-image: url(/img/grade/icon_grade<?php echo $basic_grade?>.png)">
+				<div class="grade" class="grade" data-tooltip="<?php echo $q->item_name?>" style="background-image: url(/img/grade/icon_grade<?php echo $basic_grade?>.png)">
 					
 				</div>
 			</div>
-		
-		
 		<?php
 	}
 }
