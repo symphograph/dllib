@@ -39,42 +39,40 @@ $custWay = $custWays[$customType];
 <?php include_once $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';?>
 
 <main>
-<div id="rent">
-<div class="menu_area">	
-	<div class="navcustoms">
-		<div onClick="ContentLoad('<?php echo $custWays[0]?>')">
-			<div class="navicon" style="background-image: url(img/icons/50/icon_item_1766.png);"></div>
-			<div class="navname">Базовые цены</div>
-		</div>
-		<form method="POST" action="serverchange.php" name="server">
-			<select name="serv" id="server" class="server" onchange="this.form.submit()">
-			<?php
-			$query = qwe("SELECT * FROM `servers`");
-			SelectOpts($query, 'id', 'server_name', $User->server, false);
+    <div id="rent">
+        <div class="menu_area">
+            <div class="navcustoms">
+                <div onClick="ContentLoad('<?php echo $custWays[0]?>')">
+                    <div class="navicon" style="background-image: url(img/icons/50/icon_item_1766.png);"></div>
+                    <div class="navname">Базовые цены</div>
+                </div>
+                <form method="POST" action="serverchange.php" name="server">
+                    <select name="serv" id="server" class="server" onchange="this.form.submit()">
+                    <?php
+                    $query = qwe("SELECT * FROM `servers`");
+                    SelectOpts($query, 'id', 'server_name', $User->server, false);
 
-			?>
-			</select>
-		</form>
-		<div  onClick="ContentLoad('<?php echo $custWays[1]?>')">
-			<div class="navicon" style="background-image: url(img/profs/Обработка_камня.png);"></div>
-			<div class="navname">Уровни ремесла</div>
-		</div>
-	</div>
-<div class="modes">Режимы</div>
-<?php modes($User->mode); ?>
-</div>
-<div id="rent_in" class="rent_in">
+                    ?>
+                    </select>
+                </form>
+                <div  onClick="ContentLoad('<?php echo $custWays[1]?>')">
+                    <div class="navicon" style="background-image: url(img/profs/Обработка_камня.png);"></div>
+                    <div class="navname">Уровни ремесла</div>
+                </div>
+            </div>
 
-<div class="clear"></div>
-<div class="all_info" id="all_info">
-<div id="items">
-</div>
+            <div class="modes">Режимы</div>
+                <?php modes($User->mode); ?>
+            </div>
 
-
-
-
-</div>
-</div></div>
+            <div id="rent_in" class="rent_in">
+                <div class="clear"></div>
+                <div class="all_info" id="all_info">
+                    <div id="items"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 <?php 
 include_once 'pageb/footer.php';

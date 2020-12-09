@@ -61,4 +61,3 @@ foreach($query as $q)
 <hr>
 <br><br>	
 <div class="line"></div>
-</div>
