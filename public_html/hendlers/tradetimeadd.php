@@ -51,16 +51,18 @@ if($transport != 1)
 
 
 $qwe = qwe("
-Select * from user_routimes 
-where (user_id, from_id, to_id, transport, buff_1, buff_2, buff_3) 
+SELECT * FROM user_routimes 
+WHERE (user_id, from_id, to_id, transport, buff_1, buff_2, buff_3) 
           = 
       ('$User->id', '$from_id', '$to_id', '$transport', '$buff_1', '$buff_2', '$buff_3')");
-if($qwe and $qwe->num_rows > 0)
-{
+
+if($qwe and $qwe->num_rows) {
+
     $qwe = mysqli_fetch_assoc($qwe);
     $dur_id = $qwe['dur_id'];
-}else
-{
+
+}else {
+
     $dur_id = EmptyIdFinder('user_routimes','dur_id');
 }
 
