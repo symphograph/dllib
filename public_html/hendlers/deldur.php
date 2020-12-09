@@ -9,7 +9,8 @@ if(!isset($cfg)) {
 }
 $User = new User;
 $User->byIdenty();
-if(!$user_id) die('user_id');
+if(!$User->byIdenty())
+    die('user_id');
 
 $ptoken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? 0;
 $ptoken = OnlyText($ptoken);
@@ -19,8 +20,9 @@ if((!$token) or (!$ptoken) or $ptoken != $token)
 
 qwe("
 delete from user_routimes 
-where dur_id = $dur_id 
-and user_id = $user_id");
+where dur_id = '$dur_id '
+and user_id = '$User->id'
+");
 
 echo 'ok';
 ?>
