@@ -16,12 +16,12 @@ if($isbuy == 0) exit();
 $User = new User;
 if(!$User->byIdenty())
 	die('<span style="color: red">Oh!<span>');
-extract($userinfo_arr);
+
 $user_id = $User->id;
-//$item_id = ResultItemId($craft_id);
+
 if($isbuy == 3)
 {
-	$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
+	$auc_price = PriceMode($item_id,$User->id)['auc_price'] ?? false;
 	if(!$auc_price) die('no_price');
 	qwe("
 	UPDATE `user_crafts`
@@ -42,7 +42,7 @@ if($isbuy == 3)
 	INSERT IGNORE INTO `prices`
 	(`item_id`,`user_id`,`auc_price`,`server_group`,`time`)
 	VALUES
-	('$item_id','$user_id','$auc_price','$server_group',NOW())
+	('$item_id','$user_id','$auc_price','$User->server_group',NOW())
 	");
 
     qwe("
@@ -67,5 +67,4 @@ if($isbuy == 1)
     AND item_id = '$item_id'
     ");
 	echo 'ok';
-}	
-?>
+}

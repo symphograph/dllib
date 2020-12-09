@@ -13,7 +13,7 @@ if(!isset($cfg)) {
 $User = new User;
 if(!$User->byIdenty())
 	die();
-$user_id = $User->id;
+//$user_id = $User->id;
 
 $sql = "
 DELETE FROM `user_crafts` 
