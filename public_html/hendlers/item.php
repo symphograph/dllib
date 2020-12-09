@@ -201,7 +201,7 @@ function MoneyForm($item_id)
 	global $user_id;
 	$auc_price = false;
 	$myprice = false;
-	$prarr = PriceMode($item_id,$user_id);
+	$prarr = PriceMode($item_id);
 	$text = '';
 	
 	$color = '';
@@ -361,7 +361,7 @@ function DwnCraftList($Item)
 	 	if($i == 2)
 			echo '<br><details><summary>Другие рецепты</summary>';
 			
-		$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
+		$auc_price = PriceMode($item_id)['auc_price'] ?? false;
 	 	//var_dump($auc_price);
 	 	if($auc_price)
 		{

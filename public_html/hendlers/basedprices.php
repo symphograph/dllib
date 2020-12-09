@@ -38,7 +38,7 @@ $folows = Folows($user_id);
 foreach($query as $q)
 {
 	$q = (object) $q;
-	$auc_arr =  PriceMode($q->item_id,$User->id);
+	$auc_arr =  PriceMode($q->item_id);
     $auc_price = $auc_arr['auc_price'] ?? false;
 
     $iscolor = ColorPrice($auc_arr);

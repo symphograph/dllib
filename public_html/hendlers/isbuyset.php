@@ -21,7 +21,7 @@ $user_id = $User->id;
 
 if($isbuy == 3)
 {
-	$auc_price = PriceMode($item_id,$User->id)['auc_price'] ?? false;
+	$auc_price = PriceMode($item_id)['auc_price'] ?? false;
 	if(!$auc_price) die('no_price');
 	qwe("
 	UPDATE `user_crafts`
@@ -55,7 +55,6 @@ if($isbuy == 3)
 }
 if($isbuy == 1)
 {
-	//$auc_price = PriceMode($item_id,$user_id)['auc_price'] ?? false;
 	qwe("
 	DELETE FROM `user_crafts`
 	WHERE `user_id` = '$user_id' 

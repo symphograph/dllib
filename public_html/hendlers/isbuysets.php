@@ -27,7 +27,7 @@ if(!$User->byIdenty())
 $user_id = $User->id;
 if($val)
 {
-	$auc_price = PriceMode($item_id,$User->id)['auc_price'] ?? false;
+	$auc_price = PriceMode($item_id)['auc_price'] ?? false;
 	if(!$auc_price) die('<span style="color:red">Не нашел цену!</span>');
 	
 
@@ -84,5 +84,4 @@ else
     ");
 
 	echo 'ok';
-}	
-?>
+}

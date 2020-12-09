@@ -570,11 +570,11 @@ function UserMatPrice(int $item_id,int $user_id,$craftignor = false)
 		if($valut_id == 500)
 			return $q->price_buy;
 		
-		$matprice = PriceMode($item_id,$user_id)['auc_price'] ?? false;
+		$matprice = PriceMode($item_id)['auc_price'] ?? false;
 		if($matprice)
 			return $matprice;
 
-		$matprice = PriceMode($valut_id,$user_id)['auc_price'] ?? false;
+		$matprice = PriceMode($valut_id)['auc_price'] ?? false;
 		if($matprice)
 			return $matprice * $q->price_buy;
 	}
@@ -587,7 +587,7 @@ function UserMatPrice(int $item_id,int $user_id,$craftignor = false)
     }
 
 
-	return PriceMode($item_id,$user_id)['auc_price'] ?? false;
+	return PriceMode($item_id)['auc_price'] ?? false;
 }
 
 function ItemAny($item_ids,$colname)
@@ -980,34 +980,30 @@ function IsValuta(int $item_id) : bool
     return false;
 }
 
-function PriceMode($item_id,$user_id)
+function PriceMode($item_id)
 {
-	global $mode;
-	if(!isset($mode))
-    {
-        $User = new User();
-        $User->byId($user_id);
-        $mode = $User->mode;
-    }
+	global $User;
+	if(!isset($User))
+	    die('Missed User');
+
 	
-	if($mode == 1)
+	if($User->mode == 1)
 	{
 		//Максимально широко.
-		return PriceMode1($item_id,$user_id);
+		return PriceMode1($item_id,$User->id);
 	}
-	if($mode == 2)
+	if($User->mode == 2)
 	{	
 		//В пределах друзей.
-		return PriceMode2($item_id,$user_id);
+		return PriceMode2($item_id,$User->id);
 	}
-	if($mode == 3)
+	if($User->mode == 3)
 	{
 		//Только у себя.
-		return PriceSolo($item_id,$user_id);
+		return PriceSolo($item_id,$User->id);
 	}
-	//var_dump($pricearr);
-	//return $pricearr;
-	
+
+	die('Missed mode');
 }
 
 function IsFolow($user_id,$folow_id)
@@ -1318,7 +1314,7 @@ function UserPriceList($qwe)
 
         $iscolor = false;
         //var_dump($item_id);
-        $pr_arr = PriceMode($q->item_id,$User->id) ?? false;
+        $pr_arr = PriceMode($q->item_id) ?? false;
         if($pr_arr)
         {
             $auc_price = $pr_arr['auc_price'];

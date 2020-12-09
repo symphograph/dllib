@@ -57,13 +57,13 @@ if(!count($types)>0)
 
 $typess = implode(',',$types);
 
-$coalprice = PriceMode(32103,$user_id) ?? 0;
+$coalprice = PriceMode(32103) ?? 0;
 if($coalprice)
 {
 	$coalprice = $coalprice['auc_price'];
 }
 
-$shellprice = PriceMode(32106,$user_id) ?? 0;
+$shellprice = PriceMode(32106) ?? 0;
 if($shellprice)
 {
 	$shellprice = $shellprice['auc_price'];

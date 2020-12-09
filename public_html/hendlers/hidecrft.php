@@ -13,10 +13,9 @@ $craft_id = intval($_POST['craft_id']);
 
 $uri_from = $_SERVER['HTTP_REFERER'];
 
-$query = qwe("REPLACE INTO `hide_cl` 
+$qwe = qwe("REPLACE INTO `hide_cl` 
 (`user_id`, `craft_id`)
 VALUES 
-('$user_id', '$craft_id')");
-if($query)
+('$User->id', '$craft_id')");
+if($qwe)
 	echo 'Ok';
-?>

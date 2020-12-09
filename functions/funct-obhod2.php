@@ -13,7 +13,7 @@ function CraftsObhod($item_id, $user_id)
     if(count($craftkeys1))
     {
         if(!isset($orcost))
-            $orcost = PriceMode(2,$user_id)['auc_price'] ?? false;
+            $orcost = PriceMode(2)['auc_price'] ?? false;
 
         $craftarr = CraftsBuffering($craftkeys1);
         //printr($craftarr);
@@ -306,7 +306,7 @@ function ToBuffer2($item_id)
             if(in_array($q->categ_id,[133]))
             {
                 $pass_labor = PackObject($item_id)['pass_labor2'] ?? 0;
-                $labor_price = PriceMode(2,$User->id)['auc_price'] ?? 0;
+                $labor_price = PriceMode(2)['auc_price'] ?? 0;
 
                 $craft_price = $q->craft_price + $pass_labor*$labor_price;
             }
