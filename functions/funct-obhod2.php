@@ -43,7 +43,7 @@ function MissedList($lost)
 	$lost = array_unique($lost);
 	//printr($lost);
 	?><p><b>Возможно, расчет не корректный.</b><br>Я не нашёл следующие цены:<p><?php
-	$hrefself = $_SERVER['PHP_SELF'];
+
 	$lostnames = ItemAny($lost,'item_name');
 	
 	$item_valut = ItemAny($lost,'valut_id');
@@ -77,19 +77,18 @@ function MissedList($lost)
 	FROM `items`
 	WHERE `item_id` IN (".$lostitems.")
 	");
-	if($qwe->num_rows == 0)
+	if(!$qwe or !$qwe->num_rows)
 		return false;
 	
 	foreach($qwe as $q)
 	{
-		extract($q);
-		//echo $item_name.'<br>';
-		if($valut_id and $valut_id != 500)
+		$q = (object) $q;
+		if($q->valut_id and $q->valut_id != 500)
 			continue;
 
 		//echo '<a href="/items.php?item_id='.$vl.'" text-decoration: none; style="color: #6C3F00;">'.$lostname.'</a><br>';
 		
-		PriceCell($item_id,false,$item_name,$icon,$basic_grade);
+		PriceCell($q->item_id,false,$q->item_name,$q->icon,$q->basic_grade);
 		
 	}
 }
@@ -126,31 +125,31 @@ $query = qwe("SELECT
 	$or = $arritog2['or'];
 
     $query2 = qwe("
-	SELECT 
-	maters.item_id as mat_id,
-	maters.mater_need,
-	round(maters.mater_need * '$mater_exponent' / current_craft.current_amount,2) as mater_exponent,
-	items.item_name,
-	user_crafts.craft_id as chcraft_id,
-	crafts.result_amount as child_amount,
-	`profs`.`prof_id`,
-	`profs`.`profession`,
-	round(`labor_need` * (100 - IFNULL(`save_or`,0)*`used`) / 100 / crafts.result_amount * maters.mater_need * '$mater_exponent' / current_craft.current_amount,2) AS `mat_or`,
-	current_craft.current_amount
-	from
-	(SELECT * 
-		FROM `craft_materials`
-	WHERE `craft_id` = '$craft_id' AND `mater_need`*1 > 0) as maters
-	INNER JOIN items ON maters.item_id = items.item_id
-	INNER JOIN user_crafts ON 	user_crafts.item_id = `maters`.item_id
-	AND user_crafts.`user_id` = '$user_id' AND user_crafts.`isbest` in(1,2)
-	INNER JOIN crafts ON user_crafts.craft_id = crafts.craft_id
-	INNER JOIN (SELECT result_amount as current_amount from crafts WHERE craft_id = '$craft_id') as current_craft
-	INNER JOIN `profs` ON `profs`.`prof_id` = `crafts`.`prof_id`
-	LEFT JOIN `user_profs` ON `user_crafts`.`user_id` = `user_profs`.`user_id`
-	AND `crafts`.`prof_id`= `user_profs`.`prof_id`
-	LEFT JOIN `prof_lvls` ON `user_profs`.`lvl` = `prof_lvls`.`lvl`
-	");
+        SELECT 
+        maters.item_id as mat_id,
+        maters.mater_need,
+        round(maters.mater_need * '$mater_exponent' / current_craft.current_amount,2) as mater_exponent,
+        items.item_name,
+        user_crafts.craft_id as chcraft_id,
+        crafts.result_amount as child_amount,
+        `profs`.`prof_id`,
+        `profs`.`profession`,
+        round(`labor_need` * (100 - IFNULL(`save_or`,0)*`used`) / 100 / crafts.result_amount * maters.mater_need * '$mater_exponent' / current_craft.current_amount,2) AS `mat_or`,
+        current_craft.current_amount
+        from
+        (SELECT * 
+            FROM `craft_materials`
+        WHERE `craft_id` = '$craft_id' AND `mater_need`*1 > 0) as maters
+        INNER JOIN items ON maters.item_id = items.item_id
+        INNER JOIN user_crafts ON 	user_crafts.item_id = `maters`.item_id
+        AND user_crafts.`user_id` = '$user_id' AND user_crafts.`isbest` in(1,2)
+        INNER JOIN crafts ON user_crafts.craft_id = crafts.craft_id
+        INNER JOIN (SELECT result_amount as current_amount from crafts WHERE craft_id = '$craft_id') as current_craft
+        INNER JOIN `profs` ON `profs`.`prof_id` = `crafts`.`prof_id`
+        LEFT JOIN `user_profs` ON `user_crafts`.`user_id` = `user_profs`.`user_id`
+        AND `crafts`.`prof_id`= `user_profs`.`prof_id`
+        LEFT JOIN `prof_lvls` ON `user_profs`.`lvl` = `prof_lvls`.`lvl`
+        ");
     if(mysqli_num_rows($query2)>0)
     {
         $allor_deep++;
@@ -158,12 +157,12 @@ $query = qwe("SELECT
         foreach($query2 as $q2)
         {
 
-            extract($q2);
+            $q2 = (object) $q2;
             //echo 'expo '.$item_name.' '.$mater_exponent.'<br>';
             //$mater_exponent = round($mater_exponent,10);
-            $arr_or[] = $mat_or;
+            $arr_or[] = $q2->mat_or;
             //$exponent_maters[] = $mater_exponent;
-            AllOr($chcraft_id,$user_id,$mater_exponent,$arr_or,$allor_deep);
+            AllOr($q2->chcraft_id,$user_id,$mater_exponent,$arr_or,$allor_deep);
 
         }
 
