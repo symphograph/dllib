@@ -15,14 +15,7 @@ if($from_id == 100)
 
 $pitem_id = $_POST['pitem_id'] ?? 0;
 $pitem_id = intval($pitem_id);
-/*
-if(!empty($_COOKIE['packpost']))
-{
-    $pp = unserialize($_COOKIE['packpost']);
-    $pitem_id = $pp['packpost']['item_id'];
-    $pitem_id = intval($pitem_id);
-}
-*/
+
 if(!isset($cfg)) {
     $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
     require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
@@ -53,13 +46,13 @@ if($from_id == 100)
 }
 foreach ($qwe as $q)
 {
-    extract($q);
+    $q = (object) $q;
     $sel = '';
-    if($item_id == $pitem_id)
+    if($q->item_id == $pitem_id)
         $sel = ' selected ';
-    if(in_array($pack_t_id,[2,3]) and $from_id == 100)
-        $item_name = $item_name.' - '.$zone_name;
-    ?><option value="<?php echo $item_id?>" data-id="<?php echo $zone_id?>" <?php echo $sel?>><?php echo $item_name?></option><?php
+    if(in_array($q->pack_t_id,[2,3]) and $from_id == 100)
+        $item_name = $q->item_name.' - '.$q->zone_name;
+    ?><option value="<?php echo $q->item_id?>" data-id="<?php echo $q->zone_id?>" <?php echo $sel?>><?php echo $item_name?></option><?php
 
     $sel = '';
 }

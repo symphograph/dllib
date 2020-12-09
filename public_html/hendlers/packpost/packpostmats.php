@@ -1,29 +1,16 @@
 <?php
-
-if(!isset($_POST)) die();
-
-foreach ($_POST as $k => $v)
-{
-    $p[$k] = intval($v);
-}
-
-if(!$p['item_id'])
-    die('item_id');
-
-extract($p); //Никогда так не делайте.
-
+$item_id = $_POST['item_id'] ?? 0;
+$item_id = intval($item_id);
+if(!$item_id) die();
 
 if(!isset($cfg)) {
     $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
     require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 }
 $User = new User;
-$User->check();
-$user_id = $User->id;
-if(!isset($user_id) or !$user_id)
+if(!$User->byIdenty())
     die();
-$User = new User();
-$User->byId($user_id);
+$user_id = $User->id;
 
 $craft_id = BestCraftForItem($user_id,$item_id);
 if(!$craft_id)
