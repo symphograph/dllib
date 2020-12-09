@@ -17,12 +17,12 @@ $user_id = $User->id;
 
 $sql = "
 DELETE FROM `user_crafts` 
-WHERE `user_id` = '$user_id' 
+WHERE `user_id` = '$User->id' 
 AND `item_id` = '$item_id'
 ";
 qwe($sql);
 
-$sql="DELETE FROM `user_crafts` WHERE `user_id` = '$user_id' and `isbest` <2";
+$sql="DELETE FROM `user_crafts` WHERE `user_id` = '$User->id' and `isbest` <2";
 qwe($sql);
 echo 'ok';
 ?>
