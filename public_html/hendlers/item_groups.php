@@ -44,12 +44,12 @@ AND `visible_ui` > 0
 ?>
 
 <?php
-foreach($qwe2 as $s)
+foreach($qwe2 as $q)
 {
-	extract($s);
+	$q = (object) $q;
 	?><br><details open="open"><?php
-	echo '<summary>'.$name.'</summary>';
-	Categs($qwe,$id,$cat_id);
+	echo '<summary>'.$q->name.'</summary>';
+	Categs($qwe,$q->id,$cat_id);
 	?></details><?php
 }
 	
@@ -59,20 +59,20 @@ function Categs($qwe,$ngr_id,$ccat_id)
 {
 	
 	?><ul><?php
-	foreach($qwe as $s)
+	foreach($qwe as $q)
 	{
-		extract($s);
-		if($ngr_id != $gr_id) 
+        $q = (object) $q;
+		if($ngr_id != $q->gr_id)
 			continue;
 		$chk = $ctn = '';
-		if($cat_id == $ccat_id)
+		if($q->cat_id == $ccat_id)
 		{
 			$chk = 'checked';
 			$ctn = 'class="catname"';
 		}
 			
-		?><li><label for="<?php echo $cat_id?>" <?php echo $ctn?>><?php echo $cat_name?></label>
-			<input <?php echo $chk?> type="radio" name="cat_id" id="<?php echo $cat_id?>" value="<?php echo $cat_id?>"/>
+		?><li><label for="<?php echo $q->cat_id?>" <?php echo $ctn?>><?php echo $q->cat_name?></label>
+			<input <?php echo $chk?> type="radio" name="cat_id" id="<?php echo $q->cat_id?>" value="<?php echo $q->cat_id?>"/>
 			</li><?php
 	}
 	?></ul><?php
