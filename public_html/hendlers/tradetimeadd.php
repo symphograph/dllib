@@ -1,5 +1,4 @@
 <?php
-//var_dump($_POST);
 if(!isset($_POST['from_id'])) die();
 $from_id = intval($_POST['from_id']);
 if(!$from_id) die('Откуда?');
@@ -12,7 +11,8 @@ if(!isset($cfg)) {
     require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 }
 $User = new User;
-if(!$User->byIdenty()) die('user_id');
+if(!$User->byIdenty())
+    die('user_id');
 
 $ptoken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? 0;
 $ptoken = OnlyText($ptoken);
@@ -73,4 +73,3 @@ VALUES
 
 if($qwe)
     echo 'ok';
-?>

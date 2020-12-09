@@ -12,24 +12,22 @@ if(!isset($cfg)) {
     require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 }
 
-//printr($_SERVER);
+$User = new User();
+if(!$User->byIdenty())
+	die();
+$user_id = $User->id;
+
+
 $ptoken = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? 0;
 $ptoken = OnlyText($ptoken);
-
-$userinfo_arr = UserInfo();
-
-$report = 1;
-if(!$userinfo_arr)
-	die();
-extract($userinfo_arr);
-
-$user_id = $User->id;
 $token = AskToken();
 
 if((!$token) or (!$ptoken) or $ptoken != $token)
 	die('reload');
 if(OnlyText($nick) != $nick) 
 	die('invalid');
+
+
 
 $nick = OnlyText($nick);
 $len = mb_strlen($nick);
@@ -45,7 +43,7 @@ if(!$qwe or $qwe->num_rows >0)
 $qwe = qwe("
 UPDATE `mailusers`
 SET `user_nick` = '$nick'
-WHERE `mail_id` = '$user_id'
+WHERE `mail_id` = '$User->id'
 ");
 if(!$qwe) die('error');
 

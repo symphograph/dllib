@@ -22,19 +22,14 @@ if(!isset($cfg)) {
     require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 }
 
+$User = new User();
+if(!$User->byIdenty())
+	die('user error');
 
-
-$userinfo_arr = UserInfo();
-
-if(!$userinfo_arr)
-	die();
-
-extract($userinfo_arr);
-$user_id = $User->id;
 
 if($folow)
 {
-	qwe("DELETE FROM `folows` WHERE `user_id` = '$user_id'");
+	qwe("DELETE FROM `folows` WHERE `user_id` = '$User->id'");
 	foreach($folow as $folow_id => $v)
 	{
 		$folow_id = intval($folow_id);
@@ -42,14 +37,14 @@ if($folow)
 		qwe("REPLACE INTO `folows` 
 		(`user_id`, `folow_id`)
 		VALUES
-		('$user_id', '$folow_id')
+		('$User->id', '$folow_id')
 		");
 	}
 }elseif($condition == 1)
 {
 	qwe("
 	DELETE FROM `folows` 
-	WHERE `user_id` = '$user_id'
+	WHERE `user_id` = '$User->id'
 	AND `folow_id` = '$sfolow_id'
 	");
 }elseif($condition == 2)
@@ -57,9 +52,6 @@ if($folow)
 	qwe("REPLACE INTO `folows` 
 		(`user_id`, `folow_id`)
 		VALUES
-		('$user_id', '$sfolow_id')
+		('$User->id', '$sfolow_id')
 		");
 }
-
-//echo 'ok';
-?>

@@ -22,6 +22,8 @@ $and = "AND `items`.`categ_id` = '$cat_id'";
 
 if(!$cat_id)
 {
+    if(!isset($dbLink))
+        dbconnect();
 	$squery = mysqli_real_escape_string($dbLink,$squery);
 	$and = "AND `items`.`item_name` LIKE '%".$squery."%'";
 	$view = 'list';
