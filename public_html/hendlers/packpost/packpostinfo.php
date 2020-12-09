@@ -7,14 +7,22 @@ foreach ($_POST as $k => $v)
     $p[$k] = intval($v);
 }
 $freshtime =  $freshtime ?? 0;
-if($p['per'] > 130) die('>130!');
-if(!$p['item_id']) die('item_id');
-extract($p);
+$per = $p['per'];
+if($per > 130)
+    die('>130!');
+
+$item_id = $p['item_id'];
+if(!$item_id) die('item_id');
+
+$from_id = $p['from_id'];
+$to_id = $p['to_id'];
 
 if(!isset($psiol))
     $psiol = 0;
 else
     $psiol = 5;
+
+
 if(!isset($cfg)) {
     $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
     require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
@@ -64,19 +72,19 @@ INNER JOIN items ON items.item_id = packs.item_id
 //var_dump($qwe);
 if((!$qwe) or (!$qwe->num_rows))
     die('err');
-$qwe = mysqli_fetch_assoc($qwe);
-extract($qwe);
+$q = mysqli_fetch_object($qwe);
+
 ?>
 <div class="pinfo_row">
-        <span class="pharam">Товар: [<?php echo $item_name?>]</span>
+        <span class="pharam">Товар: [<?php echo $q->item_name?>]</span>
     </div><br>
 <?php
 
-echo SalaryLetter($per,$pack_price,$psiol,$fresh_per,$item_name,$valuta);
+echo SalaryLetter($per,$q->pack_price,$psiol,$q->fresh_per,$q->item_name,$q->valuta);
 
 if($cfg->myip)
 {
-    $Factory_list = PackPercents($pack_price,$siol,$per,$fresh_per,2,1);
+    $Factory_list = PackPercents($q->pack_price,$psiol,$per,$q->fresh_per,2,1);
 
 ?>
 <div class="pinfo_row">
@@ -90,7 +98,7 @@ if($cfg->myip)
                 <input type="hidden" name="item_id" value="<?php echo $item_id?>">
                 <input type="hidden" name="from_id" value="<?php echo $from_id?>">
                 <input type="hidden" name="to_id" value="<?php echo $to_id?>">
-                <input type="hidden" name="siol" value="<?php echo $siol?>">
+                <input type="hidden" name="siol" value="<?php echo $psiol?>">
                 <input type="hidden" name="per" value="<?php echo $per?>">
             <button type="button" id="sendprice" class="def_button">ok</button>
             </form>

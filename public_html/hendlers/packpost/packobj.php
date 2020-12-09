@@ -13,9 +13,6 @@ $User->check();
 $user_id = $User->id;
 if(!isset($user_id) or !$user_id)
     die();
-$User = new User();
-$User->byId($user_id);
-
 
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
@@ -31,4 +28,3 @@ $po['esyprice'] = esyprice($craft_price);
 
 $po = json_encode($po);
 echo $po;
-?>
