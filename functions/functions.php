@@ -1265,12 +1265,15 @@ function MaCubiki($qwe,$u_amount,$craft_price)
         $matpricevalue = $matprice;
         $matprice = esyprice($matprice);
         $matprice = htmlspecialchars($matprice);
-        //var_dump($divisor);
+
         $mater_need = round($q->mater_need*$u_amount,2);
 
         $how = 'Цена пользователя';
         if (UserCraftPrice($q->item_id,$user_id) and $q->mater_need > 0)
             $how = 'Себестоимость (крафт)';
+        if($q->is_trade_npc and $q->valut_id == 500)
+            $how = 'Куплено у NPC';
+
         $how = '<span style="color: gray">' .$how.'</span>';
         $how = htmlspecialchars($how);
 

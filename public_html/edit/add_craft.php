@@ -1,5 +1,5 @@
 <?php 
-//echo $_SERVER['REMOTE_ADDR'];
+die();
 if ($_SERVER['REMOTE_ADDR'] !== '37.194.65.246')
 {echo 'Вы кто?';
   echo '<meta http-equiv="refresh" content="1; url=../index.php">';

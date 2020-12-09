@@ -494,7 +494,9 @@ function DwnCraftList($Item)
 		items.item_name,
 		items.icon,
 		items.craftable,
-		items.basic_grade
+		items.basic_grade,
+		items.is_trade_npc,
+        items.valut_id
 		FROM `craft_materials`
 		INNER JOIN items ON items.item_id = craft_materials.item_id
 		AND craft_materials.craft_id = '$Craft->id'

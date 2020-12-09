@@ -5,10 +5,10 @@ class Mat
 {
     public int $id;
     public string $name = '';
-    public int $result_id;
+    public int $result_id = 0;
     public int $need_grade = 1;
-    public int $craft_id;
-    public float $mater_need;
+    public int $craft_id = 0;
+    public float $mater_need = 0;
     public int $price = 0;
     public int $spm2 = 0;
     public bool $is_buyable = false;
