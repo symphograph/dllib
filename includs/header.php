@@ -17,7 +17,7 @@ function pajeHeader()
 
     if(empty($User->email))
     {
-        $profile = 'Войти';
+        $profile = 'Войтии';
         $profileLink = '../oauth/mailru.php';
     }else
     {
