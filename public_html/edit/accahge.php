@@ -7,7 +7,7 @@ if(!isset($cfg)) {
 
 $muser = $_POST['muser'] ?? 0;
 $muser = intval($muser);//Юзер, которого надо сделать основным на этом девайсе.
-if($muser == 0) die;
+if(!$muser) die;
 
 $User = new User;
 if(!$User->byIdenty()) die;
@@ -30,11 +30,11 @@ $qwe = qwe("
 SELECT * FROM `mailusers` 
 WHERE `mail_id` = '$muser'
 ");
-if(!$qwe or $qwe->num_rows != 1) die('error_query');
-foreach($qwe as $q)
-{
-	$newIdenty = $q['identy'];
-}
+if(!$qwe or !$qwe->num_rows) die('error_query');
+$q = mysqli_fetch_object($qwe);
+$newIdenty = $q->identy;
+
+
 $unix_time = time();
 $datetime = date('Y-m-d H:i:s',$unix_time);
 $cooktime = $unix_time+60*60*24*365*5;

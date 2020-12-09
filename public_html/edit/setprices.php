@@ -1,12 +1,8 @@
 <?php
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
-if(empty($_POST['sendprices'])) 
+die();
+if(empty($_POST['sendprices']))
 exit();
 
-//exit(var_dump($_POST));
 if(!isset($cfg)) {
     $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
     require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
@@ -26,12 +22,12 @@ foreach($_POST['setgold'] as $k => $v)
 	$setbronze = intval($_POST['setbronze'][$k]);
 	$item_id = $k;
 	$setprise = $setgold*10000+$setsilver*100+$setbronze;
-	//echo 'id: '.$item_id.' - prise: '.$setprise.'<br>';
+
 	if(!$setprise >0) continue;
 	$sql="REPLACE INTO `prices` 
 	(`user_id`, `item_id`, `auc_price`, `server_group`,`time`)
 	VALUES 
-	('$user_id', '$item_id', '$setprise', '$server_group', now())";
+	('$user_id', '$item_id', '$setprise', '$User->server_group', now())";
 	qwe($sql);
 	$sqlupd="UPDATE `user_crafts` SET `auc_price` = '$setprise'  
 	WHERE `user_id` = '$user_id' 
@@ -43,16 +39,6 @@ foreach($_POST['setgold'] as $k => $v)
 	 $sqldel="DELETE FROM `user_crafts` WHERE `user_id` = '$user_id' and `isbest` <2";
 	 qwe($sqldel);
 
-/*
-$query = qwe("
-SELECT *
- FROM `user_crafts` WHERE 
-WHERE `user_id` = '$user_id' and `isbest` = 2");
-foreach($query as $q)
-{
-	$ucrafts[] = $q['craft_id'];
-}
-*/
 
 echo '<meta http-equiv="refresh" content="0; url='.$uri_from.'">';	
 ?>

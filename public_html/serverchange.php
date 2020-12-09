@@ -1,7 +1,8 @@
 <?php
 $serv = $_POST['serv'] ?? 0;
 $serv = intval($serv);
-if($serv == 0) die;
+if(!$serv) die;
+
 if(empty($_COOKIE['path'])) die;
 if(!isset($cfg)) {
     $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';

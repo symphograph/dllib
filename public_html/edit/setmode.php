@@ -9,10 +9,11 @@ if(!isset($cfg)) {
 $User = new User;
 $User->check();
 $user_id = $User->id;
+
 $setmode = intval($_POST['mode']);
 $setmode = $setmode ?? 1;
-qwe("UPDATE `mailusers` SET `mode` = '$setmode' WHERE BINARY `identy` = '$identy'");
-$sql="DELETE FROM `user_crafts` WHERE `user_id` = '$user_id' and `isbest` <2";
+qwe("UPDATE `mailusers` SET `mode` = '$setmode' WHERE mail_id = '$User->id'");
+$sql="DELETE FROM `user_crafts` WHERE `user_id` = '$User->id' and `isbest` <2";
 qwe($sql);
 $path_white = [
     'packtable' => 'packtable.php',
@@ -30,4 +31,3 @@ else
     $url = 'packtable.php';
 
 header("Location: https://".$_SERVER['HTTP_HOST']."/".$url);
-?>
