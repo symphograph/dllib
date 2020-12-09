@@ -25,4 +25,3 @@ and user_id = '$User->id'
 ");
 
 echo 'ok';
-?>
