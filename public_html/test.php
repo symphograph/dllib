@@ -9,10 +9,8 @@ if(!isset($cfg)) {
 if (!$cfg->myip)
     die();
 
-$User = new User();
-$User->check();
-$user_id = $User->id;
-printr($User);
+$agent = get_browser(null, true);
+printr($agent);
 
 
 
@@ -42,7 +40,7 @@ foreach ($qwe as $q)
 
 
 
-
+/*
 function ListResult(array $arr)
 {
     if(!count($arr))
@@ -61,7 +59,7 @@ function ListResult(array $arr)
         echo $item_name.'<br>';
     }
 }
-
+*/
 echo '<br><br>'. (microtime(true) - $tstart);
 ?>
 

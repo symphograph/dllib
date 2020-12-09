@@ -35,15 +35,15 @@ WHERE `items`.`item_id` IN (32103, 32106,2,3,4,23633,32038,8007,32039,3712,27545
 
 $folows = Folows($user_id);
 
-foreach($query as $pr)
+foreach($query as $q)
 {
-	extract($pr);
-	$auc_arr =  PriceMode($item_id,$User->id);
+	$q = (object) $q;
+	$auc_arr =  PriceMode($q->item_id,$User->id);
     $auc_price = $auc_arr['auc_price'] ?? false;
 
     $iscolor = ColorPrice($auc_arr);
 
-	PriceCell($item_id,$auc_price,$item_name,$icon,$basic_grade,null,0,$iscolor);
+	PriceCell($q->item_id,$auc_price,$q->item_name,$q->icon,$q->basic_grade,null,0,$iscolor);
 }
 
 ?>

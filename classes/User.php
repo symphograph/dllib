@@ -33,16 +33,18 @@ class User
     public function byId(int $user_id)
     {
         $qwe = qwe("
-		SELECT `mailusers`.*,
-		`user_servers`.`server`,
-		`servers`.`server_group`,
-		`servers`.`server_name`
-		FROM
-		`mailusers`
-		LEFT JOIN `user_servers` ON `user_servers`.`user_id` = `mailusers`.`mail_id`
-		LEFT JOIN `servers` ON `servers`.`id` = `server`
-		WHERE BINARY `mailusers`.`mail_id` = '$user_id'
-		");
+            SELECT `mailusers`.*,
+            `user_servers`.`server`,
+            `servers`.`server_group`,
+            `servers`.`server_name`
+            FROM
+            `mailusers`
+            LEFT JOIN `user_servers` 
+                ON `user_servers`.`user_id` = `mailusers`.`mail_id`
+            LEFT JOIN `servers` 
+                ON `servers`.`id` = `server`
+            WHERE BINARY `mailusers`.`mail_id` = '$user_id'
+            ");
         if(!$qwe or !$qwe->num_rows)
             return false;
 

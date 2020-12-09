@@ -236,7 +236,7 @@ foreach($query as $v)
 
 	$zone_name = $v['zone_name'];
 
-    if($device_type != 'Desktop')
+    if($agent['device_type'] != 'Desktop')
         $hrefactive = 'onClick="return false;"';
     else
         $hrefactive = '';
