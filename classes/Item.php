@@ -53,14 +53,22 @@ class Item
             return false;
         $q = mysqli_fetch_object($qwe);
 
-        $this->id = $item_id;
-        $this->valut_id = $q->valut_id;
-        $this->price_buy = $q->price_buy;
-        $this->price_sale = $q->price_sale;
-        $this->category = $q->category;
-        $this->name = htmlentities($q->item_name);
-        $this->description = $q->description;
-        $this->on_off = $q->on_off;
+        if(!self::byQwe($q))
+            return false;
+
+        return true;
+    }
+
+    public function byQwe(object $q)
+    {
+        $this->id = $q->item_id;
+        $this->valut_id = $q->valut_id ?? 500;
+        $this->price_buy = $q->price_buy ?? 0;
+        $this->price_sale = $q->price_sale ?? 0;
+        $this->category = $q->category ?? '';
+        $this->name = htmlspecialchars($q->item_name);
+        $this->description = htmlspecialchars($q->description);
+        $this->on_off = $q->on_off ?? 1;
         $this->personal = $q->personal;
         $this->craftable = $q->craftable;
         $this->ismat = $q->ismat;
