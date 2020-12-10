@@ -8,9 +8,9 @@ if(!isset($cfg)) {
 }
 if (!$cfg->myip)
     die();
-
-$agent = get_browser(null, true);
-printr($agent);
+$User = new User();
+$Price = new Price;
+$Price->withFrends(1);
 
 
 

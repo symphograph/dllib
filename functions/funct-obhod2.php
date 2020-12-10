@@ -12,8 +12,11 @@ function CraftsObhod($item_id, $user_id)
 
     if(count($craftkeys1))
     {
-        if(!isset($orcost))
-            $orcost = PriceMode(2)['auc_price'] ?? false;
+        if(!isset($orcost)) {
+            $Price = new Price();
+            $Price->Solo(2);
+            $orcost = $Price->price ?? 250;
+        }
 
         $craftarr = CraftsBuffering($craftkeys1);
         //printr($craftarr);
@@ -254,7 +257,13 @@ function CraftsBuffering($craftkeys1)
 
 function ToBuffer2($item_id)
 {
-	global $User;
+	global $User, $orcost;
+    if(!isset($orcost)) {
+        $Price = new Price();
+        $Price->Solo(2);
+        $orcost = $Price->price ?? 250;
+    }
+
 	$qwe = qwe("
 		SELECT  * , ROUND(if(tmp.kry>0,SQRT(tmp.kry),SQRT(tmp.kry*-1)*-1)) as spmp
 		FROM(
@@ -289,6 +298,7 @@ function ToBuffer2($item_id)
 		foreach($qwe as $q)
 		{$i++;
 			$q = (object) $q;
+            $craft_price = $q->craft_price;
 		 	$isbest = intval($q->isbest);
 		 	if($i == 1)
 			{
@@ -296,7 +306,7 @@ function ToBuffer2($item_id)
 				REPLACE INTO craft_buffer2
 				(user_id,craft_id, item_id, craft_price, spm)
 				VALUES
-				('$User->id','$q->craft_id','$item_id','$q->craft_price','$q->spm')
+				('$User->id','$q->craft_id','$item_id','$craft_price','$q->spm')
 				");
 				if(!$isbest) $isbest = 1;
 			}else
@@ -305,9 +315,7 @@ function ToBuffer2($item_id)
             if(in_array($q->categ_id,[133]))
             {
                 $pass_labor = PackObject($item_id)['pass_labor2'] ?? 0;
-                $labor_price = PriceMode(2)['auc_price'] ?? 0;
-
-                $craft_price = $q->craft_price + $pass_labor*$labor_price;
+                $craft_price = $q->craft_price + $pass_labor*$orcost;
             }
 		 	qwe("
 			REPLACE INTO `user_crafts` 
@@ -318,7 +326,7 @@ function ToBuffer2($item_id)
 			'$User->id', 
 			'$isbest', 
 			'$q->craft_id', 
-			'$q->craft_price',
+			'$craft_price',
 			'$q->spmp',
 			now()
 			)");

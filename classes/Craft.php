@@ -109,7 +109,9 @@ class Craft
         $this->labor_need2 = $labor_need2;
         $this->labor_single = $labor_single;
 
-        $this->orcost = PriceMode(2)['auc_price'] ?? 250;
+        $Price = new Price();
+        $Price->byMode(2);
+        $this->orcost = $Price->price ?? 250;
     }
 
     public function setCountedData(int $user_id)

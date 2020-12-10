@@ -29,6 +29,7 @@ class User
     public array $profs = [];
     public $agent;
     public bool $isbot = false;
+    public array $folows = [];
 
     public function byId(int $user_id)
     {
@@ -430,6 +431,27 @@ class User
 
         PriceCell2($q->item_id,$q->auc_price,$q->item_name,$q->icon,$q->basic_grade);
 
+        return true;
+    }
+
+    public function folows() : bool
+    {
+        $qwe = qwe("
+            SELECT `folow_id` FROM `folows`
+            WHERE `user_id` = '$this->id'
+            ");
+        if(!$qwe or !$qwe->num_rows)
+            return false;
+
+        $folows = [];
+        foreach($qwe as $q) {
+            $folows[] = $q['folow_id'];
+        }
+
+        //Самого юзера тоже в массив, чтобы нашлась его цена, если она есть
+        $folows[] = $this->id;
+
+        $this->folows = $folows;
         return true;
     }
 }
