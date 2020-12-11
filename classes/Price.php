@@ -191,4 +191,26 @@ class Price
         return true;
     }
 
+    public function byCraft(int $item_id) : bool{
+
+        global $User;
+
+        $qwe = qwe("
+            SELECT `craft_price`, `updated` FROM `user_crafts` 
+            WHERE `user_id` = '$User->id' 
+            AND `item_id` = '$item_id'
+            AND `isbest` in (1,2)
+            ORDER BY `isbest` DESC
+            LIMIT 1
+            ");
+        if(!$qwe or !$qwe->num_rows)
+            return false;
+
+        $q = mysqli_fetch_object($qwe);
+        $this->price = $q->craft_price;
+        $this->autor = $User->id;
+        $this->time = $q->updated;
+        return true;
+    }
+
 }

@@ -519,7 +519,7 @@ function PriceValidator($array=[])
 	return $setprise;
 }
 
-function UserCraftPrice($item_id,$user_id)
+function UserCraftPrice(int $item_id, int $user_id)
 {
 	$qwe = qwe("
 	SELECT `craft_price` FROM `user_crafts` 
@@ -1300,7 +1300,6 @@ function MaCubiki($qwe,$u_amount,$craft_price)
 function UserPriceList($qwe)
 {
 
-    global $User;
 
     foreach($qwe as $q)
     {

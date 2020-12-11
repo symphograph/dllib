@@ -425,7 +425,10 @@ function DwnCraftList($Item)
 		</div>
 		<div class="craftinfo">
 			<div>
-				<div class="crresults"><div>Себестоимость 1 шт:</div><div><?php echo esyprice($Craft->craft_price);?></div></div>
+				<div class="crresults">
+                    <div>Себестоимость 1 шт:</div>
+                    <div><?php echo esyprice($Craft->craft_price);?></div>
+				</div>
 					<?php 
 	 			if(in_array($Item->categ_id,[133]))
 				{
@@ -441,8 +444,7 @@ function DwnCraftList($Item)
 					<div class="crresults"><div>Прибыль с 1 ОР:</div><div><?php echo $profitor?></div></div>
 					<?php			
 				}
-			
-			?>
+			    ?>
 			</div>
 			<div>
 				<div class="crresults">
@@ -553,7 +555,7 @@ function DwnCraftList($Item)
 			?><div><?php
 			all_res($user_id, $item_id, $Craft->result_amount*$u_amount, $mat_deep);
 			if($trash)
-			all_trash($user_id, $item_id, $Craft->result_amount*$u_amount, $mat_deep);
+			all_trash($user_id, $item_id, $Craft->result_amount*$u_amount);
 			
 			//if($mat_deep > 1)
 			include $_SERVER['DOCUMENT_ROOT'].'/../includs/all_res.php';

@@ -154,7 +154,8 @@ class Craft
         `items`.`item_name`, 
         `items`.`price_buy`, 
         `items`.`price_sale`, 
-        `items`.`price_type`, 
+        `items`.`price_type`,
+        `items`.valut_id,
         `items`.`is_trade_npc`, 
         `items`.`item_id` as `id`, 
         `items`.`forup_grade`,
@@ -184,7 +185,7 @@ class Craft
         {
 
             $mat = new Mat;
-            $mat->InitForCraft($q,$user_id);
+            $mat->InitForCraft($q);
             //printr($mat);
             $spm2 = $mat->spm2;
 

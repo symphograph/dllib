@@ -74,9 +74,9 @@ function all_res($user_id, $mat_id, $mater_need2, $mat_deep)
 	//echo '</details></ul>';
 }
 
-function all_trash($user_id, $mat_id, $mater_need2, $mat_deep)
+function all_trash(int $user_id,int $mat_id, int $mater_need2)
 {  
-	global $mat_deep;
+	//global $mat_deep;
 	$query = qwe("
 	SELECT DISTINCT 
 	`crafts`.`craft_id`, 
@@ -90,6 +90,8 @@ function all_trash($user_id, $mat_id, $mater_need2, $mat_deep)
 	AND `user_crafts`.`user_id` = '$user_id'
 	AND `user_crafts`.`isbest` > 0
 	");
+	if(!$query or !$query->num_rows)
+	    return false;
 	foreach($query as $v)
 	{
 		$craft_id = $v['craft_id'];
@@ -131,10 +133,10 @@ function all_trash($user_id, $mat_id, $mater_need2, $mat_deep)
 
 			if($best != 3)
 			{
-				$mat_deep++; 
+				//$mat_deep++;
 				$mater_need = bcdiv($mater_need,$amount,10)*$mater_need2;
 
-				all_trash($user_id, $mat_id, $mater_need, $mat_deep);
+				all_trash($user_id, $mat_id, $mater_need);
 			}
 		}
 

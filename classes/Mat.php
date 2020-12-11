@@ -12,15 +12,18 @@ class Mat
     public int $price = 0;
     public int $spm2 = 0;
     public bool $is_buyable = false;
+    public int $valut_id;
+    public int $is_trade_npc;
+    public int $price_buy;
+    public int $craftable = 0;
 
-    public function Cubik()
-    {
+    public function Cubik(){
         Cubik($this->id,'',$this->need_grade,'',$this->mater_need);
     }
 
-    public function InitForCraft($q,$user_id)
+    public function InitForCraft($q)
     {
-        global $trash, $lost;
+        global $trash, $lost, $User;
         $q = (object) $q;
         if($q->mater_need == 0)
             return false;
@@ -29,50 +32,102 @@ class Mat
         $this->mater_need = $q->mater_need;
         $this->need_grade = $q->mat_grade;
         $this->name = $q->item_name ?? '';
+        $this->valut_id = $q->valut_id ?? 500;
         $this->spm2 = intval($q->spm2);
+        $this->is_trade_npc = $q->is_trade_npc;
+        $this->price_buy = $q->price_buy;
+        $this->craftable = $q->craftable;
 
-        if($this->mater_need < 0)
-        {
+        if($this->mater_need < 0) {
             $trash = 1;
-            $this->price = UserMatPrice($this->id,$user_id,1);
-            if($this->price)
+            if(self::MatPrice())
                 return true;
 
             $lost[] = $this->id;
             return false;
         }
 
-        if($q->isbest == 3)
-        {
-            $this->is_buyable = true;
-            $this->price = UserMatPrice($this->id,$user_id,1);
-            if($this->price)
+        if($q->isbest == 3) {
+            $Price = new Price();
+            $Price->byMode($this->id);
+            if($Price->price){
+                $this->price = $Price->price;
                 return true;
+            }
 
             $lost[] = $this->id;
             return false;
         }
 
 
-        if(!$q->craftable)
-        {
-            $this->price = UserMatPrice($this->id,$user_id,0);
-            if($this->price)
+        if(!$q->craftable) {
+
+            if(self::MatPrice())
                 return true;
 
             $lost[] = $this->id;
             return false;
         }
 
-        if($q->buffer_price)
-        {
+        if($q->buffer_price) {
             $this->price = $q->buffer_price;
             //echo '<p>откопал в промежуточных: '.$q->item_name.' '.$this->price.'</p>';
             return true;
         }
 
-
         //$lost[] = $this->id;
+        return false;
+    }
+
+    public function MatPrice() : bool
+    {
+
+        if($this->id == 500){
+            $this->price = 1;
+            return true;
+        }
+
+        $Price = new Price();
+
+        if($this->is_trade_npc) {
+
+            if($this->valut_id == 500){
+
+                $this->price = $this->price_buy;
+                return true;
+            }
+
+            $Price->byMode($this->id);
+            if($Price->price){
+
+                $this->price = $Price->price;
+                return true;
+            }
+
+            $Price->byMode($this->valut_id);
+            if($Price->price){
+
+                $this->price = $Price->price * $this->price_buy;
+                return true;
+            }
+            return false;
+        }
+
+        if($this->craftable and $this->mater_need > 0) {
+
+            $Price->byCraft($this->id);
+            if($Price->price) {
+                $this->price = $Price->price;
+                return true;
+            }
+        }
+
+        $Price->byMode($this->id);
+        if($Price->price) {
+            $this->price = $Price->price;
+            return true;
+        }
+
         return false;
     }
 }
