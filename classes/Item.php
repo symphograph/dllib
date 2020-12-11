@@ -260,8 +260,6 @@ class Item
             WHERE `on_off` 
             AND 
                 `craft_id` IN ( $str ) 
-            AND `craft_id` NOT IN
-                (SELECT craft_id FROM user_crafts WHERE user_id = '$user_id')
             ORDER BY 
                 `deep` DESC, `result_item_id`");
         if(!$qwe or !$qwe->num_rows)
