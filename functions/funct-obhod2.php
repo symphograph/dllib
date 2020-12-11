@@ -34,6 +34,8 @@ function CraftsObhod(int $item_id, int $user_id)
             if(count($lost)>0)
             {
                 MissedList($lost);
+                //$craftsForClean = implode(',',$craftarr);
+                qwe("DELETE FROM user_crafts WHERE user_id = '$user_id' AND isbest < 2");
                 exit();
             }
         }
