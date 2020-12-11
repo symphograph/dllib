@@ -109,12 +109,16 @@ if($Item->craftable)
 	$globalitem_id = $item_id;
 	$trash = false;
 
-	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
-	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
-	require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
-	CraftsObhod($item_id, $user_id);
-	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
-	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+	if(!$Item->isCounted())
+    {
+        qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
+        qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+        require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
+        CraftsObhod($item_id, $user_id);
+        qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
+        qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+    }
+
 
 	DwnCraftList($Item);
 	?></div><?php

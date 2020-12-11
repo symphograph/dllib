@@ -30,6 +30,7 @@ class Item
     public array $crafts = [];
     public array $potential_crafts = [];
     public bool $ispack = false;
+    public int $craftprice = 0;
 
 
     public function getFromDB(int $item_id)
@@ -272,5 +273,30 @@ class Item
         }
 
         return $arr;
+    }
+
+    public function isCounted()
+    {
+        if(!$this->craftable)
+            return false;
+
+        global $User;
+        $qwe = qwe("
+            SELECT * FROM `user_crafts` 
+            WHERE user_id = '$User->id'
+            AND item_id = '$this->id'
+            ORDER BY isbest DESC 
+            LIMIT 1
+            ");
+        if(!$qwe or !$qwe->num_rows)
+            return false;
+
+        $q = mysqli_fetch_object($qwe);
+        $this->craftprice = intval($q->craft_price);
+
+        if($this->craftprice)
+            return true;
+
+        return false;
     }
 }

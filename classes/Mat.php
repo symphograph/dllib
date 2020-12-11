@@ -20,6 +20,7 @@ class Mat
 
     public function InitForCraft($q,$user_id)
     {
+        global $trash, $lost;
         $q = (object) $q;
         if($q->mater_need == 0)
             return false;
@@ -30,25 +31,37 @@ class Mat
         $this->name = $q->item_name ?? '';
         $this->spm2 = intval($q->spm2);
 
+        if($this->mater_need < 0)
+        {
+            $trash = 1;
+            $this->price = UserMatPrice($this->id,$user_id,1);
+            if($this->price)
+                return true;
+
+            $lost[] = $this->id;
+            return false;
+        }
+
         if($q->isbest == 3)
         {
             $this->is_buyable = true;
             $this->price = UserMatPrice($this->id,$user_id,1);
-            return true;
-        }
-
-        $craftignore = ($this->mater_need < 0);
-        if($craftignore or (!$q->craftable))
-        {
-            if($craftignore)
-            {
-                global $trash;
-                $trash = 1;
-            }
-
-            $this->price = UserMatPrice($this->id,$user_id,$craftignore);
             if($this->price)
                 return true;
+
+            $lost[] = $this->id;
+            return false;
+        }
+
+
+        if(!$q->craftable)
+        {
+            $this->price = UserMatPrice($this->id,$user_id,0);
+            if($this->price)
+                return true;
+
+            $lost[] = $this->id;
+            return false;
         }
 
         if($q->buffer_price)
@@ -58,13 +71,8 @@ class Mat
             return true;
         }
 
-        if(!$q->craftable)
-        {
-            global $lost;
-            $lost[] = $this->id;
-        }
 
-
+        //$lost[] = $this->id;
         return false;
     }
 }
