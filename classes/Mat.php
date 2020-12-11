@@ -16,6 +16,7 @@ class Mat
     public int $is_trade_npc;
     public int $price_buy;
     public int $craftable = 0;
+    public int $bestCraftId = 0;
 
     public function Cubik(){
         Cubik($this->id,'',$this->need_grade,'',$this->mater_need);

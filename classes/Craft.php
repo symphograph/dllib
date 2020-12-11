@@ -95,10 +95,11 @@ class Craft
         return $mats;
     }
 
-    public function InitForUser(int $user_id)
+    public function InitForUser()
     {
+        global $User;
         $Prof = new Prof();
-        $Prof->InitForUser($this->prof_id, $user_id);
+        $Prof->InitForUser($this->prof_id);
 
         $labor_need2 = $this->labor_need*((100 - $Prof->save_or) * 0.01);
         $labor_need2 = round($labor_need2,0);
@@ -128,7 +129,6 @@ class Craft
         $this->spmu = $q->spmu;
         $this->craft_price = $q->craft_price;
         $this->labor_total = $q->labor_total;
-
 
         return true;
     }

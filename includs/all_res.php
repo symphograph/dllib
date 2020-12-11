@@ -2,9 +2,12 @@
 function AllResShow($u_amount,$trash = false)
 {
 	global $User;
-	$table = 'craft_all_mats';
-	if($trash) 
-		$table = 'craft_all_trash';
+
+    $table = 'craft_all_mats';
+	if($trash)
+        $table = 'craft_all_trash';
+
+
 	$qwe = 
 	qwe("
 	SELECT 
@@ -50,6 +53,11 @@ function AllResShow($u_amount,$trash = false)
 	
 	$result = ob_get_contents();
 	ob_end_clean();
+	if($trash)
+        qwe("DELETE FROM `craft_all_trash` WHERE `user_id` = '$User->id'");
+	else
+        qwe("DELETE FROM `craft_all_mats` WHERE `user_id` = '$User->id'");
+
 	return $result;
 }
 

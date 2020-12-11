@@ -29,6 +29,7 @@ class Item
     public int $auc_price = 0;
     public array $crafts = [];
     public array $potential_crafts = [];
+    public int $bestCraftId = 0;
     public bool $ispack = false;
     public int $craftprice = 0;
 
@@ -250,7 +251,7 @@ class Item
         return $arr;
     }
 
-    public function CraftsByDeep(int $user_id)
+    public function CraftsByDeep()
     {
         if(!count($this->potential_crafts))
             $this->potential_crafts = self::AllPotentialCrafts();
@@ -298,5 +299,28 @@ class Item
             return true;
 
         return false;
+    }
+
+    public function getBestCraft()
+    {
+        global $User;
+        $qwe = qwe("
+            SELECT * FROM user_crafts 
+            WHERE user_id = '$User->id'
+            AND item_id = '$this->id'
+            ");
+        if(!$qwe or !$qwe->num_rows)
+            return 0;
+
+        $q = mysqli_fetch_object($qwe);
+        $this->bestCraftId = $q->item_id;
+        return $this->bestCraftId;
+    }
+
+    public function orTotal()
+    {
+        $Craft = new Craft($this->bestCraftId);
+        $Craft->InitForUser();
+        $Craft->getMats();
     }
 }

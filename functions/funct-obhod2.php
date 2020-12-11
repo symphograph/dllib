@@ -5,7 +5,7 @@ function CraftsObhod(int $item_id, int $user_id)
 
     $MainItem = new Item;
     $MainItem->getFromDB($item_id);
-    $craftkeys1 = $MainItem->CraftsByDeep($user_id);
+    $craftkeys1 = $MainItem->CraftsByDeep();
 
     if(!isset($lost))
         $lost = [];
@@ -232,7 +232,7 @@ function CraftsBuffering($craftkeys1)
 		{
 
             $Craft = new Craft($craft_id);
-            $Craft->InitForUser($User->id);
+            $Craft->InitForUser();
 
 
 			$rescost = $Craft->rescost($User->id);

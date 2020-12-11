@@ -2,7 +2,8 @@
 
 ////Материалы
 function all_res($user_id, $mat_id, $mater_need2, $mat_deep)
-{  
+{
+
 	global $mat_deep;
 	$query = qwe("
 	SELECT DISTINCT `crafts`.`craft_id`, `crafts`.`result_amount` 
@@ -75,8 +76,8 @@ function all_res($user_id, $mat_id, $mater_need2, $mat_deep)
 }
 
 function all_trash(int $user_id,int $mat_id, int $mater_need2)
-{  
-	//global $mat_deep;
+{
+
 	$query = qwe("
 	SELECT DISTINCT 
 	`crafts`.`craft_id`, 
