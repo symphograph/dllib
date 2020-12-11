@@ -107,7 +107,7 @@ if($Item->craftable)
 	<?php
 	//Надо посчитать оптималный
 	$globalitem_id = $item_id;
-	$trash = false;
+	$trash = 1;
 
 	if(!$Item->isCounted())
     {
