@@ -249,19 +249,21 @@ class Item
         return $arr;
     }
 
-    public function CraftsByDeep()
+    public function CraftsByDeep(int $user_id)
     {
         if(!count($this->potential_crafts))
             $this->potential_crafts = self::AllPotentialCrafts();
 
         $str = implode(',', $this->potential_crafts);
         $qwe = qwe("
-        SELECT result_item_id, craft_id from `crafts` 
-        WHERE `on_off` 
-        AND 
-            `craft_id` IN ( $str ) 
-        ORDER BY 
-            `deep` DESC, `result_item_id`");
+            SELECT result_item_id, craft_id from `crafts` 
+            WHERE `on_off` 
+            AND 
+                `craft_id` IN ( $str ) 
+            AND `craft_id` NOT IN
+                (SELECT craft_id FROM user_crafts WHERE user_id = '$user_id')
+            ORDER BY 
+                `deep` DESC, `result_item_id`");
         if(!$qwe or !$qwe->num_rows)
             return [];
 

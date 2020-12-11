@@ -1,5 +1,4 @@
 <?php
-//var_dump($_POST);
 $item_id = intval($_POST['item_id']);
 if(!$item_id) die;
 $cooktime = time()+60*60*24*360;
@@ -116,7 +115,7 @@ if($Item->craftable)
 	CraftsObhod($item_id, $user_id);
 	qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 	qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
-	//printr($Item);
+
 	DwnCraftList($Item);
 	?></div><?php
 
@@ -652,4 +651,6 @@ function LongestWordFound($text)
 	$result = array_slice($arr, -1, 1);
 	return $result;
 }
+
+
 ?>

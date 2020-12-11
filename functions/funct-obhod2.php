@@ -1,10 +1,11 @@
 ﻿<?php
-function CraftsObhod($item_id, $user_id)
+function CraftsObhod(int $item_id, int $user_id)
 {
 	global $lost, $orcost;
+
     $MainItem = new Item;
     $MainItem->getFromDB($item_id);
-    $craftkeys1 = $MainItem->CraftsByDeep();
+    $craftkeys1 = $MainItem->CraftsByDeep($user_id);
 
     if(!isset($lost))
         $lost = [];
@@ -19,7 +20,7 @@ function CraftsObhod($item_id, $user_id)
         }
 
         $craftarr = CraftsBuffering($craftkeys1);
-        //printr($craftarr);
+
 
         if(!in_array($_SERVER['SCRIPT_NAME'],[
             '/hendlers/packs_list.php',
@@ -37,8 +38,10 @@ function CraftsObhod($item_id, $user_id)
             }
         }
     }
+
     if(isset($craftarr))
         AllOrRecurs($craftarr,$user_id);
+
 }
 
 function MissedList($lost)
@@ -219,13 +222,15 @@ function CraftsBuffering($craftkeys1)
 		$complited = [];
 
 
-	//printr($craftkeys1);
+
 	foreach($craftkeys1 as $item_id => $crafts)
 	{
+
 		if(array_key_exists($item_id,$complited))
 			continue;
 		foreach($crafts as $key => $craft_id)
 		{
+
             $Craft = new Craft($craft_id);
             $Craft->InitForUser($User->id);
 
@@ -239,10 +244,13 @@ function CraftsBuffering($craftkeys1)
 			VALUES
 			('$User->id', '$craft_id', '$mycost', '$matspm')
 			");
+
 			$craftarr[] = $craft_id;
+
 		}
-		//break;
+
 		ToBuffer2($item_id);
+
 		$complited[$item_id] = 1;
 	}
 
