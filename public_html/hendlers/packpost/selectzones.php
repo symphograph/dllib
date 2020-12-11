@@ -6,7 +6,7 @@ if(!$from_id) die();
 
 $to_id = $_POST['to_id'] ?? 0;
 $to_id = intval($to_id);
-if(!$to_id) die();
+
 
 
 if(!isset($cfg)) {

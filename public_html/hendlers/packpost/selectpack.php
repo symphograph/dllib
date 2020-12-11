@@ -48,10 +48,11 @@ foreach ($qwe as $q)
 {
     $q = (object) $q;
     $sel = '';
+    $item_name = $q->item_name;
     if($q->item_id == $pitem_id)
         $sel = ' selected ';
     if(in_array($q->pack_t_id,[2,3]) and $from_id == 100)
-        $item_name = $q->item_name.' - '.$q->zone_name;
+        $item_name = $item_name.' - '.$q->zone_name;
     ?><option value="<?php echo $q->item_id?>" data-id="<?php echo $q->zone_id?>" <?php echo $sel?>><?php echo $item_name?></option><?php
 
     $sel = '';
