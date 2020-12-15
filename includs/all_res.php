@@ -66,9 +66,13 @@ if($all_res)
 {
 	?>
 	<br>
-	<details class="details"><summary><b>Все требуемые ресурсы для <?php echo $Craft->result_amount*$u_amount?>шт</b></summary><div class="all_res_area">
-	<?php echo $all_res?>
-	</div></details><br><hr><br>
+	<details class="details">
+        <summary><b>Все требуемые ресурсы для <?php echo $Craft->result_amount*$u_amount?>шт</b></summary>
+        <div class="all_res_area">
+            <?php echo $all_res?>
+        </div>
+    </details>
+    <br><hr><br>
 	<?php	
 }
 
@@ -76,10 +80,12 @@ $all_trash = AllResShow($u_amount,1);
 if($trash and $all_trash)
 {
 	?>
-	<details class="details"><summary><b>Полученные отходы с <?php echo $Craft->result_amount*$u_amount?>шт</b></summary>
+	<details class="details">
+        <summary><b>Полученные отходы с <?php echo $Craft->result_amount*$u_amount?>шт</b></summary>
 		<div class="all_res_area">
-		<?php echo $all_trash ?>
+		    <?php echo $all_trash ?>
 		</div>
-	</details><br><hr>
+	</details>
+    <br><hr>
 <?php
 }

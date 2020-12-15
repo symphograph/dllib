@@ -33,6 +33,8 @@ class Item
     public int $bestCraftId = 0;
     public bool $ispack = false;
     public int $craftprice = 0;
+    public array $potentialMatsAndCrafts = [];
+    public $orSum;
 
 
     public function getFromDB(int $item_id)
@@ -252,7 +254,7 @@ class Item
         return $arr;
     }
 
-    public function CraftsByDeep()
+    public function CraftsByDeep() : array
     {
         if(!count($this->potential_crafts))
             $this->potential_crafts = self::AllPotentialCrafts();
@@ -275,6 +277,103 @@ class Item
         }
 
         return $arr;
+    }
+
+    function RecountBestCraft()
+    {
+        global $lost, $User;
+
+
+        $this->potentialMatsAndCrafts = self::CraftsByDeep();
+
+        if(!isset($lost))
+            $lost = [];
+
+        $forLaborRecount = [];
+        if(count($this->potentialMatsAndCrafts))
+        {
+            $craftarr = self::CraftsBuffering();
+
+
+            if(!in_array($_SERVER['SCRIPT_NAME'],[
+                '/hendlers/packs_list.php',
+                '/hendlers/isbuysets.php',
+                '/packres.php',
+                '/hendlers/packpost/packpostmats.php',
+                '/hendlers/packpost/packobj.php',
+                '/test.php'
+            ]))
+            {
+
+                if(count($lost)>0)
+                {
+                    MissedList($lost);
+                    //$craftsForClean = implode(',',$craftarr);
+                    qwe("DELETE FROM user_crafts WHERE user_id = '$User->id' AND isbest < 2");
+                    exit();
+                }
+            }
+        }
+
+        if(count($craftarr)) {
+
+            foreach ($craftarr as $craftId => $itemId)
+            {
+                $Item = new Item();
+                $Item->getFromDB($itemId);
+                $Item->orSum = $Item->orTotal(0,1,$craftId);
+                if($Item->orSum)
+                    qwe("
+                    UPDATE `user_crafts` 
+                    SET `labor_total` = '$Item->orSum' 
+                    WHERE `user_id` = '$User->id' 
+                    AND `craft_id`='$craftId'
+                ");
+            }
+        }
+    }
+
+    public function CraftsBuffering() : array
+    {
+        global $User,$complited;
+        if(!isset($complited))
+            $complited = [];
+
+
+        $craftarr = [];
+        foreach($this->potentialMatsAndCrafts as $item_id => $crafts)
+        {
+
+            if(array_key_exists($item_id,$complited))
+                continue;
+            foreach($crafts as $key => $craft_id)
+            {
+
+                $Craft = new Craft($craft_id);
+                $Craft->InitForUser();
+
+
+                $rescost = $Craft->rescost($User->id);
+                $mycost = $rescost[0];
+                $matspm = $rescost[1];
+                qwe("
+                    REPLACE INTO `craft_buffer` 
+                    (user_id, craft_id, craft_price, matspm)
+                    VALUES
+                    ('$User->id', '$craft_id', '$mycost', '$matspm')
+                    ");
+
+                $craftarr[$craft_id] = $item_id;
+
+            }
+
+            ToBuffer2($item_id);
+
+            $complited[$item_id] = 1;
+            $forLaborRecount[] = $item_id;
+        }
+
+        return  $craftarr;
     }
 
     public function isCounted()
@@ -309,6 +408,8 @@ class Item
             SELECT * FROM user_crafts 
             WHERE user_id = '$User->id'
             AND item_id = '$this->id'
+            ORDER BY isbest DESC 
+            LIMIT 1
             ");
         if(!$qwe or !$qwe->num_rows)
             return 0;
@@ -318,23 +419,27 @@ class Item
         return $this->bestCraftId;
     }
 
-    public function orTotal()
+    public function orTotal($orsum,float $need = 1,$craftId = 0)
     {
-        if(!self::getBestCraft())
-            return false;
+        if(!$craftId)
+            $craftId = self::getBestCraft();
 
-        $Craft = new Craft($this->bestCraftId);
+        if(!$craftId)
+            return $orsum;
+
+        $Craft = new Craft($craftId);
         $Craft->InitForUser();
         $Craft->getMats();
+        $orsum += $Craft->labor_single*$need;
         foreach ($Craft->mats as $mat)
         {
-            $Mat = new Mat();
-            $Mat->getFromDB($mat->id);
-            if($Mat->craftable)
-                $Mat->orTotal();
-            echo $Mat->name.'<br>';
+            //$mat->getFromDB($mat->id);
+            //echo $mat->name.' '.$orsum.'<br>';
+            if($mat->craftable)
+                $orsum = $mat->orTotal($orsum,$mat->mater_need/$Craft->result_amount);
 
         }
+        return $orsum;
     }
 
 
@@ -344,17 +449,13 @@ class Item
 
         $Price = new Price();
         $Price->byMode($this->id);
-
         $color = '';
-        $text = 'Цена: ';
-
         if(!$Price->price)
-           return self::PriceDataForm($color, '', $Price, $text);
+           return self::PriceDataForm('', '', $Price, 'Цена: ');
 
 
         if($Price->autor == $User->id) {
 
-            $Puser = $User;
             $color = 'style="color: darkgreen"';
             $text = '<a href="user_prices.php" data-tooltip="Все мои цены">Вы указали: </a>';
         }else {

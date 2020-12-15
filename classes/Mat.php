@@ -5,7 +5,7 @@ class Mat extends Item
 {
     public int $result_id = 0;
     public int $need_grade = 1;
-    public int $craft_id = 0;
+    public int $craftId = 0;
     public float $mater_need = 0;
     public int $price = 0;
     public int $spm2 = 0;
@@ -15,7 +15,7 @@ class Mat extends Item
         Cubik($this->id,'',$this->need_grade,'',$this->mater_need);
     }
 
-    public function InitForCraft($q)
+    public function byRcost($q)
     {
         global $trash, $lost, $User;
         $q = (object) $q;
@@ -124,5 +124,10 @@ class Mat extends Item
         }
 
         return false;
+    }
+
+    public function byCraft()
+    {
+        self::getFromDB($this->id);
     }
 }

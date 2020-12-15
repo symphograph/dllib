@@ -93,7 +93,10 @@ if($packs_q and $packs_q->num_rows)
     qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
     foreach($packs_q as $pack)
     {
-        CraftsObhod($pack['item_id'], $user_id);
+        $Item = new Item();
+        $Item->getFromDB($pack['item_id']);
+        $Item->RecountBestCraft();
+        //CraftsObhod($pack['item_id'], $user_id);
     }
     qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
     qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");

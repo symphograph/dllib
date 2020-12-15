@@ -8,7 +8,7 @@ class User
     public bool $uncustomed;
     public int $id = 0;
     public int $mode;
-    public int $orcost = 250;
+    public int $orcost = 0;
     public int $server = 9;
     public int $server_group = 2;
     public int $siol = 0;
@@ -453,5 +453,15 @@ class User
 
         $this->folows = $folows;
         return true;
+    }
+
+    public function orCost() : int
+    {
+        if($this->orcost)
+            return $this->orcost;
+
+        $Price = new Price();
+        $Price->Solo(2);
+        return $Price->price ?? 300;
     }
 }

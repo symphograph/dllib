@@ -25,7 +25,7 @@ class Craft
     public $spm;
     public array $mats = [];
     public int $isbest = 0;
-    public int $orcost = 250;
+    public int $orcost = 300;
 
     //ОР с учетом прокачки профы у юзера
     public int $labor_need2 = 0;
@@ -80,7 +80,10 @@ class Craft
     {
         $mats = [];
         $qwe = qwe("
-        SELECT * FROM craft_materials 
+        SELECT craft_materials.* , 
+               i.craftable 
+        FROM craft_materials
+        INNER JOIN items i on craft_materials.item_id = i.item_id
         WHERE craft_id = '$this->id'
         ");
         foreach ($qwe as $q)
@@ -90,6 +93,8 @@ class Craft
             $mat->id = $q->item_id;
             $mat->mater_need = $q->mater_need;
             $mat->need_grade = $q->mat_grade;
+            $mat->craftId = $this->id;
+            $mat->craftable = $q->craftable;
             $mats[$mat->id] = $mat;
         }
         return $mats;
@@ -110,9 +115,8 @@ class Craft
         $this->labor_need2 = $labor_need2;
         $this->labor_single = $labor_single;
 
-        $Price = new Price();
-        $Price->byMode(2);
-        $this->orcost = $Price->price ?? 250;
+
+        $this->orcost = $User->orCost();
     }
 
     public function setCountedData(int $user_id)
@@ -185,7 +189,7 @@ class Craft
         {
 
             $mat = new Mat;
-            $mat->InitForCraft($q);
+            $mat->byRcost($q);
             //printr($mat);
             $spm2 = $mat->spm2;
 

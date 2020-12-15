@@ -620,4 +620,23 @@ function CssMeta(array $css_arr)
         ?><link href="css/<?php echo $css?>?ver=<?php echo md5_file($root.'/css/'.$css)?>" rel="stylesheet"><?php
     }
 }
+
+function LongestWordFound($text)
+{
+	if((!is_string($text)) or empty($text))
+		return false;
+
+	$arr = array_flip(explode(' ', $text));
+
+	// определяем длину
+	foreach ($arr as $word => $length) {
+		$arr[$word] = mb_strlen($word);
+	}
+
+	// сортируем
+	asort($arr);
+
+	// последний
+	return array_slice($arr, -1, 1);
+}
 ?>

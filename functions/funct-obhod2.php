@@ -16,7 +16,7 @@ function CraftsObhod(int $item_id, int $user_id)
         if(!isset($orcost)) {
             $Price = new Price();
             $Price->Solo(2);
-            $orcost = $Price->price ?? 250;
+            $orcost = $Price->price ?? 300;
         }
 
         $craftarr = CraftsBuffering($craftkeys1);
@@ -183,6 +183,7 @@ global $arr_or, $allor_deep, $mater_exponent;
 	$arr_or = [];
 	foreach($craftarr as $k => $craft_id)
 	{
+
 		$query = qwe("SELECT
 		`crafts`.`craft_id`,
 		`crafts`.`result_item_id`,
@@ -210,6 +211,7 @@ global $arr_or, $allor_deep, $mater_exponent;
 		$all_or = round(($all_or+$or/$result_amount),2);
 
 		qwe("UPDATE `user_crafts` SET `labor_total` = '$all_or' WHERE `user_id` = '$user_id' AND `craft_id`='$craft_id'");
+
 		//if(in_array($craft_id,[7571,77,4296,9545]))
 			//printr($arr_or);
 		$arr_or = [];
@@ -267,12 +269,8 @@ function CraftsBuffering($craftkeys1)
 
 function ToBuffer2($item_id)
 {
-	global $User, $orcost;
-    if(!isset($orcost)) {
-        $Price = new Price();
-        $Price->Solo(2);
-        $orcost = $Price->price ?? 250;
-    }
+	global $User;
+	$orcost = $User->orCost();
 
 	$qwe = qwe("
 		SELECT  * , ROUND(if(tmp.kry>0,SQRT(tmp.kry),SQRT(tmp.kry*-1)*-1)) as spmp

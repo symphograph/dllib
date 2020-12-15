@@ -114,7 +114,7 @@ if($Item->craftable)
         qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
         qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
         require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
-        CraftsObhod($item_id, $user_id);
+        $Item->RecountBestCraft();
         qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
         qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
     }
@@ -575,26 +575,5 @@ function Cubiki($qwe)
 		<?php
 	}
 }
-			 
-function LongestWordFound($text)
-{
-	if((!is_string($text)) or empty($text)) 
-		return false;
-	
-	$arr = array_flip(explode(' ', $text));
-
-	// определяем длину
-	foreach ($arr as $word => $length) {
-		$arr[$word] = mb_strlen($word);
-	}
-
-	// сортируем
-	asort($arr);
-
-	// последний
-	$result = array_slice($arr, -1, 1);
-	return $result;
-}
-
 
 ?>

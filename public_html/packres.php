@@ -122,8 +122,10 @@ foreach($qwe as $q)
     if($q['craft_price']) continue;
     if(!$q['craftable']) continue;
     if($q['is_trade_npc'] and $q['valut_id'] == 500) continue;
-
-    CraftsObhod($q['item_id'], $User->id);
+    $Item = new Item();
+    $Item->getFromDB($q['item_id']);
+    $Item->RecountBestCraft();
+    //CraftsObhod($q['item_id'], $User->id);
 
 }
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$User->id'");
