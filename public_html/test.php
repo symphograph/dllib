@@ -9,8 +9,11 @@ if(!isset($cfg)) {
 if (!$cfg->myip)
     die();
 $User = new User();
-$Price = new Price;
-$Price->withFrends(1);
+$User->byIdenty();
+$Item = new Item();
+$Item->getFromDB(30905);
+$Item->orTotal();
+
 
 
 

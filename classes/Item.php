@@ -5,6 +5,7 @@ class Item
 {
     public int $id;
     public $valut_id;
+    public $valut_icon = '';
     public $price_buy;
     public $price_sale;
     public $is_trade_npc;
@@ -313,14 +314,103 @@ class Item
             return 0;
 
         $q = mysqli_fetch_object($qwe);
-        $this->bestCraftId = $q->item_id;
+        $this->bestCraftId = $q->craft_id;
         return $this->bestCraftId;
     }
 
     public function orTotal()
     {
+        if(!self::getBestCraft())
+            return false;
+
         $Craft = new Craft($this->bestCraftId);
         $Craft->InitForUser();
         $Craft->getMats();
+        foreach ($Craft->mats as $mat)
+        {
+            $Mat = new Mat();
+            $Mat->getFromDB($mat->id);
+            if($Mat->craftable)
+                $Mat->orTotal();
+            echo $Mat->name.'<br>';
+
+        }
+    }
+
+
+    public function MoneyForm()
+    {
+        global $User;
+
+        $Price = new Price();
+        $Price->byMode($this->id);
+
+        $color = '';
+        $text = 'Цена: ';
+
+        if(!$Price->price)
+           return self::PriceDataForm($color, '', $Price, $text);
+
+
+        if($Price->autor == $User->id) {
+
+            $Puser = $User;
+            $color = 'style="color: darkgreen"';
+            $text = '<a href="user_prices.php" data-tooltip="Все мои цены">Вы указали: </a>';
+        }else {
+
+            $Puser = new User();
+            $Puser->byId($Price->autor);
+
+            if($Puser->user_nick) {
+                if(IsFolow($User->id,$Price->autor))
+                    $color = 'style="color: darkgreen"';
+
+                $text = '<a href="user_prices.php?puser_id='.$Puser->id.'" data-tooltip="Смотреть его(её) цены">'.$Puser->user_nick.'</a> указал: ';
+            }else
+                $text = 'Кто-то указал: ';
+        }
+
+        $Server = new Server($User->id);
+        $time = $Price->time;
+        $timestr = date('d.m.Y',strtotime($time)) .' <span style="color: #3E454C" data-tooltip="Выбрать в настройках"><a href="user_customs.php">' . $Server->name . '</a></span><br>';
+        self::PriceDataForm($color, $timestr ,$Price, $text);
+
+
+        return true;
+    }
+
+    public function PriceDataForm($color, $timestr ,$Price, $text)
+    {
+        global $User;
+        ?>
+        <span <?php echo $color?>>
+            <?php echo $timestr.$text?>
+        </span>
+        <form id="pr_<?php echo $this->id?>">
+            <div class="money_area_down">
+                <?php MoneyLineBL($Price->price,$this->id,'',$Price->autor == $User->id);?>
+                <span id="PrOk_<?php echo $this->id?>"></span>
+            </div>
+        </form>
+        <?php
+        return true;
+    }
+
+    public function ValutIcon() : string
+    {
+        if(!empty($this->valut_icon))
+            return $this->valut_icon;
+
+        $qwe = qwe("
+            SELECT `icon` FROM `items`
+            WHERE `item_id` = '$this->valut_id'
+            ");
+        if(!$qwe or !$qwe->num_rows)
+            return '';
+        $q = mysqli_fetch_object($qwe);
+
+        $this->valut_icon = $q->icon;
+        return $q->icon;
     }
 }

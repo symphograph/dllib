@@ -1,10 +1,8 @@
 <?php
 
 
-class Mat
+class Mat extends Item
 {
-    public int $id;
-    public string $name = '';
     public int $result_id = 0;
     public int $need_grade = 1;
     public int $craft_id = 0;
@@ -12,11 +10,6 @@ class Mat
     public int $price = 0;
     public int $spm2 = 0;
     public bool $is_buyable = false;
-    public int $valut_id;
-    public int $is_trade_npc;
-    public int $price_buy;
-    public int $craftable = 0;
-    public int $bestCraftId = 0;
 
     public function Cubik(){
         Cubik($this->id,'',$this->need_grade,'',$this->mater_need);
@@ -38,6 +31,7 @@ class Mat
         $this->is_trade_npc = $q->is_trade_npc;
         $this->price_buy = $q->price_buy;
         $this->craftable = $q->craftable;
+
 
         if($this->mater_need < 0) {
             $trash = 1;

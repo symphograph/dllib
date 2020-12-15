@@ -18,10 +18,10 @@ $mode = $User->mode;
 $Item = new Item();
 $Item->getFromDB($item_id);
 $description = $Item->description;
-$regex = '/((?<=\p{Ll})\p{Lu}|\p{Lu}(?=\p{Ll}))/ui';
-$description = preg_replace( $regex, ' $1', $description );
-$description = preg_replace("/ {2,}/"," ",$description);
-$description = htmlentities($description);
+//$regex = '/((?<=\p{Ll})\p{Lu}|\p{Lu}(?=\p{Ll}))/ui';
+//$description = preg_replace( $regex, ' $1', $description );
+//$description = preg_replace("/ {2,}/"," ",$description);
+//$description = htmlentities($description);
 	?>
 <div id="catalog_area">
 	<div class="item_descr_area">
@@ -58,18 +58,18 @@ $description = htmlentities($description);
 				echo $Item->price_buy;
 				?>
 				<a href="catalog.php?item_id=<?php echo $Item->valut_id?>">
-		        <img src="img/icons/50/<?php echo IconLink($Item->valut_id)?>.png" width="15" height="15" alt="<?php echo $Item->valut_name?>"/>
+		        <img src="img/icons/50/<?php echo $Item->ValutIcon()?>.png" width="15" height="15" alt="<?php echo $Item->valut_name?>"/>
 		        </a>
 		        <br><br>
 		        <?php
 					
 				if(!$Item->personal)
-				MoneyForm($item_id);	
+				    $Item->MoneyForm();
 			}
 			
 		}elseif($Item->categ_id != 133)
 		{
-			MoneyForm($item_id);	
+			$Item->MoneyForm();
 		}
 		
 		if($cfg->myip)
@@ -133,13 +133,7 @@ if($Item->craftable)
             <button type="button" class="def_button">Пакулятор</button>
         </a> <?php
     }
-	/*
-	if(isset($lost) and count($lost) > 0)
-	    {
-	        echo '<hr><br>';
-	       MissedList($lost);
-	    }
-    */
+
 
 }else
 {
@@ -197,66 +191,6 @@ function ValutInfo($Item)
 	else
 		echo '<br>Нет данных. Попробуйте указать несколько цен на предметы за эту валюту.<br>';
 	
-}
-
-function MoneyForm($item_id)
-{
-	global $user_id;
-	$auc_price = false;
-	$myprice = false;
-	$prarr = PriceMode($item_id);
-	$text = '';
-	
-	$color = '';
-	$time = '';
-	//var_dump($prarr);
-	if($prarr)
-	{
-		$puser_id = $prarr['user_id'];
-		$prnick = AnyById($puser_id,'mailusers','user_nick')[$puser_id];
-		$Server = new Server($user_id);
-		$time = $prarr['time'];
-		$time = date('d.m.Y',strtotime($time)) .' <span style="color: #3E454C" data-tooltip="Выбрать в настройках"><a href="user_customs.php">' . $Server->name . '</a></span><br>';
-		$auc_price = $prarr['auc_price'];
-		//var_dump($prnick);
-		if($prarr['user_id'] == $user_id)
-		{
-			$color = 'style="color: darkgreen"';
-			$text = '<a href="user_prices.php" data-tooltip="Все мои цены">Вы указали: </a>';
-		}elseif($prnick)
-		{
-			$text = '<a href="user_prices.php?puser_id='.$puser_id.'" data-tooltip="Смотреть его(её) цены">'.$prnick.'</a> указал: ';
-			
-			if(IsFolow($user_id,$puser_id))
-				$color = 'style="color: darkgreen"';	
-		}else
-			$text = 'Кто-то указал: ';
-		
-				
-	}else
-		$text = 'Цена: ';
-
-?>
-<span <?php echo $color?>><?php echo $time.$text?></span>
-<form id="pr_<?php echo $item_id?>"><div class="money_area_down">
-
-	<?php MoneyLineBL($auc_price,$item_id,'',$myprice);?>
-	<span id="PrOk_<?php echo $item_id?>"></span>	
-	</div>
-	
-</form>
-<?php
-}
-
-function IconLink($item_id)
-{
-	$qwe = qwe("
-	SELECT `icon` FROM `items`
-	WHERE `item_id` = '$item_id'
-	");
-	$q = mysqli_fetch_assoc($qwe);
-
-	return $q['icon'];
 }
 
 function RefuseList($items)
