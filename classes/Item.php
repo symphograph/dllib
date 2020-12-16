@@ -64,7 +64,7 @@ class Item
         return true;
     }
 
-    public function byQwe(object $q)
+    public function byQwe(object $q) : bool
     {
         $this->id = $q->item_id;
         $this->valut_id = $q->valut_id ?? 500;

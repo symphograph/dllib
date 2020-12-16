@@ -35,25 +35,30 @@ if($isbest)
 }
 
 
-$sqldel="
-DELETE FROM `user_crafts` 
-WHERE `user_id` = '$user_id' AND
-	(`isbest` <2
-	OR 
-	(`item_id` = '$item_id' AND `craft_id` !='$craft_id'))";
-qwe($sqldel);
 
+qwe("
+    DELETE FROM `user_crafts` 
+    WHERE `user_id` = '$user_id' 
+      AND
+        (`isbest` <2
+            OR 
+            (`item_id` = '$item_id' AND `craft_id` !='$craft_id')
+        )");
+
+qwe("UPDATE `user_crafts` SET `craft_price` = NULL WHERE `user_id` = '$user_id'");
 
 
 function isBest($craft_id)
 {
 	global $user_id;
 	$qwe = qwe("
-	SELECT `isbest` FROM `user_crafts`
-	WHERE `craft_id` = '$craft_id'
-	AND `user_id` = '$user_id'
-	");
-	if((!$qwe) or ($qwe->num_rows == 0)) return false;
+        SELECT `isbest` FROM `user_crafts`
+        WHERE `craft_id` = '$craft_id'
+        AND `user_id` = '$user_id'
+        ");
+	if(!$qwe or !$qwe->num_rows)
+	    return false;
+
 	$q = mysqli_fetch_object($qwe);
 	return $q->isbest;
 }

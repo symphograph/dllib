@@ -6,11 +6,11 @@ if(!isset($cfg)) {
 }
 $item_id = $_POST['item_id'] ?? $_GET['item_id'] ?? 0;
 $item_id = intval($item_id);
-if($item_id == 0) exit();
+if(!$item_id) exit();
 
 $isbuy = $_POST['isbuy'] ?? $_GET['isbuy'] ?? 0;
 $isbuy = intval($isbuy);
-if($isbuy == 0) exit();
+if(!$isbuy) exit();
 
 
 $User = new User;
@@ -67,3 +67,4 @@ if($isbuy == 1)
     ");
 	echo 'ok';
 }
+qwe("UPDATE `user_crafts` SET `craft_price` = NULL WHERE `user_id` = '$user_id'");
