@@ -1327,10 +1327,12 @@ function UserPriceList($qwe)
         if(!$time)
             $time = '01-01-0000';
 
+        $amount = $q->mater_need ?? '';
+
         if($q->is_trade_npc and $q->valut_id == 500)
-            PriceCell2($q->item_id,$q->price_buy,$q->item_name,$q->icon,$q->basic_grade,'','');
+            PriceCell2($q->item_id,$q->price_buy,$q->item_name,$q->icon,$q->basic_grade,'',$amount);
         else
-            PriceCell($q->item_id,$auc_price,$q->item_name,$q->icon,$q->basic_grade,$time,$isby,$iscolor,'');
+            PriceCell($q->item_id,$auc_price,$q->item_name,$q->icon,$q->basic_grade,$time,$isby,$iscolor,$amount);
 
 
         if ($q->craft_price)
