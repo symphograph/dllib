@@ -77,7 +77,7 @@ $('#snav').on('click','#searchbtn',function()
 $('#all_info').on('click','.main_itim',function()
 {
 	var craft_id = this.id.slice(3);
-	if(craft_id == 0) return false;
+	if(craft_id === 0) return false;
 	var item_id = $(this).attr("name");
 	//console.log(item_id);
 	SetCraftAsBest(craft_id,item_id);
