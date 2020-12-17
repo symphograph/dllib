@@ -16,6 +16,7 @@ class Item
     public int $personal;
     public int $craftable;
     public int $ismat;
+    public int $item_group;
     public $categ_id;
     public $categ_pid;
     public $slot;
@@ -35,6 +36,7 @@ class Item
     public int $craftprice = 0;
     public array $potentialMatsAndCrafts = [];
     public $orSum;
+    public array $allMats = [];
 
 
     public function getFromDB(int $item_id)
@@ -86,7 +88,7 @@ class Item
         $this->forup_grade = $q->forup_grade;
         $this->icon = $q->icon;
         $this->md5_icon = $q->md5_icon;
-        $this->valut_name = $q->valut_name;
+        $this->valut_name = $q->valut_name ?? '';
         $this->sgr_id = $q->sgr_id;
         $this->is_trade_npc = $q->is_trade_npc;
         $this->ispack = ($this->categ_id == 133);
@@ -286,13 +288,15 @@ class Item
 
         $this->potentialMatsAndCrafts = self::CraftsByDeep();
 
+
         if(!isset($lost))
             $lost = [];
 
-        $forLaborRecount = [];
+
         if(count($this->potentialMatsAndCrafts))
         {
             $craftarr = self::CraftsBuffering();
+
 
 
             if(!in_array($_SERVER['SCRIPT_NAME'],[
@@ -322,6 +326,7 @@ class Item
                 $Item = new Item();
                 $Item->getFromDB($itemId);
                 $Item->orSum = $Item->orTotal(0,1,$craftId);
+
                 if($Item->orSum)
                     qwe("
                     UPDATE `user_crafts` 
@@ -329,7 +334,9 @@ class Item
                     WHERE `user_id` = '$User->id' 
                     AND `craft_id`='$craftId'
                 ");
+
             }
+
         }
     }
 
@@ -381,6 +388,9 @@ class Item
         if(!$this->craftable)
             return false;
 
+        if($this->craftprice)
+            return true;
+
         global $User;
         $qwe = qwe("
             SELECT * FROM `user_crafts` 
@@ -401,8 +411,10 @@ class Item
         return false;
     }
 
-    public function getBestCraft()
+    public function getBestCraft() : int
     {
+        if($this->bestCraftId)
+            return $this->bestCraftId;
         global $User;
         $qwe = qwe("
             SELECT * FROM user_crafts 
@@ -435,13 +447,110 @@ class Item
         {
             //$mat->getFromDB($mat->id);
             //echo $mat->name.' '.$orsum.'<br>';
-            if($mat->craftable)
+            if($mat->craftable and $mat->mater_need > 0)
                 $orsum = $mat->orTotal($orsum,$mat->mater_need/$Craft->result_amount);
 
         }
         return $orsum;
     }
 
+    public function getAllMats($arr = [],float $need = 1,$craftId = 0)
+    {
+        if(!$craftId)
+            $craftId = self::getBestCraft();
+
+        if(!$craftId)
+            return $arr;
+
+        $Craft = new Craft($craftId);
+        $Craft->InitForUser();
+        $Craft->getMats();
+        foreach ($Craft->mats as $mat)
+        {
+
+            //echo $mat->name.' '.$mat->is_buyable.'<br>';
+
+            if ($mat->mater_need < 0)
+                continue;
+
+            if($mat->craftable and $mat->item_group != 23 and !$mat->is_buyable){
+
+                $arr = $mat->getAllMats($arr,$mat->mater_need/$Craft->result_amount);
+                continue;
+            }
+
+
+            if(array_key_exists($mat->id,$arr))
+                $arr[$mat->id] += $mat->mater_need*$need/$Craft->result_amount;
+            else
+                $arr[$mat->id] = $mat->mater_need*$need/$Craft->result_amount;
+
+        }
+        $this->allMats = $arr;
+        return $arr;
+    }
+
+    public function allMatsShow(int $u_amount, int $result_amount)
+    {
+        //printr($this->allMats);
+        if (!self::getAllMats())
+            return false;
+
+        $matStr = implode(',', array_keys($this->allMats));
+
+        $qwe = qwe("
+                SELECT
+                items.*,
+                item_categories.item_group,
+                item_categories.`name` as category,
+                valutas.valut_name,
+                `item_subgroups`.`sgr_id`
+                FROM
+                items
+                INNER JOIN item_categories ON items.categ_id = `item_categories`.`id`
+                AND `items`.`on_off` = 1 AND `items`.`item_id` in ( $matStr )
+                LEFT JOIN `valutas` ON `valutas`.`valut_id` = `items`.`valut_id`
+                LEFT JOIN `item_groups` ON `item_groups`.id = item_categories.item_group
+                LEFT JOIN `item_subgroups` ON `item_subgroups`.sgr_id = `item_groups`.sgr_id
+                ");
+        if(!$qwe or !$qwe->num_rows)
+            return false;
+        ?>
+        <br>
+        <details class="details">
+            <summary><b>Все требуемые ресурсы для <?php echo $result_amount*$u_amount?>шт</b></summary>
+            <div class="all_res_area">
+            <?php
+            foreach ($qwe as $q)
+            {
+                $q = (object) $q;
+
+                $Mat = new Mat;
+                $Mat->byQwe($q);
+                $sum = $this->allMats[$Mat->id]*$u_amount*$result_amount;
+                $Price = new Price;
+                $Price->origin($Mat->id,$this->allMats[$Mat->id],$Mat->is_trade_npc,$Mat->valut_id);
+                $matprice = $Price->price;
+                $matprice = esyprice($matprice);
+                $matprice = htmlspecialchars($matprice);
+                if($Mat->id != 500)
+                    $tooltip = $Mat->name.'<br>'.round($sum,4).' шт по<br>'.$matprice.$Price->how;
+                else
+                    $tooltip = $Mat->name.'<br>'.htmlspecialchars(esyprice(round($sum)));
+                ?>
+                <div class="itim" id="itim_<?php echo $Mat->id?>" style="background-image: url(/img/icons/50/<?php echo $Mat->icon?>.png)">
+                    <div class="grade" data-tooltip="<?php echo $tooltip?>" style="background-image: url(/img/grade/icon_grade<?php echo $Mat->basic_grade?>.png)">
+                        <div class="matneed"><?php echo round($sum,2)?></div>
+                    </div>
+                </div>
+                <?php
+            }
+            ?>
+            </div>
+        </details>
+        <br><hr><br>
+        <?php
+    }
 
     public function MoneyForm()
     {

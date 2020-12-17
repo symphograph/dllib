@@ -484,20 +484,13 @@ function DwnCraftList($Item)
 		//Если рецепт основной, показываем полный список ресов	
 		{		
 
-            qwe("DELETE FROM `craft_all_trash` WHERE `user_id` = '$User->id'");
-            qwe("DELETE FROM `craft_all_mats` WHERE `user_id` = '$User->id'");
-
-
-			$mats = array();
 			?><div><?php
-			all_res($user_id, $item_id, $Craft->result_amount*$u_amount, $mat_deep);
-			if($trash)
-			all_trash($user_id, $item_id, $Craft->result_amount*$u_amount);
-			
-			//if($mat_deep > 1)
-			include $_SERVER['DOCUMENT_ROOT'].'/../includs/all_res.php';
-            qwe("DELETE FROM `craft_all_trash` WHERE `user_id` = '$User->id'");
-            qwe("DELETE FROM `craft_all_mats` WHERE `user_id` = '$User->id'");
+
+			    qwe("DELETE FROM `craft_all_trash` WHERE `user_id` = '$User->id'");
+                    all_trash($user_id, $item_id, $Craft->result_amount*$u_amount);
+                    $Item->allMatsShow($u_amount, $Craft->result_amount);
+                    include $_SERVER['DOCUMENT_ROOT'].'/../includs/all_res.php';
+                qwe("DELETE FROM `craft_all_trash` WHERE `user_id` = '$User->id'");
 
 			?></div><div class="clear"><?php
 		}

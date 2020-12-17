@@ -12,16 +12,22 @@ if (!$cfg->myip)
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
 $User = new User();
 $User->byIdenty();
-$qwe = qwe("SELECT item_id FROM items WHERE on_off AND item_id >= 32103 AND craftable LIMIT 100");
+$qwe = qwe("SELECT item_id FROM items WHERE on_off AND item_id >= 8319 AND craftable LIMIT 1");
+
 foreach ($qwe as $q)
 {
     $item_id = $q['item_id'];
     $Item = new Item();
     $Item->getFromDB($item_id);
+    //printr($Item);
+
     $Item->RecountBestCraft();
     ?><details><summary><?php echo $Item->name?></summary><?php
     echo ''. (microtime(true) - $tstart);
-    echo '<br>'.$Item->orTotal(0);
+    $Item->getAllMats();
+    printr($Item->allMats);
+
+    //$Item->allMatsShow(1,10);
     echo '<br>'. (microtime(true) - $tstart);
     ?></details><?php
     // echo count($arr).'<br>';

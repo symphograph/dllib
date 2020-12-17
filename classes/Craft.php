@@ -78,13 +78,21 @@ class Craft
 
     public function getMats() : array
     {
+        global $User;
         $mats = [];
         $qwe = qwe("
         SELECT craft_materials.* , 
-               i.craftable 
+               i.craftable,
+               i.item_name,
+               item_categories.item_group,
+               uc.isbest
         FROM craft_materials
         INNER JOIN items i on craft_materials.item_id = i.item_id
-        WHERE craft_id = '$this->id'
+        LEFT JOIN `item_categories` ON i.`categ_id` = `item_categories`.`id`
+        LEFT JOIN user_crafts uc on craft_materials.item_id = uc.item_id 
+                                        AND uc.user_id = '$User->id'
+                                        AND uc.isbest = 3
+        WHERE craft_materials.craft_id = '$this->id'
         ");
         foreach ($qwe as $q)
         {
@@ -92,9 +100,15 @@ class Craft
             $mat = new Mat();
             $mat->id = $q->item_id;
             $mat->mater_need = $q->mater_need;
-            $mat->need_grade = $q->mat_grade;
+            $mat->need_grade = $q->mat_grade ?? 1;
+            $mat->name = $q->item_name;
             $mat->craftId = $this->id;
             $mat->craftable = $q->craftable;
+            $mat->item_group = $q->item_group ?? 0;
+            if($q->isbest == 3){
+                $mat->is_buyable = true;
+            }
+
             $mats[$mat->id] = $mat;
         }
         return $mats;

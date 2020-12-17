@@ -8,6 +8,7 @@ class Price
     public int $price = 0;
     public string $time = '2020-02-22';
     public int $autor = 0;
+    public string $how = 'Неизвестно';
 
     public function byMode($item_id) : bool
     {
@@ -15,7 +16,7 @@ class Price
         if(!isset($User))
             die('Missed User');
 
-
+        $this->how = 'Цена пользователя';
         if($User->mode == 1) {
             //Максимально широко.
             return self::Mode1($item_id);
@@ -207,10 +208,44 @@ class Price
             return false;
 
         $q = mysqli_fetch_object($qwe);
+        if(!$q->craft_price)
+            return false;
+
         $this->price = $q->craft_price;
         $this->autor = $User->id;
         $this->time = $q->updated;
+        $this->how  = 'Себестоимость (крафт)';
         return true;
     }
 
+    public function origin(int $item_id,$need,$is_trade_npc,int $valut_id)
+    {
+        if ($need > 0 and self::byCraft($item_id)){
+            return true;
+        }
+
+        if($is_trade_npc and $valut_id == 500){
+
+            if(self::byNPC($item_id))
+                return true;
+        }
+
+        self::byMode($item_id);
+
+    }
+
+    public function byNPC(int $item_id)
+    {
+        $qwe = qwe("SELECT price_buy FROM items WHERE item_id = '$item_id' and is_trade_npc = 1");
+
+        if(!$qwe or !$qwe->num_rows)
+            return false;
+
+        $q = mysqli_fetch_object($qwe);
+        if(!$q->price_buy)
+            return false;
+        $this->price = $q->price_buy;
+        $this->how = 'Куплено у NPC';
+        return true;
+    }
 }

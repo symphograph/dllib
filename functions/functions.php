@@ -1297,6 +1297,11 @@ function MaCubiki($qwe,$u_amount,$craft_price)
     return $money;
 }
 
+function matTooltop()
+{
+
+}
+
 function UserPriceList($qwe)
 {
 

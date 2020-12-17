@@ -1,24 +1,19 @@
 <?php
-function AllResShow($u_amount,$trash = false)
+function AllResShow($u_amount,$trash = 1)
 {
 	global $User;
-
-    $table = 'craft_all_mats';
-	if($trash)
-        $table = 'craft_all_trash';
-
 
 	$qwe = 
 	qwe("
 	SELECT 
-	`".$table."`.`mat_id`, 
-	Sum(`".$table."`.`mater_need`) as `sum`, 
+	craft_all_trash.`mat_id`, 
+	Sum(`craft_all_trash`.`mater_need`) as `sum`, 
 	`items`.`item_name`, 
 	`items`.`categ_id`, 
 	`items`.`icon`,
 	`items`.`basic_grade`
-	FROM `".$table."`
-	INNER JOIN `items` ON `".$table."`.`mat_id` = `items`.`item_id`
+	FROM `craft_all_trash`
+	INNER JOIN `items` ON `craft_all_trash`.`mat_id` = `items`.`item_id`
 	WHERE `user_id` = '$User->id'
 	GROUP BY `mat_id`
 	ORDER BY `categ_id`
@@ -55,29 +50,12 @@ function AllResShow($u_amount,$trash = false)
 	ob_end_clean();
 	if($trash)
         qwe("DELETE FROM `craft_all_trash` WHERE `user_id` = '$User->id'");
-	else
-        qwe("DELETE FROM `craft_all_mats` WHERE `user_id` = '$User->id'");
 
 	return $result;
 }
 
-$all_res = AllResShow($u_amount);
-if($all_res)
-{
-	?>
-	<br>
-	<details class="details">
-        <summary><b>Все требуемые ресурсы для <?php echo $Craft->result_amount*$u_amount?>шт</b></summary>
-        <div class="all_res_area">
-            <?php echo $all_res?>
-        </div>
-    </details>
-    <br><hr><br>
-	<?php	
-}
-
 $all_trash = AllResShow($u_amount,1);
-if($trash and $all_trash)
+if($all_trash)
 {
 	?>
 	<details class="details">
