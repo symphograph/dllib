@@ -462,6 +462,9 @@ class User
 
         $Price = new Price();
         $Price->Solo(2);
-        return $Price->price ?? 300;
+        $this->orcost = intval($Price->price);
+        if(!$this->orcost)
+            $this->orcost  = 300;
+        return $this->orcost;
     }
 }
