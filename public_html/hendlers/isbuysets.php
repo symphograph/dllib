@@ -35,7 +35,7 @@ if($val)
 	if(!$craft_id)
 	{
 		require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
-        require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
+
         $Item = new Item();
         $Item->getFromDB($item_id);
         $Item->RecountBestCraft();

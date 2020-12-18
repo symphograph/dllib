@@ -16,7 +16,7 @@ if(!isset($user_id) or !$user_id)
 
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
+
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
 $Item = new Item();
 $Item->getFromDB($item_id);

@@ -112,7 +112,7 @@ LEFT JOIN user_crafts
 $qwe = qwe($sql);
 
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/cat-funcs.php';
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$User->id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$User->id'");
