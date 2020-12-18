@@ -476,4 +476,16 @@ class User
         return $this->orcost;
     }
 
+    function IsFolow($folow_id)
+    {
+        $qwe = qwe("
+            SELECT * FROM folows 
+            WHERE `user_id` = '$this->id'
+            AND `folow_id` = '$folow_id'
+            ");
+        if($qwe and $qwe->num_rows > 0)
+            return true;
+        return false;
+    }
+
 }

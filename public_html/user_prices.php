@@ -60,7 +60,7 @@ $based_prices = '32103,32106,2,3,4,23633,32038,8007,32039,3712,27545,41488';
                 {
                     $valutignor = 'AND `prices`.`item_id` NOT in ('.$intimStr.')';
                     $chks = ['','checked'];
-                    $chk = intval(IsFolow($User->id,$puser_id));
+                    $chk = intval($User->IsFolow($puser_id));
                     ?>
                     <label for="folw" data-tooltip="Если цена этого пользователя новее Вашей, она будет использована в расчетах.">
                     Доверять этим ценам

@@ -988,18 +988,6 @@ function PriceMode($item_id)
 	die('Missed mode');
 }
 
-function IsFolow($user_id,$folow_id)
-{
-	$qwe = qwe("
-	SELECT * FROM folows 
-	WHERE `user_id` = '$user_id'
-	AND `folow_id` = '$folow_id'
-	");
-	if($qwe and $qwe->num_rows > 0)
-		return true;
-	return false;
-}
-
 function ServerGroup($user_id)
 {
 	$qwe = qwe("

@@ -649,7 +649,7 @@ class Item
             $Puser->byId($Price->autor);
 
             if($Puser->user_nick) {
-                if(IsFolow($User->id,$Price->autor))
+                if($User->IsFolow($Price->autor))
                     $color = 'style="color: darkgreen"';
 
                 $text = '<a href="user_prices.php?puser_id='.$Puser->id.'" data-tooltip="Смотреть его(её) цены">'.$Puser->user_nick.'</a> указал: ';
