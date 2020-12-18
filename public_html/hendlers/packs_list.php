@@ -220,7 +220,7 @@ foreach($query as $v)
  	$labor_all = $v['labor_all'];
  	$ProfitOr = $v['profitor'];
  	//var_dump($ProfitOr);
- 	$ProfitOr_1 = esyprice($ProfitOr,10,1);
+ 	$ProfitOr_1 = esyprice($ProfitOr,1);
 
 
 

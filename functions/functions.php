@@ -392,22 +392,7 @@ function price_str($price,$valuta)
 	}
 	if($valuta == 500)
 	{
-	    /*
-	    //$price = str_pad($price, 6, "0", STR_PAD_LEFT);
-		$g_img = '<img src="img/gold.png" width="10" height="10" alt="gold"/>';
-		$s_img = '<img src="img/silver.png" width="10" height="10" alt="silver"/>';
-		$br_img = '<img src="img/bronze.png" width="10" height="10" alt="bronze"/>';
-
-
-	 	if($price < 1000000)
-		    $s = sscanf($price, "%2d%2d%d", $gold, $silver, $bronse);
-	 	else
-		    $s = sscanf($price, "%3d%2d%d", $gold, $silver, $bronse);
-
-
-        return $minus.$gold.$g_img.str_pad($silver, 2, "0", STR_PAD_LEFT).$s_img.str_pad($bronse, 2, "0", STR_PAD_LEFT).$br_img;
-        */
-        return $minus . esyprice($price,15,1);
+        return $minus . esyprice($price,1);
 	}
 
     $v_img = '<img src="../img/'.$valuta.'.png?ver='.md5_file($_SERVER['DOCUMENT_ROOT'].'/img/'.$valuta.'.png').'" width="10" height="10" alt="coal"/>';
@@ -1334,7 +1319,7 @@ function UserPriceList($qwe)
 
         if ($q->craft_price)
         {
-            $esyprice = esyprice($q->craft_price,15,1);
+            $esyprice = esyprice($q->craft_price,1);
             ?><div>Крафт:<?php echo $esyprice?></div><?php
         }
 

@@ -120,7 +120,7 @@ function MoneyLineBL($auc_price,$item_id,$color = 'white',$is_show = 0)
 		
 }
 
-function esyprice($total,$size = 15,$only = false)
+function esyprice($total,$only = false)
 {
 	$gold = '<img src="img/gold.png" style="width: 0.9em; height: 0.9em" alt="g"/>';
 	$silver = '<img src="img/silver.png" style="width: 0.9em; height: 0.9em" alt="s"/>';
