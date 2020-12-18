@@ -434,8 +434,16 @@ class User
         return true;
     }
 
+    /**
+     * @param $user_id
+     * @return array
+     * возвращает массив id юзеров, на чьи цены подписан юзер
+     */
     public function folows() : bool
     {
+        if(count($this->folows))
+            return true;
+
         $qwe = qwe("
             SELECT `folow_id` FROM `folows`
             WHERE `user_id` = '$this->id'
@@ -467,4 +475,5 @@ class User
             $this->orcost  = 300;
         return $this->orcost;
     }
+
 }

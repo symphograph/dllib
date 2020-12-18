@@ -4,7 +4,13 @@ function MissedList($lost)
 {
 	$lost = array_unique($lost);
 	//printr($lost);
-	?><p><b>Возможно, расчет не корректный.</b><br>Я не нашёл следующие цены:<p><?php
+	?>
+    <div>
+        <br><b>Расчет не получился.</b>
+        <br>В дочерних рецептах есть неизвестные цены.
+        <br>Без них я не могу посчитать и сравнить.
+    </div>
+    <?php
 
 	$lostnames = ItemAny($lost,'item_name');
 	
@@ -48,9 +54,8 @@ function MissedList($lost)
 		if($q->valut_id and $q->valut_id != 500)
 			continue;
 
-		//echo '<a href="/items.php?item_id='.$vl.'" text-decoration: none; style="color: #6C3F00;">'.$lostname.'</a><br>';
-		
-		PriceCell($q->item_id,false,$q->item_name,$q->icon,$q->basic_grade);
+		$Price = new Price;
+		PriceCell($q->item_id,$q->item_name,$q->icon,$q->basic_grade);
 		
 	}
 }

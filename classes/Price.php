@@ -3,12 +3,19 @@
 
 class Price
 {
+    const  COLORS = [
+        '',
+        '#f35454',
+        '#dcde4f',
+        '#79f148'
+    ];
 
     public int $item_id = 0;
     public int $price = 0;
     public string $time = '2020-02-22';
     public int $autor = 0;
     public string $how = 'Неизвестно';
+    public string $color = '';
 
     public function byMode($item_id) : bool
     {
@@ -215,6 +222,33 @@ class Price
         $this->autor = $User->id;
         $this->time = $q->updated;
         $this->how  = 'Себестоимость (крафт)';
+        return true;
+    }
+
+    function getColor(): bool
+    {
+        if(!$this->price){
+            $this->color = self::COLORS[1];
+            return true;
+        }
+
+
+        global $User;
+
+        if($User->id == $this->autor){
+            $this->color = self::COLORS[3];
+            return true;
+        }
+
+
+        $User->folows();
+        if(in_array($this->autor,$User->folows)){
+            $this->color = self::COLORS[2];
+            return true;
+        }
+
+
+        $this->color = self::COLORS[1];
         return true;
     }
 

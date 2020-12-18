@@ -107,13 +107,45 @@ function MoneyLineBL($auc_price,$item_id,$color = 'white',$is_show = 0)
 	?>
 	
 	<div class="money-line">
-	<input type="number" name="setgold" class="pr_inputs" value= "<?php echo $gol;?>" min=0 max="999999999" id="gol_<?php echo $item_id;?>" autocomplete="off" <?php echo $color;?>><?php echo $img_gold;?></div>
+        <input
+            type="number"
+            name="setgold"
+            class="pr_inputs"
+            value= "<?php echo $gol;?>"
+            min=0 max="999999999"
+            id="gol_<?php echo $item_id;?>"
+            autocomplete="off"
+            style="background-color: <?php echo $color;?>"
+        >
+        <?php echo $img_gold;?>
+	</div>
 	
 	<div class="money-line">
-	<input type="number" name="setsilver" class="pr_inputs" value= "<?php echo $sil;?>" min=0 max=99 id="sil_<?php echo $item_id;?>" autocomplete="off" <?php echo $color;?>><?php echo $img_silver;?></div>
+        <input
+            type="number"
+            name="setsilver"
+            class="pr_inputs"
+            value= "<?php echo $sil;?>"
+            min=0 max=99
+            id="sil_<?php echo $item_id;?>"
+            autocomplete="off"
+            style="background-color: <?php echo $color;?>"
+        >
+        <?php echo $img_silver;?>
+	</div>
 		
 	<div class="money-line">
-	<input type="number" name="setbronze" class="pr_inputs" value= "<?php echo $bro;?>" min=0 max=99 id="bro_<?php echo $item_id;?>" autocomplete="off" <?php echo $color;?>><?php echo $img_bronze;?></div>
+        <input
+            type="number"
+            name="setbronze"
+            class="pr_inputs"
+            value= "<?php echo $bro;?>"
+            min=0 max=99 id="bro_<?php echo $item_id;?>"
+            autocomplete="off"
+            style="background-color: <?php echo $color;?>"
+        >
+        <?php echo $img_bronze;?>
+	</div>
 	<input type="hidden" name="item_id" value="<?php echo $item_id;?>">
 	<input type="button" id="prdel_<?php echo $item_id;?>" <?php echo $is_shows[$is_show]?> name="del" class="small_del" value="del" data-tooltip="Удалить свою цену"></input>
 	<?php

@@ -38,12 +38,8 @@ $folows = Folows($user_id);
 foreach($query as $q)
 {
 	$q = (object) $q;
-	$auc_arr =  PriceMode($q->item_id);
-    $auc_price = $auc_arr['auc_price'] ?? false;
 
-    $iscolor = ColorPrice($auc_arr);
-
-	PriceCell($q->item_id,$auc_price,$q->item_name,$q->icon,$q->basic_grade,null,0,$iscolor);
+	PriceCell($q->item_id,$q->item_name,$q->icon,$q->basic_grade,null,0);
 }
 
 ?>

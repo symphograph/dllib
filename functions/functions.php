@@ -697,18 +697,27 @@ function AvaGetAndPut($ava,$identy)
 	return $filename;
 }
 
-function PriceCell(int $item_id,$price,$item_name,$icon,int $grade,$time='',$isby='',$iscolor = false,$amount='')
+function PriceCell(int $item_id,$item_name,$icon, $grade,$time='',$isby='',$amount='')
 {
+    $Price = new Price();
+    $Price->item_id = $item_id;
+    if(in_array($_SERVER['SCRIPT_NAME'],['/user_prices.php']))
+        $Price->Solo($item_id);
+    else
+    {
+        $Price->byMode($item_id);
+        $Price->getColor();
+    }
+
+
+
+
+
+    $grade = intval($grade);
+    if(!$grade)
+        $grade = 1;
 	if(!empty($time))
 		$time = date('d.m.Y',strtotime($time));
-	if($iscolor)
-    {
-        $colors = ['', '#f35454', '#dcde4f', '#79f148'];
-        $color = $colors[$iscolor];
-        $color = ' style = "background-color:'.$color.'" ';
-    }else
-        $color = '';
-	
 	?>
 	<div class="price_cell">
 		<div class="price_row">
@@ -744,7 +753,7 @@ function PriceCell(int $item_id,$price,$item_name,$icon,int $grade,$time='',$isb
 				<div><span class="item_name" id="itname_<?php echo $item_name?>"><?php echo $item_name?></span>
 					<form id="pr_<?php echo $item_id;?>">
 						<div class="money_area_down">
-						<?php MoneyLineBL($price,$item_id,$color);?>
+						<?php MoneyLineBL($Price->price,$item_id,$Price->color);?>
 						</div>
 					<input type="hidden" name="item_id" value="<?php echo $item_id;?>"/>
 					</form>
@@ -1311,10 +1320,14 @@ function UserPriceList($qwe)
         $amount = $q->mater_need ?? '';
         $basic_grade = $q->basic_grade ?? 1;
 
+        $Price = new Price;
+        $Price->byMode($q->item_id);
+        $Price->getColor();
+
         if($q->is_trade_npc and $q->valut_id == 500)
             PriceCell2($q->item_id,$q->price_buy,$q->item_name,$q->icon,$basic_grade,'',$amount);
         else
-            PriceCell($q->item_id,$auc_price,$q->item_name,$q->icon,$basic_grade,$time,$isby,$iscolor,$amount);
+            PriceCell($q->item_id,$q->item_name,$q->icon,$basic_grade,$time,$isby,$amount);
 
 
         if ($q->craft_price)
