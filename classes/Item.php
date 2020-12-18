@@ -37,6 +37,7 @@ class Item
     public array $potentialMatsAndCrafts = [];
     public $orSum;
     public array $allMats = [];
+    public array $allTrash = [];
     public object $priceData;
 
 
@@ -85,7 +86,7 @@ class Item
         $this->slot = $q->slot;
         $this->lvl = $q->lvl;
         $this->inst = $q->inst;
-        $this->basic_grade = $q->basic_grade;
+        $this->basic_grade = $q->basic_grade ?? 1;
         $this->forup_grade = $q->forup_grade;
         $this->icon = $q->icon;
         $this->md5_icon = $q->md5_icon;
@@ -491,9 +492,45 @@ class Item
         return $arr;
     }
 
-    public function allMatsShow(int $u_amount, int $result_amount)
+    public function getAllTrash($arr = [],float $need = 1,$craftId = 0)
     {
-        //printr($this->allMats);
+        if(!$craftId)
+            $craftId = self::getBestCraft();
+
+        if(!$craftId)
+            return $arr;
+
+        $Craft = new Craft($craftId);
+        $Craft->InitForUser();
+        $Craft->getMats();
+        foreach ($Craft->mats as $mat)
+        {
+
+            //echo $mat->name.' '.$mat->is_buyable.'<br>';
+
+            if ($mat->mater_need < 0){
+                $tr = abs($mat->mater_need)*$need/$Craft->result_amount;
+                if(array_key_exists($mat->id,$arr))
+                    $arr[$mat->id] += $tr;
+                else
+                    $arr[$mat->id] = $tr;
+                continue;
+            }
+
+
+            if($mat->craftable and $mat->mater_need > 0){
+
+                $arr = $mat->getAllTrash($arr,$mat->mater_need/$Craft->result_amount);
+                continue;
+            }
+
+        }
+        $this->allTrash = $arr;
+        return $arr;
+    }
+
+    public function allMatsShow(int $u_amount, int $result_amount) : bool
+    {
         if (!self::getAllMats())
             return false;
 
@@ -530,22 +567,64 @@ class Item
                 $Mat->byQwe($q);
                 $sum = $this->allMats[$Mat->id]*$u_amount*$result_amount;
                 $Mat->MatPrice();
-
-
-                $matprice = esyprice($Mat->price);
-                $matprice = htmlspecialchars($matprice);
-                if($Mat->id != 500)
-                    $tooltip = $Mat->name.'<br>'.round($sum,4).' шт по<br>'.$matprice.$Mat->priceData->how;
-                else
-                    $tooltip = $Mat->name.'<br>'.htmlspecialchars(esyprice(round($sum)));
-
-                Cubik($Mat->id,$Mat->icon,$Mat->basic_grade,$tooltip, round($sum,2));
+                $Cubik = new Cubik($Mat->id,$Mat->icon,$Mat->basic_grade,$Mat->ToolTip($sum), round($sum,2));
+                $Cubik->print();
             }
             ?>
             </div>
         </details>
         <br><hr><br>
         <?php
+        return true;
+    }
+
+    public function allTrashShow(int $u_amount, int $result_amount) : bool
+    {
+        if (!self::getAllTrash())
+            return false;
+
+        $matStr = implode(',', array_keys($this->allTrash));
+
+        $qwe = qwe("
+                SELECT
+                items.*,
+                item_categories.item_group,
+                item_categories.`name` as category,
+                valutas.valut_name,
+                `item_subgroups`.`sgr_id`
+                FROM
+                items
+                INNER JOIN item_categories ON items.categ_id = `item_categories`.`id`
+                AND `items`.`on_off` = 1 AND `items`.`item_id` in ( $matStr )
+                LEFT JOIN `valutas` ON `valutas`.`valut_id` = `items`.`valut_id`
+                LEFT JOIN `item_groups` ON `item_groups`.id = item_categories.item_group
+                LEFT JOIN `item_subgroups` ON `item_subgroups`.sgr_id = `item_groups`.sgr_id
+                ");
+        if(!$qwe or !$qwe->num_rows)
+            return false;
+        ?>
+        <br>
+        <details class="details">
+            <summary><b>Полученные отходы с <?php echo $result_amount*$u_amount?>шт</b></summary>
+            <div class="all_res_area">
+                <?php
+                foreach ($qwe as $q)
+                {
+                    $q = (object) $q;
+
+                    $Mat = new Mat;
+                    $Mat->byQwe($q);
+                    $sum = $this->allTrash[$Mat->id]*$u_amount*$result_amount;
+                    $Mat->MatPrice();
+                    $Cubik = new Cubik($Mat->id,$Mat->icon,$Mat->basic_grade,$Mat->ToolTip($sum), round($sum,2));
+                    $Cubik->print();
+                }
+                ?>
+            </div>
+        </details>
+        <br><hr><br>
+        <?php
+        return true;
     }
 
     public function MoneyForm()

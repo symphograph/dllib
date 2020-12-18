@@ -123,4 +123,15 @@ class Mat extends Item
         return false;
     }
 
+    public function ToolTip($sum)
+    {
+        $matprice = esyprice($this->price);
+        $matprice = htmlspecialchars($matprice);
+
+        if($this->id != 500)
+            return $this->name.'<br>'.round($sum,4).' шт по<br>'.$matprice.$this->priceData->how;
+
+        return $this->name.'<br>'.htmlspecialchars(esyprice(round($sum)));
+    }
+
 }

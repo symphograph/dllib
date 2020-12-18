@@ -237,7 +237,6 @@ function DwnCraftList($Item)
 {
 	$best_types = ['','Выбран руру','Выбран вами', 'Покупается'];
 	$item_id = $Item->id;
-
 	global $user_id, $mat_deep, $cfg, $trash, $User;
 	$money = 0;
 	$qwe = qwe("
@@ -486,12 +485,8 @@ function DwnCraftList($Item)
 
 			?><div><?php
 
-			    qwe("DELETE FROM `craft_all_trash` WHERE `user_id` = '$User->id'");
-                    all_trash($user_id, $item_id, $Craft->result_amount*$u_amount);
                     $Item->allMatsShow($u_amount, $Craft->result_amount);
-                    include $_SERVER['DOCUMENT_ROOT'].'/../includs/all_res.php';
-                qwe("DELETE FROM `craft_all_trash` WHERE `user_id` = '$User->id'");
-
+                    $Item->allTrashShow($u_amount, $Craft->result_amount);
 			?></div><div class="clear"><?php
 		}
 	}
