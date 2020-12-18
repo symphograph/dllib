@@ -166,10 +166,12 @@ function UserPriceList2($qwe)
         if($q->craftable)
             $isby = intval($q->isbest)+1;
 
+        $basic_grade = $q->basic_grade ?? 1;
+
         if($puser_id == $User->id)
-            PriceCell($q->item_id,$q->auc_price,$q->item_name,$q->icon,$q->basic_grade,$q->time,$isby);
+            PriceCell($q->item_id,$q->auc_price,$q->item_name,$q->icon,$basic_grade,$q->time,$isby);
         else
-            PriceCell2($q->item_id,$q->auc_price,$q->item_name,$q->icon,$q->basic_grade,$q->time);
+            PriceCell2($q->item_id,$q->auc_price,$q->item_name,$q->icon,$basic_grade,$q->time);
         ?>
         </div><?php
     }

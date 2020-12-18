@@ -18,10 +18,6 @@ $mode = $User->mode;
 $Item = new Item();
 $Item->getFromDB($item_id);
 $description = $Item->description;
-//$regex = '/((?<=\p{Ll})\p{Lu}|\p{Lu}(?=\p{Ll}))/ui';
-//$description = preg_replace( $regex, ' $1', $description );
-//$description = preg_replace("/ {2,}/"," ",$description);
-//$description = htmlentities($description);
 	?>
 <div id="catalog_area">
 	<div class="item_descr_area">
@@ -79,9 +75,9 @@ $description = $Item->description;
 			?><a href="/edit/item_off.php?item_id=<?php echo $item_id?>"><button class="def_button">отключить</button></a><br><?php
 		}
 		?>
-	<hr><br>
-	<a href="user_customs.php"><button class="def_button">Настройки</button></a><br>
-	<a href="user_prices.php"><button class="def_button">Мои цены</button></a>
+        <hr><br>
+        <a href="user_customs.php"><button class="def_button">Настройки</button></a><br>
+        <a href="user_prices.php"><button class="def_button">Мои цены</button></a>
 	</div>
 	<div id="catalog_right">
 <?php

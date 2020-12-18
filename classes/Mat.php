@@ -11,9 +11,7 @@ class Mat extends Item
     public int $spm2 = 0;
     public bool $is_buyable = false;
 
-    public function Cubik(){
-        Cubik($this->id,'',$this->need_grade,'',$this->mater_need);
-    }
+
 
     public function byRcost($q)
     {

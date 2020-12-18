@@ -60,7 +60,7 @@ and user_crafts.user_id = '$user_id'
 and isbest > 0
 ");
 //var_dump($qwe);
-if((!$qwe) or (!$qwe->num_rows))
+if(!$qwe or !$qwe->num_rows)
     die('err');
 
 ?><div class="pkmats_area">

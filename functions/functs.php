@@ -284,7 +284,8 @@ function MonetisationList($val_link, $valut_id, $user_id)
 		?><div class="nicon">
 
 		<?php
-		Cubik($item_id,$icon,$basic_grade);
+		$Cubik = new Cubik($item_id,$icon,$basic_grade);
+		$Cubik->print();
 		?>
 		<div class="itemname"><?php echo $item_name?>
 		<?php echo '<div class="valut_median">'.$val_link.' = '. esyprice(round($price,0)).'</div>'; ?>
@@ -296,24 +297,6 @@ function MonetisationList($val_link, $valut_id, $user_id)
 	$echodata = ob_get_contents();
 	ob_end_clean();
 	return [$median,$echodata];
-}
-
-function Cubik($item_id,$icon,$grade = 1,$tooltip = '',$dig_in=false)
-{
-	if(!empty($tooltip))
-		$tooltip = 'data-tooltip="'.$tooltip.'"';
-	if($dig_in and !empty($dig_in))
-		$dig_in = '<div class="matneed">'.$dig_in.'</div>';
-	else
-		$dig_in = '';
-	
-	?>
-	<div class="itim" id="itim_<?php echo $item_id?>" style="background-image: url(/img/icons/50/<?php echo $icon?>.png)">
-		<div class="grade" <?php echo $tooltip?> style="background-image: url(/img/grade/icon_grade<?php echo $grade?>.png)">
-			<?php echo $dig_in?>
-		</div>
-	</div>
-	<?php
 }
 
 function Comments($User,$item_id)

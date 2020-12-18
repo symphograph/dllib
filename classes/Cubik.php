@@ -9,9 +9,11 @@ class Cubik
     public string $tooltip = '';
     public string $value = '';
 
-    public function __construct(int $id,string $icon, int $grade = 1,$tooltip = '',$value = '')
+    public function __construct(int $id,string $icon, $grade = 1,$tooltip = '',$value = '')
     {
         $this->id = $id;
+        $grade = intval($grade);
+        $this->grade = $grade ?? 1;
         $this->icon = $icon;
         if(!empty($tooltip))
             $this->tooltip = 'data-tooltip="'.$tooltip.'"';

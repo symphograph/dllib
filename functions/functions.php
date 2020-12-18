@@ -712,7 +712,7 @@ function AvaGetAndPut($ava,$identy)
 	return $filename;
 }
 
-function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='',$iscolor = false,$amount='')
+function PriceCell(int $item_id,$price,$item_name,$icon,int $grade,$time='',$isby='',$iscolor = false,$amount='')
 {
 	if(!empty($time))
 		$time = date('d.m.Y',strtotime($time));
@@ -752,14 +752,8 @@ function PriceCell($item_id,$price,$item_name,$icon,$grade,$time='',$isby='',$is
 		<div class="price_row">
 
             <?php
-            Cubik($item_id,$icon,$grade,$item_name,$amount);
-            /*
-			<div class="itim" id="itim_<?php echo $item_id;?>" style="background-image: url('img/icons/50/<?php echo $icon;?>.png')">
-				<div class="grade" class="grade" data-tooltip="<?php echo $item_name?>" style="background-image: url(/img/grade/icon_grade<?php echo $grade?>.png)">
-					<div class="PrOk" id="PrOk_<?php echo $item_id;?>"></div>
-				</div>
-			</div>
-            */
+            $Cubik = new Cubik($item_id,$icon,$grade,$item_name,$amount);
+            $Cubik->print();
             ?>
 			<div class="price_pharams">
 				<div><span class="item_name" id="itname_<?php echo $item_name?>"><?php echo $item_name?></span>
@@ -787,15 +781,9 @@ function PriceCell2($item_id,$price,$item_name,$icon,$grade,$time='',$amount='')
 		<div class="price_row">
 
             <?php
-            /*
-			<div class="itim" id="itim_<?php echo $item_id;?>" style="background-image: url('img/icons/50/<?php echo $icon;?>.png')">
-				<div class="grade" class="grade" data-tooltip="<?php echo $item_name?>" style="background-image: url(/img/grade/icon_grade<?php echo $grade?>.png)">
-					<div class="PrOk" id="PrOk_<?php echo $item_id;?>"></div>
-				</div>
-			</div>
-            */
 
-            Cubik($item_id,$icon,$grade,$item_name,$amount);
+            $Cubik = new Cubik($item_id,$icon,$grade,$item_name,$amount);
+            $Cubik->print();
 			?>
 			<div class="price_pharams">
 				<div><span class="item_name"><?php echo $item_name;?></span>
@@ -1294,7 +1282,8 @@ function MaCubiki($qwe,$u_amount,$craft_price)
 
 
 
-        Cubik($q->item_id,$q->icon,$q->mat_grade,$tooltip,$mater_need);
+        $Cubik = new Cubik($q->item_id,$q->icon,$q->mat_grade,$tooltip,$mater_need);
+        $Cubik->print();
     }
     return $money;
 }
@@ -1335,11 +1324,12 @@ function UserPriceList($qwe)
             $time = '01-01-0000';
 
         $amount = $q->mater_need ?? '';
+        $basic_grade = $q->basic_grade ?? 1;
 
         if($q->is_trade_npc and $q->valut_id == 500)
-            PriceCell2($q->item_id,$q->price_buy,$q->item_name,$q->icon,$q->basic_grade,'',$amount);
+            PriceCell2($q->item_id,$q->price_buy,$q->item_name,$q->icon,$basic_grade,'',$amount);
         else
-            PriceCell($q->item_id,$auc_price,$q->item_name,$q->icon,$q->basic_grade,$time,$isby,$iscolor,$amount);
+            PriceCell($q->item_id,$auc_price,$q->item_name,$q->icon,$basic_grade,$time,$isby,$iscolor,$amount);
 
 
         if ($q->craft_price)

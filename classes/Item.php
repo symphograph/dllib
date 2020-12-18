@@ -76,7 +76,8 @@ class Item
         $this->price_sale = $q->price_sale ?? 0;
         $this->category = $q->category ?? '';
         $this->name = htmlspecialchars($q->item_name);
-        $this->description = htmlspecialchars($q->description);
+        $this->description = $q->description;
+        //$this->description = nl2br(htmlspecialchars($q->description));
         $this->on_off = $q->on_off ?? 1;
         $this->personal = $q->personal;
         $this->craftable = $q->craftable;
