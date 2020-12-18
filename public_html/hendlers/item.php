@@ -329,7 +329,13 @@ function DwnCraftList($Item)
 		</div>
 		<div class="craftinfo">
 			<div>
-				<div class="crresults"><div><img src="img/profs/<?php echo str_replace(" ","_",$Prof->name)?>.png" width="20px" height="20px"><?php echo $Prof->name?></div></div>
+				<div class="crresults">
+                    <div>
+                        <img src="img/profs/<?php echo str_replace(" ","_",$Prof->name)?>.png" width="20px" height="20px"><?php echo $Prof->name?>
+                    </div>
+                    <div><?php if($Craft->prof_need > 1000) echo round($Craft->prof_need/1000).'к'?></div>
+
+				</div><hr>
 			</div>
 			<div>
 				<div class="crresults"><div><?php echo $Craft->dood_name?></div></div>

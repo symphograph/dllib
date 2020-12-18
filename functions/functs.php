@@ -168,8 +168,8 @@ function RepMedian($valut_id,$user_id = false)
 		AND `items`.`personal` != 1
 		AND `price_buy` < '$max'
 	ORDER BY `item_id`, `isuser`");
-	if(!$qwe or $qwe->num_rows == 0)
-	return false;
+	if(!$qwe or !$qwe->num_rows)
+	    return false;
 	$last = 0;
 	foreach($qwe as $r)
 	{
