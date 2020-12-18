@@ -229,7 +229,7 @@ class Craft
 
     public function GroupCraft()
     {
-
+        //TODO это надо переписать к едреней фене
         global $lost, $user_id;
         //extract($arritog);
         $qwe = qwe("

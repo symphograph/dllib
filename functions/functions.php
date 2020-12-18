@@ -1086,23 +1086,6 @@ function Folows($user_id)
     return $follows;
 }
 
-function ColorPrice($auc_arr)
-{
-    global $user_id, $folows;
-    if(!isset($folows))
-        $folows = Folows($user_id);
-    $auc_price = $auc_arr['auc_price'] ?? false;
-    if(!$auc_price) return 1;
-
-    if($user_id == $auc_arr['user_id'])
-        return 3;
-
-    if(in_array($auc_arr['user_id'],$folows))
-        return 2;
-
-    return 1;
-}
-
 function modes($mode)
 {
     $chks = ['','checked'];
@@ -1135,38 +1118,6 @@ function modes($mode)
     </form>
     <hr>
     <?php
-}
-
-/**
- * возвращает массив итемов, крафт которых может быть изменён при изменении цены исходного итема
- */
-function DependentItems($item_id, $arr=[],$i=0)
-{
-    $i = intval($i);
-    $i++;
-
-    $qwe = qwe("
-    Select result_item_id, ismat 
-    from craft_materials 
-    inner join items on craft_materials.result_item_id = items.item_id
-    and craft_materials.item_id = '$item_id' 
-    and items.on_off
-    group by result_item_id
-    ");
-    if(!$qwe or $qwe->num_rows == 0)
-        return [];
-
-    foreach ($qwe as $q)
-    {
-        $id = $q['result_item_id'];
-        $ismat = $q['ismat'];
-        $arr[] = $id;
-        if($ismat)
-            $arr = DependentItems($id, $arr,$i);
-    }
-    $arr = array_unique($arr);
-    sort($arr);
-    return $arr;
 }
 
 function SelectZone($zone_start=0,$zone_selected = 0)
@@ -1270,11 +1221,6 @@ function MaCubiki($qwe,$u_amount,$craft_price)
     return $money;
 }
 
-function matTooltop()
-{
-
-}
-
 function UserPriceList($qwe)
 {
 
@@ -1282,7 +1228,7 @@ function UserPriceList($qwe)
     foreach($qwe as $q)
     {
         $q = (object) $q;
-        $auc_price = $time = 0;
+        $time = 0;
         ?><div class="price_object"><?php
 
         $isby = '';
@@ -1292,14 +1238,12 @@ function UserPriceList($qwe)
 
 
 
-        $iscolor = false;
+
         //var_dump($item_id);
         $pr_arr = PriceMode($q->item_id) ?? false;
         if($pr_arr)
         {
-            $auc_price = $pr_arr['auc_price'];
             $time = $pr_arr['time'];
-            $iscolor = ColorPrice($pr_arr);
         }
 
         if(!$time)
