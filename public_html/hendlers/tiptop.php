@@ -7,8 +7,8 @@ if(!isset($cfg)) {
     $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
     require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 }
-echo 'Я тут кое-что переделываю. Некоторые функции могут быть временно недоступны. Скоро всё заработает.';
-die();
+//echo 'Я тут кое-что переделываю. Некоторые функции могут быть временно недоступны. Скоро всё заработает.';
+//die();
 $qwe = qwe("
 SELECT tip_id FROM tiptops  
 ");
