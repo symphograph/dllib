@@ -37,6 +37,7 @@ class Item
     public array $potentialMatsAndCrafts = [];
     public $orSum;
     public array $allMats = [];
+    public object $priceData;
 
 
     public function getFromDB(int $item_id)
@@ -528,22 +529,17 @@ class Item
                 $Mat = new Mat;
                 $Mat->byQwe($q);
                 $sum = $this->allMats[$Mat->id]*$u_amount*$result_amount;
-                $Price = new Price;
-                $Price->origin($Mat->id,$this->allMats[$Mat->id],$Mat->is_trade_npc,$Mat->valut_id);
-                $matprice = $Price->price;
-                $matprice = esyprice($matprice);
+                $Mat->MatPrice();
+
+
+                $matprice = esyprice($Mat->price);
                 $matprice = htmlspecialchars($matprice);
                 if($Mat->id != 500)
-                    $tooltip = $Mat->name.'<br>'.round($sum,4).' шт по<br>'.$matprice.$Price->how;
+                    $tooltip = $Mat->name.'<br>'.round($sum,4).' шт по<br>'.$matprice.$Mat->priceData->how;
                 else
                     $tooltip = $Mat->name.'<br>'.htmlspecialchars(esyprice(round($sum)));
-                ?>
-                <div class="itim" id="itim_<?php echo $Mat->id?>" style="background-image: url(/img/icons/50/<?php echo $Mat->icon?>.png)">
-                    <div class="grade" data-tooltip="<?php echo $tooltip?>" style="background-image: url(/img/grade/icon_grade<?php echo $Mat->basic_grade?>.png)">
-                        <div class="matneed"><?php echo round($sum,2)?></div>
-                    </div>
-                </div>
-                <?php
+
+                Cubik($Mat->id,$Mat->icon,$Mat->basic_grade,$tooltip, round($sum,2));
             }
             ?>
             </div>

@@ -154,7 +154,7 @@ class Craft
     public function rescost($user_id) : array
     {
 
-        $groupcraft = self::GroupCraft($this);
+        $groupcraft = self::GroupCraft();
         if($groupcraft)
         {
             $this->craft_price = round($groupcraft / $this->result_amount);
@@ -227,7 +227,7 @@ class Craft
         return [$crftprice,$sumspm];
     }
 
-    public function GroupCraft(object $Craft)
+    public function GroupCraft()
     {
 
         global $lost, $user_id;
@@ -236,7 +236,7 @@ class Craft
         SELECT `item_name`, `amount`, sum(`amount`) as `sum`
         FROM `craft_groups` 
         WHERE `group_id` = 
-        (SELECT `group_id` FROM `craft_groups` WHERE `craft_id` = '$Craft->id')
+        (SELECT `group_id` FROM `craft_groups` WHERE `craft_id` = '$this->id')
         ");
         if(!$qwe or !$qwe->num_rows)
             return false;
@@ -245,7 +245,7 @@ class Craft
         $am_sum = $gcr['sum'];
         if(!$am_sum ) return false;
 
-        $itog = $Craft->result_amount;
+        $itog = $this->result_amount;
         $cr_part = $itog/$am_sum;
         $itog = $itog/$cr_part;
 
@@ -261,7 +261,7 @@ class Craft
         FROM `craft_materials`
         INNER JOIN `items` 
         ON `craft_materials`.`item_id` = `items`.`item_id`
-        AND `craft_materials`.`craft_id` = '$Craft->id' 
+        AND `craft_materials`.`craft_id` = '$this->id' 
         AND `craft_materials`.`mater_need` > 0
         LEFT JOIN `user_crafts` 
         ON `items`.`item_id` = `user_crafts`.`item_id`
@@ -312,7 +312,7 @@ class Craft
         }
         //echo '<p>Итм-ов: '.$or.' по '.$orcost.'</p>';
 
-        $total = $sum + $Craft->labor_need2 * $Craft->orcost;
+        $total = $sum + $this->labor_need2 * $this->orcost;
 
         //echo $total.'<br>';
         return $total;

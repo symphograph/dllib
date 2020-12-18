@@ -1254,9 +1254,11 @@ function MaCubiki($qwe,$u_amount,$craft_price)
             $money = $q->mater_need;
             continue;
         }
-
-        if($q->mater_need < 0 and in_array($q->item_id,$flowers))
+        $how = 'Цена пользователя';
+        if($q->mater_need < 0 and in_array($q->item_id,$flowers)){
             $matprice =	$craft_price;
+            $how = 'Себестоимость (крафт)';
+        }
         else
             $matprice = UserMatPrice($q->item_id,$user_id,($q->mater_need < 0));
 
@@ -1268,7 +1270,7 @@ function MaCubiki($qwe,$u_amount,$craft_price)
 
         $mater_need = round($q->mater_need*$u_amount,2);
 
-        $how = 'Цена пользователя';
+
         if (UserCraftPrice($q->item_id,$user_id) and $q->mater_need > 0)
             $how = 'Себестоимость (крафт)';
         if($q->is_trade_npc and $q->valut_id == 500)

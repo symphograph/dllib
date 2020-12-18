@@ -17,7 +17,7 @@ class Mat extends Item
 
     public function byRcost($q)
     {
-        global $trash, $lost, $User;
+        global $lost, $User;
         $q = (object) $q;
         if($q->mater_need == 0)
             return false;
@@ -31,38 +31,11 @@ class Mat extends Item
         $this->is_trade_npc = $q->is_trade_npc;
         $this->price_buy = $q->price_buy;
         $this->craftable = $q->craftable;
+        $this->is_buyable = ($q->isbest == 3);
 
 
-        if($this->mater_need < 0) {
-            $trash = 1;
-            if(self::MatPrice())
-                return true;
-
-            $lost[] = $this->id;
-            return false;
-        }
-
-        if($q->isbest == 3) {
-            $Price = new Price();
-            $Price->byMode($this->id);
-            if($Price->price){
-                $this->price = $Price->price;
-                return true;
-            }
-
-            $lost[] = $this->id;
-            return false;
-        }
-
-
-        if(!$q->craftable) {
-
-            if(self::MatPrice())
-                return true;
-
-            $lost[] = $this->id;
-            return false;
-        }
+        if (self::MatPrice())
+            return true;
 
         if($q->buffer_price) {
             $this->price = $q->buffer_price;
@@ -70,25 +43,43 @@ class Mat extends Item
             return true;
         }
 
-        //$lost[] = $this->id;
+
+        $lost[] = $this->id;
         return false;
     }
 
     public function MatPrice() : bool
     {
+        $Price = new Price();
+        $Price->item_id = $this->id;
 
         if($this->id == 500){
             $this->price = 1;
+            $Price->price = 1;
+            $Price->how = 'Константа';
+            $this->priceData = $Price;
             return true;
         }
 
-        $Price = new Price();
+        if($this->is_buyable or $this->mater_need < 0){
+            $Price->byMode($this->id);
+            if($Price->price) {
+                $this->price = $Price->price;
+                $this->priceData = $Price;
+                return true;
+            }
+            return false;
+        }
+
 
         if($this->is_trade_npc) {
 
             if($this->valut_id == 500){
 
                 $this->price = $this->price_buy;
+                $Price->price = $this->price_buy;
+                $Price->how = 'Куплено у NPC';
+                $this->priceData = $Price;
                 return true;
             }
 
@@ -96,6 +87,7 @@ class Mat extends Item
             if($Price->price){
 
                 $this->price = $Price->price;
+                $this->priceData = $Price;
                 return true;
             }
 
@@ -103,16 +95,20 @@ class Mat extends Item
             if($Price->price){
 
                 $this->price = $Price->price * $this->price_buy;
+                $Price->price = $this->price;
+                $Price->how = 'Куплено у NPC';
+                $this->priceData = $Price;
                 return true;
             }
             return false;
         }
 
-        if($this->craftable and $this->mater_need > 0) {
+        if($this->craftable) {
 
             $Price->byCraft($this->id);
             if($Price->price) {
                 $this->price = $Price->price;
+                $this->priceData = $Price;
                 return true;
             }
         }
@@ -120,14 +116,11 @@ class Mat extends Item
         $Price->byMode($this->id);
         if($Price->price) {
             $this->price = $Price->price;
+            $this->priceData = $Price;
             return true;
         }
 
         return false;
     }
 
-    public function byCraft()
-    {
-        self::getFromDB($this->id);
-    }
 }
