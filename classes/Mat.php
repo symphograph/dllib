@@ -10,6 +10,7 @@ class Mat extends Item
     public int $price = 0;
     public int $spm2 = 0;
     public bool $is_buyable = false;
+    public int $isbest = 0;
 
 
 
@@ -22,7 +23,7 @@ class Mat extends Item
 
         $this->id = $q->id;
         $this->mater_need = $q->mater_need;
-        $this->need_grade = $q->mat_grade;
+        $this->need_grade = $q->mat_grade ?? 1;
         $this->name = $q->item_name ?? '';
         $this->valut_id = $q->valut_id ?? 500;
         $this->spm2 = intval($q->spm2);
@@ -49,6 +50,7 @@ class Mat extends Item
     public function MatPrice() : bool
     {
         $Price = new Price();
+        $this->priceData = $Price;
         $Price->item_id = $this->id;
 
         if($this->id == 500){
@@ -123,7 +125,7 @@ class Mat extends Item
 
     public function ToolTip($sum)
     {
-        $matprice = esyprice($this->price);
+        $matprice = esyprice($this->priceData->price);
         $matprice = htmlspecialchars($matprice);
 
         if($this->id != 500)

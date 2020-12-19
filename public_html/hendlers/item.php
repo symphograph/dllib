@@ -115,8 +115,10 @@ if($Item->craftable)
         qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
     }
 
+    $Item->getCrafts();
+	if(count($Item->crafts))
+	    DwnCraftList($Item);
 
-	DwnCraftList($Item);
 	?></div><?php
 
 
@@ -422,59 +424,12 @@ function DwnCraftList($Item)
 				?>
 			</div>
 		</div>
+
 		<div class="crftarea">
-		
+            <?php $Craft->matArea($u_amount,$Item);?>
+		</div>
+
 		<?php
-	 	$dtitle = ''; 
-		$qwe2 = qwe("
-		SELECT 
-		craft_materials.item_id,
-		craft_materials.mater_need,
-		craft_materials.mat_grade,
-		items.item_name,
-		items.icon,
-		items.craftable,
-		items.basic_grade,
-		items.is_trade_npc,
-        items.valut_id
-		FROM `craft_materials`
-		INNER JOIN items ON items.item_id = craft_materials.item_id
-		AND craft_materials.craft_id = '$Craft->id'
-		");
-		if($qwe2->num_rows)
-		{
-			//var_dump($isbest);
-			if($isbest > 1)
-			{
-				//$craft_id = 0;
-				$dtitle = 'Сбросить';
-			}else
-			{
-				if($qwe->num_rows>1 and (!$isbest))
-				$dtitle = 'Предпочитать этот';
-			}
-
-			?>
-			<div class="main_itim" id="cr_<?php echo $Craft->id?>" name="<?php echo $item_id?>" style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
-				<div class="grade" data-tooltip="<?php echo $dtitle?>" style="background-image: url(/img/grade/icon_grade<?php echo $Item->basic_grade?>.png)">
-					<div class="matneed"><?php echo $Craft->result_amount*$u_amount?></div>
-				</div>
-			</div>
-			<div class="matarea">
-			<div class="matrow">
-			<?php
-
-			$money = MaCubiki($qwe2,$u_amount,$Craft->craft_price);
-			?></div><?php
-			if($money)
-			{
-				?><div class="crmoney"><?php echo esyprice($money);?></div><?php
-			}
-		?></div><?php
-		}	
-		else
-			echo 'Не нашел материалы';
-		?></div><?php
 	 	if($cfg->myip)
 		{
 			?><a href="edit/recedit.php?query=<?php echo $Craft->id?>" target="_blank">Править</a><?php

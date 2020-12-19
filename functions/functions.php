@@ -1001,23 +1001,6 @@ AND `user_servers`.`user_id` = '$user_id'
 	return $qwe['server_group'];
 }
 
-function UserCraftStatus($user_id,$item_id)
-{
-	$qwe = qwe("
-	SELECT * FROM `user_crafts` 
-	WHERE `user_id` = '$user_id' 
-	AND `item_id` = '$item_id' 
-	AND `isbest` > 0
-	LIMIT 1
-	");
-	if(!$qwe or $qwe->num_rows == 0) 
-			return false;
-
-	$qwe = mysqli_fetch_assoc($qwe);
-
-		return $qwe['isbest'];	
-}
-
 function BestCraftForItem($user_id,$item_id)
 {
 	$qwe = qwe("

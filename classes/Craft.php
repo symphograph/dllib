@@ -84,6 +84,8 @@ class Craft
         SELECT craft_materials.* , 
                i.craftable,
                i.item_name,
+               i.icon,
+               i.basic_grade,
                item_categories.item_group,
                uc.isbest
         FROM craft_materials
@@ -91,7 +93,7 @@ class Craft
         LEFT JOIN `item_categories` ON i.`categ_id` = `item_categories`.`id`
         LEFT JOIN user_crafts uc on craft_materials.item_id = uc.item_id 
                                         AND uc.user_id = '$User->id'
-                                        AND uc.isbest = 3
+                                        AND uc.isbest > 0
         WHERE craft_materials.craft_id = '$this->id'
         ");
         foreach ($qwe as $q)
@@ -100,11 +102,15 @@ class Craft
             $mat = new Mat();
             $mat->id = $q->item_id;
             $mat->mater_need = $q->mater_need;
-            $mat->need_grade = $q->mat_grade ?? 1;
+            $mat->need_grade = intval($q->mat_grade);
+            if(!$mat->need_grade)
+                $mat->need_grade = $q->basic_grade ?? 1;
             $mat->name = $q->item_name;
             $mat->craftId = $this->id;
             $mat->craftable = $q->craftable;
             $mat->item_group = $q->item_group ?? 0;
+            $mat->icon = $q->icon ?? '';
+            $mat->isbest = $q->isbest ?? 0;
             if($q->isbest == 3){
                 $mat->is_buyable = true;
             }
@@ -291,9 +297,85 @@ class Craft
 
         $crftprice = $sum + ($this->labor_need2 * $this->orcost);
         $crftprice = round($crftprice / $am_sum);
-        echo '<br>'.$this->result_item_name.' '.$crftprice;
+        //echo '<br>'.$this->result_item_name.' '.$crftprice;
         $this->craft_price = $crftprice;
         $sumspm = round($sumspm / $this->result_amount);
         return [$crftprice,$sumspm];
+    }
+
+    public function MaCubiki(array $mats, int $u_amount): bool
+    {
+
+        $money = 0;
+        $flowers = [2178, 3564, 3622,3627,3628,3659,3667,3671,3680,3684,3685,3711,3713,8009,14629,14630,14631,16268,16273,16290];
+        foreach($mats as $Mat)
+        {
+
+           if($Mat->id == 500){
+               $money = $Mat->mater_need;
+               continue;
+           }
+
+            $Mat->MatPrice();
+            if(in_array($Mat->id,$flowers) and $Mat->mater_need < 0){
+                $Mat->priceData->price = $this->craft_price;
+                $Mat->priceData->autor = 1;
+                $Mat->priceData->how = 'Себестоимость (крафт)';
+            }
+            $mater_need = $Mat->mater_need * $u_amount;
+            $tooltip = $Mat->ToolTip($mater_need);
+
+
+            $Cubik = new Cubik($Mat->id,$Mat->icon,$Mat->need_grade,$tooltip,$mater_need);
+            $Cubik->print();
+        }
+
+        if($money){
+            ?><div class="crmoney"><?php echo esyprice($money);?></div><?php
+        }
+
+        return true;
+    }
+
+    public function matArea(int $u_amount,$Item): bool
+    {
+        $mats = $this->getMats();
+        if(!$mats or !count($mats)){
+            echo 'Материалы не найдены';
+            return false;
+        }
+
+        ?>
+        <div class="matarea">
+            <div class="matrow">
+
+                <?php
+                $dtitle = '';
+                if($this->isbest > 1){
+                    $dtitle = 'Сбросить';
+
+                }elseif(count($Item->crafts) > 1 and !$this->isbest){
+                    $dtitle = 'Предпочитать этот';
+                }
+                ?>
+
+
+                <div class="main_itim"
+                     id="cr_<?php echo $this->id?>"
+                     name="<?php echo $this->result_item_id?>"
+                     style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
+                    <div class="grade"
+                         data-tooltip="<?php echo $dtitle?>"
+                         style="background-image: url(/img/grade/icon_grade<?php echo $Item->basic_grade?>.png)">
+                        <div class="matneed"><?php echo $this->result_amount*$u_amount?></div>
+                    </div>
+                </div>
+
+                <?php self::MaCubiki($mats,$u_amount); ?>
+
+            </div>
+        </div>
+        <?php
+        return true;
     }
 }
