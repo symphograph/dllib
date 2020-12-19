@@ -76,7 +76,7 @@ class Item
         $this->price_sale = $q->price_sale ?? 0;
         $this->category = $q->category ?? '';
         $this->name = htmlspecialchars($q->item_name);
-        $this->description = $q->description;
+        $this->description = $q->description ?? '';
         //$this->description = nl2br(htmlspecialchars($q->description));
         $this->on_off = $q->on_off ?? 1;
         $this->personal = $q->personal;
@@ -92,7 +92,7 @@ class Item
         $this->icon = $q->icon;
         $this->md5_icon = $q->md5_icon;
         $this->valut_name = $q->valut_name ?? '';
-        $this->sgr_id = $q->sgr_id;
+        $this->sgr_id = $q->sgr_id ?? 0;
         $this->is_trade_npc = $q->is_trade_npc;
         $this->ispack = ($this->categ_id == 133);
 

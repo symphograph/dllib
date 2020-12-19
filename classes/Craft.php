@@ -82,10 +82,7 @@ class Craft
         $mats = [];
         $qwe = qwe("
         SELECT craft_materials.* , 
-               i.craftable,
-               i.item_name,
-               i.icon,
-               i.basic_grade,
+               i.*,
                item_categories.item_group,
                uc.isbest
         FROM craft_materials
@@ -100,6 +97,7 @@ class Craft
         {
             $q = (object) $q;
             $mat = new Mat();
+            $mat->byQwe($q);
             $mat->id = $q->item_id;
             $mat->mater_need = $q->mater_need;
             $mat->need_grade = intval($q->mat_grade);
@@ -111,6 +109,8 @@ class Craft
             $mat->item_group = $q->item_group ?? 0;
             $mat->icon = $q->icon ?? '';
             $mat->isbest = $q->isbest ?? 0;
+            $mat->is_trade_npc = $q->is_trade_npc ?? 0;
+            $mat->valut_id = $q->valut_id ?? 500;
             if($q->isbest == 3){
                 $mat->is_buyable = true;
             }
