@@ -103,6 +103,8 @@ class Craft
             $mat->need_grade = intval($q->mat_grade);
             if(!$mat->need_grade)
                 $mat->need_grade = $q->basic_grade ?? 1;
+            if($q->basic_grade > $mat->need_grade)
+                $mat->need_grade = $q->basic_grade;
             $mat->name = $q->item_name;
             $mat->craftId = $this->id;
             $mat->craftable = $q->craftable;
