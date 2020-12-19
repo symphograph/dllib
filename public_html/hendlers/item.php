@@ -295,8 +295,10 @@ function DwnCraftList($Item)
 	 	if($i == 2)
 			echo '<br><details><summary>Другие рецепты</summary>';
 			
-		$auc_price = PriceMode($item_id)['auc_price'] ?? false;
-	 	//var_dump($auc_price);
+		$Price = new Price();
+        $Price->byMode($item_id);
+        $auc_price = $Price->price;
+
 	 	if($auc_price)
 		{
 			$profit = round(($auc_price*0.9 - $Craft->craft_price),0);

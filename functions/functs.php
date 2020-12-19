@@ -293,7 +293,9 @@ function MonetisationList($val_link, $valut_id, $user_id)
 		$price_buy = $p['price_buy'];
 		$item_id = $p['item_id'];
 		$item_name = $p['item_name'];
-		$auc_price = PriceMode($item_id)['auc_price'] ?? false;
+		$Price = new Price();
+		$Price->byMode($item_id);
+		$auc_price = $Price->price;
 		$basic_grade = $p['basic_grade'];
 		if(!$auc_price) continue;
 
@@ -309,7 +311,6 @@ function MonetisationList($val_link, $valut_id, $user_id)
 		$arr = explode('_,_',$k);
 		$item_id = $arr[0];
 		$item_name = $arr[1];
-		$price_buy = $arr[2];
 		$icon = $icons[$item_id];
 		$price = $v;
 
@@ -324,7 +325,7 @@ function MonetisationList($val_link, $valut_id, $user_id)
 		</div>
 		</div><?php
 	}
-	//printr($formedian);
+
 	$median = median($formedian);
 	$echodata = ob_get_contents();
 	ob_end_clean();

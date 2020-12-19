@@ -504,24 +504,6 @@ function PriceValidator($array=[])
 	return $setprise;
 }
 
-function UserCraftPrice(int $item_id, int $user_id)
-{
-	$qwe = qwe("
-	SELECT `craft_price` FROM `user_crafts` 
-	WHERE `user_id` = '$user_id' 
-	AND `item_id` = '$item_id'
-	AND `isbest` in (1,2)
-	ORDER BY `isbest` DESC
-	LIMIT 1
-	");
-	if(!$qwe or !$qwe->num_rows)
-	    return false;
-
-	$q = mysqli_fetch_object($qwe);
-
-	return $q->craft_price;
-}
-
 function ResultItemId($craft_id)
 {
 	$craft_id = intval($craft_id);
@@ -531,48 +513,6 @@ function ResultItemId($craft_id)
 	");
 	foreach($qwe as $q)
 		return $q['result_item_id'];
-}
-
-function UserMatPrice(int $item_id,int $user_id,$craftignor = false)
-{
-    if($item_id == 500)
-        return 1;
-
-	$qwe = qwe("
-	SELECT * FROM `items` 
-	WHERE `item_id` = '$item_id'
-	");
-	if(!$qwe or !$qwe->num_rows)
-	    return false;
-
-	$q = mysqli_fetch_object($qwe);
-
-
-
-	if($q->is_trade_npc)
-	{
-		$valut_id = $q->valut_id ?? 500;
-		if($valut_id == 500)
-			return $q->price_buy;
-		
-		$matprice = PriceMode($item_id)['auc_price'] ?? false;
-		if($matprice)
-			return $matprice;
-
-		$matprice = PriceMode($valut_id)['auc_price'] ?? false;
-		if($matprice)
-			return $matprice * $q->price_buy;
-	}
-	
-	if($q->craftable and (!$craftignor))
-    {
-        $matprice = UserCraftPrice($item_id,$user_id);
-        if($matprice)
-            return $matprice;
-    }
-
-
-	return PriceMode($item_id)['auc_price'] ?? false;
 }
 
 function ItemAny($item_ids,$colname)
@@ -792,167 +732,6 @@ function PriceCell2($item_id,$price,$item_name,$icon,$grade,$time='',$amount='')
 	<?php
 }
 
-function PriceSolo($item_id,$user_id)
-{
-	//Хотим цены только от себя.
-	global $server_group;
-	if(!isset($server_group))
-		$server_group = ServerGroup($user_id);
-	$qwe = qwe("
-	SELECT `auc_price`,`time` FROM `prices`
-	WHERE `user_id` = '$user_id' 
-	AND `item_id` = '$item_id'
-	AND `server_group` = '$server_group'
-	");
-	if(!$qwe or $qwe->num_rows == 0)
-    {
-        if(!IsValuta($item_id) and in_array($item_id,IntimItems()))
-        {
-            $arr =  ItemAny($item_id,'price_sale');
-            if($arr)
-            {
-                $price = array_shift($arr);
-                $price = intval($price);
-                if($price)
-                    return ['auc_price'=>$price,'user_id'=>1,'time'=>'2020-02-22'];
-            }
-        }
-        return false;
-    }
-
-	$qwe = mysqli_fetch_assoc($qwe);
-	//var_dump($qwe['auc_price']);
-	return ['auc_price' => $qwe['auc_price'],'user_id'=>$user_id,'time'=>$qwe['time']];
-}
-
-function PriceWithFrends($item_id,$user_id)
-{
-	//Хотим цены только от друзей или себя.
-	//Друзей предпочитаем, если цена новее.
-	global $server_group;
-	if(!isset($server_group))
-		$server_group = ServerGroup($user_id);
-	//Выясняем друзей.
-	$qwe = qwe("
-	SELECT `folow_id` FROM `folows`
-	WHERE `user_id` = '$user_id'
-	");
-	if(!$qwe or $qwe->num_rows == 0)
-		return PriceSolo($item_id,$user_id);
-	
-	foreach($qwe as $q)
-	{
-		$folows[] = $q['folow_id'];
-	}
-	//Добавляем себя в массив
-	$folows[] = $user_id;
-
-	$folows = implode(',',$folows);
-	//var_dump($folows);
-	$qwe2 = qwe("
-	SELECT `auc_price`, `user_id`,`time`
-	FROM `prices`
-	WHERE `user_id` in (".$folows.")
-	AND `item_id` = '$item_id'
-	AND `server_group` = '$server_group'
-	ORDER BY `time` DESC 
-	LIMIT 1
-	");
-	if($qwe2 and $qwe2->num_rows > 0)
-	{
-		$qwe2 = mysqli_fetch_assoc($qwe2);
-		return ['auc_price'=>$qwe2['auc_price'], 'user_id'=>$qwe2['user_id'],'time'=>$qwe2['time']];
-	}
-	
-	
-	return false;
-}
-
-function PriceMode1($item_id,$user_id)
-{
-	if(in_array($item_id,IntimItems()))
-	{
-		$price = PriceSolo($item_id,$user_id);
-		if($price)
-			return $price;
-	}
-
-		
-	$price = PriceWithFrends($item_id,$user_id);
-	
-	if($price)
-		return $price;
-	
-	$price = PriceFromGood($item_id,$user_id);
-	if($price)
-		return $price;
-	return PriceFromAny($item_id,$user_id);
-}
-
-function PriceFromAny($item_id,$user_id)
-{
-	//ищем у кого угодно. Лишь бы найти.
-	global $server_group;
-	if(!isset($server_group))
-		$server_group = ServerGroup($user_id);
-	
-	$qwe = qwe("
-	SELECT `auc_price`, `user_id`,`time` FROM `prices` 
-	WHERE `item_id` = '$item_id'
-	AND `server_group` = '$server_group'
-	ORDER BY `time` DESC 
-	LIMIT 1
-	");
-	if(!$qwe or $qwe->num_rows == 0)
-		return false;
-	
-	$qwe = mysqli_fetch_assoc($qwe);
-	
-		return ['auc_price'=>$qwe['auc_price'],'user_id'=>$qwe['user_id'],'time'=>$qwe['time']];
-}
-
-function PriceFromGood($item_id,$user_id)
-{
-	//ищем у хороших людей.
-	global $server_group;
-	if(!isset($server_group))
-		$server_group = ServerGroup($user_id);
-	
-	$qwe = qwe("
-	SELECT 
-	`prices`.`auc_price`, 
-	`prices`.`user_id`,
-	`prices`.`time` 
-	FROM `prices`
-	INNER JOIN folows 
-	ON (`prices`.`user_id` = folows.folow_id AND folows.user_id = 893) 
-	OR (`prices`.`user_id` = 893 AND folows.user_id = `prices`.`user_id`)
-	WHERE `item_id` = '$item_id'
-	AND `server_group` = '$server_group'
-	ORDER BY `time` DESC
-	LIMIT 1
-	");
-	if(!$qwe or $qwe->num_rows == 0)
-		return false;
-	
-	$qwe = mysqli_fetch_assoc($qwe);
-	
-		return ['auc_price'=>$qwe['auc_price'],'user_id'=>$qwe['user_id'],'time'=>$qwe['time']];
-}
-
-function PriceMode2($item_id,$user_id)
-{
-	
-	if(in_array($item_id,IntimItems()))
-	{
-		$arr = PriceSolo($item_id,$user_id);
-		if($arr)
-			return $arr;
-	}
-		
-	return PriceWithFrends($item_id,$user_id);
-}
-
 function IsValuta(int $item_id) : bool
 {
     $qwe = qwe("SELECT * FROM valutas WHERE valut_id = '$item_id'");
@@ -960,45 +739,6 @@ function IsValuta(int $item_id) : bool
         return true;
 
     return false;
-}
-
-function PriceMode($item_id)
-{
-	global $User;
-	if(!isset($User))
-	    die('Missed User');
-
-	
-	if($User->mode == 1)
-	{
-		//Максимально широко.
-		return PriceMode1($item_id,$User->id);
-	}
-	if($User->mode == 2)
-	{	
-		//В пределах друзей.
-		return PriceMode2($item_id,$User->id);
-	}
-	if($User->mode == 3)
-	{
-		//Только у себя.
-		return PriceSolo($item_id,$User->id);
-	}
-
-	die('Missed mode');
-}
-
-function ServerGroup($user_id)
-{
-	$qwe = qwe("
-	SELECT `server_group` FROM `user_servers`
-INNER JOIN `servers` ON `user_servers`.`server` = `servers`.`id`
-AND `user_servers`.`user_id` = '$user_id'
-	");
-	if(!$qwe or $qwe->num_rows == 0) 
-		return 2;
-	$qwe = mysqli_fetch_assoc($qwe);
-	return $qwe['server_group'];
 }
 
 function BestCraftForItem($user_id,$item_id)
@@ -1142,68 +882,6 @@ function SelectZone($zone_start=0,$zone_selected = 0)
     ?></select><?php
 }
 
-function MaCubiki($qwe,$u_amount,$craft_price)
-{
-    global $user_id;
-    $i = $money = 0;
-    $flowers = [2178, 3564, 3622,3627,3628,3659,3667,3671,3680,3684,3685,3711,3713,8009,14629,14630,14631,16268,16273,16290];
-
-    foreach($qwe as $q)
-    {$i++;
-        //extract($q);
-        $q = (object) $q;
-
-        if($q->item_id == 500)
-        {
-            $money = $q->mater_need;
-            continue;
-        }
-        $how = 'Цена пользователя';
-        if($q->mater_need < 0 and in_array($q->item_id,$flowers)){
-            $matprice =	$craft_price;
-            $how = 'Себестоимость (крафт)';
-        }
-        else
-            $matprice = UserMatPrice($q->item_id,$user_id,($q->mater_need < 0));
-
-
-
-        $matpricevalue = $matprice;
-        $matprice = esyprice($matprice);
-        $matprice = htmlspecialchars($matprice);
-
-        $mater_need = round($q->mater_need*$u_amount,2);
-
-
-        if (UserCraftPrice($q->item_id,$user_id) and $q->mater_need > 0)
-            $how = 'Себестоимость (крафт)';
-        if($q->is_trade_npc and $q->valut_id == 500)
-            $how = 'Куплено у NPC';
-
-        $how = '<span style="color: gray">' .$how.'</span>';
-        $how = htmlspecialchars($how);
-
-        if($matpricevalue)
-            $tooltip = $q->item_name.'<br>'.$mater_need.' шт по<br>'.$matprice.$how;
-        else
-            $tooltip = $q->item_name.'<br>'.$mater_need.' шт<br>Цена не найдена.';
-
-
-        if(!$q->basic_grade)
-            $q->basic_grade = 1;
-
-
-        if($q->mat_grade < 2 or !$q->mat_grade)
-            $q->mat_grade = $q->basic_grade;
-
-
-
-        $Cubik = new Cubik($q->item_id,$q->icon,$q->mat_grade,$tooltip,$mater_need);
-        $Cubik->print();
-    }
-    return $money;
-}
-
 function UserPriceList($qwe)
 {
 
@@ -1219,19 +897,6 @@ function UserPriceList($qwe)
         if($q->craftable)
             $isby = intval($q->isbest)+1;
 
-
-
-
-        //var_dump($item_id);
-        $pr_arr = PriceMode($q->item_id) ?? false;
-        if($pr_arr)
-        {
-            $time = $pr_arr['time'];
-        }
-
-        if(!$time)
-            $time = '01-01-0000';
-
         $amount = $q->mater_need ?? '';
         $basic_grade = $q->basic_grade ?? 1;
 
@@ -1242,7 +907,7 @@ function UserPriceList($qwe)
         if($q->is_trade_npc and $q->valut_id == 500)
             PriceCell2($q->item_id,$q->price_buy,$q->item_name,$q->icon,$basic_grade,'',$amount);
         else
-            PriceCell($q->item_id,$q->item_name,$q->icon,$basic_grade,$time,$isby,$amount);
+            PriceCell($q->item_id,$q->item_name,$q->icon,$basic_grade,$Price->time,$isby,$amount);
 
 
         if ($q->craft_price)

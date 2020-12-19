@@ -57,17 +57,14 @@ if(!count($types)>0)
 
 $typess = implode(',',$types);
 
-$coalprice = PriceMode(32103) ?? 0;
-if($coalprice)
-{
-	$coalprice = $coalprice['auc_price'];
-}
+$Price = new Price();
+$Price->byMode(32103);
+$coalprice = $Price->price;
 
-$shellprice = PriceMode(32106) ?? 0;
-if($shellprice)
-{
-	$shellprice = $shellprice['auc_price'];
-}
+$Price = new Price();
+$Price->byMode(32106);
+$shellprice = $Price->price;
+
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
 if(in_array(4,$types))

@@ -21,7 +21,9 @@ $user_id = $User->id;
 
 if($isbuy == 3)
 {
-	$auc_price = PriceMode($item_id)['auc_price'] ?? false;
+    $Price = new Price();
+    $Price->byMode($item_id);
+	$auc_price = $Price->price;
 	if(!$auc_price) die('no_price');
 	qwe("
 	UPDATE `user_crafts`
