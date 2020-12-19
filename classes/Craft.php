@@ -151,15 +151,13 @@ class Craft
         return true;
     }
 
-    public function rescost($user_id) : array
+    public function rescost() : array
     {
-
+        global $User;
         $groupcraft = self::GroupCraft();
         if($groupcraft)
-        {
-            $this->craft_price = round($groupcraft / $this->result_amount);
-            return [$this->craft_price,0];
-        }
+            return $groupcraft;
+
 
 
 
@@ -192,11 +190,11 @@ class Craft
         AND `items`.`on_off`
         LEFT JOIN `user_crafts` 
         ON `items`.`item_id` = `user_crafts`.`item_id`
-        AND `user_crafts`.`user_id` = '$user_id'
+        AND `user_crafts`.`user_id` = '$$User->id'
         AND `user_crafts`.`isbest` > 0
         LEFT JOIN craft_buffer2 
         ON `craft_materials`.`item_id` = craft_buffer2.item_id
-        AND craft_buffer2.user_id = '$user_id'
+        AND craft_buffer2.user_id = '$User->id'
         ORDER BY `id`");
         $sum = $sumspm = 0;
         foreach($qwe as $q)
@@ -204,15 +202,13 @@ class Craft
 
             $mat = new Mat;
             $mat->byRcost($q);
-            //printr($mat);
+
             $spm2 = $mat->spm2;
 
             $mater_need = $mat->mater_need;
             if($mater_need == 0) continue;
 
 
-            //echo $q['item_name'].'<br>';
-            //var_dump($q['buffer_price']);
             if($mater_need > 0)
                 $sumspm = $sumspm + $spm2;
 
@@ -229,9 +225,8 @@ class Craft
 
     public function GroupCraft()
     {
-        //TODO это надо переписать к едреней фене
-        global $lost, $user_id;
-        //extract($arritog);
+        global $User;
+
         $qwe = qwe("
         SELECT `item_name`, `amount`, sum(`amount`) as `sum`
         FROM `craft_groups` 
@@ -245,76 +240,60 @@ class Craft
         $am_sum = $gcr['sum'];
         if(!$am_sum ) return false;
 
-        $itog = $this->result_amount;
-        $cr_part = $itog/$am_sum;
-        $itog = $itog/$cr_part;
 
-
-        $qwe = qwe("
-        SELECT 
-        `craft_materials`.`item_id` as mater,
+        $qwe = qwe("SELECT 
+        `items`.`craftable`, 
         `craft_materials`.`mater_need`,
-        `items`.`craftable`,
+       `craft_materials`.`mat_grade`,
+        `items`.`item_name`, 
+        `items`.`price_buy`, 
+        `items`.`price_sale`, 
+        `items`.`price_type`,
+        `items`.valut_id,
+        `items`.`is_trade_npc`, 
+        `items`.`item_id` as `id`, 
+        `items`.`forup_grade`,
+        `items`.`categ_id`,
         `items`.`personal`,
         `user_crafts`.`isbest`,
-        `user_crafts`.`craft_price`
-        FROM `craft_materials`
-        INNER JOIN `items` 
-        ON `craft_materials`.`item_id` = `items`.`item_id`
-        AND `craft_materials`.`craft_id` = '$this->id' 
-        AND `craft_materials`.`mater_need` > 0
+        `user_crafts`.`craft_price`,
+        craft_buffer2.spm*craft_materials.mater_need as spm2,
+        craft_buffer2.craft_price as buffer_price
+        FROM 
+        `craft_materials`
+        INNER JOIN `items`
+        ON `items`.`item_id` = `craft_materials`.`item_id`
+        AND `craft_materials`.`craft_id` = '$this->id'
+        AND `items`.`ismat`
+        AND `items`.`on_off`
         LEFT JOIN `user_crafts` 
         ON `items`.`item_id` = `user_crafts`.`item_id`
-        AND `user_crafts`.`user_id` = '$user_id'
+        AND `user_crafts`.`user_id` = '$User->id'
         AND `user_crafts`.`isbest` > 0
+        LEFT JOIN craft_buffer2 
+        ON `craft_materials`.`item_id` = craft_buffer2.item_id
+        AND craft_buffer2.user_id = '$User->id'
+        ORDER BY `id`
         ");
-        $sum = 0; $price = 0;
-        foreach($qwe as $gcr)
+        $sum = $sumspm = 0;
+        foreach($qwe as $q)
         {
-            //extract($gcr);
-            $gcr = (object) $gcr;
 
-            if($gcr->isbest)
-            {
-                //echo $mater.' '.$mater_need.'ыапаывапыв</p>';
-                if($gcr->isbest == 3)
-                    $price = UserMatPrice($gcr->mater, $user_id,1);
-                else
-                    $price = $gcr->craft_price;
-
-
-                $matsum = $gcr->mater_need * $price;
-                $sum = $sum + $matsum;
+            if(!$q['mater_need'] or $q['mater_need'] < 0)
                 continue;
-            }
 
-            if(!$gcr->craftable)
-            {
+            $mat = new Mat;
+            $mat->byRcost($q);
 
-                $user_aucprice = UserMatPrice($gcr->mater,$user_id,1);
-                if($user_aucprice)
-                {
-                    $price = $user_aucprice;
-                    $matsum = $gcr->mater_need * $price;
-                    $sum = $sum + $matsum;
-                    continue;
-                }
-            }
-
-
-            if(!$price and !$gcr->craftable)
-                $lost[] = $gcr->mater;
-
-
-            $matsum = $gcr->mater_need * $price;
-            $sum = $sum + $matsum;
-
+            $sumspm += $mat->spm2;
+            $sum += ($mat->mater_need * $mat->price);
         }
-        //echo '<p>Итм-ов: '.$or.' по '.$orcost.'</p>';
 
-        $total = $sum + $this->labor_need2 * $this->orcost;
-
-        //echo $total.'<br>';
-        return $total;
+        $crftprice = $sum + ($this->labor_need2 * $this->orcost);
+        $crftprice = round($crftprice / $am_sum);
+        echo '<br>'.$this->result_item_name.' '.$crftprice;
+        $this->craft_price = $crftprice;
+        $sumspm = round($sumspm / $this->result_amount);
+        return [$crftprice,$sumspm];
     }
 }

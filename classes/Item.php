@@ -363,7 +363,7 @@ class Item
                 $Craft->InitForUser();
 
 
-                $rescost = $Craft->rescost($User->id);
+                $rescost = $Craft->rescost();
                 $mycost = $rescost[0];
                 $matspm = $rescost[1];
                 qwe("
