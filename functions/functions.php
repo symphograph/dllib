@@ -651,8 +651,6 @@ function PriceCell(int $item_id,$item_name,$icon, $grade,$time='',$isby='',$amou
 
 
 
-
-
     $grade = intval($grade);
     if(!$grade)
         $grade = 1;
@@ -693,7 +691,7 @@ function PriceCell(int $item_id,$item_name,$icon, $grade,$time='',$isby='',$amou
 				<div><span class="item_name" id="itname_<?php echo $item_name?>"><?php echo $item_name?></span>
 					<form id="pr_<?php echo $item_id;?>">
 						<div class="money_area_down">
-						<?php MoneyLineBL($Price->price,$item_id,$Price->color);?>
+						<?php $Price->MoneyLineBL();?>
 						</div>
 					<input type="hidden" name="item_id" value="<?php echo $item_id;?>"/>
 					</form>

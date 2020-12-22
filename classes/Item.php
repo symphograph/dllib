@@ -675,7 +675,7 @@ class Item
         </span>
         <form id="pr_<?php echo $this->id?>">
             <div class="money_area_down">
-                <?php MoneyLineBL($Price->price,$this->id,'',$Price->autor == $User->id);?>
+                <?php $Price->MoneyLineBL();?>
                 <span id="PrOk_<?php echo $this->id?>"></span>
             </div>
         </form>
