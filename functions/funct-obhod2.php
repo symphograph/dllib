@@ -54,7 +54,6 @@ function MissedList($lost)
 		if($q->valut_id and $q->valut_id != 500)
 			continue;
 
-		$Price = new Price;
 		PriceCell($q->item_id,$q->item_name,$q->icon,$q->basic_grade);
 		
 	}
