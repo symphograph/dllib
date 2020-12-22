@@ -17,7 +17,12 @@ class Price
     public string $how = 'Неизвестно';
     public string $color = '';
 
-    public function byMode($item_id) : bool
+    public function __construct(int $item_id)
+    {
+        $this->item_id = $item_id;
+    }
+
+    public function byMode() : bool
     {
         global $User;
         if(!isset($User))
@@ -26,58 +31,58 @@ class Price
         $this->how = 'Цена пользователя';
         if($User->mode == 1) {
             //Максимально широко.
-            return self::Mode1($item_id);
+            return self::Mode1();
         }
 
         if($User->mode == 2) {
             //В пределах друзей.
-            return self::Mode2($item_id);
+            return self::Mode2();
         }
 
         if($User->mode == 3) {
             //Только у себя.
-            return self::Solo($item_id);
+            return self::Solo();
         }
 
         die('Missed mode');
     }
 
-    public function Mode1(int $item_id) : bool
+    private function Mode1() : bool
     {
 
-        if(in_array($item_id,IntimItems())) {
-            if(self::Solo($item_id))
+        if(in_array($this->item_id,IntimItems())) {
+            if(self::Solo())
                 return true;
         }
 
-        if(self::withFrends($item_id))
+        if(self::withFrends())
             return true;
 
-        if(self::fromGood($item_id))
+        if(self::fromGood())
             return true;
 
-        return self::fromAny($item_id);
+        return self::fromAny();
     }
 
-    public function Mode2(int $item_id) : bool
+    private function Mode2() : bool
     {
 
-        if(in_array($item_id,IntimItems())) {
-            if(self::Solo($item_id))
+        if(in_array($this->item_id,IntimItems())) {
+            if(self::Solo())
                 return true;
         }
 
-        return self::withFrends($item_id);
+        return self::withFrends();
     }
 
-    public function Solo(int $item_id) : bool
+    public function Solo() : bool
     {
         global $User;
 
         $qwe = qwe("
             SELECT `auc_price`,`time` FROM `prices`
             WHERE `user_id` = '$User->id' 
-            AND `item_id` = '$item_id'
+            AND `item_id` = '$this->item_id'
             AND `server_group` = '$User->server_group'
             ");
         if($qwe and $qwe->num_rows) {
@@ -90,14 +95,14 @@ class Price
             return true;
         }
 
-        if(IsValuta($item_id))
+        if(IsValuta($this->item_id))
             return false;
 
-        if(!in_array($item_id,IntimItems()))
+        if(!in_array($this->item_id,IntimItems()))
             return false;
 
 
-        $arr =  ItemAny($item_id,'price_sale');
+        $arr =  ItemAny($this->item_id,'price_sale');
         if(!$arr)
             return false;
 
@@ -115,7 +120,7 @@ class Price
         return true;
     }
 
-    public function withFrends(int $item_id) : bool
+    private function withFrends() : bool
     {
         global $User;
         //Хотим цены только от друзей или себя.
@@ -123,7 +128,7 @@ class Price
         //Выясняем друзей.
 
         if(!$User->folows())
-            return self::Solo($item_id);
+            return self::Solo();
 
 
         $folows = implode(',',$User->folows);
@@ -132,7 +137,7 @@ class Price
             SELECT `auc_price`, `user_id`,`time`
             FROM `prices`
             WHERE `user_id` in ( $folows )
-            AND `item_id` = '$item_id'
+            AND `item_id` = '$this->item_id'
             AND `server_group` = '$User->server_group'
             ORDER BY `time` DESC 
             LIMIT 1");
@@ -147,7 +152,7 @@ class Price
         return true;
     }
 
-    public function fromGood(int $item_id) : bool
+    private function fromGood() : bool
     {
         //ищем у юзеров, чьи записи преимущественно адеквадны
         global $User;
@@ -161,7 +166,7 @@ class Price
             INNER JOIN folows 
             ON (`prices`.`user_id` = folows.folow_id AND folows.user_id = 893) 
             OR (`prices`.`user_id` = 893 AND folows.user_id = `prices`.`user_id`)
-            WHERE `item_id` = '$item_id'
+            WHERE `item_id` = '$this->item_id'
             AND `server_group` = '$User->server_group'
             ORDER BY `time` DESC
             LIMIT 1");
@@ -176,14 +181,14 @@ class Price
         return true;
     }
 
-    public function fromAny(int $item_id) : bool
+    private function fromAny() : bool
     {
         //ищем у кого угодно. Лишь бы найти.
         global $User;
 
         $qwe = qwe("
             SELECT `auc_price`, `user_id`,`time` FROM `prices` 
-            WHERE `item_id` = '$item_id'
+            WHERE `item_id` = '$this->item_id'
             AND `server_group` = '$User->server_group'
             ORDER BY `time` DESC 
             LIMIT 1");
@@ -199,14 +204,14 @@ class Price
         return true;
     }
 
-    public function byCraft(int $item_id) : bool{
+    public function byCraft() : bool{
 
         global $User;
 
         $qwe = qwe("
             SELECT `craft_price`, `updated` FROM `user_crafts` 
             WHERE `user_id` = '$User->id' 
-            AND `item_id` = '$item_id'
+            AND `item_id` = '$this->item_id'
             AND `isbest` in (1,2)
             ORDER BY `isbest` DESC
             LIMIT 1
@@ -225,7 +230,7 @@ class Price
         return true;
     }
 
-    function getColor(): bool
+    public function getColor(): bool
     {
         if(!$this->price){
             $this->color = self::COLORS[1];

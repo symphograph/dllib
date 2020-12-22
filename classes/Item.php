@@ -632,8 +632,8 @@ class Item
     {
         global $User;
 
-        $Price = new Price();
-        $Price->byMode($this->id);
+        $Price = new Price($this->id);
+        $Price->byMode();
         $color = '';
         if(!$Price->price)
            return self::PriceDataForm('', '', $Price, 'Цена: ');

@@ -57,12 +57,12 @@ if(!count($types)>0)
 
 $typess = implode(',',$types);
 
-$Price = new Price();
-$Price->byMode(32103);
+$Price = new Price(32103);
+$Price->byMode();
 $coalprice = $Price->price;
 
-$Price = new Price();
-$Price->byMode(32106);
+$Price = new Price(32106);
+$Price->byMode();
 $shellprice = $Price->price;
 
 

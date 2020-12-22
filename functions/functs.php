@@ -293,8 +293,8 @@ function MonetisationList($val_link, $valut_id, $user_id)
 		$price_buy = $p['price_buy'];
 		$item_id = $p['item_id'];
 		$item_name = $p['item_name'];
-		$Price = new Price();
-		$Price->byMode($item_id);
+		$Price = new Price($item_id);
+		$Price->byMode();
 		$auc_price = $Price->price;
 		$basic_grade = $p['basic_grade'];
 		if(!$auc_price) continue;

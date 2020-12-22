@@ -141,7 +141,7 @@ class Craft
         $this->orcost = $User->orCost();
     }
 
-    public function setCountedData(int $user_id)
+    public function setCountedData(int $user_id): bool
     {
         $qwe = qwe("SELECT * FROM user_crafts 
         WHERE user_id = '$user_id'

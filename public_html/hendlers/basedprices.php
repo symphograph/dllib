@@ -33,7 +33,7 @@ AND `prices`.`user_id` = '$User->id'
 AND `server_group` = '$User->server_group'
 WHERE `items`.`item_id` IN (32103, 32106,2,3,4,23633,32038,8007,32039,3712,27545,41488)");
 
-$folows = Folows($user_id);
+//$folows = Folows($user_id);
 
 foreach($query as $q)
 {

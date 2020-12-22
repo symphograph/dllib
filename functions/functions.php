@@ -639,13 +639,13 @@ function AvaGetAndPut($ava,$identy)
 
 function PriceCell(int $item_id,$item_name,$icon, $grade,$time='',$isby='',$amount='')
 {
-    $Price = new Price();
-    $Price->item_id = $item_id;
+    $Price = new Price($item_id);
+
     if(in_array($_SERVER['SCRIPT_NAME'],['/user_prices.php']))
-        $Price->Solo($item_id);
+        $Price->Solo();
     else
     {
-        $Price->byMode($item_id);
+        $Price->byMode();
         $Price->getColor();
     }
 
@@ -900,8 +900,8 @@ function UserPriceList($qwe)
         $amount = $q->mater_need ?? '';
         $basic_grade = $q->basic_grade ?? 1;
 
-        $Price = new Price;
-        $Price->byMode($q->item_id);
+        $Price = new Price($q->item_id);
+        $Price->byMode();
         $Price->getColor();
 
         if($q->is_trade_npc and $q->valut_id == 500)

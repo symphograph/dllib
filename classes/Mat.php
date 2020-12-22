@@ -49,9 +49,8 @@ class Mat extends Item
 
     public function MatPrice() : bool
     {
-        $Price = new Price();
+        $Price = new Price($this->id);
         $this->priceData = $Price;
-        $Price->item_id = $this->id;
 
         if($this->id == 500){
             $this->price = 1;
@@ -62,7 +61,7 @@ class Mat extends Item
         }
 
         if($this->is_buyable or $this->mater_need < 0){
-            $Price->byMode($this->id);
+            $Price->byMode();
             if($Price->price) {
                 $this->price = $Price->price;
                 $this->priceData = $Price;
@@ -83,7 +82,7 @@ class Mat extends Item
                 return true;
             }
 
-            $Price->byMode($this->id);
+            $Price->byMode();
             if($Price->price){
 
                 $this->price = $Price->price;
@@ -91,10 +90,11 @@ class Mat extends Item
                 return true;
             }
 
-            $Price->byMode($this->valut_id);
-            if($Price->price){
+            $vPrice = new Price($this->valut_id);
+            $vPrice->byMode();
+            if($vPrice->price){
 
-                $this->price = $Price->price * $this->price_buy;
+                $this->price = $vPrice->price * $this->price_buy;
                 $Price->price = $this->price;
                 $Price->how = 'Куплено у NPC';
                 $this->priceData = $Price;
@@ -105,7 +105,7 @@ class Mat extends Item
 
         if($this->craftable) {
 
-            $Price->byCraft($this->id);
+            $Price->byCraft();
             if($Price->price) {
                 $this->price = $Price->price;
                 $this->priceData = $Price;
@@ -113,7 +113,7 @@ class Mat extends Item
             }
         }
 
-        $Price->byMode($this->id);
+        $Price->byMode();
         if($Price->price) {
             $this->price = $Price->price;
             $this->priceData = $Price;

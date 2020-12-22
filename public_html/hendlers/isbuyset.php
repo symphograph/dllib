@@ -21,8 +21,8 @@ $user_id = $User->id;
 
 if($isbuy == 3)
 {
-    $Price = new Price();
-    $Price->byMode($item_id);
+    $Price = new Price($item_id);
+    $Price->byMode();
 	$auc_price = $Price->price;
 	if(!$auc_price) die('no_price');
 	qwe("

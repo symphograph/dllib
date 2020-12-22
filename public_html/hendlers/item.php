@@ -295,8 +295,8 @@ function DwnCraftList($Item)
 	 	if($i == 2)
 			echo '<br><details><summary>Другие рецепты</summary>';
 			
-		$Price = new Price();
-        $Price->byMode($item_id);
+		$Price = new Price($Item->id);
+        $Price->byMode();
         $auc_price = $Price->price;
 
 	 	if($auc_price)
