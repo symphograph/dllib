@@ -272,7 +272,7 @@ class Price
     public function MoneyLineBL()
     {
         global $User;
-        self::getColor();
+        //self::getColor();
 
         $is_show = intval($this->autor == $User->id);
         $is_shows = ['style="display: none;"',''];
@@ -334,9 +334,14 @@ class Price
     {
         global $User;
 
-        self::getColor();
-        if(!$this->price)
+        if(!$this->price){
+            $this->color = '';
             return self::PriceDataForm('Цена: ');
+        }
+
+
+        self::getColor();
+
 
 
         if($this->autor == $User->id) {
@@ -364,9 +369,12 @@ class Price
     {
         global $User;
         $Server = new Server($User->id);
+        $serverStr = '<span style="color: #3E454C" data-tooltip="Выбрать в настройках"><a href="user_customs.php">' . $Server->name . '</a></span>';
         $timestr = '';
         if($this->price)
-            $timestr = date('d.m.Y',strtotime($this->time)) .' <span style="color: #3E454C" data-tooltip="Выбрать в настройках"><a href="user_customs.php">' . $Server->name . '</a></span><br>';
+            $timestr = date('d.m.Y',strtotime($this->time)) .$serverStr.' <br>';
+        else
+            $timestr = $serverStr.' <br>';
         ?>
         <span style="color: <?php echo $this->tcolor?>">
             <?php echo $timestr.$text?>
