@@ -330,4 +330,55 @@ class Price
 
     }
 
+    public function MoneyForm(): bool
+    {
+        global $User;
+
+        self::getColor();
+        if(!$this->price)
+            return self::PriceDataForm('Цена: ');
+
+
+        if($this->autor == $User->id) {
+
+            $text = '<a href="user_prices.php" data-tooltip="Все мои цены">Вы указали: </a>';
+        }else {
+
+            $Puser = new User();
+            $Puser->byId($this->autor);
+
+            if($Puser->user_nick) {
+
+                $text = '<a href="user_prices.php?puser_id='.$Puser->id.'" data-tooltip="Смотреть его(её) цены">'.$Puser->user_nick.'</a> указал: ';
+            }else
+                $text = 'Кто-то указал: ';
+        }
+
+        self::PriceDataForm($text);
+
+
+        return true;
+    }
+
+    public function PriceDataForm($text): bool
+    {
+        global $User;
+        $Server = new Server($User->id);
+        $timestr = '';
+        if($this->price)
+            $timestr = date('d.m.Y',strtotime($this->time)) .' <span style="color: #3E454C" data-tooltip="Выбрать в настройках"><a href="user_customs.php">' . $Server->name . '</a></span><br>';
+        ?>
+        <span style="color: <?php echo $this->tcolor?>">
+            <?php echo $timestr.$text?>
+        </span>
+        <form id="pr_<?php echo $this->item_id?>">
+            <div class="money_area_down">
+                <?php self::MoneyLineBL();?>
+                <span id="PrOk_<?php echo $this->item_id?>"></span>
+            </div>
+        </form>
+        <?php
+        return true;
+    }
+
 }

@@ -636,60 +636,7 @@ class Item
         return true;
     }
 
-    public function MoneyForm()
-    {
-        global $User;
 
-        $Price = new Price($this->id);
-        $Price->byMode();
-        $color = '';
-        if(!$Price->price)
-           return self::PriceDataForm('', '', $Price, 'Цена: ');
-
-
-        if($Price->autor == $User->id) {
-
-            $color = 'style="color: darkgreen"';
-            $text = '<a href="user_prices.php" data-tooltip="Все мои цены">Вы указали: </a>';
-        }else {
-
-            $Puser = new User();
-            $Puser->byId($Price->autor);
-
-            if($Puser->user_nick) {
-                if($User->IsFolow($Price->autor))
-                    $color = 'style="color: darkgreen"';
-
-                $text = '<a href="user_prices.php?puser_id='.$Puser->id.'" data-tooltip="Смотреть его(её) цены">'.$Puser->user_nick.'</a> указал: ';
-            }else
-                $text = 'Кто-то указал: ';
-        }
-
-        $Server = new Server($User->id);
-        $time = $Price->time;
-        $timestr = date('d.m.Y',strtotime($time)) .' <span style="color: #3E454C" data-tooltip="Выбрать в настройках"><a href="user_customs.php">' . $Server->name . '</a></span><br>';
-        self::PriceDataForm($color, $timestr ,$Price, $text);
-
-
-        return true;
-    }
-
-    public function PriceDataForm($color, $timestr ,$Price, $text)
-    {
-        global $User;
-        ?>
-        <span <?php echo $color?>>
-            <?php echo $timestr.$text?>
-        </span>
-        <form id="pr_<?php echo $this->id?>">
-            <div class="money_area_down">
-                <?php $Price->MoneyLineBL();?>
-                <span id="PrOk_<?php echo $this->id?>"></span>
-            </div>
-        </form>
-        <?php
-        return true;
-    }
 
     public function ValutIcon() : string
     {

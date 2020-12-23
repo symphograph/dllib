@@ -42,7 +42,9 @@ $description = $Item->description;
 		</a>
 		<hr>
 		
-		<?php 
+		<?php
+		$Price = new Price($Item->id);
+        $Price->byMode();
 		if($Item->is_trade_npc)
 		{
 			
@@ -59,13 +61,16 @@ $description = $Item->description;
 		        <br><br>
 		        <?php
 					
-				if(!$Item->personal)
-				    $Item->MoneyForm();
+				if(!$Item->personal){
+
+				    $Price->MoneyForm();
+				}
+
 			}
 			
 		}elseif($Item->categ_id != 133)
 		{
-			$Item->MoneyForm();
+			$Price->MoneyForm();
 		}
 		
 		if($cfg->myip)
