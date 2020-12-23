@@ -617,6 +617,7 @@ class Item
                     $Mat->byQwe($q);
                     $sum = $this->allTrash[$Mat->id]*$u_amount*$result_amount;
                     $Mat->MatPrice();
+
                     $Cubik = new Cubik($Mat->id,$Mat->icon,$Mat->basic_grade,$Mat->ToolTip($sum), round($sum,2));
                     $Cubik->print();
                 }

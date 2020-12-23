@@ -127,13 +127,25 @@ class Mat extends Item
 
     public function ToolTip($sum)
     {
+        if($this->id == 500)
+            return $this->name.'<br>'.htmlspecialchars(esyprice(round($sum)));
+
         $matprice = esyprice($this->priceData->price);
         $matprice = htmlspecialchars($matprice);
+        $this->priceData->getColor();
 
-        if($this->id != 500)
-            return $this->name.'<br>'.round($sum,4).' шт по<br>'.$matprice.$this->priceData->how;
+        if($this->priceData->autor > 1){
+            $Puser = new User();
+            $Puser->byId($this->priceData->autor);
+            $autorName = $Puser->user_nick;
+            $autorName = '<span style="color: '.$this->priceData->tcolor.'; text-shadow: 0 0 2px white">'.$autorName.'</span>';
+            $autorName = htmlspecialchars($autorName);
+        }else
+            $autorName = '';
 
-        return $this->name.'<br>'.htmlspecialchars(esyprice(round($sum)));
+
+        return $this->name.'<br>'.round($sum,4).' шт по<br>'.$matprice.$this->priceData->how.'<br>'.$autorName;
+
     }
 
 }

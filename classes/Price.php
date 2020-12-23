@@ -10,12 +10,20 @@ class Price
         '#79f148'
     ];
 
+    const  TCOLORS = [
+        '',
+        '#f35454',
+        'green',
+        'darkgreen'
+    ];
+
     public int $item_id = 0;
     public int $price = 0;
     public string $time = '2020-02-22';
     public int $autor = 0;
     public string $how = 'Неизвестно';
     public string $color = '';
+    public string $tcolor = '';
 
     public function __construct(int $item_id)
     {
@@ -224,7 +232,7 @@ class Price
             return false;
 
         $this->price = $q->craft_price;
-        $this->autor = $User->id;
+        $this->autor = 1;
         $this->time = $q->updated;
         $this->how  = 'Себестоимость (крафт)';
         return true;
@@ -234,6 +242,7 @@ class Price
     {
         if(!$this->price){
             $this->color = self::COLORS[1];
+            $this->tcolor = self::TCOLORS[1];
             return true;
         }
 
@@ -242,6 +251,7 @@ class Price
 
         if($User->id == $this->autor){
             $this->color = self::COLORS[3];
+            $this->tcolor = self::TCOLORS[3];
             return true;
         }
 
@@ -249,11 +259,13 @@ class Price
         $User->folows();
         if(in_array($this->autor,$User->folows)){
             $this->color = self::COLORS[2];
+            $this->tcolor = self::TCOLORS[2];
             return true;
         }
 
 
         $this->color = self::COLORS[1];
+        $this->tcolor = self::TCOLORS[1];
         return true;
     }
 
