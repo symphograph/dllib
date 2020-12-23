@@ -36,7 +36,8 @@ class Mat extends Item
         if (self::MatPrice())
             return true;
 
-        if($q->buffer_price) {
+        if($q->buffer_price and !$this->is_buyable) {
+
             $this->price = $q->buffer_price;
             //echo '<p>откопал в промежуточных: '.$q->item_name.' '.$this->price.'</p>';
             return true;
@@ -67,6 +68,7 @@ class Mat extends Item
                 $this->priceData = $Price;
                 return true;
             }
+            
             return false;
         }
 

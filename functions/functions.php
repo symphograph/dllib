@@ -655,28 +655,26 @@ function PriceCell(int $item_id,$item_name,$icon, $grade,$time='',$isby='',$amou
     if(!$grade)
         $grade = 1;
 	if(!empty($time))
-		$time = date('d.m.Y',strtotime($time));
+		$time = date('d.m.Y',strtotime($Price->time));
 	?>
 	<div class="price_cell">
 		<div class="price_row">
 			<span class="comdate"><?php echo $time?></span>
 			<?php if(!empty($isby))
 			{
-			//var_dump($isby);
-			if($isby == 4)
-				$checked = 'checked';
-			else
-				$checked = '';
-			?>
-			<div class="pricecell_date_row">				
-				<div>
-					<label data-tooltip="Куплю. Не буду крафтить.">
-						<input type="checkbox" <?php echo $checked ?> id="isby_<?php echo $item_id ?>" name="isby"/>
-						  <span class="comdate">Покупаемый</span>
-					</label>
-				</div>
-			</div>
-			<?php
+                $chks = ['',' checked '];
+                $chk = intval($isby == 4);
+
+                ?>
+                <div class="pricecell_date_row">
+                    <div>
+                        <label data-tooltip="Куплю. Не буду крафтить.">
+                            <input type="checkbox" <?php echo $chks[$chk] ?> id="isby_<?php echo $item_id ?>" name="isby"/>
+                              <span class="comdate">Покупаемый</span>
+                        </label>
+                    </div>
+                </div>
+                <?php
 			}
 			?>	
 			

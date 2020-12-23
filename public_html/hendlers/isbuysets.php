@@ -66,7 +66,7 @@ if($val)
 	");
 	
 	qwe("
-	INSERT IGNORE prices
+	REPLACE INTO prices
 	(item_id, user_id, auc_price, server_group, time)
 	VALUES
 	('$item_id','$User->id','$auc_price','$User->server_group',NOW())
@@ -89,3 +89,4 @@ else
 
 	echo 'ok';
 }
+qwe("UPDATE `user_crafts` SET `craft_price` = NULL WHERE `user_id` = '$user_id'");

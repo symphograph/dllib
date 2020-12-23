@@ -198,7 +198,7 @@ class Craft
         AND `items`.`on_off`
         LEFT JOIN `user_crafts` 
         ON `items`.`item_id` = `user_crafts`.`item_id`
-        AND `user_crafts`.`user_id` = '$$User->id'
+        AND `user_crafts`.`user_id` = '$User->id'
         AND `user_crafts`.`isbest` > 0
         LEFT JOIN craft_buffer2 
         ON `craft_materials`.`item_id` = craft_buffer2.item_id
