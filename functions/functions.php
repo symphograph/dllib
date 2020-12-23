@@ -728,15 +728,6 @@ function PriceCell2($item_id,$price,$item_name,$icon,$grade,$time='',$amount='')
 	<?php
 }
 
-function IsValuta(int $item_id) : bool
-{
-    $qwe = qwe("SELECT * FROM valutas WHERE valut_id = '$item_id'");
-    if($qwe and $qwe->num_rows)
-        return true;
-
-    return false;
-}
-
 function BestCraftForItem($user_id,$item_id)
 {
 	$qwe = qwe("

@@ -103,7 +103,7 @@ class Price
             return true;
         }
 
-        if(IsValuta($this->item_id))
+        if(self::IsValuta())
             return false;
 
         if(!in_array($this->item_id,IntimItems()))
@@ -387,6 +387,19 @@ class Price
         </form>
         <?php
         return true;
+    }
+
+    public function IsValuta() : bool
+    {
+        $qwe = qwe("SELECT * FROM valutas WHERE valut_id = '$this->item_id'");
+        if($qwe and $qwe->num_rows)
+            return true;
+        $q = mysqli_fetch_object($qwe);
+        $valut_id = $q->valut_id;
+        if($valut_id)
+            return $valut_id;
+
+        return false;
     }
 
 }
