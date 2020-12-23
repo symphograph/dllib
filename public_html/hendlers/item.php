@@ -231,12 +231,14 @@ function IsRefuse(int $item_id)
 	return $arr;
 }
 
-function DwnCraftList($Item)
+function DwnCraftList($ItemOb)
 {
+    $Item = new Item();
+    $Item->reConstruct($ItemOb);
 	$best_types = ['','Выбран руру','Выбран вами', 'Покупается'];
 	$item_id = $Item->id;
 	global $user_id, $mat_deep, $cfg, $trash, $User;
-	$money = 0;
+
 	$qwe = qwe("
 	SELECT
 	`crafts`.`craft_id`

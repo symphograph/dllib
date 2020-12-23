@@ -99,6 +99,13 @@ class Item
         return true;
     }
 
+    public function reConstruct($Item)
+    {
+        foreach (get_object_vars($Item) as $k => $v){
+            $this->$k = $v;
+        }
+    }
+
     /**
      * @return array
      * Возвращает рецепты
