@@ -131,7 +131,64 @@ foreach($qwe as $q)
 qwe("DELETE FROM craft_buffer WHERE `user_id` = '$User->id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$User->id'");
 
-$folows = Folows($User->id);
+if(!isset($lost))
+    $lost = [49003, 49033, 49034];
+$lost = array_unique($lost);
+sort($lost);
+$losts = implode(',',$lost);
+
+$sql = "
+SELECT 
+items.item_id, 
+items.item_name, 
+items.craftable,  
+items.personal,
+items.is_trade_npc,
+items.valut_id,
+items.icon,
+items.basic_grade,
+prices.auc_price,
+prices.time,
+isbest,
+(isbest = 3) as isbuy,
+user_crafts.craft_price
+FROM
+(
+	SELECT item_id, result_item_id 
+	FROM craft_materials 
+	WHERE result_item_id IN 
+	(
+		SELECT DISTINCT item_id 
+		FROM packs WHERE item_id IN 
+		(SELECT result_item_id FROM crafts WHERE on_off)
+	)
+	OR result_item_id in (49003, 49033, 49034)
+	OR result_item_id in 
+	(
+		SELECT item_id 
+		FROM craft_materials 
+		WHERE result_item_id 
+		IN  (49003, 49033, 49034)
+	)
+	OR item_id in ( $losts )
+	GROUP BY item_id
+) as tmp
+INNER JOIN items 
+	ON items.item_id = tmp.item_id 
+	AND items.on_off 
+	AND items.item_id != 500
+    AND (!(items.valut_id = 500 AND items.is_trade_npc))
+LEFT JOIN prices 
+	ON prices.user_id = '$User->id' 
+	AND prices.item_id = items.item_id 
+	AND prices.server_group = '$User->server_group'
+LEFT JOIN user_crafts 
+	ON user_crafts.user_id = '$User->id' 
+	AND user_crafts.item_id = items.item_id 
+	AND user_crafts.isbest > 0
+	ORDER BY isbuy DESC, item_name
+	";
+
 $qwe = qwe($sql);
 UserPriceList($qwe);
 
