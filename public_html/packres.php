@@ -132,6 +132,8 @@ qwe("DELETE FROM craft_buffer WHERE `user_id` = '$User->id'");
 qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$User->id'");
 
 if(!isset($lost))
+    $lost = [];
+if(!count($lost))
     $lost = [49003, 49033, 49034];
 $lost = array_unique($lost);
 sort($lost);
