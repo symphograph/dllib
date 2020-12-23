@@ -774,28 +774,6 @@ function IntimItems()
 	return $IntimItems;
 }
 
-/**
- * @param $user_id
- * @return array
- * возвращает массив id юзеров, на чьи цены подписан юзер
- */
-function Folows($user_id)
-{
-    $qwe = qwe("
-    Select * from folows
-    WHERE user_id = '$user_id'
-    ");
-    if(!$qwe or $qwe->num_rows == 0)
-        return [];
-
-    $follows = [];
-    foreach ($qwe as $q)
-    {
-        $follows[] = $q['folow_id'];
-    }
-    return $follows;
-}
-
 function modes($mode)
 {
     $chks = ['','checked'];

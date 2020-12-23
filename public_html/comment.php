@@ -8,9 +8,7 @@ $User->check();
 $user_id = $User->id;
 if(empty($_POST['send']) or $user_id == 1) exit('send');
 
-$uri_from = 'index.php';
 
-$uri_from = $_SERVER['HTTP_REFERER'];
 $item_id = intval($_POST['item_id']);
 if(!$item_id) exit('item_id');
 $text = $_POST['text'];
