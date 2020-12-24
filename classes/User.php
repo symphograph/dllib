@@ -439,28 +439,27 @@ class User
      * @return array
      * возвращает массив id юзеров, на чьи цены подписан юзер
      */
-    public function folows() : bool
+    public function folows() : array
     {
         if(count($this->folows))
-            return true;
+            return $this->folows;
 
         $qwe = qwe("
             SELECT `folow_id` FROM `folows`
             WHERE `user_id` = '$this->id'
             ");
         if(!$qwe or !$qwe->num_rows)
-            return false;
+            return [];
 
         $folows = [];
         foreach($qwe as $q) {
             $folows[] = $q['folow_id'];
         }
-
-        //Самого юзера тоже в массив, чтобы нашлась его цена, если она есть
-        $folows[] = $this->id;
-
-        $this->folows = $folows;
-        return true;
+        if(count($folows)){
+            $this->folows = $folows;
+            return $this->folows;
+        }
+        return [];
     }
 
     public function orCost() : int

@@ -112,6 +112,9 @@ class Item
      */
     public function getCrafts() : array
     {
+        if(count($this->crafts))
+            return $this->crafts;
+
         $crafts = [];
         $qwe = qwe("
         SELECT `craft_id` FROM `crafts` 
@@ -635,8 +638,6 @@ class Item
         <?php
         return true;
     }
-
-
 
     public function ValutIcon() : string
     {

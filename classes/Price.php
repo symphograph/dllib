@@ -135,7 +135,7 @@ class Price
         //Друзей предпочитаем, если цена новее.
         //Выясняем друзей.
 
-        if(!$User->folows())
+        if(!count($User->folows()))
             return self::Solo();
 
 
@@ -144,7 +144,7 @@ class Price
         $qwe = qwe("
             SELECT `auc_price`, `user_id`,`time`
             FROM `prices`
-            WHERE `user_id` in ( $folows )
+            WHERE (`user_id` in ( $folows ) or `user_id` = '$User->id')
             AND `item_id` = '$this->item_id'
             AND `server_group` = '$User->server_group'
             ORDER BY `time` DESC 
@@ -252,14 +252,16 @@ class Price
         if($User->id == $this->autor){
             $this->color = self::COLORS[3];
             $this->tcolor = self::TCOLORS[3];
+            $this->how = 'Ваша цена';
             return true;
         }
 
 
-        $User->folows();
-        if(in_array($this->autor,$User->folows)){
+
+        if(in_array($this->autor,$User->folows())){
             $this->color = self::COLORS[2];
             $this->tcolor = self::TCOLORS[2];
+            $this->how = 'Цена друга';
             return true;
         }
 
@@ -389,17 +391,17 @@ class Price
         return true;
     }
 
-    public function IsValuta() : bool
+    public function IsValuta() : int
     {
         $qwe = qwe("SELECT * FROM valutas WHERE valut_id = '$this->item_id'");
-        if($qwe and $qwe->num_rows)
-            return true;
+        if(!$qwe or !$qwe->num_rows)
+            return 0;
         $q = mysqli_fetch_object($qwe);
-        $valut_id = $q->valut_id;
-        if($valut_id)
-            return $valut_id;
 
-        return false;
+        if($q->valut_id)
+            return $q->valut_id;
+
+        return 0;
     }
 
 }

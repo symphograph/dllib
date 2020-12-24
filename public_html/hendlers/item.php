@@ -90,7 +90,7 @@ if($Item->ismat)
 {
 	?><p><b>Используется в рецептах:</b></p>
 		<div class="up_craft_area"><?php
-	UpCraftList($item_id);
+	    UpCraftList($item_id);
 		?></div><?php
 }
 else 
