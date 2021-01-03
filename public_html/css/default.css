@@ -19,7 +19,7 @@ header
 	color: #fff;
 	letter-spacing: 1px;
 	display: flex;
-	/*padding: 1em 0;*/
+	height: 5%;
 	justify-content: space-around;
 	
 }
@@ -76,13 +76,14 @@ header nav {
 }
 main {
 	flex: auto;
-	height: 100%;
+	height: 90%;
 	/*box-sizing: border-box;*/
 	position: relative;
 	
 }
 
 footer {
+	height: 5%;
     flex-shrink: 0;
 	color: white;
 	background-color: black;
