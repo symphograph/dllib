@@ -39,6 +39,7 @@ class Item
     public array $allMats = [];
     public array $allTrash = [];
     public object $priceData;
+    public array $craftTree = [];
 
 
     public function getFromDB(int $item_id)
@@ -654,5 +655,36 @@ class Item
 
         $this->valut_icon = $q->icon;
         return $q->icon;
+    }
+
+    public function craftTree($arr=[],$i = 0) : array
+    {
+        $i++;
+
+        if(!$this->craftable)
+            return $arr;
+        $craftId = self::getBestCraft();
+        if(!$craftId)
+            return $arr;
+        $Craft = new Craft($craftId);
+        $Craft->getMats();
+        foreach ($Craft->mats as $mat){
+            $Mat = new Mat();
+            $Mat->reConstruct($mat);
+            if($Mat->mater_need < 0)
+                continue;
+
+            $arr[] = ['deep'=>$i,$this->id, $Mat->id, $Mat->name];
+            if($Mat->craftable and !$Mat->is_buyable){
+
+                echo $Mat->getBestCraft();
+                //printr([$Mat->name,$Mat->is_buyable]);
+                $arr = $Mat->craftTree($arr,$i);
+            }
+               // printr([$Mat->name,$Mat->is_buyable]);
+
+        }
+
+        return $arr;
     }
 }

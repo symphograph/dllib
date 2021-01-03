@@ -95,7 +95,7 @@ class User
         return $identy;
     }
 
-    public function isBot()
+    public function isBot(): bool
     {
         $BotName = is_bot();
         if(!$BotName)

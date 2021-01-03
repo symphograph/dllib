@@ -2,18 +2,19 @@
 //Опшенсы простого селекта
 function SelectOpts($query, $col_val, $col_name, $sel_val = false, $default = false)
 {	$selected = '';
- if($default)
-	echo '<option value="0">'.$default.'</option>';
-	foreach($query as $q)
-	{
-		if($sel_val)
-		{
-		if($q[$col_val] == $sel_val)
-			$selected = 'selected';
-		}
-		echo '<option value="'.$q[$col_val].'" '.$selected.'>'.$q[$col_name].'</option>';
-		$selected = '';
-	}
+     if($default)
+        echo '<option value="0">'.$default.'</option>';
+
+    foreach($query as $q)
+    {
+        if($sel_val){
+            if($q[$col_val] == $sel_val)
+                $selected = 'selected';
+        }
+
+        echo '<option value="'.$q[$col_val].'" '.$selected.'>'.$q[$col_name].'</option>';
+        $selected = '';
+    }
 }
 
 function LettersOnly($string)
@@ -518,5 +519,13 @@ function LongestWordFound($text)
 
 	// последний
 	return array_slice($arr, -1, 1);
+}
+
+function cmp($a, $b)
+{
+    if ($a == $b) {
+        return 0;
+    }
+    return ($a < $b) ? -1 : 1;
 }
 ?>

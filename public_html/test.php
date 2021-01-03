@@ -12,6 +12,22 @@ if (!$cfg->myip)
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
 $User = new User();
 $User->byIdenty();
+
+$Item = new Item();
+$Item->getFromDB(16325);
+$arr = $Item->craftTree();
+/*
+usort($arr,function($a,$b){
+    return $a['deep'] - $b['deep'];
+});
+*/
+//printr($arr);
+foreach ($arr as $k=>$v)
+{
+    //printr($v);
+    echo '<br>'.str_repeat(' - ',$v['deep']-1).$v[2];
+}
+die();
 $qwe = qwe("SELECT item_id FROM items WHERE on_off AND item_id >= 8319 AND craftable LIMIT 1");
 
 foreach ($qwe as $q)

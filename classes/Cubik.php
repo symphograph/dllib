@@ -23,9 +23,11 @@ class Cubik
 
     public function print()
     {
+        $urlImg = '/img/icons/50/'.$this->icon.'.png';
+        $urlGrade = '/img/grade/icon_grade'.$this->grade.'.png';
         ?>
-        <div class="itim" id="itim_<?php echo $this->id?>" style="background-image: url(/img/icons/50/<?php echo $this->icon?>.png)">
-            <div class="grade" <?php echo $this->tooltip?> style="background-image: url(/img/grade/icon_grade<?php echo $this->grade?>.png)">
+        <div class="itim" id="itim_<?php echo $this->id?>" style="background-image: url(<?php echo $urlImg?>)">
+            <div class="grade" <?php echo $this->tooltip?> style="background-image: url(<?php echo $urlGrade?>)">
                 <?php echo $this->value?>
             </div>
         </div>
