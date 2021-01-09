@@ -50,7 +50,7 @@ if($User->siol == 5)
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=0.6">
 <meta name="yandex-verification" content="<?php echo $cfg->yandex_key?>" />
 <meta name = "description" content = "Таблица цен на паки в Archeage <?php echo $aa_ver?>"/>
   <meta name = "keywords" content = "товары фактории, паки <?php echo $aa_ver?>, archeage, архейдж, аркейдж, региональные товары, таблица паков, сколько стоят паки, цена паков" />

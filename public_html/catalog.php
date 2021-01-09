@@ -44,7 +44,7 @@ if(!empty($_COOKIE['item_id']))
   <meta name=“robots” content=“index, nofollow”>
 <title>Предметы</title>
     <?php CssMeta(['default.css','items.css','right_nav.css','catalog_area.css']);?>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=0.7">
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript" src="js/search.js?ver=<?php echo md5_file('js/search.js')?>"></script>
 
