@@ -489,7 +489,7 @@ class Item
 
             if($mat->craftable and $mat->item_group != 23 and !$mat->is_buyable){
 
-                $arr = $mat->getAllMats($arr,$mat->mater_need/$Craft->result_amount);
+                $arr = $mat->getAllMats($arr,$mat->mater_need*$need/$Craft->result_amount);
                 continue;
             }
 
@@ -532,7 +532,7 @@ class Item
 
             if($mat->craftable and $mat->mater_need > 0){
 
-                $arr = $mat->getAllTrash($arr,$mat->mater_need/$Craft->result_amount);
+                $arr = $mat->getAllTrash($arr,$mat->mater_need*$need/$Craft->result_amount);
                 continue;
             }
 
