@@ -61,7 +61,7 @@ if(!$cfg->myip)
 function OnlyText($string)
 {
 	$string = trim($string);
-	$string = preg_replace('/[^0-9a-zA-Zа-яА-ЯёЁ]/ui', '',$string);
+	$string = preg_replace('/[^0-9a-zA-Zа-яА-ЯёЁ ]/ui', '',$string);
 	$string = trim($string);
 	return($string);
 }

@@ -31,7 +31,7 @@ $User = new User;
 $User->check();
 $user_id = $User->id;
 
-printr($psiol);
+
 $cook_settings =
     [
         'per' => $per,
