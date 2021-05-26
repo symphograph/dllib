@@ -30,7 +30,7 @@ $custWay = $custWays[$customType];
 <title>Настройки</title>
 <link href="css/default.css?ver=<?php echo $ver?>" rel="stylesheet">
 <link href="css/customs.css?ver=<?php echo $ver?>" rel="stylesheet">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=0.7">
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
 </head>
 

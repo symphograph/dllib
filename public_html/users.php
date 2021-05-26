@@ -23,7 +23,7 @@ $ver = random_str(8);
   <meta name=“robots” content=“index, nofollow”>
 <title>Пользователи</title>
 <?php CssMeta(['default.css','users.css']);?>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=0.8">
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
 </head>
 
