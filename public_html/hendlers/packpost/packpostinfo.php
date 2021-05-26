@@ -6,7 +6,7 @@ foreach ($_POST as $k => $v)
 {
     $p[$k] = intval($v);
 }
-$freshtime =  $freshtime ?? 0;
+$freshtime =  $p['freshtime'] ?? 0;
 $per = $p['per'];
 if($per > 130)
     die('>130!');
@@ -17,7 +17,7 @@ if(!$item_id) die('item_id');
 $from_id = $p['from_id'];
 $to_id = $p['to_id'];
 
-if(!isset($psiol))
+if(!isset($_POST['psiol']))
     $psiol = 0;
 else
     $psiol = 5;
@@ -31,6 +31,7 @@ $User = new User;
 $User->check();
 $user_id = $User->id;
 
+printr($psiol);
 $cook_settings =
     [
         'per' => $per,
@@ -98,7 +99,7 @@ if($cfg->myip)
                 <input type="hidden" name="item_id" value="<?php echo $item_id?>">
                 <input type="hidden" name="from_id" value="<?php echo $from_id?>">
                 <input type="hidden" name="to_id" value="<?php echo $to_id?>">
-                <input type="hidden" name="siol" value="<?php echo $psiol?>">
+                <input type="hidden" name="psiol" value="<?php echo $psiol?>">
                 <input type="hidden" name="per" value="<?php echo $per?>">
             <button type="button" id="sendprice" class="def_button">ok</button>
             </form>
