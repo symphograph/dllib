@@ -16,7 +16,10 @@ if(!$User->byIdenty())
 $user_id = $User->id;
 $mode = $User->mode;
 $Item = new Item();
-$Item->getFromDB($item_id);
+if(!$Item->getFromDB($item_id)){
+    die();
+}
+
 $description = $Item->description;
 	?>
 <div id="catalog_area">
