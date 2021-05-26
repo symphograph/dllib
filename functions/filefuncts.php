@@ -55,7 +55,11 @@ function file_force_contents($dir, $contents)
 			$dir = $part;
 	 	else
 			$dir .= "/$part";
-		if(!is_dir($dir)) mkdir($dir, 0700, true);
+		if(!is_dir($dir) and $dir){
+            mkdir($dir, 0700, true);
+            //echo '<p>gfdsfgfdsfgfds'.$dir.' - '.$i.'</p>';
+        }
+
 		//echo $dir.'<br>';
 		
 	}
