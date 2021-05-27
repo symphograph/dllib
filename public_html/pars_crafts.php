@@ -35,10 +35,10 @@ foreach($qlast as $q)
 */
 
 $qlist = qwe("
-SELECT * FROM `New_Crafts_70` 
-/*WHERE result_item_id in (SELECT item_id FROM New_items60)*/
-WHERE craft_id >= (SELECT item_id FROM parsed_last)
-/*LIMIT 5*/
+SELECT * FROM New_crafts_75 
+WHERE craft_id NOT IN
+    (SELECT craft_id FROM crafts)
+AND craft_id >= (SELECT item_id FROM parsed_last)
 ");
 
 $icrfts = 0;
@@ -76,7 +76,7 @@ foreach($qlist as $qq)
 		$new = true;
 	}
 	
-	//if(!$new) continue;
+	if(!$new) continue;
 	//if(IsCraftExistInBD($rec))
 		//continue;
 	

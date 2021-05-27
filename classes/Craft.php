@@ -3,7 +3,7 @@
 
 class Craft
 {
-    public int $id;
+    public int $craft_id;
     public $rec_name;
     public $dood_id;
     public $dood_name;
@@ -41,14 +41,13 @@ class Craft
 
     public function __construct(int $craft_id)
     {
-        $craft_id = intval($craft_id);
         $qwe = qwe("SELECT * FROM crafts WHERE on_off AND craft_id = '$craft_id'");
         if(!$qwe or !$qwe->num_rows)
             return false;
         $q = mysqli_fetch_object($qwe);
 
 
-        $this->id = $q->craft_id;
+        $this->craft_id = $q->craft_id;
         $this->rec_name = $q->rec_name;
         $this->dood_id = $q->dood_id;
         $this->dood_name = $q->dood_name;
@@ -91,7 +90,7 @@ class Craft
         LEFT JOIN user_crafts uc on craft_materials.item_id = uc.item_id 
                                         AND uc.user_id = '$User->id'
                                         AND uc.isbest > 0
-        WHERE craft_materials.craft_id = '$this->id'
+        WHERE craft_materials.craft_id = '$this->craft_id'
         ");
         foreach ($qwe as $q)
         {
@@ -106,7 +105,7 @@ class Craft
             if($q->basic_grade > $mat->need_grade)
                 $mat->need_grade = $q->basic_grade;
             $mat->name = $q->item_name;
-            $mat->craftId = $this->id;
+            $mat->craftId = $this->craft_id;
             $mat->craftable = $q->craftable;
             $mat->item_group = $q->item_group ?? 0;
             $mat->icon = $q->icon ?? '';
@@ -145,7 +144,7 @@ class Craft
     {
         $qwe = qwe("SELECT * FROM user_crafts 
         WHERE user_id = '$user_id'
-        AND craft_id = '$this->id'
+        AND craft_id = '$this->craft_id'
         ") ;
         if(!$qwe or !$qwe->num_rows)
             return false;
@@ -193,7 +192,7 @@ class Craft
         `craft_materials`
         INNER JOIN `items`
         ON `items`.`item_id` = `craft_materials`.`item_id`
-        AND `craft_materials`.`craft_id` = '$this->id'
+        AND `craft_materials`.`craft_id` = '$this->craft_id'
         AND `items`.`ismat`
         AND `items`.`on_off`
         LEFT JOIN `user_crafts` 
@@ -239,7 +238,7 @@ class Craft
         SELECT `item_name`, `amount`, sum(`amount`) as `sum`
         FROM `craft_groups` 
         WHERE `group_id` = 
-        (SELECT `group_id` FROM `craft_groups` WHERE `craft_id` = '$this->id')
+        (SELECT `group_id` FROM `craft_groups` WHERE `craft_id` = '$this->craft_id')
         ");
         if(!$qwe or !$qwe->num_rows)
             return false;
@@ -271,7 +270,7 @@ class Craft
         `craft_materials`
         INNER JOIN `items`
         ON `items`.`item_id` = `craft_materials`.`item_id`
-        AND `craft_materials`.`craft_id` = '$this->id'
+        AND `craft_materials`.`craft_id` = '$this->craft_id'
         AND `items`.`ismat`
         AND `items`.`on_off`
         LEFT JOIN `user_crafts` 
@@ -363,7 +362,7 @@ class Craft
 
 
                 <div class="main_itim"
-                     id="cr_<?php echo $this->id?>"
+                     id="cr_<?php echo $this->craft_id?>"
                      name="<?php echo $this->result_item_id?>"
                      style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
                     <div class="grade"

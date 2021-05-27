@@ -43,21 +43,21 @@ WHERE `result_item_id` NOT IN
 GROUP BY `result_item_id`
 LIMIT 10
 ");*/
-/*
-$qwe = qwe("
-SELECT * FROM `New_items_70`
-WHERE item_id >= (SELECT item_id FROM parsed_last)
-LIMIT 100
-");
-*/
 
+$qwe = qwe("
+SELECT * FROM `New_items_75`
+WHERE item_id >= (SELECT item_id FROM parsed_last)
+LIMIT 500
+");
+
+/*
 $qwe = qwe("
 SELECT item_id FROM craft_materials WHERE item_id NOT in 
 (SELECT item_id FROM items)
 GROUP BY item_id
 ");
-
-if((!$qwe) or $qwe->num_rows == 0)
+*/
+if(!$qwe or !$qwe->num_rows)
 	die('no items');
 $i = 0;
 $ver = random_str(8);

@@ -1,7 +1,6 @@
 <?php
-if(!isset($_POST['item_id'])) die();
-
-$item_id = intval($_POST['item_id']);
+$item_id = $_POST['item_id'] ?? 0;
+$item_id = intval($item_id);
 if(!$item_id) die();
 
 if(!isset($cfg)) {

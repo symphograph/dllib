@@ -268,7 +268,6 @@ function DwnCraftList($ItemOb)
 	 	if(!$Craft->setCountedData($user_id))
 	 	    continue;
 
-	 	$isbest = $Craft->isbest;
 	 	$Prof = new Prof();
 	 	$Prof->InitForUser($Craft->prof_id);
 		$craft_name = $Craft->rec_name ?? $Item->name;
@@ -287,7 +286,7 @@ function DwnCraftList($ItemOb)
 			?>
 			<div id="isbuy">
 				<div class="isby">
-					<input type="radio" <?php if($isbest != 3) echo 'checked';?> id="ib_<?php echo $item_id?>" name="isbuy" value="1"/>
+					<input type="radio" <?php if($Craft->isbest != 3) echo 'checked';?> id="ib_<?php echo $item_id?>" name="isbuy" value="1"/>
 					<label class="navicon" for="ib_<?php echo $item_id?>" data-tooltip="Использовать для расчетов себестоимость<br>Считать по крафту" style="background-image: url(../img/profs/Обработка_камня.png);"></label>
 					<span>Крафтить</span>
 				</div>
@@ -296,7 +295,7 @@ function DwnCraftList($ItemOb)
 				</div>
 				<div class="isby">
 					<span>Покупать</span>
-					<input type="radio" <?php if($isbest == 3) echo 'checked';?> id="is_<?php echo $item_id?>" name="isbuy" value="3"/>
+					<input type="radio" <?php if($Craft->isbest == 3) echo 'checked';?> id="is_<?php echo $item_id?>" name="isbuy" value="3"/>
 					<label class="navicon" for="is_<?php echo $item_id?>" data-tooltip="Использовать мою цену для расчетов" style="background-image: url(../img/perdaru2.png);"></label>
 				</div>
 			</div>
@@ -307,11 +306,10 @@ function DwnCraftList($ItemOb)
 			
 		$Price = new Price($Item->id);
         $Price->byMode();
-        $auc_price = $Price->price;
 
-	 	if($auc_price)
+	 	if($Price->price)
 		{
-			$profit = round(($auc_price*0.9 - $Craft->craft_price),0);
+			$profit = round(($Price->price*0.9 - $Craft->craft_price),0);
 			$labor_total = floatval($Craft->labor_total);
 			if($labor_total)
 			{
@@ -328,7 +326,7 @@ function DwnCraftList($ItemOb)
 		
 		?>
 		<div class="crresults">
-			<div><b><?php echo $best_types[$isbest];?></b></div>
+			<div><b><?php echo $best_types[$Craft->isbest];?></b></div>
 			<div>
 				<!--<div class="itemprompt" data-title="Рецепт будет выбран автоматически">Сбросить выбор</div>-->
 			</div>
@@ -379,12 +377,8 @@ function DwnCraftList($ItemOb)
                     <div><?php echo esyprice($Craft->craft_price);?></div>
 				</div>
 					<?php 
-	 			if(in_array($Item->categ_id,[133]))
-				{
+	 			if(in_array($Item->categ_id,[133])){
 					$PackObject = PackObject($item_id);
-					?>
-					
-					<?php
 				}else
 				{
 					
@@ -444,7 +438,7 @@ function DwnCraftList($ItemOb)
 		<?php
 	 	if($cfg->myip)
 		{
-			?><a href="edit/recedit.php?query=<?php echo $Craft->id?>" target="_blank">Править</a><?php
+			?><a href="edit/recedit.php?query=<?php echo $Craft->craft_id?>" target="_blank">Править</a><?php
 		}
 		?>
 		<hr><?php
@@ -481,7 +475,7 @@ function SPTime($mins)
     return $d.$h.':'.$m;
 }
 
-function UpCraftList($item_id)
+function UpCraftList(int $item_id)
 {
 
 	$qwe = qwe("
