@@ -9,21 +9,6 @@ if(!isset($cfg)) {
 if (!$cfg->myip)
     die('rrr');
 
-
-echo phpinfo();
-
-
-
-
-
-
-
-
-die();
-
-
-
-
 echo '<br><br>'. (microtime(true) - $tstart);
 ?>
 
