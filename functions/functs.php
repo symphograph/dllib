@@ -62,18 +62,30 @@ function Comment($string)
 
 function esyprice($total,$only = false)
 {
+    $minus = '';
+    if($total < 0){
+        $minus = '-';
+    }
+    $total = abs($total);
 	$gold = '<img src="img/gold.png" style="width: 0.9em; height: 0.9em" alt="g"/>';
 	$silver = '<img src="img/silver.png" style="width: 0.9em; height: 0.9em" alt="s"/>';
 	$bronze = '<img src="img/bronze.png" style="width: 0.9em; height: 0.9em" alt="b"/>';
 	$gol= strrev(substr(strrev($total),4,10));
-	if($gol == 0) $gold = '';
-		$sil = strrev(substr(strrev($total),2,2));
-	if($sil == 0 and $gold == '') {$silver = ''; $rsil = '';};
-		$bro = strrev(substr(strrev($total),0,2));
+
+	if(!$gol)
+	    $gold = '';
+
+    $sil = strrev(substr(strrev($total),2,2));
+
+	if(!$sil and $gold == '') {
+	    $silver = '';
+	}
+    $bro = strrev(substr(strrev($total),0,2));
+	$string = $minus.$gol.$gold.$sil.$silver.$bro.$bronze;
 	if($only)
-		return $gol.$gold.$sil.$silver.$bro.$bronze;
+		return $string;
 	
-	return '<div class="esyprice">'.$gol.$gold.$sil.$silver.$bro.$bronze.'</div>';
+	return '<div class="esyprice">'.$string.'</div>';
 }
 
 function median($arr)
