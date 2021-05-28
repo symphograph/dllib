@@ -72,16 +72,6 @@ class Mat extends Item
             return false;
         }
 
-        if($this->craftable) {
-
-            $Price->byCraft();
-            if($Price->price) {
-                $this->price = $Price->price;
-                $this->priceData = $Price;
-                return true;
-            }
-        }
-
 
         if($this->is_trade_npc and !$this->craftable) {
 
@@ -113,6 +103,16 @@ class Mat extends Item
                 return true;
             }
             return false;
+        }
+
+        if($this->craftable) {
+
+            $Price->byCraft();
+            if($Price->price) {
+                $this->price = $Price->price;
+                $this->priceData = $Price;
+                return true;
+            }
         }
 
 
