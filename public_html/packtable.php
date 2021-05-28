@@ -11,7 +11,7 @@ if (!$User->check()) {
 }
 
 $ver = random_str(8);
-$aa_ver = '7.0';
+$aa_ver = '7.5';
 
 function perselect($per)
 {
