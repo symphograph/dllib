@@ -30,8 +30,7 @@ $based_prices = '32103,32106,2,3,4,23633,32038,8007,32039,3712,27545,41488';
   <meta name = "keywords" content = "Умный калькулятор, archeage, архейдж, крафт" />
   <meta name=“robots” content=“index, nofollow”>
 <title>Цены пользователя</title>
-<link href="css/default.css?ver=<?php echo md5_file('css/default.css')?>" rel="stylesheet">
-<link href="css/user_prices.css?ver=<?php echo md5_file('css/user_prices.css')?>" rel="stylesheet">
+    <?php CssMeta(['default.css','user_prices.css']);?>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
 
@@ -83,6 +82,11 @@ $based_prices = '32103,32106,2,3,4,23633,32038,8007,32039,3712,27545,41488';
                 ?>
 
                 <a href="user_customs.php"><button class="def_button">Настройки</button></a>
+                <select id="sort">
+                    <option value="1">По дате</option>
+                    <option value="2">По имени</option>
+                </select>
+                <input type="hidden" id="puser_id" value="<?php echo $puser_id?>">
             </div>
             <br><hr>
             <div class = "responses"><div id = "responses"></div></div>
@@ -93,35 +97,7 @@ $based_prices = '32103,32106,2,3,4,23633,32038,8007,32039,3712,27545,41488';
 
             <div class="all_info_area">
                 <div class="all_info" id="all_info">
-                    <div id="items">
-                        <div class="prices">
-                        <?php
-                        $qwe = qwe("
-                        SELECT 
-                        `prices`.`item_id`, 
-                        `prices`.`auc_price`, 
-                        `prices`.`time`,
-                        `items`.`item_name`,
-                        `items`.`icon`,
-                        `items`.`basic_grade`,
-                        `items`.`item_id` IN ( $based_prices ) as `isbased`,
-                        user_crafts.isbest,
-                        user_crafts.isbest = 3 as ismybuy,
-                        items.craftable
-                        FROM `prices`
-                        INNER JOIN `items` ON `items`.`item_id` = `prices`.`item_id`
-                        AND `prices`.`user_id` = '$puser_id'
-                        AND `prices`.`server_group` = '$User->server_group'
-                        ".$valutignor."
-                        LEFT JOIN user_crafts ON user_crafts.user_id = '$User->id' AND user_crafts.item_id = `prices`.`item_id`
-                        AND user_crafts.isbest > 0
-                        ORDER BY `isbased` DESC, ismybuy DESC, `prices`.`time` DESC
-                        ");
 
-                        UserPriceList2($qwe);
-                        ?>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -138,41 +114,3 @@ addScript('js/user-prices.js');
 </body>
 </html>
 <?php
-function UserPriceList2($qwe)
-{
-    global $puser_id, $User;
-
-    if(!$qwe or !$qwe->num_rows){
-        ?>
-        <div>
-            Похоже, что записей о ценах нет.<br>
-            Их Можно сделать здесь:<br><br>
-            <a href="catalog.php"><button class="def_button">Крафкулятор</button></a><br><br>
-            <a href="user_customs.php"><button class="def_button">Настройки</button></a><br><br>
-            <a href="packres.php"><button class="def_button">Ресурсы для паков</button></a>
-        </div>
-        <?php
-        return false;
-    }
-
-
-    foreach($qwe as $q)
-    {
-        $q = (object) $q;
-        ?><div><?php
-
-        $chk = $isby = '';
-
-        if($q->craftable)
-            $isby = intval($q->isbest)+1;
-
-        $basic_grade = $q->basic_grade ?? 1;
-
-        if($puser_id == $User->id)
-            PriceCell($q->item_id,$q->item_name,$q->icon,$basic_grade,$q->time,$isby);
-        else
-            PriceCell2($q->item_id,$q->auc_price,$q->item_name,$q->icon,$basic_grade,$q->time);
-        ?>
-        </div><?php
-    }
-}

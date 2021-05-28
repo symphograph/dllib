@@ -1,6 +1,7 @@
 window.onload = function() {
 
-    $(".small_del").show();
+    //$(".small_del").show();
+    LoadPrices();
 
 };
 
@@ -78,3 +79,32 @@ $('#all_info').on('click','.itim',function(){
     var url = 'catalog.php?item_id='+item_id;
     window.location.href = url;
 });
+
+$('.prmenu').on('change','#sort', function(){
+    LoadPrices();
+});
+
+function LoadPrices()
+{
+    let sort = $('#sort').val();
+    let puser_id = $('#puser_id').val();
+    $.ajax
+    ({
+        url: "hendlers/user_prices.php", // путь к ajax файлу
+        type: "POST",      // тип запроса
+
+        data: {
+            sort: sort,
+            puser_id: puser_id
+        },
+
+        dataType: "html",
+        cache: false,
+        // Данные пришли
+        success: function(data )
+        {
+            $("#all_info").html(data);
+            $(".small_del").show();
+        }
+    });
+}

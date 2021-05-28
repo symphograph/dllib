@@ -4,7 +4,7 @@
 class Craft
 {
     public int $craft_id;
-    public $rec_name;
+    public string|null $rec_name = 'Имя рецепта';
     public $dood_id;
     public $dood_name;
     public $result_item_id;
@@ -39,8 +39,11 @@ class Craft
     public int $spmu = 0;
     public int $craft_price = 0;
 
-    public function __construct(int $craft_id)
+    public function __construct(int $craft_id = 0)
     {
+        if(!$craft_id)
+            return false;
+
         $qwe = qwe("SELECT * FROM crafts WHERE on_off AND craft_id = '$craft_id'");
         if(!$qwe or !$qwe->num_rows)
             return false;

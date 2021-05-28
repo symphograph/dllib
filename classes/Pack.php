@@ -4,7 +4,7 @@
 class Pack extends Item
 {
     public int $z_from = 0;
-    public string $z_from_name = 'Откуда';
+    public string|null $z_from_name = 'Откуда';
     public int $z_to = 0;
     public string $z_to_name = 'Куда';
     public int $tid = 0;

@@ -641,7 +641,7 @@ function PriceCell(int $item_id,$item_name,$icon, $grade,$time='',$isby='',$amou
 {
     $Price = new Price($item_id);
 
-    if(in_array($_SERVER['SCRIPT_NAME'],['/user_prices.php']))
+    if(in_array($_SERVER['SCRIPT_NAME'],['/user_prices.php','/hendlers/user_prices.php']))
         $Price->Solo();
     else
     {
@@ -1030,5 +1030,44 @@ function ProfUnEmper(int $user_id)
 		('$user_id', '$q->prof_id', 1)");
     }
     return true;
+}
+
+function UserPriceList2($qwe)
+{
+    global $puser_id, $User;
+
+    if(!$qwe or !$qwe->num_rows){
+        ?>
+        <div>
+            Похоже, что записей о ценах нет.<br>
+            Их Можно сделать здесь:<br><br>
+            <a href="catalog.php"><button class="def_button">Крафкулятор</button></a><br><br>
+            <a href="user_customs.php"><button class="def_button">Настройки</button></a><br><br>
+            <a href="packres.php"><button class="def_button">Ресурсы для паков</button></a>
+        </div>
+        <?php
+        return false;
+    }
+
+
+    foreach($qwe as $q)
+    {
+        $q = (object) $q;
+        ?><div><?php
+
+        $chk = $isby = '';
+
+        if($q->craftable)
+            $isby = intval($q->isbest)+1;
+
+        $basic_grade = $q->basic_grade ?? 1;
+
+        if($puser_id == $User->id) {
+            PriceCell($q->item_id, $q->item_name, $q->icon, $basic_grade, $q->time, $isby);
+        }else
+            PriceCell2($q->item_id,$q->auc_price,$q->item_name,$q->icon,$basic_grade,$q->time);
+        ?>
+        </div><?php
+    }
 }
 ?>
