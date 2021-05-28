@@ -138,12 +138,16 @@ select {
 	background: none;
 	color: #6c3f00;
 	height: 2em;
-	padding: 0 1em;
 	box-sizing: content-box;
 	font-size: 1em;
 	outline: none;
 	text-align: right;
 }
+
+.prmenu select{
+	padding: 0 1em;
+}
+
 select:hover {
 	
 	border: 1px solid;
