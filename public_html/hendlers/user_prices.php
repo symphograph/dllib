@@ -11,7 +11,7 @@ if(!$sort)
 
 $sorts = [
         'ORDER BY `isbased` DESC, ismybuy DESC, `prices`.`time` DESC',
-    'ORDER BY `prices`.`time` DESC',
+    'ORDER BY `prices`.`time` DESC, `item_name`',
     'ORDER BY `item_name`',
     ];
 
