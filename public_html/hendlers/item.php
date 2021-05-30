@@ -71,7 +71,7 @@ $description = $Item->description;
 
 			}
 			
-		}elseif($Item->categ_id != 133 and !$Item->personal)
+		}elseif($Item->categ_id != 133)
 		{
 			$Price->MoneyForm();
 		}

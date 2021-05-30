@@ -850,7 +850,7 @@ function SelectZone($zone_start=0,$zone_selected = 0)
 function UserPriceList($qwe)
 {
 
-
+    global $lost;
     foreach($qwe as $q)
     {
         $q = (object) $q;
@@ -875,7 +875,7 @@ function UserPriceList($qwe)
             PriceCell($q->item_id,$q->item_name,$q->icon,$basic_grade,$Price->time,$isby,$amount);
 
 
-        if ($q->craft_price)
+        if ($q->craft_price and !in_array($q->item_id,$lost))
         {
             $esyprice = esyprice($q->craft_price,1);
             ?><div>Крафт:<?php echo $esyprice?></div><?php
