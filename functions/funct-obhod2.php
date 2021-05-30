@@ -3,7 +3,7 @@
 function MissedList($lost)
 {
 	$lost = array_unique($lost);
-	//printr($lost);
+	global $User;
 	?>
     <div>
         <br><b>Расчет не получился.</b>
@@ -39,6 +39,7 @@ function MissedList($lost)
 	SELECT 
 	item_id,
 	item_name,
+    craftable,
 	icon,
 	basic_grade,
 	valut_id
@@ -55,6 +56,16 @@ function MissedList($lost)
 			continue;
 
 		PriceCell($q->item_id,$q->item_name,$q->icon,$q->basic_grade);
+
+		if(!$q->craftable){
+            qwe("
+            INSERT INTO lost_items 
+            (item_id, server_group, detetime) 
+            VALUES 
+           ($q->item_id, $User->server_group, now())
+           ");
+        }
+
 		
 	}
 }
