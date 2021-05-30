@@ -35,7 +35,7 @@ and craft_id = '$craft_id'
 ");
 $q = mysqli_fetch_assoc($qwe);
 ?><div id="craft_price"><?php
-echo esyprice($q['craft_price']);
+echo 'Себестоимость: '.esyprice($q['craft_price']);
 ?></div><?php
 
 $qwe = qwe("
