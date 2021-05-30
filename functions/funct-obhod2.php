@@ -59,10 +59,10 @@ function MissedList($lost)
 
 		if(!$q->craftable){
             qwe("
-            INSERT INTO lost_items 
-            (item_id, server_group, detetime) 
+            REPLACE INTO lost_items 
+            (user_id,item_id, server_group, detetime) 
             VALUES 
-           ($q->item_id, $User->server_group, now())
+           ($User->id, $q->item_id, $User->server_group, now())
            ");
         }
 
