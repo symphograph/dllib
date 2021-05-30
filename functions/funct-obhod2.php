@@ -57,7 +57,7 @@ function MissedList($lost)
 
 		PriceCell($q->item_id,$q->item_name,$q->icon,$q->basic_grade);
 
-		if(!$q->craftable){
+		if(!$q->craftable and $User->mode == 1){
             qwe("
             REPLACE INTO lost_items 
             (user_id,item_id, server_group, detetime) 
