@@ -450,9 +450,9 @@ class Price
         if(!self::serverMedian())
             return false;
 
-        ?><br><?php
-        printVals('В среднем по больнице:',esyprice($this->serverMedian,1));
-        ?><br><?php
+        ?><br>В среднем по больнице:<br><?php
+        echo esyprice($this->serverMedian,1);
+        ?><br><br><?php
         return true;
     }
 
