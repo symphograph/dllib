@@ -65,8 +65,8 @@ $description = $Item->description;
 		        <?php
 					
 				if(!$Item->personal){
-
 				    $Price->MoneyForm();
+				    $Price->serverMedianPrint();
 				}
 
 			}
@@ -74,6 +74,7 @@ $description = $Item->description;
 		}elseif($Item->categ_id != 133)
 		{
 			$Price->MoneyForm();
+			$Price->serverMedianPrint();
 		}
 		
 		if($cfg->myip)
@@ -354,79 +355,48 @@ function DwnCraftList($ItemOb)
 			</div>
 		</div>
 		<div class="craftinfo">
-			<div data-tooltip="Коэфициент приводящий друг к другу такие величины, как занимаемая площадь, интервал между сбором, себестоимость, получаемое количество, требуемое количество.">
-				<div class="crresults"><div><b>Коэф SPM:</b></div><div><b><?php echo $Craft->spmu?></b></div></div>
+			<div>
+			    <?php printVals('Коэф SPM:',$Craft->spmu,'Коэфициент приводящий друг к другу такие величины, как занимаемая площадь, интервал между сбором, себестоимость, получаемое количество, требуемое количество.');?>
 			</div>
 
 			<?php
-			if($sptime)
-            {
-            ?>
-                <div>
-                <div class="crresults"><div>Интервал:</div><div><?php echo $sptime?></div></div>
-                </div>
-            <?php
+			if($sptime){
+			    ?><div><?php printVals('Интервал:',$sptime);?></div><?php
             }
             ?>
 
 		</div>
 		<div class="craftinfo">
 			<div>
-				<div class="crresults">
-                    <div>Себестоимость 1 шт:</div>
-                    <div><?php echo esyprice($Craft->craft_price);?></div>
-				</div>
-					<?php 
-	 			if(in_array($Item->categ_id,[133])){
-					$PackObject = PackObject($item_id);
-				}else
-				{
-					
-					?>
-					<div class="crresults"><div>Прибыль:</div><div><?php echo $profit;?></div></div>
-					<div class="crresults"><div>Прибыль с 1 ОР:</div><div><?php echo $profitor?></div></div>
-					<?php			
-				}
+
+                <?php
+                    printVals('Себестоимость 1 шт:', esyprice($Craft->craft_price));
+
+                    if(in_array($Item->categ_id,[133])){
+                        $PackObject = PackObject($item_id);
+                    }else
+                    {
+                        printVals('Прибыль:',$profit);
+                        printVals('Прибыль с 1 ОР:',$profitor);
+                    }
 			    ?>
 			</div>
 			<div>
-				<div class="crresults">
-					<div>На рецепт:</div>
-					<div><?php echo $Craft->labor_need2.$imgor;?>
-						
-					</div>
-				</div>
-				<?php 
-	 			if(in_array($Item->categ_id,[133]))
-				{
-					 
-					$pass_labor = $PackObject['pass_labor2'];
-					?>
-					<div class="crresults">
-						<div>На сдачу:</div>
-						<div><?php echo $pass_labor.$imgor;?></div>
-					</div>
-					<div class="crresults">
-                        <div>На цепочку:</div>
-                        <div><?php echo round($Craft->labor_total,2).$imgor;?></div>
-					</div>
-					<div class="crresults">
-                        <div>На всё:</div>
-                        <div><?php echo round($Craft->labor_total+$pass_labor,2).$imgor;?></div>
-					</div>
-					<?php
-				}else
-				{
-					?>
-					<div class="crresults">
-					    <div>На 1 шт:</div><div><?php echo $Craft->labor_single.$imgor;?></div>
-					</div>
-					<div class="crresults">
-                        <div>На цепочку:</div>
-                        <div><?php echo round($Craft->labor_total,2).$imgor;?></div>
-					</div>
-					<?php
-				}
+			    <?php
+			        printVals('На рецепт:',$Craft->labor_need2.$imgor);
+
+                    if(in_array($Item->categ_id,[133]))
+                    {
+                        $pass_labor = $PackObject['pass_labor2'];
+                        printVals('На сдачу:',$pass_labor.$imgor);
+                        printVals('На цепочку:',round($Craft->labor_total,2).$imgor);
+                        printVals('На всё:',round($Craft->labor_total+$pass_labor,2).$imgor);
+
+                    }else
+                    {
+                        printVals('На 1 шт:',$Craft->labor_single.$imgor);
+                        printVals('На цепочку',round($Craft->labor_total,2).$imgor);
+                    }
 				?>
 			</div>
 		</div>

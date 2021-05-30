@@ -1070,4 +1070,16 @@ function UserPriceList2($qwe)
         </div><?php
     }
 }
-?>
+
+function printVals($name,$val,$tooltip = '')
+{
+    if(!empty($tooltip)){
+        $tooltip = ' data-tooltip="'.$tooltip.'" ';
+    }
+    ?>
+    <div class="crresults"<?php echo $tooltip?>>
+        <div><?php echo $name?></div>
+        <div><?php echo $val;?></div>
+    </div>
+    <?php
+}

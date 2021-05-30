@@ -25,7 +25,7 @@ class User
     public string $mailnick;
     public string $time;
     public string $token;
-    public string $user_nick;
+    public string $user_nick = '';
     public array $profs = [];
     public $agent;
     public bool $isbot = false;

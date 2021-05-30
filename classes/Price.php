@@ -24,6 +24,7 @@ class Price
     public string $how = 'Неизвестно';
     public string $color = '';
     public string $tcolor = '';
+    public int $serverMedian = 0;
 
     public function __construct(int $item_id)
     {
@@ -402,6 +403,57 @@ class Price
             return $q->valut_id;
 
         return 0;
+    }
+
+    public function serverMedian()
+    {
+        global $User;
+        $qwe = qwe("
+            SELECT * FROM prices 
+            WHERE item_id = '$this->item_id' 
+            AND server_group = '$User->server_group'
+            order by time DESC
+            ");
+        if(!$qwe or !$qwe->num_rows){
+            return false;
+        }
+        $arr = [];
+        $i = 0;
+        foreach ($qwe as $q)
+        {
+            if($q['auc_price'] > 1){
+                $i++;
+                $arr[] = $q['auc_price'];
+                //echo $q['time'].esyprice($q['auc_price']);
+            }
+
+            if($i>=100)
+                break;
+        }
+
+        if(count($arr)){
+            $this->serverMedian = median($arr);
+            return $this->serverMedian;
+        }
+
+
+        foreach ($qwe as $q)
+        {
+            $arr[] = $q['auc_price'];
+        }
+
+        $this->serverMedian = median($arr);
+        return $this->serverMedian;
+    }
+
+    public function serverMedianPrint(){
+        if(!self::serverMedian())
+            return false;
+
+        ?><br><?php
+        printVals('В среднем по больнице:',esyprice($this->serverMedian,1));
+        ?><br><?php
+        return true;
     }
 
 }
