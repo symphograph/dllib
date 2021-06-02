@@ -151,6 +151,15 @@ if($Item->craftable)
 		echo 'Некрафтабельно';
 	if(($Item->is_trade_npc and $Item->valut_id !=500) or  in_array($item_id,[3,4,5,6,23633]))
 		ValutInfo($Item);
+
+	if ($Item->id == 41488){
+	    ?>
+	    <div>
+            <br>
+            <p>Дополнительно о векселях можно узнать на <a href="https://gisaa.ru/veksel" ><b>gisaa.ru</b></a></p>
+	    </div>
+        <?php
+	}
 }
 ?>
         </div>
