@@ -24,9 +24,9 @@ $description = $Item->description;
 	?>
 <div id="catalog_area">
 	<div class="item_descr_area">
-		<?php if($cfg->myip) echo $item_id?>
+		<?php if($cfg->myip) echo $Item->id?>
 		<div class="nicon">
-			<div class="itim" id="itim_<?php echo $item_id?>" style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
+			<div class="itim" id="itim_<?php echo $Item->id?>" style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
 				<div class="grade" style="background-image: url('/img/grade/icon_grade<?php echo $Item->basic_grade?>.png')"></div>
 			</div>
 			<div class="itemname">
@@ -40,7 +40,7 @@ $description = $Item->description;
 		<div class="item_descr"><?php echo $description?></div>
 		</details><br>
 		
-		<a href="https://archeagecodex.com/ru/item/<?php echo $item_id?>/" target="_blank">
+		<a href="https://archeagecodex.com/ru/item/<?php echo $Item->id?>/" target="_blank">
 		<div class="aacodex_logo" data-tooltip="Смотреть на archeagecodex"></div>
 		</a>
 		<hr>
@@ -79,9 +79,9 @@ $description = $Item->description;
 		
 		if($cfg->myip)
 		{
-			?><a href="/edit/recedit.php?addrec=<?php echo $item_id?>" target="_blank"><button class="def_button">Добавить рецепт</button></a><br><?php
-			?><a href="/edit/edit_item.php?item_id=<?php echo $item_id?>"><button class="def_button">Править итем</button></a><br><?php
-			?><a href="/edit/item_off.php?item_id=<?php echo $item_id?>"><button class="def_button">отключить</button></a><br><?php
+			?><a href="/edit/recedit.php?addrec=<?php echo $Item->id?>" target="_blank"><button class="def_button">Добавить рецепт</button></a><br><?php
+			?><a href="/edit/edit_item.php?item_id=<?php echo $Item->id?>"><button class="def_button">Править итем</button></a><br><?php
+			?><a href="/edit/item_off.php?item_id=<?php echo $Item->id?>"><button class="def_button">отключить</button></a><br><?php
 		}
 		?>
         <hr><br>
@@ -94,7 +94,7 @@ if($Item->ismat)
 {
 	?><p><b>Используется в рецептах:</b></p>
 		<div class="up_craft_area"><?php
-	    UpCraftList($item_id);
+	    UpCraftList($Item->id);
 		?></div><?php
 }
 else 
@@ -111,17 +111,17 @@ if($Item->craftable)
 	
 	<?php
 	//Надо посчитать оптималный
-	$globalitem_id = $item_id;
+	$globalitem_id = $Item->id;
 	$trash = 1;
 
 	if(!$Item->isCounted())
     {
-        qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
-        qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+        qwe("DELETE FROM craft_buffer WHERE `user_id` = '$User->id'");
+        qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$User->id'");
         require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/funct-obhod2.php';
         $Item->RecountBestCraft();
-        qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
-        qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
+        qwe("DELETE FROM craft_buffer WHERE `user_id` = '$User->id'");
+        qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$User->id'");
     }
 
     $Item->getCrafts();
@@ -136,7 +136,7 @@ if($Item->craftable)
     {
         ?>
         <br><hr><br>
-        <a href="/packpost.php?item_id=<?php echo $item_id?>">
+        <a href="/packpost.php?item_id=<?php echo $Item->id?>">
             <button type="button" class="def_button">Пакулятор</button>
         </a> <?php
     }
@@ -144,12 +144,12 @@ if($Item->craftable)
 
 }else
 {
-	$refuse = IsRefuse($item_id);
+	$refuse = IsRefuse($Item->id);
 	if($refuse)
 		RefuseList($refuse);
 	else
 		echo 'Некрафтабельно';
-	if(($Item->is_trade_npc and $Item->valut_id !=500) or  in_array($item_id,[3,4,5,6,23633]))
+	if(($Item->is_trade_npc and $Item->valut_id !=500) or  in_array($Item->id,[3,4,5,6,23633]))
 		ValutInfo($Item);
 
 	if ($Item->id == 41488){
@@ -170,7 +170,7 @@ Comments($User,$item_id);
 
 function ValutInfo($Item)
 {
-	global $user_id;
+	global $User;
 	$mvalut = $Item->valut_id;
 	$valut_name = $Item->valut_name;
 	//Касательно Чести, Рем Репутации, итд.
@@ -190,8 +190,8 @@ function ValutInfo($Item)
 	Медиана:
 	
 	<?php
-	//$serv_median = RepMedian($mvalut, $user_id);
-	$valutData = MonetisationList($val_link, $mvalut, $user_id);
+	//$serv_median = RepMedian($mvalut, $User->id);
+	$valutData = MonetisationList($val_link, $mvalut, $User->id);
 	//printr($valutData);
 	if(!empty($valutData[1]))
 	{
@@ -255,7 +255,7 @@ function DwnCraftList($ItemOb)
     $Item->reConstruct($ItemOb);
 	$best_types = ['','Выбран руру','Выбран вами', 'Покупается'];
 	$item_id = $Item->id;
-	global $user_id, $mat_deep, $cfg, $trash, $User;
+	global $User, $mat_deep, $cfg, $trash, $User;
 
 	$qwe = qwe("
 	SELECT
@@ -263,7 +263,7 @@ function DwnCraftList($ItemOb)
 	FROM
 		`crafts`
 	INNER JOIN `user_crafts` ON `crafts`.`craft_id` = `user_crafts`.`craft_id`
-	AND `user_crafts`.`user_id` = '$user_id'
+	AND `user_crafts`.`user_id` = '$User->id'
 	AND `user_crafts`.`item_id` = '$item_id'
 	AND `crafts`.`on_off` = 1
 	ORDER BY `isbest` DESC, `spmu`,`craft_price`
@@ -275,7 +275,7 @@ function DwnCraftList($ItemOb)
 		//extract($q);
 		$Craft = new Craft($q['craft_id']);
 		$Craft->InitForUser();
-	 	if(!$Craft->setCountedData($user_id))
+	 	if(!$Craft->setCountedData($User->id))
 	 	    continue;
 
 	 	$Prof = new Prof();
