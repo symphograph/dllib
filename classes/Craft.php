@@ -20,7 +20,7 @@ class Craft
     public $my_craft;
     public $craft_time;
     public $prof_id;
-    public $grade;
+    public int $grade = 1;
     public $mins;
     public $spm;
     public array $mats = [];
@@ -71,7 +71,7 @@ class Craft
         $this->my_craft = $q->my_craft;
         $this->craft_time = $q->craft_time;
         $this->prof_id = $q->prof_id;
-        $this->grade = $q->grade;
+        $this->grade = intval($q->grade);
         $this->mins = $q->mins;
         $this->spm = $q->spm;
         $this->mats = self::getMats();
@@ -370,7 +370,7 @@ class Craft
                      style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
                     <div class="grade"
                          data-tooltip="<?php echo $dtitle?>"
-                         style="background-image: url(/img/grade/icon_grade<?php echo $Item->basic_grade?>.png)">
+                         style="background-image: url(/img/grade/icon_grade<?php echo $this->grade?>.png)">
                         <div class="matneed"><?php echo $this->result_amount*$u_amount?></div>
                     </div>
                 </div>
