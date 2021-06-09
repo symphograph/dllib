@@ -127,7 +127,11 @@ foreach($qwe as $q)
 </div>
 </div>
 </main>
-<?php include_once 'pageb/footer.php';?>
+<?php
+    include_once 'pageb/footer.php';
+    jsFile('posters.js');
+
+?>
 <script type="text/javascript" src="js/Catalog.js?ver=<?php echo md5_file('js/Catalog.js')?>"></script>
 </body>
 

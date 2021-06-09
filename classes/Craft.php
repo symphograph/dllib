@@ -19,10 +19,10 @@ class Craft
     public $deep;
     public $my_craft;
     public $craft_time;
-    public $prof_id;
+    public int|null $prof_id = 27;
     public int $grade = 1;
     public $mins;
-    public $spm;
+    public int|null $spm;
     public array $mats = [];
     public int $isbest = 0;
     public int $orcost = 300;
@@ -50,31 +50,31 @@ class Craft
         $q = mysqli_fetch_object($qwe);
 
 
-        $this->craft_id = $q->craft_id;
-        $this->rec_name = $q->rec_name;
-        $this->dood_id = $q->dood_id;
-        $this->dood_name = $q->dood_name;
-        $this->result_item_id = $q->result_item_id;
+        $this->craft_id         = $q->craft_id;
+        $this->rec_name         = $q->rec_name;
+        $this->dood_id          = $q->dood_id;
+        $this->dood_name        = $q->dood_name;
+        $this->result_item_id   = $q->result_item_id;
         $this->result_item_name = $q->result_item_name;
-        $this->labor_need = $q->labor_need;
-        $this->profession = $q->profession;
-        $this->prof_need = $q->prof_need;
-        $this->result_amount = $q->result_amount;
+        $this->labor_need       = $q->labor_need;
+        $this->profession       = $q->profession;
+        $this->prof_need        = $q->prof_need;
+        $this->result_amount    = $q->result_amount;
 
         if($q->dood_id == 9131)
             $this->result_amount = $q->result_amount * 1.1;
 
-        $this->on_off = $q->on_off;
-        $this->isbottom = $q->isbottom;
+        $this->on_off     = $q->on_off;
+        $this->isbottom   = $q->isbottom;
         $this->dood_group = $q->dood_group;
-        $this->deep = $q->deep;
-        $this->my_craft = $q->my_craft;
+        $this->deep       = $q->deep;
+        $this->my_craft   = $q->my_craft;
         $this->craft_time = $q->craft_time;
-        $this->prof_id = $q->prof_id;
-        $this->grade = intval($q->grade);
-        $this->mins = $q->mins;
-        $this->spm = $q->spm;
-        $this->mats = self::getMats();
+        $this->prof_id    = $q->prof_id;
+        $this->grade      = intval($q->grade);
+        $this->mins       = $q->mins;
+        $this->spm        = $q->spm;
+        $this->mats       = self::getMats();
         return true;
     }
 
@@ -97,24 +97,26 @@ class Craft
         ");
         foreach ($qwe as $q)
         {
-            $q = (object) $q;
+            $q   = (object)$q;
             $mat = new Mat();
             $mat->byQwe($q);
-            $mat->id = $q->item_id;
+            $mat->id         = $q->item_id;
             $mat->mater_need = $q->mater_need;
             $mat->need_grade = intval($q->mat_grade);
-            if(!$mat->need_grade)
+
+            if (!$mat->need_grade)
                 $mat->need_grade = $q->basic_grade ?? 1;
-            if($q->basic_grade > $mat->need_grade)
+            if ($q->basic_grade > $mat->need_grade)
                 $mat->need_grade = $q->basic_grade;
-            $mat->name = $q->item_name;
-            $mat->craftId = $this->craft_id;
-            $mat->craftable = $q->craftable;
-            $mat->item_group = $q->item_group ?? 0;
-            $mat->icon = $q->icon ?? '';
-            $mat->isbest = $q->isbest ?? 0;
+
+            $mat->name         = $q->item_name;
+            $mat->craftId      = $this->craft_id;
+            $mat->craftable    = $q->craftable;
+            $mat->item_group   = $q->item_group ?? 0;
+            $mat->icon         = $q->icon ?? '';
+            $mat->isbest       = $q->isbest ?? 0;
             $mat->is_trade_npc = $q->is_trade_npc ?? 0;
-            $mat->valut_id = $q->valut_id ?? 500;
+            $mat->valut_id     = $q->valut_id ?? 500;
             if($q->isbest == 3){
                 $mat->is_buyable = true;
             }
@@ -153,8 +155,8 @@ class Craft
             return false;
         $q = mysqli_fetch_object($qwe);
 
-        $this->isbest = $q->isbest;
-        $this->spmu = $q->spmu;
+        $this->isbest      = $q->isbest;
+        $this->spmu        = $q->spmu;
         $this->craft_price = $q->craft_price;
         $this->labor_total = $q->labor_total;
 

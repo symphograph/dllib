@@ -79,7 +79,7 @@ $description = $Item->description;
 		
 		if($cfg->myip)
 		{
-			?><a href="/edit/recedit.php?addrec=<?php echo $Item->id?>" target="_blank"><button class="def_button">Добавить рецепт</button></a><br><?php
+			?><a href="/recedit.php?addrec=<?php echo $Item->id?>" target="_blank"><button class="def_button">Добавить рецепт</button></a><br><?php
 			?><a href="/edit/edit_item.php?item_id=<?php echo $Item->id?>"><button class="def_button">Править итем</button></a><br><?php
 			?><a href="/edit/item_off.php?item_id=<?php echo $Item->id?>"><button class="def_button">отключить</button></a><br><?php
 		}
@@ -397,6 +397,7 @@ function DwnCraftList($ItemOb)
                     if(in_array($Item->categ_id,[133]))
                     {
                         $pass_labor = $PackObject['pass_labor2'];
+                        //printr($PackObject);
                         printVals('На сдачу:',$pass_labor.$imgor);
                         printVals('На цепочку:',round($Craft->labor_total,2).$imgor);
                         printVals('На всё:',round($Craft->labor_total+$pass_labor,2).$imgor);
@@ -417,7 +418,7 @@ function DwnCraftList($ItemOb)
 		<?php
 	 	if($cfg->myip)
 		{
-			?><a href="edit/recedit.php?query=<?php echo $Craft->craft_id?>" target="_blank">Править</a><?php
+			?><a href="../recedit.php?query=<?php echo $Craft->craft_id?>" target="_blank">Править</a><?php
 		}
 		?>
 		<hr><?php

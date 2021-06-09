@@ -512,8 +512,13 @@ function CssMeta(array $css_arr)
     $root = $_SERVER['DOCUMENT_ROOT'];
     foreach ($css_arr as $css)
     {
-        ?><link href="css/<?php echo $css?>?ver=<?php echo md5_file($root.'/css/'.$css)?>" rel="stylesheet"><?php
+        ?><link href="/css/<?php echo $css?>?ver=<?php echo md5_file($root.'/css/'.$css)?>" rel="stylesheet"><?php
     }
+}
+
+function jsFile($file)
+{
+    ?><script type="text/javascript" src="<?php echo 'js/'.$file.'?ver='.md5_file($_SERVER['DOCUMENT_ROOT'].'/js/'.$file)?>"></script><?php
 }
 
 function LongestWordFound($text)
@@ -541,5 +546,20 @@ function cmp($a, $b)
         return 0;
     }
     return ($a < $b) ? -1 : 1;
+}
+
+function sqlUpdateArgsToString(array $args){
+    global $dbLink;
+    if(!isset($dbLink))
+        dbconnect();
+
+    $arr = [];
+    foreach ($args as $ak => $av){
+        if(!is_int($av)){
+            $av = mysqli_real_escape_string($dbLink,$av);
+        }
+        $arr[] = "`$ak` = '$av'";
+    }
+    return implode(', ',$arr);
 }
 ?>
