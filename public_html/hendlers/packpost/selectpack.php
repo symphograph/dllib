@@ -10,7 +10,7 @@ if($from_id == 100)
     $and = '';
 }else
 {
-    $and = "AND pack_prices.zone_id = '$from_id'";
+    $and = " AND pack_prices.zone_id = '$from_id' ";
 }
 
 $pitem_id = $_POST['pitem_id'] ?? 0;
@@ -33,8 +33,8 @@ FROM packs
 INNER JOIN pack_prices ON pack_prices.item_id = packs.item_id
     AND  pack_prices.zone_id = packs.zone_id
 INNER JOIN zones on zones.zone_id = packs.zone_id
-".$and."
-and (pack_prices.zone_id < 30 or pack_prices.zone_id > 49)
+$and
+and zones.fresh_type
 group by pack_prices.item_id, pack_prices.zone_id
 order by item_name
 ");

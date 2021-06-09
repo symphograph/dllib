@@ -396,7 +396,7 @@ function DwnCraftList($ItemOb)
 
                     if(in_array($Item->categ_id,[133]))
                     {
-                        $pass_labor = $PackObject['pass_labor2'];
+                        $pass_labor = $PackObject['pass_labor2'] ?? 0;
                         //printr($PackObject);
                         printVals('На сдачу:',$pass_labor.$imgor);
                         printVals('На цепочку:',round($Craft->labor_total,2).$imgor);

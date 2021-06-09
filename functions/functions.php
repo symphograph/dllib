@@ -815,7 +815,7 @@ function SelectZone($zone_start=0,$zone_selected = 0)
     {
         $qwe = qwe("
         select * from zones 
-        where (zone_id < 30 or zone_id > 49)
+        where fresh_type
         order by side, zone_name
         ");
 

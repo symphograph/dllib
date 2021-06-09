@@ -101,7 +101,7 @@ order by item_name
 ";
     $sql = "
 select * from zones
-where (zone_id < 30 or zone_id > 49)
+where fresh_type
 order by side, zone_name
 ";
     $qwe = qwe($sql);
