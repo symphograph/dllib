@@ -55,9 +55,7 @@ if($User->siol == 5)
 <meta name = "description" content = "Таблица цен на паки в Archeage <?php echo $aa_ver?>"/>
   <meta name = "keywords" content = "товары фактории, паки <?php echo $aa_ver?>, archeage, архейдж, аркейдж, региональные товары, таблица паков, сколько стоят паки, цена паков" />
 <title>Таблица цен на паки <?php echo $aa_ver?></title>
-
-<link href="css/default.css?ver=<?php echo md5_file('css/default.css')?>" rel="stylesheet">
-<link href="css/packtable.css?ver=<?php echo md5_file('css/packtable.css')?>" rel="stylesheet">
+    <?php CssMeta(['default.css','packtable.css']); ?>
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
 </head>
 

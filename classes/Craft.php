@@ -99,8 +99,8 @@ class Craft
         {
             $q   = (object)$q;
             $mat = new Mat();
-            $mat->byQwe($q);
-            $mat->id         = $q->item_id;
+            $mat->byQ($q);
+            $mat->item_id    = $q->item_id;
             $mat->mater_need = $q->mater_need;
             $mat->need_grade = intval($q->mat_grade);
 
@@ -109,8 +109,8 @@ class Craft
             if ($q->basic_grade > $mat->need_grade)
                 $mat->need_grade = $q->basic_grade;
 
-            $mat->name         = $q->item_name;
-            $mat->craftId      = $this->craft_id;
+            $mat->item_name = $q->item_name;
+            $mat->craftId   = $this->craft_id;
             $mat->craftable    = $q->craftable;
             $mat->item_group   = $q->item_group ?? 0;
             $mat->icon         = $q->icon ?? '';
@@ -121,7 +121,7 @@ class Craft
                 $mat->is_buyable = true;
             }
 
-            $mats[$mat->id] = $mat;
+            $mats[$mat->item_id] = $mat;
         }
         return $mats;
     }
@@ -317,13 +317,13 @@ class Craft
         foreach($mats as $Mat)
         {
 
-           if($Mat->id == 500){
+           if($Mat->item_id == 500){
                $money = $Mat->mater_need;
                continue;
            }
 
             $Mat->MatPrice();
-            if(in_array($Mat->id,$flowers) and $Mat->mater_need < 0){
+            if(in_array($Mat->item_id,$flowers) and $Mat->mater_need < 0){
                 $Mat->priceData->price = $this->craft_price;
                 $Mat->priceData->autor = 1;
                 $Mat->priceData->how = 'Себестоимость (крафт)';
@@ -332,7 +332,7 @@ class Craft
             $tooltip = $Mat->ToolTip($mater_need);
 
 
-            $Cubik = new Cubik($Mat->id,$Mat->icon,$Mat->need_grade,$tooltip,$mater_need);
+            $Cubik = new Cubik($Mat->item_id,$Mat->icon,$Mat->need_grade,$tooltip,$mater_need);
             $Cubik->print();
         }
 

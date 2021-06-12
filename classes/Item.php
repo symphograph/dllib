@@ -3,15 +3,15 @@
 
 class Item
 {
-    public int $id;
-    public $valut_id;
+    public int $item_id;
+    public     $valut_id;
     public $valut_icon = '';
     public $price_buy;
     public $price_sale;
     public $is_trade_npc;
     public string $category;
-    public $name;
-    public $description;
+    public string $item_name;
+    public        $description;
     public int $on_off;
     public int $personal;
     public int $craftable;
@@ -32,8 +32,8 @@ class Item
     public array $crafts = [];
     public array $potential_crafts = [];
     public int $bestCraftId = 0;
-    public bool $ispack = false;
-    public int $craftprice = 0;
+    public bool  $ispack                 = false;
+    public int   $craft_price            = 0;
     public array $potentialMatsAndCrafts = [];
     public $orSum;
     public array $allMats = [];
@@ -63,20 +63,20 @@ class Item
             return false;
         $q = mysqli_fetch_object($qwe);
 
-        if(!self::byQwe($q))
+        if(!self::byQ($q))
             return false;
 
         return true;
     }
 
-    public function byQwe(object $q) : bool
+    public function byQ(object $q) : bool
     {
-        $this->id = $q->item_id;
+        $this->item_id  = $q->item_id;
         $this->valut_id = $q->valut_id ?? 500;
         $this->price_buy = $q->price_buy ?? 0;
         $this->price_sale = $q->price_sale ?? 0;
         $this->category = $q->category ?? '';
-        $this->name = htmlspecialchars($q->item_name);
+        $this->item_name = htmlspecialchars($q->item_name);
         $this->description = $q->description ?? '';
         //$this->description = nl2br(htmlspecialchars($q->description));
         $this->on_off = $q->on_off ?? 1;
@@ -116,10 +116,11 @@ class Item
         if(count($this->crafts))
             return $this->crafts;
 
+
         $crafts = [];
         $qwe = qwe("
         SELECT `craft_id` FROM `crafts` 
-        WHERE `result_item_id` = '$this->id'
+        WHERE `result_item_id` = '$this->item_id'
         AND `on_off`
         ");
         if(!$qwe or !$qwe->num_rows)
@@ -182,7 +183,7 @@ class Item
         else
             $crafts = $this->crafts;
 
-        $items = self::AllPotentialMats($this->id);
+        $items = self::AllPotentialMats($this->item_id);
         if(!count($items))
             return $crafts;
 
@@ -210,7 +211,7 @@ class Item
      */
     public function getPrimaryMats()
     {
-        $mats = self::AllPotentialMats($this->id);
+        $mats = self::AllPotentialMats($this->item_id);
         if(!count($mats))
             return [];
 
@@ -402,24 +403,24 @@ class Item
         if(!$this->craftable)
             return false;
 
-        if($this->craftprice)
+        if($this->craft_price)
             return true;
 
         global $User;
         $qwe = qwe("
             SELECT * FROM `user_crafts` 
             WHERE user_id = '$User->id'
-            AND item_id = '$this->id'
+            AND item_id = '$this->item_id'
             ORDER BY isbest DESC 
             LIMIT 1
             ");
         if(!$qwe or !$qwe->num_rows)
             return false;
 
-        $q = mysqli_fetch_object($qwe);
-        $this->craftprice = intval($q->craft_price);
+        $q                 = mysqli_fetch_object($qwe);
+        $this->craft_price = intval($q->craft_price);
 
-        if($this->craftprice)
+        if($this->craft_price)
             return true;
 
         return false;
@@ -433,7 +434,7 @@ class Item
         $qwe = qwe("
             SELECT * FROM user_crafts 
             WHERE user_id = '$User->id'
-            AND item_id = '$this->id'
+            AND item_id = '$this->item_id'
             ORDER BY isbest DESC 
             LIMIT 1
             ");
@@ -459,7 +460,7 @@ class Item
         $orsum += $Craft->labor_single*$need;
         foreach ($Craft->mats as $mat)
         {
-            //$mat->getFromDB($mat->id);
+            //$mat->getFromDB($mat->item_id);
             //echo $mat->name.' '.$orsum.'<br>';
             if($mat->craftable and $mat->mater_need > 0)
                 $orsum = $mat->orTotal($orsum,$mat->mater_need/$Craft->result_amount);
@@ -494,10 +495,10 @@ class Item
             }
 
 
-            if(array_key_exists($mat->id,$arr))
-                $arr[$mat->id] += $mat->mater_need*$need/$Craft->result_amount;
+            if(array_key_exists($mat->item_id,$arr))
+                $arr[$mat->item_id] += $mat->mater_need*$need/$Craft->result_amount;
             else
-                $arr[$mat->id] = $mat->mater_need*$need/$Craft->result_amount;
+                $arr[$mat->item_id] = $mat->mater_need*$need/$Craft->result_amount;
 
         }
         $this->allMats = $arr;
@@ -522,10 +523,10 @@ class Item
 
             if ($mat->mater_need < 0){
                 $tr = abs($mat->mater_need)*$need/$Craft->result_amount;
-                if(array_key_exists($mat->id,$arr))
-                    $arr[$mat->id] += $tr;
+                if(array_key_exists($mat->item_id,$arr))
+                    $arr[$mat->item_id] += $tr;
                 else
-                    $arr[$mat->id] = $tr;
+                    $arr[$mat->item_id] = $tr;
                 continue;
             }
 
@@ -576,10 +577,10 @@ class Item
                 $q = (object) $q;
 
                 $Mat = new Mat;
-                $Mat->byQwe($q);
-                $sum = $this->allMats[$Mat->id]*$u_amount*$result_amount;
+                $Mat->byQ($q);
+                $sum = $this->allMats[$Mat->item_id]*$u_amount*$result_amount;
                 $Mat->MatPrice();
-                $Cubik = new Cubik($Mat->id,$Mat->icon,$Mat->basic_grade,$Mat->ToolTip($sum), round($sum,2));
+                $Cubik = new Cubik($Mat->item_id,$Mat->icon,$Mat->basic_grade,$Mat->ToolTip($sum), round($sum,2));
                 $Cubik->print();
             }
             ?>
@@ -625,11 +626,11 @@ class Item
                     $q = (object) $q;
 
                     $Mat = new Mat;
-                    $Mat->byQwe($q);
-                    $sum = $this->allTrash[$Mat->id]*$u_amount*$result_amount;
+                    $Mat->byQ($q);
+                    $sum = $this->allTrash[$Mat->item_id]*$u_amount*$result_amount;
                     $Mat->MatPrice();
 
-                    $Cubik = new Cubik($Mat->id,$Mat->icon,$Mat->basic_grade,$Mat->ToolTip($sum), round($sum,2));
+                    $Cubik = new Cubik($Mat->item_id,$Mat->icon,$Mat->basic_grade,$Mat->ToolTip($sum), round($sum,2));
                     $Cubik->print();
                 }
                 ?>
@@ -674,7 +675,7 @@ class Item
             if($Mat->mater_need < 0)
                 continue;
 
-            $arr[] = ['deep'=>$i,$this->id, $Mat->id, $Mat->name];
+            $arr[] = ['deep'=>$i, $this->item_id, $Mat->item_id, $Mat->item_name];
             if($Mat->craftable and !$Mat->is_buyable){
 
                 echo $Mat->getBestCraft();

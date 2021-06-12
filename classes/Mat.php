@@ -21,10 +21,10 @@ class Mat extends Item
         if($q->mater_need == 0)
             return false;
 
-        $this->id = $q->id;
+        $this->item_id    = $q->id;
         $this->mater_need = $q->mater_need;
         $this->need_grade = $q->mat_grade ?? 1;
-        $this->name = $q->item_name ?? '';
+        $this->item_name = $q->item_name ?? '';
         $this->valut_id = $q->valut_id ?? 500;
         $this->spm2 = intval($q->spm2);
         $this->is_trade_npc = $q->is_trade_npc;
@@ -44,16 +44,16 @@ class Mat extends Item
         }
 
        // if (!$this->craftable)
-            $lost[] = $this->id;
+            $lost[] = $this->item_id;
         return false;
     }
 
     public function MatPrice() : bool
     {
-        $Price = new Price($this->id);
+        $Price = new Price($this->item_id);
         $this->priceData = $Price;
 
-        if($this->id == 500){
+        if($this->item_id == 500){
             $this->price = 1;
             $Price->price = 1;
             $Price->how = 'Константа';
@@ -129,8 +129,8 @@ class Mat extends Item
 
     public function ToolTip($sum)
     {
-        if($this->id == 500)
-            return $this->name.'<br>'.htmlspecialchars(esyprice(round($sum)));
+        if($this->item_id == 500)
+            return $this->item_name.'<br>'.htmlspecialchars(esyprice(round($sum)));
 
         $matprice = esyprice($this->priceData->price);
         $matprice = htmlspecialchars($matprice);
@@ -146,7 +146,7 @@ class Mat extends Item
             $autorName = '';
 
 
-        return $this->name.'<br>'.round($sum,4).' шт по<br>'.$matprice.$this->priceData->how.'<br>'.$autorName;
+        return $this->item_name.'<br>'.round($sum,4).' шт по<br>'.$matprice.$this->priceData->how.'<br>'.$autorName;
 
     }
 

@@ -183,7 +183,7 @@ function edMats($v)
     $Mat->reConstruct($v);
     ?>
     <div class="itemline">
-        <div class="itemprompt" data-title="<?php echo $Mat->name . ' x ' . $Mat->mater_need ?>">
+        <div class="itemprompt" data-title="<?php echo $Mat->item_name . ' x ' . $Mat->mater_need ?>">
             <div class="itim"
                  style="background-image: url(../img/icons/50/<?php echo $Mat->icon ?>.png)">
                 <div class="itdigit">
@@ -196,11 +196,11 @@ function edMats($v)
                                 text-align: right;"
                            autocomplete="off"
                            type="text"
-                           name="mater_need[<?php echo $Mat->id ?>]"
+                           name="mater_need[<?php echo $Mat->item_id ?>]"
                            value="<?php echo $Mat->mater_need ?>"
                     >
 
-                    <input type="checkbox" name="del[]" value="<?php echo $Mat->id ?>"
+                    <input type="checkbox" name="del[]" value="<?php echo $Mat->item_id ?>"
                            autocomplete="off"
                            style="background-color: transparent; border-color: transparent;"
                     >

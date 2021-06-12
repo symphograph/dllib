@@ -24,13 +24,13 @@ $description = $Item->description;
 	?>
 <div id="catalog_area">
 	<div class="item_descr_area">
-		<?php if($cfg->myip) echo $Item->id?>
+		<?php if($cfg->myip) echo $Item->item_id?>
 		<div class="nicon">
-			<div class="itim" id="itim_<?php echo $Item->id?>" style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
+			<div class="itim" id="itim_<?php echo $Item->item_id?>" style="background-image: url('/img/icons/50/<?php echo $Item->icon?>.png')">
 				<div class="grade" style="background-image: url('/img/grade/icon_grade<?php echo $Item->basic_grade?>.png')"></div>
 			</div>
 			<div class="itemname">
-				<div id="mitemname"><b><?php echo $Item->name?></b></div>
+				<div id="mitemname"><b><?php echo $Item->item_name?></b></div>
 				<div class="comdate"><?php if($Item->personal) echo 'Персональный предмет'?></div>
 				<div class="mcateg" id="categ_<?php echo $Item->categ_id?>" sgroup="<?php echo $Item->sgr_id?>"><?php echo $Item->category?></div>
 			</div>	
@@ -40,13 +40,13 @@ $description = $Item->description;
 		<div class="item_descr"><?php echo $description?></div>
 		</details><br>
 		
-		<a href="https://archeagecodex.com/ru/item/<?php echo $Item->id?>/" target="_blank">
+		<a href="https://archeagecodex.com/ru/item/<?php echo $Item->item_id?>/" target="_blank">
 		<div class="aacodex_logo" data-tooltip="Смотреть на archeagecodex"></div>
 		</a>
 		<hr>
 		
 		<?php
-		$Price = new Price($Item->id);
+		$Price = new Price($Item->item_id);
         $Price->byMode();
 		if($Item->is_trade_npc)
 		{
@@ -79,9 +79,9 @@ $description = $Item->description;
 		
 		if($cfg->myip)
 		{
-			?><a href="/recedit.php?addrec=<?php echo $Item->id?>" target="_blank"><button class="def_button">Добавить рецепт</button></a><br><?php
-			?><a href="/edit/edit_item.php?item_id=<?php echo $Item->id?>"><button class="def_button">Править итем</button></a><br><?php
-			?><a href="/edit/item_off.php?item_id=<?php echo $Item->id?>"><button class="def_button">отключить</button></a><br><?php
+			?><a href="/recedit.php?addrec=<?php echo $Item->item_id?>" target="_blank"><button class="def_button">Добавить рецепт</button></a><br><?php
+			?><a href="/edit/edit_item.php?item_id=<?php echo $Item->item_id?>"><button class="def_button">Править итем</button></a><br><?php
+			?><a href="/edit/item_off.php?item_id=<?php echo $Item->item_id?>"><button class="def_button">отключить</button></a><br><?php
 		}
 		?>
         <hr><br>
@@ -94,7 +94,7 @@ if($Item->ismat)
 {
 	?><p><b>Используется в рецептах:</b></p>
 		<div class="up_craft_area"><?php
-	    UpCraftList($Item->id);
+	    UpCraftList($Item->item_id);
 		?></div><?php
 }
 else 
@@ -111,7 +111,7 @@ if($Item->craftable)
 	
 	<?php
 	//Надо посчитать оптималный
-	$globalitem_id = $Item->id;
+	$globalitem_id = $Item->item_id;
 	$trash = 1;
 
 	if(!$Item->isCounted())
@@ -136,7 +136,7 @@ if($Item->craftable)
     {
         ?>
         <br><hr><br>
-        <a href="/packpost.php?item_id=<?php echo $Item->id?>">
+        <a href="/packpost.php?item_id=<?php echo $Item->item_id?>">
             <button type="button" class="def_button">Пакулятор</button>
         </a> <?php
     }
@@ -144,15 +144,15 @@ if($Item->craftable)
 
 }else
 {
-	$refuse = IsRefuse($Item->id);
+	$refuse = IsRefuse($Item->item_id);
 	if($refuse)
 		RefuseList($refuse);
 	else
 		echo 'Некрафтабельно';
-	if(($Item->is_trade_npc and $Item->valut_id !=500) or  in_array($Item->id,[3,4,5,6,23633]))
+	if(($Item->is_trade_npc and $Item->valut_id !=500) or  in_array($Item->item_id,[3,4,5,6,23633]))
 		ValutInfo($Item);
 
-	if ($Item->id == 41488){
+	if ($Item->item_id == 41488){
 	    ?>
 	    <div>
             <br>
@@ -254,7 +254,7 @@ function DwnCraftList($ItemOb)
     $Item = new Item();
     $Item->reConstruct($ItemOb);
 	$best_types = ['','Выбран руру','Выбран вами', 'Покупается'];
-	$item_id = $Item->id;
+	$item_id = $Item->item_id;
 	global $User, $mat_deep, $cfg, $trash, $User;
 
 	$qwe = qwe("
@@ -280,7 +280,7 @@ function DwnCraftList($ItemOb)
 
 	 	$Prof = new Prof();
 	 	$Prof->InitForUser($Craft->prof_id);
-		$craft_name = $Craft->rec_name ?? $Item->name;
+		$craft_name = $Craft->rec_name ?? $Item->item_name;
 	 	//$u_amount = $result_amount;
 	 	$u_amount = 1;
 	 	if($i == 1)
@@ -314,7 +314,7 @@ function DwnCraftList($ItemOb)
 	 	if($i == 2)
 			echo '<br><details><summary>Другие рецепты</summary>';
 			
-		$Price = new Price($Item->id);
+		$Price = new Price($Item->item_id);
         $Price->byMode();
 
 	 	if($Price->price)

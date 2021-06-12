@@ -7,9 +7,9 @@ if(!empty($_COOKIE['pack_settings']))
 function PackTypeButton(int $type, string $navname, string $img, array $ps)
 {
     $chk = '';
-    if(isset($ps['type'][$type]))
+    if(isset($ps['type'][$type])){
         $chk = ' checked ';
-
+    }
 
     ?>
     <div class="nicon_out">
@@ -52,6 +52,12 @@ function PackTypeButton(int $type, string $navname, string $img, array $ps)
 			<label for="side_2" class="navicon" style="background-image: url(img/icons/50/icon_house_029.png);"></label>
 			<div class="navname">Восточные</div>
 		</div>
+
+        <div class="nicon_out">
+            <input type="radio" id="side_3" name="side" value="3">
+            <label for="side_3" class="navicon" style="background-image: url(img/icons/50/icon_item_0013.png);"></label>
+            <div class="navname">Северные</div>
+        </div>
 		
 	</div>		
 	<hr>		

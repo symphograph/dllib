@@ -406,6 +406,7 @@ function FreshTimeSelect($item_id = false, $from_id = false)
         $qwe = qwe("
         SELECT 
         fresh_data.fresh_tstart,
+        fresh_data.fresh_tstop,
         fresh_data.fresh_per,
         fresh_data.fresh_lvl,
         fresh_data.fresh_group,
@@ -422,27 +423,23 @@ function FreshTimeSelect($item_id = false, $from_id = false)
     }else
     {
        $qwe = qwe("
-        Select fresh_tstart from fresh_data
+        Select * from fresh_data
         GROUP BY fresh_tstart;
         ");
     }
 
 
-    foreach($qwe as $i)
+    foreach($qwe as $f)
     {
-        $time = $i['fresh_tstart'];
-
-        if(($time/60) >= 24)
-            $format = "jд. H:i";
-        else
-            $format = "H:i";
-
-        $pack_time = date($format,$time*60-3600*3-3600*24);
-
-        if($item_id)
-            $per = ' '.$i['fresh_per'].'%';
-
-        ?><option value="<?php echo $time?>"><?php echo $pack_time.$per;?></option><?php
+        $Fresh = new Freshness(
+                $f['fresh_group'],
+                $f['fresh_type'],
+                $f['fresh_lvl'],
+                $f['fresh_tstart'],
+                $f['fresh_tstop'],
+                $f['fresh_per']
+        );
+        echo $Fresh->option($item_id);
     }
 }
 

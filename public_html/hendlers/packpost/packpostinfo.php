@@ -59,7 +59,7 @@ pack_prices.pack_price/pack_prices.mul as pack_price
 FROM
 packs
 INNER JOIN pack_prices ON pack_prices.item_id= packs.item_id 
-AND pack_prices.zone_id = packs.zone_id
+AND pack_prices.zone_id = packs.zone_from
 AND packs.item_id = '$item_id'
 AND pack_prices.zone_id = '$from_id'
 AND pack_prices.zone_to = '$to_id'

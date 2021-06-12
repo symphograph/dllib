@@ -31,8 +31,8 @@ packs.zone_name,
 packs.pack_t_id       
 FROM packs
 INNER JOIN pack_prices ON pack_prices.item_id = packs.item_id
-    AND  pack_prices.zone_id = packs.zone_id
-INNER JOIN zones on zones.zone_id = packs.zone_id
+    AND  pack_prices.zone_id = packs.zone_from
+INNER JOIN zones on zones.zone_id = packs.zone_from
 $and
 and zones.fresh_type
 group by pack_prices.item_id, pack_prices.zone_id
