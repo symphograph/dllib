@@ -11,7 +11,7 @@ $('#input_data').ready(function()
         var divid = $(this).attr('id');
         if(divid == 0) return false;
         QueryMats(item_id,divid);
-        $("#"+divid).attr('id',0);
+        //$("#"+divid).attr('id',0);
 
     });
 
@@ -78,7 +78,7 @@ function QueryPacks()
     $jdun = $("#jdun");
 
     if(!side) return($("#input_data").html('<h2>"Восток" или "Запад"?</h2>'));
-    console.log(side);
+    //console.log(side);
     $jdun.removeClass("jdun"); $jdun.addClass("loading");
     $.ajax
     ({
@@ -88,16 +88,33 @@ function QueryPacks()
 
         data: form.serialize(),
 
-        dataType: "html",
+        dataType: "json",
         cache: false,
         // Данные пришли
         success: function(data )
         {
             $jdun.removeClass("loading"); $jdun.addClass("jdun");
-            $("#input_data").html(data );
+            //$("#input_data").html(data );
+            packList(data)
             TipTop();
         }
     });
+}
+
+function packList(arr)
+{
+    //validator.showErrors(JSON.parse(arr))
+    console.log(arr)
+
+    $.each(arr,function(k,v){
+
+
+        let row = '';
+        row = '<div className="pack_row0">' + v.Pack.pack_name + '</div><hr>';
+        console.log(row);
+    });
+
+
 }
 
 $('#all_info').on('input','.pr_inputs',function(){

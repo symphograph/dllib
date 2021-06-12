@@ -6,10 +6,10 @@ class PackPrice
     private int       $per;
     private int       $siol;
     private int       $fresh_per;
-    private int       $factoryPrice = 0;
+    public int        $factoryPrice = 0;
     private int       $flatSalary;
     private int       $perSalary;
-    private int       $finalSalary  = 0;
+    public int        $finalSalary  = 0;
     private int       $valut_id;
     private int       $craft_price;
     public int        $profit       = 0;

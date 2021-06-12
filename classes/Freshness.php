@@ -56,7 +56,7 @@ class Freshness
         AND '$age' between fresh_data.fresh_tstart and fresh_data.fresh_tstop
         GROUP BY fresh_data.fresh_tstart");
         if(!$qwe or !$qwe->num_rows){
-            printr(get_defined_vars());
+            //printr(get_defined_vars());
             return false;
 
         }

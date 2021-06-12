@@ -113,7 +113,7 @@ class Pack extends Item
         $this->Fresh = $Fresh;
     }
 
-    public function printRow(int $per,int $siol)
+    public function printRow(int $per,int $siol) : string
     {
         parent::isCounted();
 
@@ -127,7 +127,8 @@ class Pack extends Item
             valut_id: $this->valuta_id,
             craft_price: $this->craft_price
         );
-            //printr($PackPrice);
+
+        ob_start();
         ?>
         <div class="piconandpname">
             <div itid="<?php echo $this->item_id ?>" id="<?php echo $this->item_id . '_' . $this->zone_to ?>"
@@ -159,5 +160,6 @@ class Pack extends Item
             <?php $this->PackPrice->printPriceData();?>
         </div>
         <?php
+        return ob_get_clean();
     }
 }
