@@ -275,7 +275,7 @@ function DwnCraftList($ItemOb)
 		//extract($q);
 		$Craft = new Craft($q['craft_id']);
 		$Craft->InitForUser();
-	 	if(!$Craft->setCountedData($User->id))
+	 	if(!$Craft->setCountedData())
 	 	    continue;
 
 	 	$Prof = new Prof();

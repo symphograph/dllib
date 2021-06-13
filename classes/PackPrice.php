@@ -3,31 +3,37 @@ class PackPrice
 {
     const  StandartPrem = 2;
     private int|float $db_price;
-    private int       $per;
-    private int       $siol;
-    private int       $fresh_per;
-    public int        $factoryPrice = 0;
-    private int       $flatSalary;
-    private int       $perSalary;
-    public int        $finalSalary  = 0;
-    private int       $valut_id;
-    private int       $craft_price;
-    public int        $profit       = 0;
-    public int        $profitOr     = 0;
-    private int       $item_id;
-    private int       $laborSum     = 0;
+    private int $per;
+    private int $siol;
+    private int $fresh_per;
+    private int $valut_id;
+    private int $flatSalary;
+    private int $perSalary;
+    private int $item_id;
+    private int $craft_price;
+    private int $craftLabor  = 0;
+    private int $labor_total = 0;
+
+    public int $factoryPrice = 0;
+    public int $finalSalary  = 0;
+    public int $finalGoldSalary  = 0;
+    public int $profit       = 0;
+    public int $profitOr     = 0;
+
+
+    public string     $salaryLetter = '';
 
     public function __construct(
-        int $item_id,
-        int $db_price,
         int $per,
         int $siol,
+        int $item_id,
+        int $db_price,
         int $fresh_per,
         int $valut_id,
-        int $craft_price
+        int $craft_price,
+        int $labor_total
     )
     {
-
         $this->per         = $per;
         $this->siol        = $siol;
         $this->item_id     = $item_id;
@@ -35,13 +41,14 @@ class PackPrice
         $this->fresh_per   = $fresh_per;
         $this->craft_price = $craft_price;
         $this->valut_id    = $valut_id ?? 500;
+        $this->labor_total = $labor_total;
 
         self::flatSalary();
         self::perSiol();
         self::finalSalary();
         self::profit();
         self::profitOr();
-
+        self::salaryLetter();
     }
 
     private function flatSalary() : void
@@ -52,7 +59,6 @@ class PackPrice
         }
     }
 
-
     private function perSiol(): void
     {
         $persiol = $this->flatSalary * ($this->per / 100);
@@ -60,6 +66,7 @@ class PackPrice
 
         if($this->valut_id == 500){
             $persiol = $persiol * (1 + $this->siol / 100);
+            //var_dump($this->siol);
             $persiol = round($persiol);
         }
         $this->factoryPrice = $persiol;
@@ -67,7 +74,7 @@ class PackPrice
 
     private function finalSalary() : void
     {
-        $salary = $this->factoryPrice * (1 + $this->fresh_per / 100);
+        $salary = $this->factoryPrice * (1 + ($this->fresh_per / 100));
         $salary = round($salary);
         $salary = $salary * (1 + self::StandartPrem / 100);
         $salary = round($salary);
@@ -77,7 +84,7 @@ class PackPrice
     private function valutConvert() : int
     {
         global $coalprice, $shellprice;
-        $valutes = [32103=>$coalprice,32106=>$shellprice];
+        $valutes = [32103=>$coalprice,32106=>$shellprice,500=>1];
         $salary = $valutes[$this->valut_id] * $this->finalSalary;
         return round($salary);
     }
@@ -87,6 +94,7 @@ class PackPrice
         $finalSalary = $this->finalSalary;
         if($this->valut_id != 500){
             $finalSalary = self::valutConvert();
+            $this->finalGoldSalary = $finalSalary;
         }
         $this->profit = $finalSalary - $this->craft_price;
     }
@@ -96,7 +104,7 @@ class PackPrice
         $Price = new Price(2);
         $Price->byMode();
         $orCost = $Price->price;
-        $this->profitOr = round($this->craft_price / $orCost);
+        $this->profitOr = round(self::valutConvert() / $this->labor_total);
     }
 
     public function __get(string $name)
@@ -104,7 +112,7 @@ class PackPrice
         return $this->$name;
     }
 
-    public function SalaryLetter() : string|false
+    public function salaryLetter() : string|false
     {
         $finalSalary  = price_str($this->finalSalary, $this->valut_id);
         $flatSalary   = price_str($this->flatSalary, $this->valut_id);
@@ -151,7 +159,9 @@ class PackPrice
             </div>
             <?php
         }
-        return ob_get_clean();
+        $result = ob_get_clean();
+        $this->salaryLetter = $result;
+        return $result;
     }
 
     public function printPriceData() : void

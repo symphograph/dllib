@@ -17,11 +17,13 @@ $user_id = $User->id;
 $pack_age = $_POST['pack_age'] ?? 0;
 $pack_age = intval($pack_age);
 
-$per = $_POST['perc'] ?? 0;
+$per = $_POST['per'] ?? 0;
 $per = intval($per);
 
 $side = $_POST['side'] ?? 0;
 $side = intval($side);
+if(!$side)
+    die('side');
 
 $siol = $_POST['siol'] ?? 0;
 $siol = intval($siol);
@@ -40,7 +42,7 @@ if(isset($_POST['type']))
 		$types[$tk] = intval($tv);
 	}	
 }
-
+//printr($types);
 $pack_settings =
 [
     'perc' => $per,
@@ -53,8 +55,8 @@ $pack_settings =
 $cooktime = time()+60*60*24*360;
 setcookie("pack_settings",serialize($pack_settings),$cooktime,'/');
 
-if(!count($types)>0)
-	die('<h2>Не вижу вид паков</h2>');
+if(!count($types))
+	die('notypes');
 
 $typess = implode(',',$types);
 
@@ -195,7 +197,7 @@ packs.zone_from,
 packs.pack_sname, 
 pt.pack_t_id, 
 pt.pack_t_name, 
-pt.pass_labor, 
+pt.pass_labor,     
 pt.fresh_group, 
 uc.craft_price, 
 uc.labor_total, 
@@ -206,7 +208,7 @@ AND side = '$side'
 AND packs.zone_from = pack_prices.zone_id
 AND packs.pack_t_id in ($typesStr)
 INNER JOIN items ON packs.item_id = items.item_id AND items.on_off
-INNER JOIN user_crafts uc on pack_prices.item_id = uc.item_id AND uc.user_id = '$User->id'
+INNER JOIN user_crafts uc on pack_prices.item_id = uc.item_id AND uc.user_id = '$User->id' and isbest
 INNER JOIN pack_types pt on packs.pack_t_id = pt.pack_t_id
 ORDER BY packs.item_id");
 
@@ -218,10 +220,16 @@ foreach($qwe as $v)
     $Pack = new Pack();
     $Pack->byQ($v);
     $Pack->freshGet(age: $pack_age);
+    $Pack->getBestCraft();
+    $Pack->bestCraft->setCountedData();
     $Pack->printRow($per ?? 130, $siol ?? 0);
     $packData[] = [
             //'data' => $Pack->printRow($per ?? 130, $siol ?? 0),
             'item_id' => $Pack->item_id,
+            'salary' => $Pack->PackPrice->finalSalary,
+            'goldsalary' => $Pack->PackPrice->finalGoldSalary,
+            'profit' => $Pack->PackPrice->profit,
+            'profitor' => $Pack->PackPrice->profitOr,
             'Pack' => $Pack,
 
     ];
@@ -244,7 +252,7 @@ echo json_encode($packData);
 //    echo '<br><br>'. (microtime(true) - $tstart);
 
 
-function ProfLvl($user_id,$prof_id)
+function ProfLvl(int $user_id, int $prof_id)
 {
 	$qwe = qwe("
 	SELECT * FROM user_profs 
@@ -257,5 +265,6 @@ function ProfLvl($user_id,$prof_id)
 	$qwe = mysqli_fetch_assoc($qwe);
 	return $qwe['lvl'];
 }
+
 
 ?>

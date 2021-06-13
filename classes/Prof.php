@@ -3,13 +3,13 @@
 
 class Prof
 {
-    public int $id = 25;
-    public string $name = 'Прочее';
-    public int $lvl = 0;
-    public int $save_or = 0;
-    public int $save_time = 0;
-    public int $min = 0;
-    public int $max = 10000;
+    public int    $id        = 25;
+    public string $name      = 'Прочее';
+    public int    $lvl       = 0;
+    public int    $save_or   = 0;
+    public int    $save_time = 0;
+    public int    $min       = 0;
+    public int    $max       = 10000;
 
     public function InitForUser(int $prof_id) : bool
     {
@@ -33,5 +33,12 @@ class Prof
         $this->min = $q->min;
         $this->max = $q->max;
         return true;
+    }
+
+    public function savedLabor(int $labor) : int
+    {
+        //`pass_labor` * (100 - IFNULL(`save_or`,0)) / 100,0)
+        $labor = $labor * (100 - $this->save_or)/100;
+        return round($labor);
     }
 }

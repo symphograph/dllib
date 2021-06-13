@@ -116,16 +116,17 @@ class Pack extends Item
     public function printRow(int $per,int $siol) : string
     {
         parent::isCounted();
-
+        //printr($this->bestCraft);
 
         $this->PackPrice = new PackPrice(
-            item_id: $per,
-            db_price: $this->pack_price,
             per: $per,
             siol: $siol,
+            item_id: $per,
+            db_price: $this->pack_price,
             fresh_per: $this->Fresh->fresh_per,
             valut_id: $this->valuta_id,
-            craft_price: $this->craft_price
+            craft_price: $this->craft_price,
+            labor_total: $this->bestCraft->labor_total
         );
 
         ob_start();

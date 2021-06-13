@@ -3,43 +3,44 @@
 
 class Item
 {
-    public int $item_id;
-    public     $valut_id;
-    public $valut_icon = '';
-    public $price_buy;
-    public $price_sale;
-    public $is_trade_npc;
+    public int    $item_id;
+    public        $valut_id;
+    public        $valut_icon             = '';
+    public        $price_buy;
+    public        $price_sale;
+    public        $is_trade_npc;
     public string $category;
     public string $item_name;
     public        $description;
-    public int $on_off;
-    public int $personal;
-    public int $craftable;
-    public int $ismat;
-    public int $item_group;
-    public $categ_id;
-    public $categ_pid;
-    public $slot;
-    public $lvl;
-    public $inst;
-    public $basic_grade;
-    public $forup_grade;
-    public $icon;
-    public $md5_icon;
-    public $valut_name;
-    public $sgr_id;
-    public int $auc_price = 0;
-    public array $crafts = [];
-    public array $potential_crafts = [];
-    public int $bestCraftId = 0;
-    public bool  $ispack                 = false;
-    public int   $craft_price            = 0;
-    public array $potentialMatsAndCrafts = [];
-    public $orSum;
-    public array $allMats = [];
-    public array $allTrash = [];
+    public int    $on_off;
+    public int    $personal;
+    public int    $craftable;
+    public int    $ismat;
+    public int    $item_group;
+    public        $categ_id;
+    public        $categ_pid;
+    public        $slot;
+    public        $lvl;
+    public        $inst;
+    public        $basic_grade;
+    public        $forup_grade;
+    public        $icon;
+    public        $md5_icon;
+    public        $valut_name;
+    public        $sgr_id;
+    public int    $auc_price              = 0;
+    public array  $crafts                 = [];
+    public array  $potential_crafts       = [];
+    public Craft  $bestCraft;
+    public int    $bestCraftId            = 0;
+    public bool   $ispack                 = false;
+    public int    $craft_price            = 0;
+    public array  $potentialMatsAndCrafts = [];
+    public        $orSum;
+    public array  $allMats                = [];
+    public array  $allTrash               = [];
     public object $priceData;
-    public array $craftTree = [];
+    public array  $craftTree              = [];
 
 
     public function getFromDB(int $item_id)
@@ -443,6 +444,7 @@ class Item
 
         $q = mysqli_fetch_object($qwe);
         $this->bestCraftId = $q->craft_id;
+        $this->bestCraft = new Craft($q->craft_id);
         return $this->bestCraftId;
     }
 

@@ -2,7 +2,9 @@ window.onload = function() {
     //setTimeout(function() {$("#xlgames").hide('slow');}, 3000);
     TipTop();
 };
-$('#packsettings').on('change','input, select',function(){QueryPacks()});
+//$('#packsettings').on('change','input, select',function(){QueryPacks()});
+
+/*
 $('#input_data').ready(function()
 {
     $('#input_data').on('mouseover','div[class="pack_icon"]',function()
@@ -14,7 +16,6 @@ $('#input_data').ready(function()
         //$("#"+divid).attr('id',0);
 
     });
-
 })
 
 function QueryMats(id,divid)
@@ -39,7 +40,7 @@ function QueryMats(id,divid)
     });
 
 }
-
+*/
 $('main').on('click','div',function(){
 
 
