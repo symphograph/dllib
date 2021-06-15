@@ -96,7 +96,7 @@ class Item
         $this->valut_name = $q->valut_name ?? '';
         $this->sgr_id = $q->sgr_id ?? 0;
         $this->is_trade_npc = $q->is_trade_npc;
-        $this->ispack = ($this->categ_id == 133);
+        $this->ispack = (in_array($this->categ_id,[133,171]));
 
         return true;
     }
