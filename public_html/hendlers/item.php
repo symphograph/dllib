@@ -71,7 +71,7 @@ $description = $Item->description;
 
 			}
 			
-		}elseif($Item->categ_id != 133)
+		}elseif(!in_array($Item->categ_id,[133,171]))
 		{
 			$Price->MoneyForm();
 			$Price->serverMedianPrint();
@@ -168,16 +168,16 @@ if($Item->craftable)
 <?php
 Comments($User,$item_id);
 
-function ValutInfo($Item)
+function ValutInfo(Item $Item)
 {
 	global $User;
 	$mvalut = $Item->valut_id;
 	$valut_name = $Item->valut_name;
 	//Касательно Чести, Рем Репутации, итд.
-	if(in_array($Item->id,[2,3,4,5,6,23633]))
+	if(in_array($Item->item_id,[2,3,4,5,6,23633]))
 	{
-		$valut_name = $Item->name;
-		$mvalut = $Item->id;
+		$valut_name = $Item->item_name;
+		$mvalut = $Item->item_id;
 	}
 	$val_link = '<a href="catalog.php?item_id='.$mvalut.'">
 		<img src="img/icons/50/'.$mvalut.'.png" width="15" height="15" alt="'.$valut_name.'"/></a>';
@@ -185,7 +185,7 @@ function ValutInfo($Item)
 	ItemsFromAlterValutes($mvalut);
 	?>
 	<br><br>
-	<h3><?php echo $Item->name?>: конвертация в золото.</h3>
+	<h3><?php echo $Item->item_name?>: конвертация в золото.</h3>
 	*Следует учесть, что калькулятор не принимает в расчет предметы, позволяющие конвертировать валюту оптом.<br>
 	Медиана:
 	
@@ -249,10 +249,10 @@ function IsRefuse(int $item_id)
 	return $arr;
 }
 
-function DwnCraftList($ItemOb)
+function DwnCraftList(Item $Item)
 {
-    $Item = new Item();
-    $Item->reConstruct($ItemOb);
+    //$Item = new Item();
+    //$Item->reConstruct($ItemOb);
 	$best_types = ['','Выбран руру','Выбран вами', 'Покупается'];
 	$item_id = $Item->item_id;
 	global $User, $mat_deep, $cfg, $trash, $User;
@@ -381,7 +381,7 @@ function DwnCraftList($ItemOb)
                 <?php
                     printVals('Себестоимость 1 шт:', esyprice($Craft->craft_price));
 
-                    if(in_array($Item->categ_id,[133])){
+                    if(in_array($Item->categ_id,[133,171])){
                         $PackObject = PackObject($item_id);
                     }else
                     {
@@ -394,7 +394,7 @@ function DwnCraftList($ItemOb)
 			    <?php
 			        printVals('На рецепт:',$Craft->labor_need2.$imgor);
 
-                    if(in_array($Item->categ_id,[133]))
+                    if(in_array($Item->categ_id,[133,171]))
                     {
                         $pass_labor = $PackObject['pass_labor2'] ?? 0;
                         //printr($PackObject);

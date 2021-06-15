@@ -282,7 +282,7 @@ function packList()
                     <div class="pack_mats">
 
                         <div v-for="mat in row.Pack.bestCraft.mats" class="maticon" :style="{backgroundImage: 'url(img/icons/50/'+mat.icon+'.png)'}">
-                            <div class="itdigit">4</div>
+                            <div class="itdigit">{{ mat.mater_need }}</div>
                         </div>
                         <a :href="'catalog.php?item_id='+row.Pack.item_id">
                             <div class="maticon" style="background-image: url(img/icons/50/icon_item_4069.png)"></div>

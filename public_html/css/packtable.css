@@ -283,14 +283,20 @@ select:hover {
 	justify-content: space-between;*/
 }
 .phr{
-background-color: rgba(205, 183, 129, 0.4);
+background-color: rgb(232 194 68);
 }
 .pack_row0{
 	background-color: rgba(205, 183, 129, 0.2);
 }
+.pack_row0:hover{
+	background-color: rgba(205, 183, 129, 0.3);
+}
 
 .pack_row1 {
 	background-color:  rgba(215,201,170,0.2);
+}
+.pack_row1:hover {
+	background-color:  rgba(215,201,170,0.5);
 }
 .itdigit {
 	text-shadow: 0px 0px 1px black;

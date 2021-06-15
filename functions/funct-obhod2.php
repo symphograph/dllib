@@ -123,7 +123,7 @@ function ToBuffer2($item_id)
 			}else
 				$isbest = 0;
 
-            if(in_array($q->categ_id,[133]))
+            if(in_array($q->categ_id,[133,171]))
             {
                 $pass_labor = PackObject($item_id)['pass_labor2'] ?? 0;
                 $craft_price = $q->craft_price + $pass_labor*$orcost;

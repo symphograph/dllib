@@ -25,8 +25,9 @@ $side = intval($side);
 if(!$side)
     die('side');
 
+
 $siol = $_POST['siol'] ?? 0;
-$siol = intval($siol);
+($siol === 'true') ? $siol = 5 : $siol = 0;
 
 $qsort = $_POST['sort'] ?? 0;
 $qsort = intval($qsort);
