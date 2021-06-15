@@ -12,18 +12,18 @@ function CheckLostImages()
 	FROM `items`
 	WHERE `on_off` = 1
 	");
-	$lost=[];
+	$lostImg=[];
 	foreach($qwe as $q)
 	{
 		extract($q);
 		if(!file_exists('img/icons/50/'.$icon.'.png'))
 			$lost[$icon] = $item_id;
 	}
-	sort($lost);
-	return $lost;
+	sort($lostImg);
+	return $lostImg;
 }
-$lost = CheckLostImages();
-$lost = implode('<br>',$lost);
-printr($lost);
+$lostImg = CheckLostImages();
+$lostImg = implode('<br>',$lostImg);
+printr($lostImg);
 ?>
 
