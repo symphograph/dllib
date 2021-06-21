@@ -16,16 +16,18 @@ class Pack extends Item
     public int            $fresh_per   = 0;
     public int            $fresh_type  = 0;
     public int            $fresh_group = 0;
-    public Freshness|null $Fresh       = null;
+    public Freshness $Fresh;
     public int            $age         = 0;
     public array          $Zones       = [];
     public int            $pass_labor  = 0;
     public int            $valuta_id;
     public PackPrice      $PackPrice;
     public int $condType = 0;
-    //public array          $freshPerces = [];
 
-
+    public function __construct()
+    {
+        $this->Fresh = new Freshness();
+    }
 
 
     public function getFromDB(int $item_id)
@@ -117,6 +119,10 @@ class Pack extends Item
         $Fresh = new Freshness();
         $Fresh->byAge($this->item_id, $this->zone_from,$this->age);
         $this->Fresh = $Fresh;
+    }
+
+    public function bestcondition(){
+        $Fresh = new Freshness();
     }
 
     public function printRow(int $per,int $siol) : string

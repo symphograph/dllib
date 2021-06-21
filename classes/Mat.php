@@ -43,7 +43,7 @@ class Mat extends Item
             return true;
         }
 
-       // if (!$this->craftable)
+       if (!$this->craftable)
             $lost[] = $this->item_id;
         return false;
     }

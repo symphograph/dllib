@@ -243,6 +243,4 @@ class FreshCardDefiner
         }
         return false;
     }
-
-
 }

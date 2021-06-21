@@ -48,7 +48,7 @@ function MissedList($lost)
 	");
 	if(!$qwe or !$qwe->num_rows)
 		return false;
-	
+	$newlost = [];
 	foreach($qwe as $q)
 	{
 		$q = (object) $q;
@@ -65,9 +65,9 @@ function MissedList($lost)
            ($User->id, $q->item_id, $User->server_group, now())
            ");
         }
-
-		
+        $newlost[] = $q->item_id;
 	}
+	return $newlost;
 }
 
 function ToBuffer2($item_id)

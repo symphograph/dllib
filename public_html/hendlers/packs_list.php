@@ -17,6 +17,9 @@ $user_id = $User->id;
 $pack_age = $_POST['pack_age'] ?? 0;
 $pack_age = intval($pack_age);
 
+$condition = $_POST['condition'] ?? 0;
+$condition = intval($condition);
+
 $per = $_POST['per'] ?? 0;
 $per = intval($per);
 
@@ -104,8 +107,18 @@ if($packs_q and $packs_q->num_rows)
 
 if(isset($lost) and count($lost)>0)
 {
-	MissedList($lost);
+    ob_start();
+    $lost = MissedList($lost);
+    ob_clean();
 	qwe("delete FROM user_crafts where user_id = '$user_id' AND isbest < 2");
+	$ll = [];
+	$lost = array_unique($lost);
+	foreach ($lost as $l){
+	    $Litem = new Item();
+	    $Litem->getFromDB($l);
+	    $ll[] = $Litem;
+    }
+	echo json_encode(['lost'=>$ll]);
 	exit();
 }
 
@@ -212,7 +225,7 @@ AND packs.pack_t_id in ($typesStr)
 INNER JOIN items ON packs.item_id = items.item_id AND items.on_off
 INNER JOIN user_crafts uc on pack_prices.item_id = uc.item_id AND uc.user_id = '$User->id' and isbest
 INNER JOIN pack_types pt on packs.pack_t_id = pt.pack_t_id
-INNER JOIN fresh_types join fresh_types ft on packs.fresh_id = ft.id
+INNER JOIN fresh_types ft on packs.fresh_id = ft.id
 ORDER BY packs.item_id");
 if(!$qwe or !$qwe->num_rows){
     die('no data');
@@ -221,10 +234,11 @@ $i=0; $n=0; $open = false;
 $packData = [];
 foreach($qwe as $v)
 {   $i++;
-
+    $v = (object) $v;
     $Pack = new Pack();
     $Pack->byQ($v);
-    $Pack->freshGet(age: $pack_age);
+    //printr($v->fperdata);
+    $Pack->Fresh->setCondition($v->fperdata,$condition);
     $Pack->getBestCraft();
     $Pack->bestCraft->setCountedData();
     $Pack->printRow($per ?? 130, $siol ?? 0);
@@ -236,7 +250,6 @@ foreach($qwe as $v)
             'profit' => $Pack->PackPrice->profit,
             'profitor' => $Pack->PackPrice->profitOr,
             'Pack' => $Pack,
-
     ];
 
     /*

@@ -71,5 +71,22 @@ class Freshness
 
     }
 
+    public function setCondition(string $fperdata,int $bad = 0)
+    {
+        $fperdata = explode('|',$fperdata);
+        if(!count($fperdata)){
+            return false;
+        }
+        if($bad){
+            $this->fresh_per = min($fperdata);
+        }else {
+            $this->fresh_per = max($fperdata);
+        }
+
+        $this->fresh_lvl = array_search($this->fresh_per,$fperdata) + 1;
+
+        return true;
+    }
+
 
 }

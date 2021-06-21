@@ -225,10 +225,20 @@ function sortrow(){
     ?>
     <div class="sortrow">
 
-        <div class="freguency" title="Возраст пака">
+        <div class="freguency" title="Свежесть">
+            <?php
+            /*
+
             <select v-model="packForm.pack_age" name="pack_age" class="select_input" autocomplete="off" onchange="">
                 <?php FreshTimeSelect() ?>
             </select>
+            */
+            ?>
+            <select v-model="packForm.condition" name="condition" class="select_input" autocomplete="off" onchange="">
+                <option value="0" selected>Зрелые</option>
+                <option value="1">Протухшие</option>
+            </select>
+
         </div>
 
         <div class="sortmenu">
@@ -268,6 +278,83 @@ function sortrow(){
 function packList()
 {
     ?>
+    <div v-if="lost.length > 0">
+        <br><b>Расчет не получился.</b>
+        <br>В дочерних рецептах есть неизвестные цены.
+        <br>Без них я не могу посчитать и сравнить.
+    </div>
+
+
+    <template v-if="uPrices.length > 0" >
+        <div class="price_cell" v-for="(item,idx) in uPrices">
+            <div class="price_row">
+                <span class="comdate"></span>
+            </div>
+            <div class="price_row">
+
+                <div class="itim" :id="'itim_'+item.item_id" :style="{backgroundImage: 'url(img/icons/50/'+item.icon+'.png)'}">
+                    <div class="grade" :data-tooltip="item.item_name" style="background-image: url(/img/grade/icon_grade1.png)">
+                    </div>
+                </div>
+                <div class="price_pharams">
+                    <div><span class="item_name" :id="'itname_'+item.item_name">{{ item.item_name }}</span>
+                        <form :id="'pr_'+item.item_id">
+                            <div class="money_area_down">
+
+                                <div class="money-line">
+                                    <input
+                                            v-model.number="uPrices[idx].gold"
+                                            type="number"
+                                            name="setgold"
+                                            class="pr_inputs"
+                                            :min=0
+                                            max="999999999"
+                                            :id="'gol_'+item.item_id"
+                                            autocomplete="off"
+                                            :style="{backgroundColor: item.color}"
+                                    >
+                                    <img src="img/gold.png" width="15" height="15" alt="g"/>        </div>
+
+                                <div class="money-line">
+                                    <input
+                                            v-model.number="uPrices[idx].silver"
+                                            type="number"
+                                            name="setsilver"
+                                            class="pr_inputs"
+                                            value= ""
+                                            min=0 max=99
+                                            :id="'sil_'+item.item_id"
+                                            autocomplete="off"
+                                            :style="{backgroundColor: item.color}"
+                                    >
+                                    <img src="img/silver.png" width="15" height="15" alt="s"/>        </div>
+
+                                <div class="money-line">
+                                    <input
+                                            v-model.number="uPrices[idx].bronze"
+                                            type="number"
+                                            name="setbronze"
+                                            class="pr_inputs"
+                                            value= "0"
+                                            min=0 max=99
+                                            :id="'bro_'+item.item_id"
+                                            autocomplete="off"
+                                            :style="{backgroundColor: item.color}"
+                                    >
+                                    <img src="img/bronze.png" width="15" height="15" alt="b"/>        </div>
+                                <input type="hidden" :name="item.item_id" :value="item.item_id">
+                                <input type="button" @click="cleanUPrice(idx)" :id="'prdel_'+item.item_id" name="del" class="small_del" value="del" data-tooltip="Очистить">
+                            </div>
+                            <input type="hidden" name="item_id" :value="item.item_id"/>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <button class="def_button" type="button" @click="sendPrices">Готово</button>
+    </template>
+
     <template v-for="(row,idx) in sortedList">
         <div :class="(idx % 2 === 0 ? 'pack_row0' : 'pack_row1')">
             <div class="piconandpname">

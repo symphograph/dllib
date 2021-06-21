@@ -310,51 +310,50 @@ class Item
             $lost = [];
 
 
-        if(count($this->potentialMatsAndCrafts))
+        if(!count($this->potentialMatsAndCrafts)) {
+            return false;
+        }
+
+
+        $craftarr = self::CraftsBuffering();
+
+        if(!in_array($_SERVER['SCRIPT_NAME'],[
+            '/hendlers/packs_list.php',
+            '/hendlers/isbuysets.php',
+            '/packres.php',
+            '/hendlers/packpost/packpostmats.php',
+            '/hendlers/packpost/packobj.php',
+            '/test.php'
+        ]) and count($lost)) {
+
+            MissedList($lost);
+            //$craftsForClean = implode(',',$craftarr);
+            qwe("DELETE FROM user_crafts WHERE user_id = '$User->id' AND isbest < 2");
+            exit();
+        }
+
+
+        if(!count($craftarr)) {
+            return false;
+        }
+
+        foreach ($craftarr as $craftId => $itemId)
         {
-            $craftarr = self::CraftsBuffering();
+            $Item = new Item();
+            $Item->getFromDB($itemId);
+            $Item->orSum = $Item->orTotal(0,1,$craftId);
 
-
-
-            if(!in_array($_SERVER['SCRIPT_NAME'],[
-                '/hendlers/packs_list.php',
-                '/hendlers/isbuysets.php',
-                '/packres.php',
-                '/hendlers/packpost/packpostmats.php',
-                '/hendlers/packpost/packobj.php',
-                '/test.php'
-            ]))
-            {
-
-                if(count($lost)>0)
-                {
-                    MissedList($lost);
-                    //$craftsForClean = implode(',',$craftarr);
-                    qwe("DELETE FROM user_crafts WHERE user_id = '$User->id' AND isbest < 2");
-                    exit();
-                }
-            }
-        }
-
-        if(count($craftarr)) {
-
-            foreach ($craftarr as $craftId => $itemId)
-            {
-                $Item = new Item();
-                $Item->getFromDB($itemId);
-                $Item->orSum = $Item->orTotal(0,1,$craftId);
-
-                if($Item->orSum)
-                    qwe("
-                    UPDATE `user_crafts` 
-                    SET `labor_total` = '$Item->orSum' 
-                    WHERE `user_id` = '$User->id' 
-                    AND `craft_id`='$craftId'
-                ");
-
-            }
+            if($Item->orSum)
+                qwe("
+                UPDATE `user_crafts` 
+                SET `labor_total` = '$Item->orSum' 
+                WHERE `user_id` = '$User->id' 
+                AND `craft_id`='$craftId'
+            ");
 
         }
+
+        return true;
     }
 
     public function CraftsBuffering() : array

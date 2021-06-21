@@ -7,17 +7,20 @@ const pt = Vue.createApp( {
     data() {
         return {
             sortParam: 'profit',
-
             packData: [],
+            lost: [],
             packForm: {
                 per: 130,
                 pack_age: 0,
+                condition: 0,
                 side: null,
                 siol: 0,
                 type: [],
             },
+            uPrices: {},
             error: 'ok',
-            color: 'gray'
+            color: 'gray',
+            min: 0
 
         }
     },
@@ -28,16 +31,62 @@ const pt = Vue.createApp( {
             },
             deep: true
 
-            }
-
+        },
+        uPrices:{
+            handler(val){
+                var i = val.length;
+                while (i--){
+                    pt.uPriceValidator(i,val[i].gold,val[i].silver,val[i].bronze)
+                }
+            },
+            deep: true
+        }
     },
-
     methods: {
-        getPacks(){
-            //console.log($('#packsettings').serialize())
-            let form = $('#packsettings')
-            let fdata = form.serialize()
+        sendPrices() {
 
+            $.ajax
+            ("hendlers/setpricelist.php",
+                {
+                    type: "POST",
+                    data: { prices: this.uPrices},
+                    dataType: "json",
+                    cache: false
+
+                }).done(function (data) {
+                pt.error = 'ok'
+                pt.getPacks()
+            }).fail(function (data) {
+
+                pt.error = data.responseText ?? 'yy'
+                $('#tiptop').html(pt.errorMsg)
+            })
+        },
+        uPriceValidator(i,gol,sil,bro){
+            if(gol < 0){ gol = 0; pt.uPrices[i].gold = 0}
+            if(sil < 0){ sil = 0; pt.uPrices[i].silver = 0 }
+            if(bro < 0){ sil = 0; pt.uPrices[i].bronze = 0 }
+
+            if(bro > 99){bro = 99}
+            if(sil > 99){sil = 99}
+            if(gol > 99999999){gol = 99999999}
+
+            let sum = gol*10000 + sil*100 + bro
+            if(sum < 0){
+                sum = 0;
+            }
+            pt.uPrices[i].sum = sum;
+        },
+        cleanUPrice(idx) {
+            pt.uPrices[idx].sum = 0;
+            pt.uPrices[idx].gold = null
+            pt.uPrices[idx].silver = null
+            pt.uPrices[idx].bronze = null
+        },
+
+        getPacks(){
+            pt.lost = []
+            pt.uPrices = []
             this.jdunOn()
             $.ajax
             ({
@@ -50,23 +99,45 @@ const pt = Vue.createApp( {
             }).done(function(data) {
                 pt.error = 'ok'
                 pt.jdunOff()
-                pt.packData = data
+                if(typeof data.lost!== 'undefined'){
+                    pt.lost = data.lost
+                    var i = pt.lost.length;
 
-                //console.log(pt.packData)
-                //console.log(pt.sortParam)
-                //console.log(pt.sortParam)
+                    while (i--){
+                        var toarr = {
+                            item_id: pt.lost[i].item_id,
+                            item_name: pt.lost[i].item_name,
+                            icon:  pt.lost[i].icon,
+                            gold: null,
+                            silver: null,
+                            bronze: null,
+                            sum: 0,
+                            color: '#f35454'
+                        }
+
+                        pt.uPrices.push(toarr)
+                    }
+
+                    //console.log(pt.lost)
+                   pt.packData = []
+                }else{
+                    pt.packData = data
+                    pt.lost = []
+                }
+
                 TipTop();
 
             }).fail(function(data) {
                 pt.jdunOff()
-                //console.log(data.responseText)
+
                 pt.packData = []
+                pt.lost = []
                 pt.error = data.responseText ?? 'yy'
                 $('#tiptop').html(pt.errorMsg)
-                //$('#tiptop').html('Похоже, что-то не получается... :(')
             })
-            //pt.sortedList()
+
         },
+
         valutImager(value,vid = 500){
             if(vid !== 500){
                 return value + '<img src="../img/'+vid+'.png" '+'style="width: 0.9em; height: 0.9em"  alt="coal"/>';
@@ -99,7 +170,9 @@ const pt = Vue.createApp( {
         jdunOff() {
             let jdun = $("#jdun");
             jdun.removeClass("loading"); jdun.addClass("jdun");
-        }
+        },
+
+
 
     },
     computed: {
@@ -123,6 +196,9 @@ const pt = Vue.createApp( {
             switch (this.error){
                 case 'side': return '??Восток, Север, Запад??';
                 case 'notypes': return 'Не вижу тип пака';
+                case 'no data': return 'Ничего не вижу';
+                case 'user': return 'Ошибка авторизации';
+                case 'dbError': return 'Ошибка записи в базу данных';
                 default: return 'Ничего не понимаю';
             }
 
@@ -132,8 +208,7 @@ const pt = Vue.createApp( {
                 return 'red';
             } else
                 return 'gray';
-        }
-
+        },
     }
 
 }).mount('#rent')
