@@ -9,37 +9,148 @@ if(!isset($cfg)) {
 if (!$cfg->myip)
     die('rrr');
 
-/*
-$types = [];
-$qwe = qwe("SELECT item_id, item_name, description FROM items where categ_id = 133");
-foreach ($qwe as $q){
-    $q = (object) $q;
-    if(!str_contains($q->description,'Тип'))
-        continue;
-    $preg = preg_match_all('#Тип(.+?)товар#',$q->description,$arr);
-    $typeName = explode(' ',$arr[1][0])[1];
-    $types[] = $typeName;
-    //printr($typeName);
-}
-$types = array_unique($types);
-printr($types);
-*/
-$resume = [];
-$cards = getCardsFromFile();
-$packNames = getPackNamesFromdb();
-$freshTypes = getfreshTypesFromdb();
-foreach ($cards as $card){
-    $DefCard = new FreshCardDefiner($packNames, $card, $freshTypes);
-    printr($DefCard->Card);
-    $resume[$DefCard->Card->freshTypeName][$DefCard->Card->fresh_lvl][$DefCard->Card->condition][$DefCard->Card->fresh_per] = 1;
-    echo '_______________________________';
-    ksort($resume[$DefCard->Card->freshTypeName]);
-    $conditions[$DefCard->Card->condition] = 1;
-}
-ksort($resume);
-printr($resume);
-printr($conditions);
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/functions/filefuncts.php';
 
+$packNames = getPackNamesFromdb();
+$doodNames = doodsFromdb();
+$freshTypes = getfreshTypesFromdb();
+$cards = cardsFromDir();
+//printr($freshTypes);
+//qwe("TRUNCATE `freshCards`");
+foreach ($cards as $card){
+    //printr($card);
+    $DefCard = new FreshCardDefiner($packNames, $doodNames, $card, $freshTypes, $card['file']);
+    //printr($DefCard->Card);
+    //echo '-------------------------------';
+}
+
+//perDoubList(1);
+$qwe = qwe("SELECT DISTINCT item_id FROM freshCards");
+foreach ($qwe as $q){
+    $item_id = $q['item_id'];
+    $pdata = perdata($item_id);
+     /*if(count($pdata) != 5){
+         continue;
+     }*/
+    //printr($pdata);
+     //$pdatas[] = implode('|',$pdata);
+    $pdata = perImplode($pdata);
+    $pdatas[$item_id] = $pdata;
+    qwe("UPDATE packs SET perdata = '$pdata' 
+WHERE native_id = '$item_id'
+AND (perdata = '' or perdata LIKE '%n%')
+");
+
+}
+$pdatas = array_unique($pdatas);
+asort($pdatas);
+
+printr($pdatas);
+
+
+
+/////--------------------------------------------------------------
+
+function perImplode($pdata){
+    for($i=1;$i<=5;$i++){
+        $arr[$i] = $pdata[$i] ?? 'n';
+
+    }
+    //printr($arr);
+    return implode('|',$arr);
+}
+
+function perdata(int $item_id):array
+{
+    $pdata = [];
+    $qwe = qwe("SELECT * FROM freshCards WHERE item_id = '$item_id'");
+    foreach ($qwe as $q){
+        $pdata[$q['fresh_lvl']] = $q['fresh_per'];
+    }
+    ksort($pdata);
+    return $pdata;
+}
+
+function perDoubList(int $lvl){
+    $qwe = qwe("SELECT * FROM freshCards WHERE fresh_lvl = '$lvl'
+/*group by item_id,fresh_per*/
+order by fresh_per
+");
+    $alrady = [];
+    foreach ($qwe as $q)
+    {
+        if(in_array($q['fresh_per'],$alrady))
+            continue;
+
+        echo '<p>'.$q['fresh_per'].'</p>';
+
+
+        $Pack = new Pack();
+        $Pack->getFromDB($q['item_id']);
+        echo '<b>'.$Pack->item_name.'</b>';
+        echo '<br>';
+        printr(perdata($q['item_id']));
+        //echo '<b>'.$Pack->fresh_group.'</b>';
+        //echo '<br>';
+        perdubles($q['fresh_per'],$lvl);
+        echo '<br>----------------------------------';
+        $alrady[] = $q['fresh_per'];
+    }
+}
+
+function perdubles(int $fresh_per, int $lvl)
+{
+    $qwe = qwe("
+    SELECT * FROM freshCards 
+    WHERE fresh_per = '$fresh_per'
+    AND fresh_lvl = '$lvl'
+    /*GROUP BY item_id*/
+    order by packName
+    ");
+    $arr = [];
+    foreach ($qwe as $q){
+        if(in_array($q['item_id'],$arr))
+            continue;
+        $Pack = new Pack();
+        $Pack->getFromDB($q['item_id']);
+        echo $Pack->item_name.' | '.$q['freshTypeName'].' | '.$Pack->z_from_name.'<br>';
+        $arr[] = $q['item_id'];
+    }
+}
+
+function cardsFromDir() : array
+{
+    $dir = dirname($_SERVER['DOCUMENT_ROOT']).'/freshcards/tmp/';
+    $fileList = FileList($dir);
+
+    $cards = [];
+    foreach ($fileList as $k => $file){
+
+        $card = cardFromFile($file);
+        $date = cardDate($file);
+        if(count($card)){
+            $cards[$date] = $card;
+        }
+
+    }
+    if(!count($cards)){
+        return [];
+    }
+
+    return $cards;
+}
+
+function cardDate(string $file)
+{
+    if(!str_ends_with($file,'.txt')){
+        return false;
+    }
+    $str = substr($file, 0, -4);
+    $Date = DateTime::createFromFormat("d-m-Y G-i-s", $str,new DateTimeZone(' Asia/Sakhalin'));
+    $Date->setTimezone(new DateTimeZone('Europe/Moscow'));
+    $date = $Date->getTimestamp();
+    return date('Y-m-d G:i:s',$date);
+}
 
 function getfreshTypesFromdb() : array
 {
@@ -58,7 +169,7 @@ function getfreshTypesFromdb() : array
 function getPackNamesFromdb() : array
 {
     $packNames = [];
-    $qwe = qwe("SELECT item_id, item_name FROM items where categ_id in (133,171)");
+    $qwe = qwe("SELECT item_id, item_name FROM items where categ_id in (133,171) AND on_off");
     if(!$qwe or !$qwe->num_rows){
         return [];
     }
@@ -69,17 +180,57 @@ function getPackNamesFromdb() : array
     return $packNames;
 }
 
+function doodsFromdb() : array
+{
+    $doodNames = [];
+    $qwe = qwe("
+    SELECT 
+    packs.native_id as item_id,
+    packDoods.dood_name 
+    FROM packDoods
+    INNER JOIN packs 
+    ON packDoods.dood_id = packs.dood_id
+    ");
+    if(!$qwe or !$qwe->num_rows){
+        return [];
+    }
+    foreach ($qwe as $q){
+        $q = (object) $q;
+        $doodNames[$q->item_id] = mb_strtolower($q->dood_name);
+    }
+    return $doodNames;
+}
+
+function cardFromFile(string $file) : array
+{
+    $dir = dirname($_SERVER['DOCUMENT_ROOT']).'/freshcards/tmp/'.$file;
+    if(!file_exists($dir)){
+        return [];
+    }
+    $arr = [];
+    $data =  file($dir,FILE_IGNORE_NEW_LINES);
+    foreach ($data as $str){
+        $str = strPrepare($str);
+        if(!empty($str))
+        $arr[] = $str;
+    }
+    $arr['datetime'] = cardDate($file);
+    $arr['file'] = $file;
+    return $arr;
+}
+
 function getCardsFromFile() : array
 {
-    $url = dirname($_SERVER['DOCUMENT_ROOT']).'/freshcards/Untitled.txt';
-    if(!file_exists($url))
+    $dir = dirname($_SERVER['DOCUMENT_ROOT']).'/freshcards/Untitled.txt';
+    if(!file_exists($dir)){
         return [];
+    }
 
-    $file =  file($url,FILE_IGNORE_NEW_LINES);
+
+    $file =  file($dir,FILE_IGNORE_NEW_LINES);
     $cards = [];
     $add = [];
     foreach ($file as $str){
-
 
         if ($str != ''){
             $str = strPrepare($str);

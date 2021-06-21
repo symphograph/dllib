@@ -73,7 +73,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/../includs/header.php';
             <form id="recdata" action="" method="POST">
                 <div class="line">
 
-                    <?php printr($Craft); $icon = ItemAny($Craft->result_item_id, 'icon')[$Craft->result_item_id];?>
+                    <?php $icon = ItemAny($Craft->result_item_id, 'icon')[$Craft->result_item_id] ?? '';?>
 
                     <div class="top_itimset"
                          style="width: 40px; height: 40px; background-image: url(/img/icons/50/<?php echo $icon ?>.png)">

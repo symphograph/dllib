@@ -43,13 +43,13 @@ WHERE `result_item_id` NOT IN
 GROUP BY `result_item_id`
 LIMIT 10
 ");*/
-
+/*
 $qwe = qwe("
 SELECT * FROM `New_items_75`
 WHERE item_id >= (SELECT item_id FROM parsed_last)
 LIMIT 500
 ");
-
+*/
 /*
 $qwe = qwe("
 SELECT item_id FROM craft_materials WHERE item_id NOT in 
@@ -57,6 +57,11 @@ SELECT item_id FROM craft_materials WHERE item_id NOT in
 GROUP BY item_id
 ");
 */
+$qwe = qwe("
+SELECT * FROM `items`
+WHERE categ_id = 133
+AND item_id > (SELECT item_id FROM parsed_last)
+");
 if(!$qwe or !$qwe->num_rows)
 	die('no items');
 $i = 0;
@@ -206,25 +211,23 @@ foreach($qwe as $q)
 
  	else
  	qwe("UPDATE `items` SET 
-	`price_buy` = '$price_buy', 
-	`price_type` = '$price_type', 
-	`price_sale` = '$price_sale',
+	/*`price_buy` = '$price_buy',*/ 
+	/*`price_type` = '$price_type',*/ 
+	/*`price_sale` = '$price_sale',*/
     /*`valut_id` = '$valut_id',*/
 	/*`is_trade_npc` = '$is_trade_npc',*/ 
-	`item_name` = '$item_name',
+	/*`item_name` = '$item_name',*/
 	/*`personal` = '$personal', */
 	/*`basic_grade` = '$grade',*/
     `description` = '$description'
 	WHERE `item_id` = '$item_id'
 	");
 
-
+    /*
 	$iconfile = ParsIcons($item_id);
-	if($iconfile)
-	{
-
+	if($iconfile) {
 		?><div style="width: 40px; height: 40px; background-image: url(<?php echo 'img/icons/50/'.$iconfile.'.png?ver='.$ver?>)"></div><?php
-	}
+	}*/
 
 
 

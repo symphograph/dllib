@@ -129,10 +129,10 @@ foreach($qwe as $q)
 </main>
 <?php
     include_once 'pageb/footer.php';
-    jsFile('posters.js');
+    jsFile('Catalog.js');
 
 ?>
-<script type="text/javascript" src="js/Catalog.js?ver=<?php echo md5_file('js/Catalog.js')?>"></script>
+
 </body>
 
 <script type='text/javascript'>

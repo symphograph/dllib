@@ -11,6 +11,7 @@ class CraftUpdater extends Craft
     public function __construct(
         int $craft_id,
         int $result_amount = 1,
+        int $result_item_id = 0,
         int $prof_id = 27,
         int $prof_need = 0,
         int $dood_id = 0,

@@ -22,6 +22,7 @@ class Pack extends Item
     public int            $pass_labor  = 0;
     public int            $valuta_id;
     public PackPrice      $PackPrice;
+    public int $condType = 0;
     //public array          $freshPerces = [];
 
 
@@ -31,6 +32,7 @@ class Pack extends Item
     {
         parent::getFromDB($item_id);
 
+
         if(!$this->ispack)
             return false;
 
@@ -39,11 +41,13 @@ class Pack extends Item
         INNER JOIN pack_types pt 
             ON packs.pack_t_id = pt.pack_t_id 
             AND packs.pack_type = pt.pack_t_name
-            AND packs.item_id = '$item_id'
+            AND packs.native_id = '$item_id'
         INNER JOIN zones z on packs.zone_from = z.zone_id
         ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->num_rows){
             return false;
+        }
+
         $q = mysqli_fetch_object($qwe);
         if(self::byQ($q))
             return true;
@@ -55,7 +59,9 @@ class Pack extends Item
     {
 
         $q = (object) $q;
-        parent::byQ($q);
+
+
+        //parent::byQ($q);
 
         foreach ($q as $qk => $kv){
             if(!empty($kv)){

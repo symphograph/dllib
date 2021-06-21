@@ -915,25 +915,27 @@ function PackZoneFromId(int $item_id)
 
     foreach ($qwe as $q)
     {
-        $arr[] = $q['zone_id'];
+        $arr[] = $q['zone_from'];
     }
     return $arr;
 }
 
 function PackPercents($pack_price,$siol,$per,$fresh_per,$standart,$factlist = false)
 {
+
     $salary = $pack_price/130*100*($per/100)*(1+$siol/100);
-    $salary = round($salary,0);
+    $salary = round($salary);
 
     $Factory_list = $salary;
     if($factlist)
         return $Factory_list;
 
-    $salary = $salary*(1+$fresh_per/100);
-    $salary = round($salary,0);
+    $salary = $salary*(1+($fresh_per/100));
+    $salary = round($salary);
+
 
     $salary = $salary*(1+$standart/100);
-    $salary = round($salary,0);
+    $salary = round($salary);
 
     return $salary;
 }

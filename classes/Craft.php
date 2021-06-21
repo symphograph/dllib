@@ -71,7 +71,7 @@ class Craft
         $this->my_craft   = $q->my_craft;
         $this->craft_time = $q->craft_time;
         $this->prof_id    = $q->prof_id;
-        $this->grade      = intval($q->grade);
+        $this->grade      = $q->grade ?? 1;
         $this->mins       = $q->mins;
         $this->spm        = $q->spm;
         $this->mats       = self::getMats();
@@ -344,14 +344,15 @@ class Craft
         return true;
     }
 
-    public function matArea(int $u_amount,$Item): bool
+    public function matArea(int $u_amount,Item $Item): bool
     {
         $mats = $this->getMats();
         if(!$mats or !count($mats)){
             echo 'Материалы не найдены';
             return false;
         }
-
+        if(!$this->grade)
+            $this->grade = 1;
         ?>
         <div class="matarea">
             <div class="matrow">

@@ -72,6 +72,7 @@ class Item
 
     public function byQ(object $q) : bool
     {
+        //printr($q);
         $this->item_id  = $q->item_id;
         $this->valut_id = $q->valut_id ?? 500;
         $this->price_buy = $q->price_buy ?? 0;
@@ -300,7 +301,7 @@ class Item
     function RecountBestCraft()
     {
         global $lost, $User;
-
+        $craftarr = [];
 
         $this->potentialMatsAndCrafts = self::CraftsByDeep();
 

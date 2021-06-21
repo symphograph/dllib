@@ -8,13 +8,14 @@ if(!isset($cfg)) {
 }
 if (!$cfg->myip)
     die('rrr');
-$User = new User;
-$User->check();
-$Craft = new Craft(48);
-$Craft->InitForUser();
-printr($Craft);
+
+$c = 10/3;
+echo $c;
+//3.3333333333333
+echo $c === 3.3333333333333 ? 'да' : 'нет';
+//нет
 
 
-echo '<br><br>'. (microtime(true) - $tstart);
+//echo '<br><br>'. (microtime(true) - $tstart);
 ?>
 

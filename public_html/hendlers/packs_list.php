@@ -202,7 +202,8 @@ pt.pass_labor,
 pt.fresh_group, 
 uc.craft_price, 
 uc.labor_total, 
-uc.spmu
+uc.spmu,
+ft.fperdata
 FROM packs
 INNER JOIN pack_prices ON packs.item_id = pack_prices.item_id
 AND side = '$side'
@@ -211,8 +212,11 @@ AND packs.pack_t_id in ($typesStr)
 INNER JOIN items ON packs.item_id = items.item_id AND items.on_off
 INNER JOIN user_crafts uc on pack_prices.item_id = uc.item_id AND uc.user_id = '$User->id' and isbest
 INNER JOIN pack_types pt on packs.pack_t_id = pt.pack_t_id
+INNER JOIN fresh_types join fresh_types ft on packs.fresh_id = ft.id
 ORDER BY packs.item_id");
-
+if(!$qwe or !$qwe->num_rows){
+    die('no data');
+}
 $i=0; $n=0; $open = false;
 $packData = [];
 foreach($qwe as $v)

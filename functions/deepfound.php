@@ -1,23 +1,22 @@
 ﻿
 <?php
 function deepfound($query,$lvl, $errarr, $root_craft)
-{	global $errcnt, $errarr;	
+{	global $errcnt, $errarr,$dbLink;
 	$mats =array();
 		$cnt = mysqli_num_rows($query);
 		//echo '<p>Вижу '.$cnt.' компонентов</p>';
    foreach($query as $v)
 	{
 		 //$mater_need = $v['mater_need'];
-			//if($mater_need < 0) continue;
+		//if($mater_need < 0) continue;
 		$mat_id = $v['item_id'];
 	   	//if(!IsCraftable($mat_id)) 
 		$mat_name = $v['item_name'];
 		$cr_name = $v['result_item_name'];
 		$mats[]= $mat_id;
-		$craft_id = $v['craft_id']; 
+		$craft_id = $v['craft_id'];
 
-		//echo '<p>Для '.$cr_name.' надо:</p>';
-		//echo '<p>'.$lvl.' '.$mat_name.'</p>';
+		$mat_name = mysqli_real_escape_string($dbLink,$mat_name);
 		 qwe("REPLACE INTO `craft_lvls` (`lvl`, `item_id`, `item_name`) 
 		 VALUES ('$lvl', '$mat_id', '$mat_name')");
 		qwe("REPLACE INTO `craft_tree` (`root_craft_id`, `craft_id`) 
