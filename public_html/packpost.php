@@ -19,6 +19,8 @@ $freshtime = 0;
 $per = 130;
 $psiol = false;
 
+
+
 if(!empty($_COOKIE['packpost']))
 {
     $pp = unserialize($_COOKIE['packpost']);
@@ -50,6 +52,8 @@ if(isset($_GET['item_id']))
     header("Location: packpost.php");
     exit();
 }
+$Pack = new Pack();
+$Pack->getFromDB($item_id);
 
 ?>
 <!doctype html>
@@ -89,25 +93,31 @@ if(isset($_GET['item_id']))
 ?>
 <main>
 
-    <?php
+<?php
+/*
     $sql = "
-select 
-packs.item_id,
-items.item_name 
-FROM items
-INNER JOIN packs ON packs.item_id = items.item_id
-GROUP BY packs.item_id
-order by item_name
-";
-    $sql = "
+    select
+    packs.item_id,
+    items.item_name
+    FROM items
+    INNER JOIN packs ON packs.item_id = items.item_id
+    GROUP BY packs.item_id
+    order by item_name
+    ";
+*/
+
+
+$qwe = qwe("
 select * from zones
 where fresh_type
 order by side, zone_name
-";
-    $qwe = qwe($sql);
+");
 
     ?>
 <div id="rent">
+    <?php
+    //printr($Pack);
+    ?>
 <h1>Пак-Инфо</h1>
     <div id="rent_in" class="rent_in">
         <div class="clear"></div>
@@ -137,8 +147,8 @@ order by side, zone_name
                             <div>
                             <label>
                                 <img class="selicon" src="/img/icons/50/icon_item_1405.png" data-tooltip="Возраст пака">
-                                <select id="freshtime" name = "freshtime" autocomplete="off">
-                                  <?php FreshTimeSelect($item_id,$from_id);?>
+                                <select id="freshlvl" name = "freshtime" autocomplete="off">
+                                  <?php $Pack->fPerOptions();?>
                                 </select>
                             </label>
                             </div>

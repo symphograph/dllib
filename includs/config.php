@@ -74,4 +74,9 @@ dbconnect();
 spl_autoload_register(function ($class_name) {
 	require_once $_SERVER['DOCUMENT_ROOT'].'/../classes/'.$class_name . '.php';
 });
+
+$cfg->vueprod = '.prod';
+if(str_starts_with($_SERVER['SERVER_NAME'],'test.')){
+	$cfg->vueprod = '';
+}
 ?>

@@ -3,6 +3,28 @@
 
 class Freshness
 {
+    const conditions = [
+        1 => [
+            'новый',
+            'свежий',
+            'подержанный',
+            'поврежденный',
+            'недоукомплектованный'
+        ],
+        2 => [
+            'новый',
+            'выдержанный',
+            'подержанный',
+            'испорченный',
+            'недоукомплектованный'
+        ],
+        3 => [
+            'новый',
+            'подержанный',
+            'поврежденный',
+            'испорченный'
+        ]
+    ];
     public function __construct(
         public int $fresh_group = 0,
         public int $fresh_type = 0,
@@ -17,6 +39,16 @@ class Freshness
         foreach ($args as $ak => $av) {
             $this->$ak = $av;
         }
+    }
+
+    private function fPerData(string $fperdata) : array
+    {
+        $arr = explode('|',$fperdata);
+        $fperdata = [];
+        foreach ($arr as $k =>$v){
+            $fperdata[$k+1] = $v;
+        }
+        return $fperdata;
     }
 
     public function option(int $item_id = 0)
@@ -86,6 +118,31 @@ class Freshness
         $this->fresh_lvl = array_search($this->fresh_per,$fperdata) + 1;
 
         return true;
+    }
+
+    public function setLvl(string $fperdata, int $condType,int $lvl) : bool
+    {
+        $pd = self::fPerData($fperdata);
+        if(!count($pd)){
+            return false;
+        }
+        if(!isset($pd[$lvl])){
+            return false;
+        }
+
+        $this->fresh_per = $pd[$lvl];
+        $this->fresh_lvl = $lvl;
+        $this->fresh_name = self::conditions[$condType][$lvl] ?? 'не определено';
+
+        return true;
+    }
+
+    public function fPerOptions(string $fperdata, int $condType){
+        $arr = self::fPerData($fperdata);
+        foreach ($arr as $lvl => $per){
+            $freshName = self::conditions[$condType][$lvl-1] ?? 'не определено';
+            ?><option value="<?php echo $lvl?>"><?php echo $per . '% '.$freshName?></option><?php
+        }
     }
 
 

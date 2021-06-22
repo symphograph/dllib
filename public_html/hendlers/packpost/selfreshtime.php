@@ -13,6 +13,8 @@ if(!isset($cfg)) {
     $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
     require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 }
-
-FreshTimeSelect($item_id, $from_id);
+$Pack = new Pack();
+$Pack->getFromDB($item_id);
+$Pack->fPerOptions();
+//FreshTimeSelect($item_id, $from_id);
 ?>

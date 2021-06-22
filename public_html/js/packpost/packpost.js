@@ -29,7 +29,7 @@ $(window).load(function(){
 
 
         });
-        $('#form').on('change','#freshtime, #per, #siol, #zto',function()
+        $('#form').on('change','#freshlvl, #per, #siol, #zto',function()
         {
             InfoLoad();
         });
@@ -54,7 +54,7 @@ function ZtoLoad(from_id,to_id = 0) {
     {
         $("#zto").html('');
         $("#bill").html('');
-        $("#freshtime").html('');
+        $("#freshlvl").html('');
         return;
     }
 
@@ -157,7 +157,7 @@ function FreshTimeLoad(item_id,from_id) {
         // Данные пришли
         success: function(data )
         {
-            $("#freshtime").html(data );
+            $("#freshlvl").html(data );
             InfoLoad();
         },
         async: false

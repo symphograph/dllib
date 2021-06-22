@@ -3,26 +3,28 @@
 
 class Pack extends Item
 {
-    public int            $zone_from   = 0;
-    public string|null    $z_from_name = 'Откуда';
-    public int            $zone_to     = 0;
-    public string         $z_to_name   = 'Куда';
-    public int            $pack_t_id   = 0;
-    public string         $pack_t_name = 'Тип пака';
-    public int            $fact_price  = 0;
-    public int            $pack_price  = 0;
-    public string         $pack_sname  = '';
-    public string         $pack_name   = '';
-    public int            $fresh_per   = 0;
-    public int            $fresh_type  = 0;
-    public int            $fresh_group = 0;
-    public Freshness $Fresh;
-    public int            $age         = 0;
-    public array          $Zones       = [];
-    public int            $pass_labor  = 0;
-    public int            $valuta_id;
-    public PackPrice      $PackPrice;
-    public int $condType = 0;
+    public int         $zone_from   = 0;
+    public string|null $z_from_name = 'Откуда';
+    public int         $zone_to     = 0;
+    public string      $z_to_name   = 'Куда';
+    public int         $pack_t_id   = 0;
+    public string      $pack_t_name = 'Тип пака';
+    public int         $fact_price  = 0;
+    public int         $pack_price  = 0;
+    public string      $pack_sname  = '';
+    public string      $pack_name   = '';
+    public int         $fresh_per   = 0;
+    public int         $fresh_type  = 0;
+    public int         $fresh_group = 0;
+    public Freshness   $Fresh;
+    public int         $age         = 0;
+    public array       $Zones       = [];
+    public int         $pass_labor  = 0;
+    public int         $valuta_id = 500;
+    public PackPrice   $PackPrice;
+    public int         $condType    = 0;
+    public string      $fperdata;
+    public int         $fresh_id;
 
     public function __construct()
     {
@@ -45,6 +47,7 @@ class Pack extends Item
             AND packs.pack_type = pt.pack_t_name
             AND packs.native_id = '$item_id'
         INNER JOIN zones z on packs.zone_from = z.zone_id
+        INNER JOIN fresh_types ft on packs.fresh_id = ft.id
         ");
         if(!$qwe or !$qwe->num_rows){
             return false;
@@ -76,18 +79,30 @@ class Pack extends Item
         return true;
     }
 
-    public function reSname()
+    public function fPerOptions()
     {
-        $pack_name = $this->pack_sname ?? $this->item_name;
-        if(preg_match('/Груз компоста/',$pack_name))
+        $this->Fresh->fPerOptions($this->fperdata,$this->condType);
+    }
+
+
+
+    private function reSname()
+    {
+        if($this->pack_sname){
+            $this->pack_name = $this->pack_sname;
+        }else{
+            $this->pack_name = $this->item_name;
+        }
+
+        if(preg_match('/Груз компоста/',$this->pack_name))
             $this->pack_name = 'Груз компоста';
-        if(preg_match('/Груз зрелого сыра/',$pack_name))
+        if(preg_match('/Груз зрелого сыра/',$this->pack_name))
             $this->pack_name = 'Груз сыра';
-        if(preg_match('/Груз домашней наливки/',$pack_name))
+        if(preg_match('/Груз домашней наливки/',$this->pack_name))
             $this->pack_name = 'Груз наливки';
-        if(preg_match('/Груз меда/',$pack_name))
+        if(preg_match('/Груз меда/',$this->pack_name))
             $this->pack_name = 'Груз меда';
-        if($pack_name == 'Вяленые припасы Заболоченных низин')
+        if($this->pack_name == 'Вяленые припасы Заболоченных низин')
             $this->pack_name = 'Вяленые припасы';
 
     }

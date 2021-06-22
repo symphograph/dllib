@@ -3,6 +3,7 @@ const sortByZoneTo = (d1, d2) => (d1.Pack.z_to_name.toLowerCase() > d2.Pack.z_to
 const sortByProfitOr = (d1, d2) =>(d1.profitor < d2.profitor) ? 1 : -1;
 const sortByProfit = (d1, d2) =>(d1.profit < d2.profit) ? 1 : -1;
 const sortBySalary = (d1, d2) =>(d1.goldsalary < d2.goldsalary) ? 1 : -1;
+
 const pt = Vue.createApp( {
     data() {
         return {
@@ -55,6 +56,7 @@ const pt = Vue.createApp( {
 
                 }).done(function (data) {
                 pt.error = 'ok'
+
                 pt.getPacks()
             }).fail(function (data) {
 
@@ -87,6 +89,14 @@ const pt = Vue.createApp( {
         getPacks(){
             pt.lost = []
             pt.uPrices = []
+            localStorage.setItem ("packTypes", JSON.stringify(pt.packForm.type));
+            if(!this.packForm.side){
+                this.error = 'side'
+                $('#tiptop').html(this.errorMsg)
+                console.log(this.errorMsg)
+                return false
+            }
+
             this.jdunOn()
             $.ajax
             ({
@@ -172,8 +182,23 @@ const pt = Vue.createApp( {
             jdun.removeClass("loading"); jdun.addClass("jdun");
         },
 
+        getParams(){
+            if(localStorage.getItem('packTypes') !== null){
+                return false;
+            }
+            this.packForm.type = JSON.parse(localStorage.getItem('packTypes'))
+            return true
+        },
+        setParams(){
 
+        }
 
+    },
+    mounted(){
+
+        this.getParams()
+       // console.log(this.$route.query)
+        return true
     },
     computed: {
         sortedList() {

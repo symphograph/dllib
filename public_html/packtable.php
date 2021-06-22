@@ -62,7 +62,9 @@ if($User->siol == 5)
 <title>Таблица цен на паки <?php echo $aa_ver?></title>
     <?php CssMeta(['default.css','packtable.css']); ?>
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
-    <script src="https://unpkg.com/vue@next"></script>
+<!--    <script src="https://unpkg.com/vue@next"></script>-->
+    <?php //addScript('js/vue.global.prod.js');?>
+<script type="text/javascript" src="https://unpkg.com/vue@next/dist/vue.global<?php echo $cfg->vueprod?>.js"></script>
 </head>
 
 <body>
@@ -162,7 +164,7 @@ function PackTypeButton(int $type, string $navname, string $img, array $ps)
 
     ?>
     <div class="nicon_out">
-        <input type="checkbox" v-model="packForm.type" id="type_<?php echo $type ?>" name="type[<?php echo $type ?>]" <?php echo $chk ?> value="<?php echo $type ?>">
+        <input type="checkbox" autocomplete="off" v-model="packForm.type" id="type_<?php echo $type ?>" name="type[<?php echo $type ?>]" value="<?php echo $type ?>">
         <label class="navicon" for="type_<?php echo $type ?>" style="background-image: url(<?php echo $img ?>);"></label>
         <div class="navname"><?php echo $navname ?></div>
     </div>
@@ -181,19 +183,19 @@ function selectRow($ps)
 
             >
                 <div class="nicon_out">
-                    <input v-model="packForm.side" type="radio" id="side_1" name="side" value="1">
+                    <input v-model="packForm.side" type="radio" id="side_1" name="side" value="1" autocomplete="off">
                     <label class="navicon" for="side_1" style="background-image: url(img/westhouse.png);"></label>
                     <div class="navname">Запад</div>
                 </div>
 
                 <div class="nicon_out">
-                    <input v-model="packForm.side" type="radio" id="side_3" name="side" value="3">
+                    <input v-model="packForm.side" type="radio" id="side_3" name="side" value="3" autocomplete="off">
                     <label for="side_3" class="navicon" style="background-image: url(img/icons/50/icon_item_0013.png);"></label>
                     <div class="navname">Север</div>
                 </div>
 
                 <div class="nicon_out">
-                    <input v-model="packForm.side" type="radio" id="side_2" name="side" value="2">
+                    <input v-model="packForm.side" type="radio" id="side_2" name="side" value="2" autocomplete="off">
                     <label for="side_2" class="navicon" style="background-image: url(img/icons/50/icon_house_029.png);"></label>
                     <div class="navname">Восток</div>
                 </div>
@@ -207,7 +209,7 @@ function selectRow($ps)
                 2 => ['Компост', 'img/icons/50/icon_item_2504.png'],
                 3 => ['С навеса', 'img/icons/50/icon_item_1336.png'],
                 4 => ['Растворы', 'img/icons/50/icon_item_3869.png'],
-                6 => ['Общинные', 'img/icons/50/icon_item_0864.png'],
+                5 => ['Вексельные', 'img/icons/50/icon_item_0864.png'],
                 7 => ['Трофейные', 'img/icons/50/icon_item_4295.png']
             ];
             foreach ($buttons as $type => $v) {
@@ -378,7 +380,7 @@ function packList()
                 </div>
 
                 <div class="pack_name">
-                    <div class="pack_mname"><b>{{ row.Pack.item_name }}</b></div>
+                    <div class="pack_mname"><b>{{ row.Pack.pack_name }}</b></div>
 
                     <div class="znames">
                         <div class="znamesrows">

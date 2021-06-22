@@ -1,4 +1,4 @@
-Vue.createApp({
+VueGlobalProd.createApp({
     data: () => ({
         counter: 0,
         title: 'Список заметок',

@@ -1,6 +1,6 @@
 window.onload = function() {
     //setTimeout(function() {$("#xlgames").hide('slow');}, 3000);
-    TipTop();
+    //TipTop();
 };
 //$('#packsettings').on('change','input, select',function(){QueryPacks()});
 

@@ -6,7 +6,7 @@ foreach ($_POST as $k => $v)
 {
     $p[$k] = intval($v);
 }
-$freshtime =  $p['freshtime'] ?? 0;
+$freshlvl =  $p['freshlvl'] ?? 0;
 $per = $p['per'];
 if($per > 130)
     die('>130!');
@@ -38,54 +38,25 @@ $cook_settings =
         'psiol' => $psiol,
         'from_id' => $from_id,
         'to_id' => $to_id,
-        'freshtime' => $freshtime,
+        'freshlvl' => $freshlvl,
         'item_id' => $item_id
     ];
 $cooktime = time()+60*60*24*360;
 setcookie("packpost",serialize($cook_settings),$cooktime,'/');
 
-//printr($p);
-
-$qwe = qwe("
-SELECT 
-fresh_data.fresh_tstart,
-fresh_data.fresh_per,
-fresh_data.fresh_lvl,
-fresh_data.fresh_group,
-fresh_data.fresh_type,
-item_name,
-pack_prices.valuta_id as valuta,       
-pack_prices.pack_price/pack_prices.mul as pack_price
-FROM
-packs
-INNER JOIN pack_prices ON pack_prices.item_id= packs.item_id 
-AND pack_prices.zone_id = packs.zone_from
-AND packs.item_id = '$item_id'
-AND pack_prices.zone_id = '$from_id'
-AND pack_prices.zone_to = '$to_id'
-INNER JOIN zones ON zones.zone_id = pack_prices.zone_id 
-INNER JOIN pack_types ON packs.pack_t_id = pack_types.pack_t_id 
-INNER JOIN fresh_data ON pack_types.fresh_group = fresh_data.fresh_group  
-AND zones.fresh_type = fresh_data.fresh_type
-AND fresh_data.fresh_tstart = '$freshtime'
-INNER JOIN items ON items.item_id = packs.item_id
-");
-//var_dump($qwe);
-if((!$qwe) or (!$qwe->num_rows))
-    die('err');
-$q = mysqli_fetch_object($qwe);
-
+$Pack = new Pack();
+$Pack->getFromDB($item_id);
 ?>
 <div class="pinfo_row">
-        <span class="pharam">Товар: [<?php echo $q->item_name?>]</span>
+        <span class="pharam">Товар: [<?php echo $Pack->item_name?>]</span>
     </div><br>
 <?php
 
-echo SalaryLetter($per,$q->pack_price,$psiol,$q->fresh_per,$q->item_name,$q->valuta);
+echo SalaryLetter($per,$Pack->pack_price,$psiol,$Pack->fresh_per,$Pack->item_name,$Pack->valuta_id);
 
 if($cfg->myip)
 {
-    $Factory_list = PackPercents($q->pack_price,$psiol,$per,$q->fresh_per,2,1);
+    $Factory_list = PackPercents($Pack->pack_price,$psiol,$per,$Pack->fresh_per,2,1);
 
 ?>
 <div class="pinfo_row">

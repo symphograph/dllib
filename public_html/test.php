@@ -14,7 +14,11 @@ echo $c;
 //3.3333333333333
 echo $c === 3.3333333333333 ? 'да' : 'нет';
 //нет
-
+echo $c*3;
+$b = 3;
+echo $c*$b;
+$d = $c;
+echo $d*3;
 
 //echo '<br><br>'. (microtime(true) - $tstart);
 ?>
