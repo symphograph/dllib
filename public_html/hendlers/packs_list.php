@@ -33,7 +33,7 @@ $siol = $_POST['siol'] ?? 0;
 ($siol === 'true') ? $siol = 5 : $siol = 0;
 
 $types = [];
-if(isset($_POST['type']))
+if(isset($_POST['type']) and is_array($_POST['type']))
 {
 	foreach($_POST['type'] as $tk => $tv)
 	{
