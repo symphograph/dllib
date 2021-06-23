@@ -183,14 +183,15 @@ const pt = Vue.createApp( {
         },
 
         getParams(){
-            if(localStorage.getItem('packTypes') === null){
+            var ls = localStorage.getItem('packTypes');
+            if(ls === null){
                 return false;
             }
-            if (localStorage.getItem('packTypes').length){
-                this.packForm.type = JSON.parse(localStorage.getItem('packTypes'))
+            if (JSON.parse(ls).length){
+                this.packForm.type = JSON.parse(ls)
                 return true
             }else {
-                localStorage.setItem ("packTypes", JSON.stringify([]));
+                localStorage.setItem ("packTypes",JSON.stringify([]));
             }
         },
         setParams(){
