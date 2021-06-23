@@ -24,6 +24,7 @@ class PackProfit
         $this->craft_price = $craft_price;
         $this->valut_id    = $valut_id ?? 500;
         $this->labor_total = $labor_total;
+        $this->finalGoldSalary = $finalSalary;
 
         self::profit();
         self::profitOr();
