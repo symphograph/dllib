@@ -14,7 +14,7 @@ class Item
     public        $description;
     public int    $on_off;
     public int    $personal;
-    public int    $craftable;
+    public int    $craftable = 0;
     public int    $ismat;
     public int    $item_group;
     public        $categ_id;

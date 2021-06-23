@@ -4,9 +4,9 @@
 class Salary
 {
     const  StandartPrem = 2;
-    private int $flatSalary = 0;
-    public int $factoryPrice = 0;
-    public int $finalSalary  = 0;
+    private float $flatSalary = 0;
+    public float $factoryPrice = 0;
+    public float $finalSalary  = 0;
     public string     $salaryLetter = '';
 
     public function __construct(
@@ -40,11 +40,11 @@ class Salary
     private function perSiol(): void
     {
         $persiol = $this->flatSalary * ($this->per / 100);
-        $persiol = round($persiol);
+        //$persiol = round($persiol);
 
         if($this->valut_id == 500){
             $persiol = $persiol * (1 + $this->siol / 100);
-            $persiol = round($persiol);
+            //$persiol = round($persiol);
         }
         $this->factoryPrice = $persiol;
     }
@@ -52,7 +52,7 @@ class Salary
     private function finalSalary() : void
     {
         $salary = $this->factoryPrice * (1 + ($this->fresh_per / 100));
-        $salary = round($salary);
+        //$salary = round($salary);
         $salary = $salary * (1 + self::StandartPrem / 100);
         $salary = round($salary);
         $this->finalSalary = $salary;
@@ -60,9 +60,14 @@ class Salary
 
     public function salaryLetter() : string|false
     {
-        $finalSalary  = price_str($this->finalSalary, $this->valut_id);
-        $flatSalary   = price_str($this->flatSalary, $this->valut_id);
-        $factoryPrice = price_str($this->factoryPrice, $this->valut_id);
+        $finalSalary  = round($this->finalSalary);
+        $flatSalary   = round($this->flatSalary);
+        $factoryPrice = round($this->factoryPrice);
+
+
+        $finalSalary  = price_str($finalSalary, $this->valut_id);
+        $flatSalary   = price_str($flatSalary, $this->valut_id);
+        $factoryPrice = price_str($factoryPrice, $this->valut_id);
         $freguency    = 100 + $this->fresh_per;
 
         ob_start();
