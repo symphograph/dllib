@@ -189,6 +189,8 @@ const pt = Vue.createApp( {
             if (localStorage.getItem('packTypes').length){
                 this.packForm.type = JSON.parse(localStorage.getItem('packTypes'))
                 return true
+            }else {
+                localStorage.setItem ("packTypes", JSON.stringify([]));
             }
         },
         setParams(){
