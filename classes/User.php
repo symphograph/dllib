@@ -274,15 +274,22 @@ class User
 
     private function regNewMail()
     {
+        global $dbLink;
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $fname = mysqli_real_escape_string($dbLink,$this->fname);
+        $last_name = mysqli_real_escape_string($dbLink,$this->last_name);
+        $avatar = mysqli_real_escape_string($dbLink,$this->avatar);
+        $mailnick = mysqli_real_escape_string($dbLink,$this->mailnick);
+        $email = mysqli_real_escape_string($dbLink,$this->email);
         $qwe = qwe("
             UPDATE `mailusers` SET 
-            `first_name` = '$this->fname', 
-            `last_name` = '$this->last_name', 
-            `avatar` = '$this->avatar', 
-            `mailnick` = '$this->mailnick', 
+            `first_name` = '$fname', 
+            `last_name` = '$last_name', 
+            `avatar` = '$avatar', 
+            `mailnick` = '$mailnick', 
             `last_time` = '$this->last_time', 
-            `last_ip` = '$this->last_time',
-            `email` = '$this->email'
+            `last_ip` = '$ip',
+            `email` = '$email'
             WHERE `mail_id` = '$this->id'
             ");
         if(!$qwe)
