@@ -74,15 +74,7 @@ $Pack->getFromDB($item_id);
     <link href="css/packpost.css?ver=<?php echo md5_file('css/packpost.css')?>" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
-    <script type="text/javascript" src="js/packpost/packpost.js?ver=<?php echo md5_file('js/packpost/packpost.js')?>"></script>
-    <script type="text/javascript" src="js/packpost/times.js?ver=<?php echo md5_file('js/packpost/times.js')?>"></script>
-    <script type="text/javascript" src="js/packpost/prices.js?ver=<?php echo md5_file('js/packpost/prices.js')?>"></script>
-    <script type="text/javascript" src="js/packpost/setbuy.js?ver=<?php echo md5_file('js/packpost/setbuy.js')?>"></script>
-    <?php if(!$User->ismobiledevice)
-    {
-        ?><script type="text/javascript" src="js/tooltips.js?ver=<?php echo md5_file('js/tooltips.js')?>"></script><?php
-    }
-    ?>
+
 </head>
 
 <body>
@@ -147,7 +139,7 @@ order by side, zone_name
                             <div>
                             <label>
                                 <img class="selicon" src="/img/icons/50/icon_item_1405.png" data-tooltip="Возраст пака">
-                                <select id="freshlvl" name = "freshtime" autocomplete="off">
+                                <select id="freshlvl" name = "freshlvl" autocomplete="off">
                                   <?php $Pack->fPerOptions();?>
                                 </select>
                             </label>
@@ -242,7 +234,16 @@ function TimeRouteForm()
         <?php
 }
 include_once 'pageb/footer.php'; ?>
-</body>
+<script type="text/javascript" src="js/packpost/packpost.js?ver=<?php echo md5_file('js/packpost/packpost.js')?>"></script>
+<script type="text/javascript" src="js/packpost/times.js?ver=<?php echo md5_file('js/packpost/times.js')?>"></script>
+<script type="text/javascript" src="js/packpost/prices.js?ver=<?php echo md5_file('js/packpost/prices.js')?>"></script>
+<script type="text/javascript" src="js/packpost/setbuy.js?ver=<?php echo md5_file('js/packpost/setbuy.js')?>"></script>
+<?php if(!$User->ismobiledevice)
+{
+    ?><script type="text/javascript" src="js/tooltips.js?ver=<?php echo md5_file('js/tooltips.js')?>"></script><?php
+}
+?>
+
 
 <script type='text/javascript'>
 
@@ -303,4 +304,5 @@ if($cfg->myip)
 ?>
 
 </script>
+</body>
 </html>

@@ -191,7 +191,7 @@ function ValutInfo(Item $Item)
 	
 	<?php
 	//$serv_median = RepMedian($mvalut, $User->id);
-	$valutData = MonetisationList($val_link, $mvalut, $User->id);
+	$valutData = MonetisationList($val_link, $mvalut);
 	//printr($valutData);
 	if(!empty($valutData[1]))
 	{

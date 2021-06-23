@@ -273,6 +273,16 @@ class Item
         return $arr;
     }
 
+    private function clearBuff()
+    {
+        global $User;
+        if(!isset($User->id)){
+            die('user');
+        }
+        qwe("DELETE FROM craft_buffer WHERE `user_id` = '$User->id'");
+        qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$User->id'");
+    }
+
     public function CraftsByDeep() : array
     {
         if(!count($this->potential_crafts))
@@ -298,9 +308,13 @@ class Item
         return $arr;
     }
 
-    function RecountBestCraft()
+    function RecountBestCraft($single = false)
     {
         global $lost, $User;
+        if($single){
+            require_once $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
+            self::clearBuff();
+        }
         $craftarr = [];
 
         $this->potentialMatsAndCrafts = self::CraftsByDeep();
@@ -321,7 +335,8 @@ class Item
             '/hendlers/packs_list.php',
             '/hendlers/isbuysets.php',
             '/packres.php',
-            '/hendlers/packpost/packpostmats.php',
+            '/hendlers/packpost/packpostinfo.php',
+            /*'/hendlers/packpost/packpostmats.php',*/
             '/hendlers/packpost/packobj.php',
             '/test.php'
         ]) and count($lost)) {
@@ -351,6 +366,10 @@ class Item
                 AND `craft_id`='$craftId'
             ");
 
+        }
+
+        if($single){
+            self::clearBuff();
         }
 
         return true;

@@ -13,7 +13,7 @@ const pt = Vue.createApp( {
             packForm: {
                 per: 130,
                 pack_age: 0,
-                condition: 0,
+                condition: 1,
                 side: null,
                 siol: 0,
                 type: [],

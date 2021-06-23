@@ -20,8 +20,9 @@ class Pack extends Item
     public int         $age         = 0;
     public array       $Zones       = [];
     public int         $pass_labor  = 0;
-    public int         $valuta_id = 500;
-    public PackPrice   $PackPrice;
+    public int        $valuta_id = 500;
+    public PackProfit $PackProfit;
+    public Salary     $Salary;
     public int         $condType    = 0;
     public string      $fperdata;
     public int         $fresh_id;
@@ -32,7 +33,7 @@ class Pack extends Item
     }
 
 
-    public function getFromDB(int $item_id)
+    public function getFromDB(int $item_id, int $zfrom_id = 0, int $zto_id = 0)
     {
         parent::getFromDB($item_id);
 
@@ -40,12 +41,18 @@ class Pack extends Item
         if(!$this->ispack)
             return false;
 
+        if($zfrom_id and $zto_id){
+
+            return self::byWay($item_id,$zfrom_id,$zto_id);
+
+        }
+
         $qwe = qwe("
         SELECT * FROM packs 
         INNER JOIN pack_types pt 
             ON packs.pack_t_id = pt.pack_t_id 
             AND packs.pack_type = pt.pack_t_name
-            AND packs.native_id = '$item_id'
+            AND packs.item_id = '$item_id'
         INNER JOIN zones z on packs.zone_from = z.zone_id
         INNER JOIN fresh_types ft on packs.fresh_id = ft.id
         ");
@@ -75,16 +82,19 @@ class Pack extends Item
         }
         $this->z_from_name = (new Zone($this->zone_from))->zone_name;
         $this->z_to_name = (new Zone($this->zone_to))->zone_name;
+        $this->Fresh = new Freshness(
+            condType: $q->condType ?? 0,
+            fperdata: $q->fperdata ?? ''
+        );
+
         self::reSname();
         return true;
     }
 
     public function fPerOptions()
     {
-        $this->Fresh->fPerOptions($this->fperdata,$this->condType);
+        $this->Fresh->fPerOptions();
     }
-
-
 
     private function reSname()
     {
@@ -128,66 +138,79 @@ class Pack extends Item
         return $this->freshPerces;
     }
 */
-    public function freshGet(int $age)
+
+    public function initSalary(int $per,int $siol, int $quality = 0, $lvl = 0) : void
     {
-        $this->age = $age;
-        $Fresh = new Freshness();
-        $Fresh->byAge($this->item_id, $this->zone_from,$this->age);
-        $this->Fresh = $Fresh;
-    }
+        if($quality){
+            $this->Fresh->setCondition($quality);
+        }elseif ($lvl){
+            $this->Fresh->setLvl($lvl);
+        }
 
-    public function bestcondition(){
-        $Fresh = new Freshness();
-    }
-
-    public function printRow(int $per,int $siol) : string
-    {
-        parent::isCounted();
-        //printr($this->bestCraft);
-
-        $this->PackPrice = new PackPrice(
+        $this->Salary = new Salary(
             per: $per,
             siol: $siol,
-            item_id: $per,
             db_price: $this->pack_price,
             fresh_per: $this->Fresh->fresh_per,
+            valut_id: $this->valuta_id
+        );
+    }
+
+    public function initPrice(int $per,int $siol, int $quality = 0, $lvl = 0) : void
+    {
+
+        self::initSalary(per: $per,siol:  $siol, quality:  $quality, lvl:  $lvl);
+
+        if(!parent::isCounted()){
+            return;
+        }
+        $this->getBestCraft();
+        $this->bestCraft->setCountedData();
+
+
+        $this->PackProfit = new PackProfit(
+            finalSalary: $this->Salary->finalSalary,
             valut_id: $this->valuta_id,
             craft_price: $this->craft_price,
             labor_total: $this->bestCraft->labor_total
         );
-
-        ob_start();
-        ?>
-        <div class="piconandpname">
-            <div itid="<?php echo $this->item_id ?>" id="<?php echo $this->item_id . '_' . $this->zone_to ?>"
-                 class="pack_icon" style="background-image: url(img/icons/50/<?php echo $this->icon ?>.png)">
-                <div class="itdigp"><?php echo $this->Fresh->fresh_per; ?>%</div>
-            </div>
-
-            <div id="pmats_<?php echo $this->item_id ?>" class="pkmats_area"></div>
-
-            <div class="pack_name">
-                <div class="pack_mname"><b><?php echo $this->pack_name; ?></b></div>
-
-                <div class="znames">
-                    <div class="znamesrows">
-                        <div class="zname"></div>
-                        <div class="zname"><?php echo $this->z_from_name ?></div>
-                        <div class="zname"></div>
-                    </div>
-                    <div class="znamesrows">
-                        <div class="zname2"></div>
-                        <div class="zname2"></div>
-                        <div class="zname2"><?php echo $this->z_to_name ?></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="pprices">
-            <?php $this->PackPrice->printPriceData();?>
-        </div>
-        <?php
-        return ob_get_clean();
     }
+
+    private function byWay(int $item_id, int $zfrom_id, int $zto_id) : bool
+    {
+        global $User;
+        $qwe = qwe("SELECT 
+            items.*,
+            pack_prices.zone_to, 
+            pack_prices.pack_price, 
+            pack_prices.valuta_id, 
+            pack_prices.mul, 
+            packs.zone_from, 
+            packs.pack_sname, 
+            pt.pack_t_id, 
+            pt.pack_t_name, 
+            pt.pass_labor,     
+            pt.fresh_group, 
+            ft.fperdata,
+            ft.condType       
+            FROM packs
+            INNER JOIN pack_prices ON packs.item_id = pack_prices.item_id
+            AND packs.zone_from = pack_prices.zone_id
+            AND pack_prices.zone_id = '$zfrom_id'
+                AND pack_prices.zone_to = '$zto_id'
+                AND packs.item_id = '$item_id'
+            INNER JOIN items ON packs.item_id = items.item_id AND items.on_off
+            INNER JOIN pack_types pt on packs.pack_t_id = pt.pack_t_id
+            INNER JOIN fresh_types ft on packs.fresh_id = ft.id
+            ORDER BY packs.item_id");
+
+        if(!$qwe or !$qwe->num_rows){
+
+            return false;
+        }
+        $q = mysqli_fetch_object($qwe);
+
+        return self::byQ($q);
+    }
+
 }

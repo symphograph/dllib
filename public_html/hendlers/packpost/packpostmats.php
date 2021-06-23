@@ -12,30 +12,22 @@ if(!$User->byIdenty())
     die();
 $user_id = $User->id;
 
-$craft_id = BestCraftForItem($user_id,$item_id);
-if(!$craft_id)
-{
-    qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
-    qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
+$Item = new Item();
+$Item->getFromDB($item_id);
+$Item->getBestCraft();
+if(!$Item->isCounted()){
+    $Item->RecountBestCraft(1);
     $Item = new Item();
     $Item->getFromDB($item_id);
-    $Item->RecountBestCraft();
-    qwe("DELETE FROM craft_buffer WHERE `user_id` = '$user_id'");
-    qwe("DELETE FROM craft_buffer2 WHERE `user_id` = '$user_id'");
 
-    $craft_id = BestCraftForItem($user_id,$item_id);
+}
+if(!$Item->isCounted()){
+    die('uncounted');
 }
 
-$qwe = qwe("
-SELECT * from user_crafts
-where  user_id = $user_id 
-and craft_id = '$craft_id' 
-");
-$q = mysqli_fetch_assoc($qwe);
 ?><div id="craft_price"><?php
-echo 'Себестоимость: '.esyprice($q['craft_price']);
+echo 'Себестоимость: '.esyprice($Item->craft_price);
 ?></div><?php
 
 $qwe = qwe("
@@ -54,7 +46,7 @@ user_crafts.isbest,
 user_crafts.craft_price    
 FROM craft_materials
 inner join `items` on craft_materials.item_id = `items`.item_id
-and craft_materials.craft_id = '$craft_id'
+and craft_materials.craft_id = '$Item->bestCraftId'
 LEFT join user_crafts on craft_materials.item_id = user_crafts.item_id
 and user_crafts.user_id = '$user_id'
 and isbest > 0

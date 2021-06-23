@@ -24,22 +24,13 @@ foreach ($cards as $card){
     //echo '-------------------------------';
 }
 
-//perDoubList(1);
+
 $qwe = qwe("SELECT DISTINCT item_id FROM freshCards");
 foreach ($qwe as $q){
     $item_id = $q['item_id'];
     $pdata = perdata($item_id);
-     /*if(count($pdata) != 5){
-         continue;
-     }*/
-    //printr($pdata);
-     //$pdatas[] = implode('|',$pdata);
     $pdata = perImplode($pdata);
     $pdatas[$item_id] = $pdata;
-    qwe("UPDATE packs SET perdata = '$pdata' 
-WHERE native_id = '$item_id'
-AND (perdata = '' or perdata LIKE '%n%')
-");
 
 }
 $pdatas = array_unique($pdatas);

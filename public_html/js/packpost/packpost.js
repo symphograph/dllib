@@ -135,11 +135,13 @@ function MatsLoad() {
 
 
 
-function FreshTimeLoad(item_id,from_id) {
+function FreshTimeLoad(item_id,from_id,to_id = 0) {
     if(!item_id)
         item_id = $("#packselect").val();
     if(!from_id)
         from_id = $("#zfrom").val();
+    if(!to_id)
+        to_id = $("#zto").val();
 
     $.ajax
     ({
@@ -149,7 +151,8 @@ function FreshTimeLoad(item_id,from_id) {
         data:
             {
                 item_id: item_id,
-                from_id: from_id
+                from_id: from_id,
+                to_id: to_id
             },
 
         dataType: "html",

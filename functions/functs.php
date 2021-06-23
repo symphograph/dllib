@@ -90,14 +90,17 @@ function esyprice($total,$only = false)
 	return '<div class="esyprice">'.$string.'</div>';
 }
 
-function median($arr)
-{ //Медиана от массива $arr
-	if(!$arr) return false;
- sort ($arr);
- $count = count($arr);
- $middle = floor($count/2);
- if ($count%2) return round($arr[$middle],0);
- else return round(($arr[$middle-1]+$arr[$middle])/2,0);
+function median(array $arr)
+{
+    $count = count($arr);
+    if(!$count){
+        return false;
+    }
+
+    sort ($arr);
+    $middle = floor($count/2);
+    if ($count%2) return round($arr[$middle],0);
+    else return round(($arr[$middle-1]+$arr[$middle])/2,0);
 }
 
 function ItemsFromAlterValutes($valut_id)
@@ -148,7 +151,7 @@ function MaxValuta($valut_id)
 		return 100000;
 }
 
-function MonetisationList($val_link, $valut_id, $user_id)
+function MonetisationList($val_link, int $valut_id)
 {
 
 	
@@ -304,8 +307,8 @@ if($User->email)
 
 function SetToken()
 {
-	global $user_id;
-	if(!isset($user_id))
+	global $User;
+	if(!isset($User->id))
 		return false;
 	
 	$token = random_str(12);
@@ -313,7 +316,7 @@ function SetToken()
 	UPDATE `mailusers`
 	SET `token` = '$token',
 	`last_time` = NOW()
-	WHERE `mail_id` = '$user_id'
+	WHERE `mail_id` = '$User->id'
 	");
 	if($qwe)
 		return $token;
@@ -321,15 +324,15 @@ function SetToken()
 
 function AskToken()
 {
-	global $user_id;
-	if(!isset($user_id))
+	global $User;
+	if(!isset($User->id))
 		return false;
 	
 	$qwe= qwe("
 	SELECT `token` 
 	FROM `mailusers`
 	WHERE 
-	`mail_id` = '$user_id'
+	`mail_id` = '$User->id'
 	AND `last_time` > (NOW() - INTERVAL 60 MINUTE)
 	AND LENGTH(`token`) > 0
 	");
@@ -394,53 +397,6 @@ function secToArray($secs)
 	$res['secs'] = $secs % 60;
 
 	return $res;
-}
-
-function FreshTimeSelect($item_id = false, $from_id = false)
-{
-    $per = '';
-    if($item_id)
-    {
-        $item_id = intval($item_id);
-        $from_id = intval($from_id);
-        $qwe = qwe("
-        SELECT 
-        fresh_data.fresh_tstart,
-        fresh_data.fresh_tstop,
-        fresh_data.fresh_per,
-        fresh_data.fresh_lvl,
-        fresh_data.fresh_group,
-        fresh_data.fresh_type
-        FROM
-        packs
-        INNER JOIN pack_prices ON pack_prices.item_id= packs.item_id AND packs.item_id = '$item_id'
-        INNER JOIN zones ON zones.zone_id = pack_prices.zone_id AND pack_prices.zone_id = '$from_id'
-        INNER JOIN pack_types ON packs.pack_t_id = pack_types.pack_t_id AND pack_types.pack_t_id != 6
-        INNER JOIN fresh_data ON pack_types.fresh_group = fresh_data.fresh_group  
-        AND zones.fresh_type = fresh_data.fresh_type
-        GROUP BY fresh_data.fresh_tstart");
-
-    }else
-    {
-       $qwe = qwe("
-        Select * from fresh_data
-        GROUP BY fresh_tstart;
-        ");
-    }
-
-
-    foreach($qwe as $f)
-    {
-        $Fresh = new Freshness(
-                $f['fresh_group'],
-                $f['fresh_type'],
-                $f['fresh_lvl'],
-                $f['fresh_tstart'],
-                $f['fresh_tstop'],
-                $f['fresh_per']
-        );
-        echo $Fresh->option($item_id);
-    }
 }
 
 function is_image($filename) {

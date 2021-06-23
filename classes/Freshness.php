@@ -32,23 +32,102 @@ class Freshness
         public int $fresh_tstart = 0,
         public int $fresh_tstop = 0,
         public int $fresh_per = 0,
-        public string $fresh_name = ''
+        public string $fresh_name = '',
+        public int $condType = 0,
+        public string $fperdata = '',
+        public array $perdata = [],
+        public int $fresh_id = 0
     )
     {
         $args = get_defined_vars();
         foreach ($args as $ak => $av) {
             $this->$ak = $av;
         }
+        if($fresh_id){
+            self::bydb();
+        }
+        $this->perdata = self::fPerData();
     }
 
-    private function fPerData(string $fperdata) : array
+    private function bydb()
     {
-        $arr = explode('|',$fperdata);
-        $fperdata = [];
-        foreach ($arr as $k =>$v){
-            $fperdata[$k+1] = $v;
+
+    }
+
+    private function fPerData() : array
+    {
+        $arr = explode('|',$this->fperdata);
+        if(!count($arr)){
+            return [];
         }
-        return $fperdata;
+
+        $perdata = [];
+        foreach ($arr as $k =>$v){
+            $perdata[$k+1] = $v;
+        }
+
+       return $perdata;
+    }
+
+    private function highLvl() : int
+    {
+        $per = max($this->perdata);
+        return  array_search($per,$this->perdata);
+    }
+
+    private function downLvl() : int
+    {
+        $per = min($this->perdata);
+        return  array_search($per,$this->perdata);
+    }
+
+    /**
+     * @uses  downLvl()
+     * @uses  highLvl()
+     */
+    public function setCondition(int $condition = 1)
+    {
+        $cond = ['','high','down'][$condition] ?? '';
+        if(empty($cond)){
+            return false;
+        }
+
+        $func = $cond.'Lvl';
+        if(!method_exists($this,$func)){
+            return false;
+        }
+        $lvl = self::$func();
+        if(!$lvl){
+            return false;
+        }
+
+        self::setLvl($lvl);
+        return true;
+    }
+
+    public function setLvl(int $lvl) : bool
+    {
+        if(!count($this->perdata)){
+            return false;
+        }
+        if(!isset($this->perdata[$lvl])){
+            return false;
+        }
+
+        $this->fresh_per = $this->perdata[$lvl];
+        $this->fresh_lvl = $lvl;
+        $this->fresh_name = self::conditions[$this->condType][$lvl-1] ?? 'не определено';
+
+        return true;
+    }
+
+    public function fPerOptions(){
+        $arr = self::fPerData();
+
+        foreach ($arr as $lvl => $per){
+            $freshName = self::conditions[$this->condType][$lvl-1] ?? 'не определено';
+            ?><option value="<?php echo $lvl?>"><?php echo $per . '% '.$freshName?></option><?php
+        }
     }
 
     public function option(int $item_id = 0)
@@ -65,85 +144,5 @@ class Freshness
         $pack_time = date($format,$this->fresh_tstart*60-3600*3-3600*24);
         return "<option value='$this->fresh_tstart'>$pack_time $per</option>";
     }
-
-    public function byAge(int $item_id, int $from_id, int $age)
-    {
-        $qwe = qwe("
-        SELECT 
-        fresh_data.fresh_tstart,
-        fresh_data.fresh_tstop,
-        fresh_data.fresh_per,
-        fresh_data.fresh_lvl,
-        fresh_data.fresh_group,
-        fresh_data.fresh_type,
-        fl.fresh_name       
-        FROM
-        packs
-        INNER JOIN pack_prices ON pack_prices.item_id= packs.item_id AND packs.item_id = '$item_id'
-        INNER JOIN zones ON zones.zone_id = pack_prices.zone_id AND pack_prices.zone_id = '$from_id'
-        INNER JOIN pack_types ON packs.pack_t_id = pack_types.pack_t_id AND pack_types.pack_t_id != 6
-        INNER JOIN fresh_data ON pack_types.fresh_group = fresh_data.fresh_group
-        INNER JOIN fresh_lvls fl on fresh_data.fresh_lvl = fl.fresh_lvl
-        AND zones.fresh_type = fresh_data.fresh_type
-        AND '$age' between fresh_data.fresh_tstart and fresh_data.fresh_tstop
-        GROUP BY fresh_data.fresh_tstart");
-        if(!$qwe or !$qwe->num_rows){
-            //printr(get_defined_vars());
-            return false;
-
-        }
-
-        $q = mysqli_fetch_object($qwe);
-        foreach ($q as $k => $v)
-        {
-            if(!empty($v))
-                $this->$k = $v;
-        }
-        return true;
-
-    }
-
-    public function setCondition(string $fperdata,int $bad = 0)
-    {
-        $fperdata = explode('|',$fperdata);
-        if(!count($fperdata)){
-            return false;
-        }
-        if($bad){
-            $this->fresh_per = min($fperdata);
-        }else {
-            $this->fresh_per = max($fperdata);
-        }
-
-        $this->fresh_lvl = array_search($this->fresh_per,$fperdata) + 1;
-
-        return true;
-    }
-
-    public function setLvl(string $fperdata, int $condType,int $lvl) : bool
-    {
-        $pd = self::fPerData($fperdata);
-        if(!count($pd)){
-            return false;
-        }
-        if(!isset($pd[$lvl])){
-            return false;
-        }
-
-        $this->fresh_per = $pd[$lvl];
-        $this->fresh_lvl = $lvl;
-        $this->fresh_name = self::conditions[$condType][$lvl] ?? 'не определено';
-
-        return true;
-    }
-
-    public function fPerOptions(string $fperdata, int $condType){
-        $arr = self::fPerData($fperdata);
-        foreach ($arr as $lvl => $per){
-            $freshName = self::conditions[$condType][$lvl-1] ?? 'не определено';
-            ?><option value="<?php echo $lvl?>"><?php echo $per . '% '.$freshName?></option><?php
-        }
-    }
-
 
 }

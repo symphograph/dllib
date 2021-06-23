@@ -63,7 +63,7 @@ if($User->siol == 5)
     <?php CssMeta(['default.css','packtable.css']); ?>
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
 <!--    <script src="https://unpkg.com/vue@next"></script>-->
-    <?php //addScript('js/vue.global.prod.js');?>
+
 <script type="text/javascript" src="https://unpkg.com/vue@next/dist/vue.global<?php echo $cfg->vueprod?>.js"></script>
 </head>
 
@@ -205,11 +205,12 @@ function selectRow($ps)
             <?php
             $buttons = [
                 1 => ['Обычные', 'img/icons/50/icon_item_0863.png'],
+                6 => ['Для местных', 'img/icons/50/icon_house_041.png'],
                 8 => ['За ДЗ', 'img/icons/50/icon_item_0476.png'],
                 2 => ['Компост', 'img/icons/50/icon_item_2504.png'],
                 3 => ['С навеса', 'img/icons/50/icon_item_1336.png'],
                 4 => ['Растворы', 'img/icons/50/icon_item_3869.png'],
-                5 => ['Вексельные', 'img/icons/50/icon_item_0864.png'],
+                5 => ['Вексельные', 'img/icons/50/icon_item_3493.png'],
                 7 => ['Трофейные', 'img/icons/50/icon_item_4295.png']
             ];
             foreach ($buttons as $type => $v) {
@@ -237,8 +238,8 @@ function sortrow(){
             */
             ?>
             <select v-model="packForm.condition" name="condition" class="select_input" autocomplete="off" onchange="">
-                <option value="0" selected>Зрелые</option>
-                <option value="1">Протухшие</option>
+                <option value="1" selected>Зрелые</option>
+                <option value="2">Протухшие</option>
             </select>
 
         </div>
@@ -397,17 +398,17 @@ function packList()
                 </div>
             </div>
             <div class="pprices">
-                <div class="pprice" :data-tooltip="row.Pack.PackPrice.salaryLetter">
-                    <div v-html="valutImager(row.Pack.PackPrice.finalSalary,row.Pack.valuta_id)"></div>
+                <div class="pprice" :data-tooltip="row.Pack.Salary.salaryLetter">
+                    <div v-html="valutImager(row.Pack.Salary.finalSalary,row.Pack.valuta_id)"></div>
                     <a :href="'/packpost.php?item_id='+row.Pack.item_id">
                         <img style="width: 15px" src="/img/icons/50/quest/icon_item_quest023.png"/>
                     </a>
                 </div>
                 <div class="pprice">
-                    <div v-html="valutImager(row.Pack.PackPrice.profit)"></div>
+                    <div v-html="valutImager(row.Pack.PackProfit.profit)"></div>
                     <br>
                     <div class="profitLabor">
-                        <div v-html="valutImager(row.Pack.PackPrice.profitOr)"></div>/
+                        <div v-html="valutImager(row.Pack.PackProfit.profitOr)"></div>/
                         <img src="/img/icons/50/2.png" style="width: 15px" alt="imgor"/>
                     </div>
                 </div>

@@ -7,7 +7,7 @@ foreach ($_POST as $k => $v)
     $p[$k] = intval($v);
 }
 $freshlvl =  $p['freshlvl'] ?? 0;
-$per = $p['per'];
+$per = $p['per'] ?? 130;
 if($per > 130)
     die('>130!');
 
@@ -45,14 +45,29 @@ $cooktime = time()+60*60*24*360;
 setcookie("packpost",serialize($cook_settings),$cooktime,'/');
 
 $Pack = new Pack();
-$Pack->getFromDB($item_id);
+$Pack->getFromDB($item_id,$from_id,$to_id);
+if(!$Pack->isCounted()){
+    $Item= new Item();
+    $Item->getFromDB($item_id);
+    $Item->RecountBestCraft(1);
+    $Pack = new Pack();
+    $Pack->getFromDB($item_id,$from_id,$to_id);
+    $Item = null;
+}
+$Pack->initSalary(
+    per: $per,
+    siol: $psiol,
+    lvl: $freshlvl
+);
 ?>
 <div class="pinfo_row">
         <span class="pharam">Товар: [<?php echo $Pack->item_name?>]</span>
     </div><br>
 <?php
-
-echo SalaryLetter($per,$Pack->pack_price,$psiol,$Pack->fresh_per,$Pack->item_name,$Pack->valuta_id);
+//printr($Pack);
+echo $Pack->Salary->salaryLetter();
+//printr($Pack);
+//echo SalaryLetter($per,$Pack->pack_price,$psiol,$Pack->Fresh->fresh_per,$Pack->item_name,$Pack->valuta_id);
 
 if($cfg->myip)
 {
