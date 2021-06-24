@@ -32,9 +32,7 @@ class Salary
     private function flatSalary() : void
     {
         $this->flatSalary = round($this->db_price / 130 * 100);
-        if($this->valut_id !== 500){
-            $this->flatSalary /= 100;
-        }
+
     }
 
     private function perSiol(): void
@@ -54,6 +52,11 @@ class Salary
         $salary = $this->factoryPrice * (1 + ($this->fresh_per / 100));
         //$salary = round($salary);
         $salary = $salary * (1 + self::StandartPrem / 100);
+        if($this->valut_id !== 500){
+            $salary /= 100;
+            $this->factoryPrice /= 100;
+            $this->flatSalary /= 100;
+        }
         $salary = round($salary);
         $this->finalSalary = $salary;
     }

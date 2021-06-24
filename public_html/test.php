@@ -9,6 +9,16 @@ if(!isset($cfg)) {
 if (!$cfg->myip)
     die('rrr');
 
+
+for($a = 0; $a != 1; $a += 0.1){
+    echo $a;
+}
+//$a станет = 1 никогда
+
+
+die();
+
+
 $c = 10/3;
 echo $c;
 //3.3333333333333
@@ -19,6 +29,7 @@ $b = 3;
 echo $c*$b;
 $d = $c;
 echo $d*3;
+
 
 //echo '<br><br>'. (microtime(true) - $tstart);
 ?>
