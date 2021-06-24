@@ -384,6 +384,7 @@ function is_bot()
 
 function price_str($price,$valuta)
 {
+
 	$minus = '';
 	if($price < 0)
 	{
