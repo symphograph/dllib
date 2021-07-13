@@ -76,12 +76,18 @@ class User
         return $identy;
     }
 
-    private function newUser()
+    private function newUser() : bool | string
     {
         $datetime = date('Y-m-d H:i:s',time());
         $identy = random_str(12);
         $ip = $_SERVER['REMOTE_ADDR'];
         $newid = EmptyIdFinder('mailusers');
+
+        if(self::isIdExist($newid)){
+            //TODO - я хз почему, но эта поебень не работает
+            $newid = EmptyIdFinder('mailusers');
+        }
+
         $qwe = qwe("
             INSERT INTO `mailusers`
             (`mail_id`, `identy`, `ip`, `time`, `last_ip`, `last_time`)
@@ -93,6 +99,15 @@ class User
 
         self::byIdenty($identy);
         return $identy;
+    }
+
+    private function isIdExist(int $id) : bool
+    {
+        $qwe = qwe("SELECT * FROM mailusers WHERE mail_id = '$id'");
+        if($qwe and $qwe->num_rows){
+            return true;
+        }
+        return false;
     }
 
     public function isBot(): bool
@@ -163,7 +178,10 @@ class User
             if(!self::isCookieble())
                 return false;
 
-            self::newUser();
+            if(!self::newUser()){
+                return false;
+            }
+
             return true;
         }
 
