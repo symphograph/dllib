@@ -7,10 +7,7 @@ if(!$nick)
 
 $reports = ['<span style="color: red">ой!<span>','ок'];
 	
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 
 $User = new User();
 if(!$User->byIdenty())
@@ -37,7 +34,7 @@ if($len<3 or $len>20)
 $qwe = qwe("
 SELECT * FROM `mailusers` 
 WHERE `user_nick` = '$nick'");
-if(!$qwe or $qwe->num_rows >0)
+if(!$qwe or $qwe->rowCount() >0)
  die('Ник занят');
 
 $qwe = qwe("

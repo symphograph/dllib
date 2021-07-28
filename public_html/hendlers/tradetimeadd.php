@@ -6,10 +6,7 @@ $to_id = $_POST['to_id'] ?? 0;
 $to_id = intval($to_id);
 if(!$to_id) die('Куда?');
 
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 $User = new User;
 if(!$User->byIdenty())
     die('user_id');
@@ -56,10 +53,10 @@ WHERE (user_id, from_id, to_id, transport, buff_1, buff_2, buff_3)
           = 
       ('$User->id', '$from_id', '$to_id', '$transport', '$buff_1', '$buff_2', '$buff_3')");
 
-if($qwe and $qwe->num_rows) {
+if($qwe and $qwe->rowCount()) {
 
-    $qwe = mysqli_fetch_assoc($qwe);
-    $dur_id = $qwe['dur_id'];
+    $q = $qwe->fetchObject();
+    $dur_id = $q->dur_id;
 
 }else {
 

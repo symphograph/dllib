@@ -79,7 +79,7 @@ function Metka($BotName)
     if($BotName)
     {
         $query = qwe("SELECT * FROM `mailusers` WHERE `email` = '$BotName'");
-        if(mysqli_num_rows($query)>0)//Если бот уже записан
+        if($query and $query->rowCount())//Если бот уже записан
         {
             foreach($query as $q)
             {$identy = $q['identy'];}
@@ -183,12 +183,12 @@ function DeviceMark($user_id,$unix_time = 0)
     SELECT * FROM `sessions` 
     WHERE `sessmark` = '$sessmark' 
     AND `user_id` = '$user_id'");
-	if(!$qwe or !$qwe->num_rows)
+	if(!$qwe or !$qwe->rowCount())
 	{
         SetSess($user_id, $sessmark, $unix_time);
         return true;
     }
-    $q = mysqli_fetch_object($qwe);
+    $q= $qwe->fetchObject();
 
     $agent = get_browser(null, true);
     $agent = (object) $agent;
@@ -288,9 +288,9 @@ function UserInfo($identy = '')
 		LEFT JOIN `servers` ON `servers`.`id` = `server`
 		WHERE BINARY `mailusers`.`identy` = '$identy'
 		");
-	//var_dump($query->num_rows);
+	//var_dump($query->rowCount());
 	
-	if((!$query) or $query->num_rows == 0) 
+	if((!$query) or $query->rowCount() == 0) 
 		return false;
 	
 	foreach($query as $q)
@@ -406,7 +406,7 @@ function EmptyIdFinder($table,$colname = false)
 
 	//Проверям, что это ключевой столбец и что он один.
 	$qwe = qwe("SHOW KEYS FROM `$table` WHERE Key_name = 'PRIMARY'");
-	if(!$qwe or mysqli_num_rows($qwe) != 1)
+	if(!$qwe or $qwe->rowCount() != 1)
 		return false;
 	
 	if(!$colname)//Если столбец не указывали, находим.
@@ -426,7 +426,7 @@ function EmptyIdFinder($table,$colname = false)
 	";
 
 	$qwe = qwe($sql);
-	if($qwe->num_rows)
+	if($qwe->rowCount())
     {
         foreach($qwe as $q)
             return $q['empty_id'];
@@ -527,7 +527,7 @@ function ItemAny($item_ids,$colname)
 	WHERE `item_id` in (".$item_ids.")
 	");
 	if(!$qwe) return false;
-	if($qwe->num_rows == 0) return false;
+	if($qwe->rowCount() == 0) return false;
 	foreach($qwe as $q)
 	{	
 		$arr[$q['item_id']] = $q[$colname];
@@ -541,9 +541,9 @@ function ItemAny($item_ids,$colname)
 function AnyById($any_ids,$table,$colname)
 {
 	$qwe = qwe("SHOW KEYS FROM `".$table."` WHERE Key_name = 'PRIMARY'");
-	if((!$qwe) or $qwe->num_rows != 1) return false;
-	$qwe = mysqli_fetch_assoc($qwe);
-	$key = $qwe['Column_name'];
+	if((!$qwe) or $qwe->rowCount() != 1) return false;
+	$q = $qwe->fetchObject();
+	$key = $q->Column_name;
 	//Получить каку-нибудь колонку для одного или нескольких итемов
 	if(is_array($any_ids))
 		$any_ids = implode(',',$any_ids);
@@ -554,7 +554,7 @@ function AnyById($any_ids,$table,$colname)
 	WHERE `".$key."` in (".$any_ids.")
 	");
 	if(!$qwe) return false;
-	if($qwe->num_rows == 0) return false;
+	if($qwe->rowCount() == 0) return false;
 	foreach($qwe as $q)
 	{	
 		$arr[$q[$key]] = $q[$colname];
@@ -591,12 +591,12 @@ function NickAdder($mail_id)
 	(SELECT `user_nick` FROM `mailusers` WHERE `user_nick` is NOT NULL)
 	LIMIT 1
 	");
-	if(!$qwe or $qwe->num_rows == 0)
+	if(!$qwe or $qwe->rowCount() == 0)
 		$nick = NickGenerator();
 	else
 	{
-		$qwe = mysqli_fetch_assoc($qwe);
-		$nick = $qwe['name'];
+		$q = $qwe->fetchObject();
+		$nick = $q->name;
 	}
 	
 	$qwe = qwe("UPDATE `mailusers` 
@@ -738,12 +738,12 @@ function BestCraftForItem($user_id,$item_id)
 	ORDER BY isbest DESC
 	LIMIT 1
 	");
-	if(!$qwe or $qwe->num_rows == 0) 
+	if(!$qwe or $qwe->rowCount() == 0) 
 			return false;
 
-	$qwe = mysqli_fetch_assoc($qwe);
+	$q = $qwe->fetchObject();
 
-		return $qwe['craft_id'];	
+    return $q->craft_id;
 }
 
 /**
@@ -766,7 +766,7 @@ function IntimItems()
 	(SELECT valut_id FROM valutas))
 	AND item_id != 500
 	");
-	if(!$qwe or $qwe->num_rows == 0) 
+	if(!$qwe or $qwe->rowCount() == 0) 
 			return [];
 	foreach($qwe as $q)
 	{
@@ -813,7 +813,7 @@ function allZones() : array
 {
     $arr = [];
     $qwe = qwe("SELECT * FROM zones");
-    if(!$qwe or !$qwe->num_rows){
+    if(!$qwe or !$qwe->rowCount()){
         return $arr;
     }
 
@@ -911,7 +911,7 @@ function PackZoneFromId(int $item_id)
     SELECT zone_from FROM packs 
     WHERE item_id = '$item_id'
     ");
-    if(!$qwe or !$qwe->num_rows)
+    if(!$qwe or !$qwe->rowCount())
         return [];
 
     foreach ($qwe as $q)
@@ -1025,15 +1025,15 @@ function PackObject($item_id)
     and uc.isbest > 0 and uc.user_id = `user_profs`.`user_id`
     limit 1
 	");
-    if(!$qwe or $qwe->num_rows == 0)
+    if(!$qwe or $qwe->rowCount() == 0)
         return [];
-    return mysqli_fetch_assoc($qwe);
+    return $qwe->fetchObject();
 }
 
 function ProfUnEmper(int $user_id)
 {
     $prof_q = qwe("SELECT * FROM `user_profs` where `user_id` ='$user_id'");
-    if($prof_q and $prof_q->num_rows)
+    if($prof_q and $prof_q->rowCount())
         return false;
 
     $query = qwe("
@@ -1056,7 +1056,7 @@ function UserPriceList2($qwe)
 {
     global $puser_id, $User;
 
-    if(!$qwe or !$qwe->num_rows){
+    if(!$qwe or !$qwe->rowCount()){
         ?>
         <div>
             Похоже, что записей о ценах нет.<br>

@@ -497,3 +497,4 @@ cgi-bin
 /logs/
 /imgtmp/
 /freshcards/
+/lite_php_browscap.ini

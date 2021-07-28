@@ -1,8 +1,5 @@
 ﻿<?php
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 if(!$cfg->myip) exit();
 //var_dump($_GET);
 if(!empty($_GET['item_id']))

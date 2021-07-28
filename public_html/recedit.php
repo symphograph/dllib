@@ -53,8 +53,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/../includs/header.php';
 
         qwe("UPDATE `items` set `craftable`=1 where `item_id`='$item_id'");
         $q_craft = qwe("SELECT `craft_id` FROM `crafts` where `result_item_id` = '$item_id' order by `craft_id` DESC LIMIT 1");
-        $arrcraft = mysqli_fetch_assoc($q_craft);
-        $craft_id = $arrcraft['craft_id'];
+        $arrcraft = $q_craft->fetchObject();
+        $craft_id = $arrcraft->craft_id;
         echo '<meta http-equiv="refresh" content="0; url=recedit.php?query=' . $craft_id . '"">';
         exit();
     }

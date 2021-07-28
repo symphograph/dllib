@@ -46,10 +46,10 @@ class User
                 ON `servers`.`id` = `server`
             WHERE BINARY `mailusers`.`mail_id` = '$user_id'
             ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
 
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
         self::ByQwe($q);
 
         return true;
@@ -104,7 +104,7 @@ class User
     private function isIdExist(int $id) : bool
     {
         $qwe = qwe("SELECT * FROM mailusers WHERE mail_id = '$id'");
-        if($qwe and $qwe->num_rows){
+        if($qwe and $qwe->rowCount()){
             return true;
         }
         return false;
@@ -118,12 +118,12 @@ class User
 
         $this->isbot = true;
         $qwe = qwe("SELECT * FROM `mailusers` WHERE `email` = '$BotName'");
-        if(!$qwe or !$qwe->num_rows){
+        if(!$qwe or !$qwe->rowCount()){
             //Новый бот. Записываем.
             self::newBot($BotName);
             return true;
         }
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
 
         //Если бот уже знакомый, обновляем
         $ip = $_SERVER['REMOTE_ADDR'];
@@ -229,10 +229,10 @@ class User
 		LEFT JOIN `servers` ON `servers`.`id` = `server`
 		WHERE BINARY `mailusers`.`identy` = '$identy'
 		");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
 
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
         self::ByQwe($q);
 
         $this->uncustomed = ProfUnEmper($this->id);
@@ -255,11 +255,11 @@ class User
         from `mailusers` 
         where `email` = '$this->email'
         ");
-        if(!$qwe or !$qwe->num_rows) {
+        if(!$qwe or !$qwe->rowCount()) {
            return self::regNewMail();
         }
 
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
 
         return self::authKnownUser($q);
     }
@@ -292,24 +292,27 @@ class User
 
     private function regNewMail()
     {
-        global $dbLink;
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $fname = mysqli_real_escape_string($dbLink,$this->fname);
-        $last_name = mysqli_real_escape_string($dbLink,$this->last_name);
-        $avatar = mysqli_real_escape_string($dbLink,$this->avatar);
-        $mailnick = mysqli_real_escape_string($dbLink,$this->mailnick);
-        $email = mysqli_real_escape_string($dbLink,$this->email);
         $qwe = qwe("
             UPDATE `mailusers` SET 
-            `first_name` = '$fname', 
-            `last_name` = '$last_name', 
-            `avatar` = '$avatar', 
-            `mailnick` = '$mailnick', 
-            `last_time` = '$this->last_time', 
-            `last_ip` = '$ip',
-            `email` = '$email'
-            WHERE `mail_id` = '$this->id'
-            ");
+            `first_name` = :fname, 
+            `last_name` = :last_name, 
+            `avatar` = :avatar, 
+            `mailnick` = :mailnick, 
+            `last_time` = :last_time, 
+            `last_ip` = :ip,
+            `email` = :email
+            WHERE `mail_id` = :id
+            ",[
+                'fname' => $this->fname,
+                'last_name' => $this->last_name,
+                'avatar' => $this->avatar,
+                'mailnick' => $this->mailnick,
+                'last_time' => $this->last_time,
+                'email' => $this->email,
+                'last_ip' => $_SERVER['REMOTE_ADDR'],
+                'id' => $this->id
+            ]
+        );
         if(!$qwe)
             return false;
 
@@ -450,9 +453,9 @@ class User
         ORDER BY `time` DESC 
         LIMIT 1
         ");
-        if(!$qwe or $qwe->num_rows == 0)
+        if(!$qwe or $qwe->rowCount() == 0)
             return false;
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
 
         PriceCell2($q->item_id,$q->auc_price,$q->item_name,$q->icon,$q->basic_grade);
 
@@ -473,7 +476,7 @@ class User
             SELECT `folow_id` FROM `folows`
             WHERE `user_id` = '$this->id'
             ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return [];
 
         $folows = [];
@@ -507,7 +510,7 @@ class User
             WHERE `user_id` = '$this->id'
             AND `folow_id` = '$folow_id'
             ");
-        if($qwe and $qwe->num_rows > 0)
+        if($qwe and $qwe->rowCount() > 0)
             return true;
         return false;
     }

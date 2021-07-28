@@ -46,7 +46,7 @@ function MissedList($lost)
 	FROM `items`
 	WHERE `item_id` IN (".$lostitems.")
 	");
-	if(!$qwe or !$qwe->num_rows)
+	if(!$qwe or !$qwe->rowCount())
 		return false;
 	$newlost = [];
 	foreach($qwe as $q)
@@ -125,7 +125,7 @@ function ToBuffer2($item_id)
 
             if(in_array($q->categ_id,[133,171]))
             {
-                $pass_labor = PackObject($item_id)['pass_labor2'] ?? 0;
+                $pass_labor = PackObject($item_id)->pass_labor2 ?? 0;
                 $craft_price = $q->craft_price + $pass_labor*$orcost;
             }
 		 	qwe("

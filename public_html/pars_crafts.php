@@ -1,10 +1,7 @@
 <meta charset="utf-8">
 <?php
 $start = $_SERVER["REQUEST_TIME_FLOAT"];
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 if(!$cfg->myip) exit();
 ?>
 <form method="post" action="">
@@ -61,7 +58,7 @@ foreach($qlist as $qq)
 	
 	$query = qwe("SELECT `craft_id`, `on_off` FROM `crafts`
 	WHERE `craft_id` = '$rec'");
-	if(mysqli_num_rows($query)>0)
+	if($query and $query->rowCount())
 	{
 		foreach($query as $q)
 		{
@@ -301,10 +298,10 @@ function profid($profession)
 	$qwe = qwe("SELECT * FROM profs
 	WHERE profession = '$profession'
 	");
-	if(!$qwe or $qwe->num_rows == 0)
+	if(!$qwe or $qwe->rowCount() == 0)
 		return 25;
-	$qwe = mysqli_fetch_assoc($qwe);
-	$prof_id = intval($qwe['prof_id']);
+	$q = $qwe->fetchObject();
+	$prof_id = intval($q->prof_id);
 	if($prof_id) return $prof_id;
 	
 	return 26;

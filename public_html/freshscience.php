@@ -2,10 +2,7 @@
 <?php
 $tstart = microtime(true);
 
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 if (!$cfg->myip)
     die('rrr');
 
@@ -147,7 +144,7 @@ function getfreshTypesFromdb() : array
 {
     $arr = [];
     $qwe = qwe("SELECT * FROM fresh_types");
-    if(!$qwe or !$qwe->num_rows){
+    if(!$qwe or !$qwe->rowCount()){
         return $arr;
     }
     foreach ($qwe as $q){
@@ -161,7 +158,7 @@ function getPackNamesFromdb() : array
 {
     $packNames = [];
     $qwe = qwe("SELECT item_id, item_name FROM items where categ_id in (133,171) AND on_off");
-    if(!$qwe or !$qwe->num_rows){
+    if(!$qwe or !$qwe->rowCount()){
         return [];
     }
     foreach ($qwe as $q){
@@ -182,7 +179,7 @@ function doodsFromdb() : array
     INNER JOIN packs 
     ON packDoods.dood_id = packs.dood_id
     ");
-    if(!$qwe or !$qwe->num_rows){
+    if(!$qwe or !$qwe->rowCount()){
         return [];
     }
     foreach ($qwe as $q){

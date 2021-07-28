@@ -13,10 +13,7 @@ $to_id = intval($to_id);
 if(!$to_id) die('to_id');
 
 
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 $Pack = new Pack();
 $Pack->getFromDB($item_id,$from_id,$to_id);
 $Pack->fPerOptions();

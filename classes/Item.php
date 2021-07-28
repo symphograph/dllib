@@ -60,9 +60,9 @@ class Item
         LEFT JOIN `item_groups` ON `item_groups`.id = item_categories.item_group
         LEFT JOIN `item_subgroups` ON `item_subgroups`.sgr_id = `item_groups`.sgr_id
         ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
 
         if(!self::byQ($q))
             return false;
@@ -125,7 +125,7 @@ class Item
         WHERE `result_item_id` = '$this->item_id'
         AND `on_off`
         ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return [];
 
         foreach ($qwe as $q)
@@ -161,7 +161,7 @@ class Item
         inner join crafts on crafts.craft_id = craft_materials.craft_id
         AND crafts.on_off
         ");
-        if(!$qwe or $qwe->num_rows == 0)
+        if(!$qwe or $qwe->rowCount() == 0)
             return $arr;
 
         foreach ($qwe as $q)
@@ -195,7 +195,7 @@ class Item
         SELECT craft_id FROM crafts 
         WHERE result_item_id IN ( $str )
         ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return $crafts;
 
         foreach ($qwe as $q)
@@ -219,7 +219,7 @@ class Item
 
         $mats = implode(',',$mats);
         $qwe = qwe("SELECT * FROM items WHERE item_id IN ($mats) AND on_off and !craftable");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return [];
 
         $arr = [];
@@ -255,7 +255,7 @@ class Item
         AND crafts.craft_id not in (SELECT craft_id FROM craft_groups)
         GROUP BY items.item_id
         ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return $arr;
 
         foreach ($qwe as $q)
@@ -296,7 +296,7 @@ class Item
                 `craft_id` IN ( $str ) 
             ORDER BY 
                 `deep` DESC, `result_item_id`");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return [];
 
         $arr = [];
@@ -434,10 +434,10 @@ class Item
             ORDER BY isbest DESC 
             LIMIT 1
             ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
 
-        $q                 = mysqli_fetch_object($qwe);
+        $q                 = $qwe->fetchObject();
         $this->craft_price = intval($q->craft_price);
 
         if($this->craft_price)
@@ -458,10 +458,10 @@ class Item
             ORDER BY isbest DESC 
             LIMIT 1
             ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return 0;
 
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
         $this->bestCraftId = $q->craft_id;
         $this->bestCraft = new Craft($q->craft_id);
         return $this->bestCraftId;
@@ -585,7 +585,7 @@ class Item
                 LEFT JOIN `item_groups` ON `item_groups`.id = item_categories.item_group
                 LEFT JOIN `item_subgroups` ON `item_subgroups`.sgr_id = `item_groups`.sgr_id
                 ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
         ?>
         <br>
@@ -634,7 +634,7 @@ class Item
                 LEFT JOIN `item_groups` ON `item_groups`.id = item_categories.item_group
                 LEFT JOIN `item_subgroups` ON `item_subgroups`.sgr_id = `item_groups`.sgr_id
                 ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
         ?>
         <br>
@@ -671,9 +671,9 @@ class Item
             SELECT `icon` FROM `items`
             WHERE `item_id` = '$this->valut_id'
             ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return '';
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
 
         $this->valut_icon = $q->icon;
         return $q->icon;

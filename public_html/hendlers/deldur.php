@@ -3,10 +3,7 @@ $dur_id = $_POST['dur_id'] ?? 0;
 $dur_id = intval($dur_id);
 if(!$dur_id) die();
 
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 $User = new User;
 $User->byIdenty();
 if(!$User->byIdenty())

@@ -3,10 +3,7 @@ $item_id = $_POST['item_id'] ?? 0;
 $item_id = intval($item_id);
 if(!$item_id) die();
 
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 $User = new User;
 if(!$User->byIdenty())
     die();
@@ -52,7 +49,7 @@ and user_crafts.user_id = '$user_id'
 and isbest > 0
 ");
 //var_dump($qwe);
-if(!$qwe or !$qwe->num_rows)
+if(!$qwe or !$qwe->rowCount())
     die('err');
 
 ?><div class="pkmats_area">

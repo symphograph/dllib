@@ -19,15 +19,11 @@ class FreshCard
 
     public function insertTodb() : void
     {
-        global $dbLink;
-        $packName = mysqli_real_escape_string($dbLink,$this->packName);
-        $master = mysqli_real_escape_string($dbLink,$this->master);
-        $owner = mysqli_real_escape_string($dbLink,$this->owner);
-        qwe(sql: "
+
+        qwe("
         INSERT IGNORE INTO freshCards
         (
-         item_id, 
-         packName, 
+         item_id,  
          fresh_id, 
          freshTypeName, 
          `condition`, 
@@ -37,13 +33,13 @@ class FreshCard
          datetime, 
          tmp, 
          file,
+         packName,
          master,
          owner
          ) 
         VALUES 
         (
          '$this->item_id',
-         '$packName',
          '$this->fresh_id',
          '$this->freshTypeName',
          '$this->condition',
@@ -53,9 +49,10 @@ class FreshCard
          '$this->datetime',
          '$this->tmp',
          '$this->file',
-         '$master',
-         '$owner'
+         :packName,
+         :master,
+         :owner
          )
-        ");
+        ",['packName'=> $this->packName, 'master' => $this->master,'owner'=>$this->owner]);
     }
 }

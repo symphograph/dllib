@@ -3,10 +3,7 @@ $craft_id = $_POST['craft_id'] ?? $_GET['craft_id'] ?? 0;
 $craft_id = intval($craft_id);
 if(!$craft_id) exit();
 
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 
 //var_dump($_POST);
 
@@ -56,10 +53,10 @@ function isBest($craft_id)
         WHERE `craft_id` = '$craft_id'
         AND `user_id` = '$user_id'
         ");
-	if(!$qwe or !$qwe->num_rows)
+	if(!$qwe or !$qwe->rowCount())
 	    return false;
 
-	$q = mysqli_fetch_object($qwe);
+	$q= $qwe->fetchObject();
 	return $q->isbest;
 }
 ?>

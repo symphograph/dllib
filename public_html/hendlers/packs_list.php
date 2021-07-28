@@ -1,8 +1,5 @@
 <?php
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 if(empty($_POST))
 exit();
 
@@ -69,7 +66,7 @@ WHERE packs.item_id not in (SELECT `item_id` FROM `user_crafts` WHERE user_id = 
 AND `side` = '$side'
 AND packs.item_id in (SELECT `item_id` FROM `packs` WHERE `pack_t_id` IN (".$typess."))
 ");
-if($packs_q and $packs_q->num_rows)
+if($packs_q and $packs_q->rowCount())
 {
     //Запускаем расчет себестоимостей.
     require_once $_SERVER['DOCUMENT_ROOT'] . '/../functions/funct-obhod2.php';
@@ -132,7 +129,7 @@ INNER JOIN user_crafts uc on pack_prices.item_id = uc.item_id AND uc.user_id = '
 INNER JOIN pack_types pt on packs.pack_t_id = pt.pack_t_id
 INNER JOIN fresh_types ft on packs.fresh_id = ft.id
 ORDER BY packs.item_id");
-if(!$qwe or !$qwe->num_rows){
+if(!$qwe or !$qwe->rowCount()){
     die('no data');
 }
 

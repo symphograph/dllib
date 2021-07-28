@@ -15,6 +15,7 @@
     "ext-gmp": "*",
     "ext-curl": "*",
     "ext-bcmath": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+    "ext-pdo": "*"
   }
 }

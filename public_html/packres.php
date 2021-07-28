@@ -1,9 +1,6 @@
 <?php
 setcookie('path', 'packres');
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 $User = new User();
 $User->check();
 $user_id = $User->id;
@@ -214,10 +211,10 @@ function CraftPriceForItem($item_id,$user_id)
     order by isbest desc 
     limit 1
     ");
-    if(!$qwe or $qwe->num_rows == 0)
+    if(!$qwe or $qwe->rowCount() == 0)
         return false;
-    $qwe = mysqli_fetch_assoc($qwe);
-    return $qwe['craft_price'];
+    $q = $qwe->fetchObject();
+    return $q->craft_price;
 }
 
 include_once 'pageb/footer.php';

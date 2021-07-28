@@ -15,9 +15,9 @@ class Server
         ON `user_servers`.`server` = `servers`.`id`
         AND `user_servers`.`user_id` = '$user_id'
         ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
 
         $this->id = $q->server;
         $this->name = $q->server_name;

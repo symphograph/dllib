@@ -25,10 +25,10 @@ class Zone
     public function byId(int $zone_id) : bool
     {
         $qwe = qwe("SELECT * FROM zones WHERE zone_id = '$zone_id'");
-        if(!$qwe or !$qwe->num_rows){
+        if(!$qwe or !$qwe->rowCount()){
             return false;
         }
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
 
         if(!self::byQ($q)){
             return false;

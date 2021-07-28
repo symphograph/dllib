@@ -20,10 +20,7 @@ $buff_3 = $_POST['buff'][3] ?? 0;
 $buff_3 = intval($buff_3);
 
 
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 
 $User = new User;
 $User->byIdenty();
@@ -53,7 +50,7 @@ AND user_routimes.buff_3 = '$buff_3'
 ORDER BY
 registred DESC, user_routimes.time DESC");
 
-if(!$qwe or !$qwe->num_rows)
+if(!$qwe or !$qwe->rowCount())
     die('<br>Нет записей с такими параметрами.');
 ?>
 <br>

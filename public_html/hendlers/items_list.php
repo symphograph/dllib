@@ -6,10 +6,7 @@ if(!$cat_id)
 	$squery = $_POST['squery'] ?? '';
 	if(empty($squery)) die;
 }
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 
 $User = new User();
 if(!$User->byIdenty())
@@ -19,14 +16,13 @@ if(!$User->byIdenty())
 $view = $_POST['view'] ?? 0;
 $view = intval($view);
 $and = "AND `items`.`categ_id` = '$cat_id'";
-
+$params = null;
 if(!$cat_id)
 {
-    if(!isset($dbLink))
-        dbconnect();
-	$squery = mysqli_real_escape_string($dbLink,$squery);
-	$and = "AND `items`.`item_name` LIKE '%".$squery."%'";
+	$and = "AND `items`.`item_name` LIKE :squery";
+    $squery = "%$squery%";
 	$view = 'list';
+	$params = ['squery'=>$squery];
 }
 $sql = "
 SELECT
@@ -53,8 +49,8 @@ INNER JOIN item_subgroups ON item_groups.sgr_id = item_subgroups.sgr_id
 ORDER BY `item_name`
 ";
 
-$qwe = qwe($sql);
-if(!$qwe or !$qwe->num_rows)
+$qwe = qwe($sql,$params);
+if(!$qwe or !$qwe->rowCount())
  die('Ничего не найдено');
 foreach($qwe as $q)
 {

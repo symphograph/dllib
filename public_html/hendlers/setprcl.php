@@ -9,10 +9,7 @@ $reports = ['<span style="color: red">ой!<span>','ок'];
 $report = 1;
 
 	
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 
 $User = new User;
 if(!$User->byIdenty())

@@ -48,10 +48,32 @@ class CraftUpdater extends Craft
         if (!$this->valid)
             return false;
 
-        $str = sqlUpdateArgsToString($this->args);
-        $sql = "UPDATE `crafts` SET  $str  WHERE `craft_id` = '$this->craft_id'";
+        $sql = "UPDATE `crafts` SET  
+                    result_amount = :result_amount,
+                    result_item_id = :result_item_id,
+                    prof_id = :prof_id,
+                    profession = :profession,
+                    prof_need = :prof_need,
+                    dood_id = :dood_id,
+                    dood_name = :dood_name,
+                    rec_name = :rec_name,
+                    labor_need = :labor_need,
+                    mins = :mins
+        WHERE `craft_id` = :craft_id";
 
-        $qwe = qwe($sql);
+        $qwe = qwe($sql,[
+            'result_amount' => $this->$this->result_amount,
+            'result_item_id' => $this->result_item_id,
+            'prof_id' => $this->prof_id,
+            'profession' => $this->profession,
+            'prof_need' => $this->prof_need,
+            'dood_id' => $this->dood_id,
+            'dood_name' => $this->dood_name,
+            'rec_name' => $this->rec_name,
+            'labor_need' => $this->labor_need,
+            'mins' => $this->mins,
+            'craft_id' => $this->craft_id
+        ]);
         if (!$qwe)
             return false;
 
@@ -73,10 +95,7 @@ class CraftUpdater extends Craft
         }
         return true;
     }
-
-    /**
-     *[item_id]=>mater_need
-     */
+    
     public function upMatNeeds(array $needs): bool
     {
 

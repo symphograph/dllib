@@ -1,8 +1,5 @@
 <?php
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 
 
 $muser = $_POST['muser'] ?? 0;
@@ -23,15 +20,15 @@ SELECT * FROM `sessions`
 WHERE `sessmark` = '$sessmark'
 AND `user_id` = '$muser'
 ");
-if(!$qwe or $qwe->num_rows != 1)
+if(!$qwe or $qwe->rowCount() != 1)
 	die('error_user');
 
 $qwe = qwe("
 SELECT * FROM `mailusers` 
 WHERE `mail_id` = '$muser'
 ");
-if(!$qwe or !$qwe->num_rows) die('error_query');
-$q = mysqli_fetch_object($qwe);
+if(!$qwe or !$qwe->rowCount()) die('error_query');
+$q= $qwe->fetchObject();
 $newIdenty = $q->identy;
 
 

@@ -3,10 +3,7 @@ $item_id = intval($_POST['item_id']);
 if(!$item_id) die;
 $cooktime = time()+60*60*24*360;
 setcookie("item_id",$item_id,$cooktime,'/');
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 
 
 $User = new User();
@@ -223,7 +220,7 @@ function RefuseList($items)
 	WHERE item_id in (".$items.")
 	");
 	if(!$qwe) return false;
-	if($qwe->num_rows == 0) return false;
+	if($qwe->rowCount() == 0) return false;
 	?><p><b>Является отходом при крафте:</b></p>
 		<div class="up_craft_area"><?php
 	Cubiki($qwe);
@@ -238,7 +235,7 @@ function IsRefuse(int $item_id)
 	WHERE item_id = '$item_id'
 	AND mater_need < 0
 	");
-	if(!$qwe or !$qwe->num_rows)
+	if(!$qwe or !$qwe->rowCount())
 	    return false;
 
 	$arr = [];
@@ -396,7 +393,7 @@ function DwnCraftList(Item $Item)
 
                     if(in_array($Item->categ_id,[133,171]))
                     {
-                        $pass_labor = $PackObject['pass_labor2'] ?? 0;
+                        $pass_labor = $PackObject->pass_labor2 ?? 0;
                         //printr($PackObject);
                         printVals('На сдачу:',$pass_labor.$imgor);
                         printVals('На цепочку:',round($Craft->labor_total,2).$imgor);
@@ -475,7 +472,7 @@ function UpCraftList(int $item_id)
 	ORDER BY crafts.deep DESC,
 	items.categ_id, craft_materials.result_item_id
 	");
-	if($qwe->num_rows > 0)
+	if($qwe->rowCount() > 0)
 		Cubiki($qwe);
 	else
 		echo 'Не нашел рецепты';

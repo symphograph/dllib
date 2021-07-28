@@ -16,10 +16,7 @@ $sorts = [
     ];
 
 $based_prices = '32103,32106,2,3,4,23633,32038,8007,32039,3712,27545,41488';
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 $User = new User();
 $User->check();
 

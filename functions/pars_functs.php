@@ -183,11 +183,11 @@ function ValutID($valut_name)
 	SELECT * FROM `valutas`
 	WHERE `valut_name` = '$valut_name'
 	");
-	if(!$qwe or $qwe->num_rows == 0)
+	if(!$qwe or $qwe->rowCount() == 0)
 		return false;
-	$qwe = mysqli_fetch_assoc($qwe);
+	$q = $qwe->fetchObject();
 	
-	return $qwe['valut_id'];
+	return $q->valut_id;
 }
 
 function ParsIcons($item_id)
@@ -266,7 +266,7 @@ function IsItemExistInBD($item_id)
 	FROM `items`
 	WHERE `item_id` = '$item_id'
 	");
-	if((!$qwe) or $qwe->num_rows == 0) 
+	if((!$qwe) or $qwe->rowCount() == 0) 
 		return false;
 	
 	return true;
@@ -279,7 +279,7 @@ function IsCraftExistInBD($craft_id)
 	FROM `crafts`
 	WHERE `craft_id` = '$craft_id'
 	");
-	if((!$qwe) or $qwe->num_rows == 0) 
+	if((!$qwe) or $qwe->rowCount() == 0) 
 		return false;
 	
 	return true;
@@ -291,7 +291,7 @@ function IsCraftDeletedInBD($craft_id)
 	FROM `deleted_crafts50`
 	WHERE `craft_id` = '$craft_id'
 	");
-	if((!$qwe) or $qwe->num_rows == 0) 
+	if((!$qwe) or $qwe->rowCount() == 0) 
 		return false;
 	
 	return true;

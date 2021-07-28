@@ -56,11 +56,11 @@ class Pack extends Item
         INNER JOIN zones z on packs.zone_from = z.zone_id
         INNER JOIN fresh_types ft on packs.fresh_id = ft.id
         ");
-        if(!$qwe or !$qwe->num_rows){
+        if(!$qwe or !$qwe->rowCount()){
             return false;
         }
 
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
         if(self::byQ($q))
             return true;
 
@@ -129,7 +129,7 @@ class Pack extends Item
         WHERE fresh_type = '$this->fresh_type' 
         and fresh_group = '$this->fresh_group'
         ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return [];
 
         foreach ($qwe as $q){
@@ -204,11 +204,11 @@ class Pack extends Item
             INNER JOIN fresh_types ft on packs.fresh_id = ft.id
             ORDER BY packs.item_id");
 
-        if(!$qwe or !$qwe->num_rows){
+        if(!$qwe or !$qwe->rowCount()){
 
             return false;
         }
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
 
         return self::byQ($q);
     }

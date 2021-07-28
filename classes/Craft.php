@@ -45,9 +45,9 @@ class Craft
             return false;
 
         $qwe = qwe("SELECT * FROM crafts WHERE on_off AND craft_id = '$craft_id'");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
 
 
         $this->craft_id         = $q->craft_id;
@@ -152,9 +152,9 @@ class Craft
         WHERE user_id = '$User->id'
         AND craft_id = '$this->craft_id'
         ") ;
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
 
         $this->isbest      = $q->isbest;
         $this->spmu        = $q->spmu;
@@ -246,11 +246,11 @@ class Craft
         WHERE `group_id` = 
         (SELECT `group_id` FROM `craft_groups` WHERE `craft_id` = '$this->craft_id')
         ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
 
-        $gcr = mysqli_fetch_assoc($qwe);
-        $am_sum = $gcr['sum'];
+        $gcr = $qwe->fetchObject();
+        $am_sum = $gcr->sum;
         if(!$am_sum ) return false;
 
 

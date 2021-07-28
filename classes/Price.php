@@ -94,9 +94,9 @@ class Price
             AND `item_id` = '$this->item_id'
             AND `server_group` = '$User->server_group'
             ");
-        if($qwe and $qwe->num_rows) {
+        if($qwe and $qwe->rowCount()) {
 
-            $q = mysqli_fetch_object($qwe);
+            $q= $qwe->fetchObject();
 
             $this->autor = $User->id;
             $this->price = $q->auc_price;
@@ -150,10 +150,10 @@ class Price
             AND `server_group` = '$User->server_group'
             ORDER BY `time` DESC 
             LIMIT 1");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
 
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
         $this->price = $q->auc_price;
         $this->autor = $q->user_id;
         $this->time = $q->time;
@@ -179,10 +179,10 @@ class Price
             AND `server_group` = '$User->server_group'
             ORDER BY `time` DESC
             LIMIT 1");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
 
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
         $this->price = $q->auc_price;
         $this->autor = $q->user_id;
         $this->time = $q->time;
@@ -201,10 +201,10 @@ class Price
             AND `server_group` = '$User->server_group'
             ORDER BY `time` DESC 
             LIMIT 1");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
 
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
 
         $this->price = $q->auc_price;
         $this->autor = $q->user_id;
@@ -225,10 +225,10 @@ class Price
             ORDER BY `isbest` DESC
             LIMIT 1
             ");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return false;
 
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
         if(!$q->craft_price)
             return false;
 
@@ -395,9 +395,9 @@ class Price
     public function IsValuta() : int
     {
         $qwe = qwe("SELECT * FROM valutas WHERE valut_id = '$this->item_id'");
-        if(!$qwe or !$qwe->num_rows)
+        if(!$qwe or !$qwe->rowCount())
             return 0;
-        $q = mysqli_fetch_object($qwe);
+        $q= $qwe->fetchObject();
 
         if($q->valut_id)
             return $q->valut_id;
@@ -414,7 +414,7 @@ class Price
             AND server_group = '$User->server_group'
             order by time DESC
             ");
-        if(!$qwe or !$qwe->num_rows){
+        if(!$qwe or !$qwe->rowCount()){
             return false;
         }
         $arr = [];

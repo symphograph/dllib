@@ -16,10 +16,7 @@ if($from_id == 100)
 $pitem_id = $_POST['pitem_id'] ?? 0;
 $pitem_id = intval($pitem_id);
 
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 
 
 $qwe = qwe(" 
@@ -39,7 +36,7 @@ and zones.fresh_type
 group by pack_prices.item_id, pack_prices.zone_id
 order by item_name
 ");
-if (!$qwe or !$qwe->num_rows)
+if (!$qwe or !$qwe->rowCount())
     die();
 if($from_id == 100)
 {

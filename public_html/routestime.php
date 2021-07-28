@@ -3,10 +3,7 @@ header("Location: /packpost.php");
 die();
 
 
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 $User = new User;
 $User->check();
 $user_id = $User->id;
@@ -177,7 +174,7 @@ include_once 'pageb/footer.php'; ?>
 /*
 function RowsForGoogleScript($qwe,$cols = [])
 {
-    if(!$qwe or $qwe->num_rows ==0)
+    if(!$qwe or $qwe->rowCount() ==0)
         return [];
 
 

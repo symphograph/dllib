@@ -2,10 +2,7 @@
 <?php
 $start = microtime(true);
 
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 if(!$cfg->myip) exit();
 $start_id = $_POST['start_id'] ?? 0;
 $start_id = intval($start_id);
@@ -62,7 +59,7 @@ SELECT * FROM `items`
 WHERE categ_id = 133
 AND item_id > (SELECT item_id FROM parsed_last)
 ");
-if(!$qwe or !$qwe->num_rows)
+if(!$qwe or !$qwe->rowCount())
 	die('no items');
 $i = 0;
 $ver = random_str(8);

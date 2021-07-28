@@ -1,9 +1,8 @@
 <?php
 setcookie('path', 'packtable');
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
+
 $User = new User();
 if (!$User->check()) {
     header("Refresh: 0");

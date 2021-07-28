@@ -1,9 +1,9 @@
 ﻿
 <?php
-function deepfound($query,$lvl, $errarr, $root_craft)
-{	global $errcnt, $errarr,$dbLink;
+function deepfound(bool|PDOStatement $query,$lvl, $errarr, $root_craft)
+{	global $errcnt, $errarr;
 	$mats =array();
-		$cnt = mysqli_num_rows($query);
+		$cnt = $query->rowCount();
 		//echo '<p>Вижу '.$cnt.' компонентов</p>';
    foreach($query as $v)
 	{
@@ -16,9 +16,10 @@ function deepfound($query,$lvl, $errarr, $root_craft)
 		$mats[]= $mat_id;
 		$craft_id = $v['craft_id'];
 
-		$mat_name = mysqli_real_escape_string($dbLink,$mat_name);
 		 qwe("REPLACE INTO `craft_lvls` (`lvl`, `item_id`, `item_name`) 
-		 VALUES ('$lvl', '$mat_id', '$mat_name')");
+		 VALUES ('$lvl', '$mat_id', :mat_name)",
+		 ['mat_name' => $mat_name]
+		 );
 		qwe("REPLACE INTO `craft_tree` (`root_craft_id`, `craft_id`) 
 		VALUES ('$root_craft', '$craft_id')");
 	}
@@ -57,7 +58,7 @@ function IsCraftable($item_id)
 	WHERE result_item_id = '$item_id'
 	AND on_off
 	");
-	if(!$qwe or $qwe->num_rows == 0)
+	if(!$qwe or $qwe->rowCount() == 0)
 		return false;
 	foreach($qwe as $q)
 	{

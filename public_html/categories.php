@@ -1,8 +1,5 @@
 <?php
-if(!isset($cfg)) {
-    $cfg = require dirname($_SERVER['DOCUMENT_ROOT']).'/includs/ip.php';
-    require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-}
+require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 if(!$cfg->myip) exit();
 ?>
 <!doctype html>
@@ -40,7 +37,7 @@ $sel_cat = intval($_POST['category']);
 </form>
 <?php
 $query = qwe("SELECT * FROM `items` WHERE `categ_id` = '$sel_cat' AND `on_off` = 1 ORDER BY `slot`, `lvl`");
-echo $query->num_rows.'<br>';
+echo $query->rowCount().'<br>';
 	foreach($query as $itm)
 	{
 		$item_id = $itm['item_id'];

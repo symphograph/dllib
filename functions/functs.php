@@ -118,7 +118,7 @@ function ItemsFromAlterValutes($valut_id)
 	AND `is_trade_npc` = 1
 	AND `on_off` = 1
 	ORDER BY `categ_id`");
-	if(mysqli_num_rows($qwe)>0)
+	if($qwe and $qwe->rowCount())
 	{
 		?>
 		<details class="for1" open><summary><b>Передаваемые предметы за эту валюту:</b></summary>
@@ -167,7 +167,7 @@ function MonetisationList($val_link, int $valut_id)
 	AND `on_off` = 1
 	AND price_buy < '$max'
 	ORDER BY `categ_id`");
-	if(!$qwe or $qwe->num_rows == 0) 
+	if(!$qwe or $qwe->rowCount() == 0) 
 		return false;
 	
 	foreach($qwe as $p)
@@ -234,7 +234,7 @@ identy as midenty,
 FROM `reports`
 INNER JOIN `mailusers` ON `user_id` = `mail_id`
 WHERE `item_id` = '$item_id'");
-if($query and mysqli_num_rows($query) > 0)
+if($query and $query->rowCount())
 {
 	foreach($query as $com)
 	{
@@ -336,10 +336,10 @@ function AskToken()
 	AND `last_time` > (NOW() - INTERVAL 60 MINUTE)
 	AND LENGTH(`token`) > 0
 	");
-	if(!$qwe or $qwe->num_rows == 0) 
+	if(!$qwe or $qwe->rowCount() == 0) 
 		return false;
-	$qwe = mysqli_fetch_assoc($qwe);
-	return $qwe['token'];
+	$q = $qwe->fetchObject();
+	return $q->token;
 }
 
 function SPM_array()
@@ -358,7 +358,7 @@ function SPM_array()
 	inner JOIN items ON craft_materials.item_id = items.item_id 
 	AND items.on_off
 	");
-	if(!$qwe or $qwe->num_rows == 0) 
+	if(!$qwe or $qwe->rowCount() == 0) 
 		return false;
 	foreach($qwe as $q)
 	{
@@ -374,7 +374,7 @@ function SPM_array()
 	WHERE dood_id = 9108
 	AND crafts.on_off
 	");
-	if(!$qwe or $qwe->num_rows == 0) 
+	if(!$qwe or $qwe->rowCount() == 0) 
 		return false;
 	foreach($qwe as $q)
 	{
@@ -499,21 +499,6 @@ function cmp($a, $b)
         return 0;
     }
     return ($a < $b) ? -1 : 1;
-}
-
-function sqlUpdateArgsToString(array $args){
-    global $dbLink;
-    if(!isset($dbLink))
-        dbconnect();
-
-    $arr = [];
-    foreach ($args as $ak => $av){
-        if(!is_int($av)){
-            $av = mysqli_real_escape_string($dbLink,$av);
-        }
-        $arr[] = "`$ak` = '$av'";
-    }
-    return implode(', ',$arr);
 }
 
 function removeBOM($str="") : string
