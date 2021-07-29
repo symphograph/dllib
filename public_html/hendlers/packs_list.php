@@ -75,7 +75,7 @@ if($packs_q and $packs_q->rowCount())
     foreach($packs_q as $pack)
     {
         $Item = new Item();
-        $Item->getFromDB($pack['item_id']);
+        $Item->byId($pack['item_id']);
         $Item->RecountBestCraft();
     }
     qwe("DELETE FROM craft_buffer WHERE `user_id` = '$User->id'");
@@ -94,7 +94,7 @@ if(isset($lost) and count($lost)>0)
 	$lost = array_unique($lost);
 	foreach ($lost as $l){
 	    $Litem = new Item();
-	    $Litem->getFromDB($l);
+	    $Litem->byId($l);
 	    $ll[] = $Litem;
     }
 	echo json_encode(['lost'=>$ll]);

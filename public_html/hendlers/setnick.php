@@ -33,15 +33,15 @@ if($len<3 or $len>20)
 
 $qwe = qwe("
 SELECT * FROM `mailusers` 
-WHERE `user_nick` = '$nick'");
+WHERE `user_nick` = :nick",['nick'=> $nick]);
 if(!$qwe or $qwe->rowCount() >0)
  die('Ник занят');
 
 $qwe = qwe("
 UPDATE `mailusers`
-SET `user_nick` = '$nick'
-WHERE `mail_id` = '$User->id'
-");
+SET `user_nick` = :nick
+WHERE `mail_id` = :userId
+",['nick' => $nick, 'userId' => $User->id]);
 if(!$qwe) die('error');
 
 echo 'ok';

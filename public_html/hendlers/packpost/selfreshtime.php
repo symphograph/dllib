@@ -15,7 +15,7 @@ if(!$to_id) die('to_id');
 
 require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 $Pack = new Pack();
-$Pack->getFromDB($item_id,$from_id,$to_id);
+$Pack->byId($item_id,$from_id,$to_id);
 $Pack->fPerOptions();
 
 ?>

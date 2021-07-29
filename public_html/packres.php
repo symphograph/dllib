@@ -120,7 +120,7 @@ foreach($qwe as $q)
     if(!$q['craftable']) continue;
     if($q['is_trade_npc'] and $q['valut_id'] == 500) continue;
     $Item = new Item();
-    $Item->getFromDB($q['item_id']);
+    $Item->byId($q['item_id']);
     $Item->RecountBestCraft();
     //CraftsObhod($q['item_id'], $User->id);
 

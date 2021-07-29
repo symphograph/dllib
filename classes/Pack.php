@@ -33,9 +33,9 @@ class Pack extends Item
     }
 
 
-    public function getFromDB(int $item_id, int $zfrom_id = 0, int $zto_id = 0)
+    public function byId(int $item_id, int $zfrom_id = 0, int $zto_id = 0)
     {
-        parent::getFromDB($item_id);
+        parent::byId($item_id);
 
 
         if(!$this->ispack)

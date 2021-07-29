@@ -43,7 +43,7 @@ class Item
     public array  $craftTree              = [];
 
 
-    public function getFromDB(int $item_id)
+    public function byId(int $item_id)
     {
         $qwe = qwe("
         SELECT
@@ -355,7 +355,7 @@ class Item
         foreach ($craftarr as $craftId => $itemId)
         {
             $Item = new Item();
-            $Item->getFromDB($itemId);
+            $Item->byId($itemId);
             $Item->orSum = $Item->orTotal(0,1,$craftId);
 
             if($Item->orSum)

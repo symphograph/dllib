@@ -18,7 +18,23 @@ main {
 	justify-content: space-around;
 }
 
+.items_bar input, .items_list input {
+	display: none;
 
+}
+
+.items_list {
+	/*background-color: rgba(206, 255, 0, 0.34);*/
+background: linear-gradient(
+180deg,
+rgba(238, 232, 218, 0.15) 0%,
+rgba(206, 255, 0, 0.34) 99.48%
+)
+}
+
+.items_list .item_name {
+	font-weight: bold;
+}
 
 #right {
 	width: 100%;
@@ -259,6 +275,22 @@ optarity: 0,1;
 .item_row {
 	display: flex;
 	justify-content: space-between;
+	width: 100%;
+	cursor: pointer;
+}
+
+.item_row:hover {
+	color: #FEFFBD;
+	background-color: #b3b3c2;
+}
+
+.item_row .active{
+	color: #FEFFBD;
+	background-color: #818187;
+}
+
+.item_row label {
+	width: 100%;
 }
 
 .nicon {
@@ -354,6 +386,10 @@ input[type='number'] {
 	color: #404040;
 }
 
+.advice_variant {
+	width: 100%;
+}
+
 #search_advice_wrapper .advice_variant:hover{
 	color:#FEFFBD;
 	background-color:#818187;
@@ -361,7 +397,6 @@ input[type='number'] {
 
 #search_advice_wrapper .active{
 	cursor: pointer;
-	/*padding: 5px;*/
 	color:#FEFFBD;
 	background-color:#818187;
 }

@@ -41,15 +41,16 @@ AND `visible_ui` > 0
 ?>
 
 <?php
+$arr = $qwe->fetchAll();
 foreach($qwe2 as $q)
 {
 	$q = (object) $q;
 	?><br><details open="open"><?php
 	echo '<summary>'.$q->name.'</summary>';
-	Categs($qwe,$q->id,$cat_id);
+	Categs($arr,$q->id,$cat_id);
 	?></details><?php
 }
-	
+
 $chks = ['','checked'];
 
 function Categs($qwe,$ngr_id,$ccat_id)
@@ -59,8 +60,10 @@ function Categs($qwe,$ngr_id,$ccat_id)
 	foreach($qwe as $q)
 	{
         $q = (object) $q;
-		if($ngr_id != $q->gr_id)
-			continue;
+		if($ngr_id != $q->gr_id){
+            continue;
+        }
+
 		$chk = $ctn = '';
 		if($q->cat_id == $ccat_id)
 		{

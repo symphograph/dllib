@@ -13,7 +13,7 @@ if(!$User->byIdenty())
 $user_id = $User->id;
 $mode = $User->mode;
 $Item = new Item();
-if(!$Item->getFromDB($item_id)){
+if(!$Item->byId($item_id)){
     die();
 }
 

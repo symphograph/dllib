@@ -74,7 +74,7 @@ order by fresh_per
 
 
         $Pack = new Pack();
-        $Pack->getFromDB($q['item_id']);
+        $Pack->byId($q['item_id']);
         echo '<b>'.$Pack->item_name.'</b>';
         echo '<br>';
         printr(perdata($q['item_id']));
@@ -100,7 +100,7 @@ function perdubles(int $fresh_per, int $lvl)
         if(in_array($q['item_id'],$arr))
             continue;
         $Pack = new Pack();
-        $Pack->getFromDB($q['item_id']);
+        $Pack->byId($q['item_id']);
         echo $Pack->item_name.' | '.$q['freshTypeName'].' | '.$Pack->z_from_name.'<br>';
         $arr[] = $q['item_id'];
     }

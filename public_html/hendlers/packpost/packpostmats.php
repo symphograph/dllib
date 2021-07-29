@@ -11,12 +11,12 @@ $user_id = $User->id;
 
 
 $Item = new Item();
-$Item->getFromDB($item_id);
+$Item->byId($item_id);
 $Item->getBestCraft();
 if(!$Item->isCounted()){
     $Item->RecountBestCraft(1);
     $Item = new Item();
-    $Item->getFromDB($item_id);
+    $Item->byId($item_id);
 
 }
 if(!$Item->isCounted()){

@@ -44,7 +44,7 @@ class FreshCardDefiner
 
         if(self::defPack()){
             $this->Pack = new Pack();
-            $this->Pack->getFromDB($this->Card->item_id);
+            $this->Pack->byId($this->Card->item_id);
             //printr($this->Pack);
         }
         self::defFreshTypeName();

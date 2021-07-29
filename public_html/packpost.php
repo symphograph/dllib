@@ -50,7 +50,7 @@ if(isset($_GET['item_id']))
     exit();
 }
 $Pack = new Pack();
-$Pack->getFromDB($item_id);
+$Pack->byId($item_id);
 
 ?>
 <!doctype html>

@@ -42,13 +42,13 @@ $cooktime = time()+60*60*24*360;
 setcookie("packpost",serialize($cook_settings),$cooktime,'/');
 
 $Pack = new Pack();
-$Pack->getFromDB($item_id,$from_id,$to_id);
+$Pack->byId($item_id,$from_id,$to_id);
 if(!$Pack->isCounted()){
     $Item= new Item();
-    $Item->getFromDB($item_id);
+    $Item->byId($item_id);
     $Item->RecountBestCraft(1);
     $Pack = new Pack();
-    $Pack->getFromDB($item_id,$from_id,$to_id);
+    $Pack->byId($item_id,$from_id,$to_id);
     $Item = null;
 }
 $Pack->initSalary(
