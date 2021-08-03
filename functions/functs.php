@@ -469,9 +469,9 @@ function CssMeta(array $css_arr)
     }
 }
 
-function jsFile($file)
+function jsFile($file,$type = 'text/javascript')
 {
-    ?><script type="text/javascript" src="<?php echo 'js/'.$file.'?ver='.md5_file($_SERVER['DOCUMENT_ROOT'].'/js/'.$file)?>"></script><?php
+    ?><script type="<?php echo $type?>" src="<?php echo 'js/'.$file.'?ver='.md5_file($_SERVER['DOCUMENT_ROOT'].'/js/'.$file)?>"></script><?php
 }
 
 function LongestWordFound($text)

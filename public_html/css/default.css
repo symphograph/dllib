@@ -225,13 +225,16 @@ footer span {
 	padding: 2em 2em 0 2em;
 }
 
-
+.lost-area{
+	box-sizing: content-box;
+	height: max-content;
+}
 .def_button{
 	background-image: url(../img/default.png);
 	width: 140px;
 	height: 30px;
 	background-repeat: no-repeat;
-	background-size: 140px 30px;
+	background-size: 100% 100%;
 	border: none;
 	border-radius: 4px;
 	color: #4B3A23;
@@ -241,8 +244,8 @@ footer span {
 }
 .def_button:hover{
 	/*border: 1px solid rgba(194,164,38,1.00);*/
-	-webkit-box-shadow: 1px 1px 1px rgba(30,26,12,1.00);
-	box-shadow: 1px 1px 1px rgba(30,26,12,1.00);
+	-webkit-box-shadow: 1px 1px 4px 0px rgb(30 26 12 / 55%);
+	box-shadow: 1px 1px 4px 0px rgb(30 26 12 / 55%);
 }
 
 .grade {
@@ -488,4 +491,9 @@ hr{
 	display: flex;
 	justify-content: space-between;
 	cursor: default;
+}
+
+.smallIcon {
+	width: 1em;
+	height: 1em;
 }

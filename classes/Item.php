@@ -3,9 +3,8 @@
 
 class Item
 {
-    public int    $item_id;
+    public int    $item_id = 0;
     public        $valut_id;
-    public        $valut_icon             = '';
     public        $price_buy;
     public        $price_sale;
     public        $is_trade_npc;
@@ -14,7 +13,6 @@ class Item
     public        $description;
     public int    $on_off;
     public int    $personal;
-    public int    $craftable = 0;
     public int    $ismat;
     public int    $item_group;
     public        $categ_id;
@@ -28,19 +26,24 @@ class Item
     public        $md5_icon;
     public        $valut_name;
     public        $sgr_id;
-    public int    $auc_price              = 0;
-    public array  $crafts                 = [];
-    public array  $potential_crafts       = [];
-    public Craft  $bestCraft;
-    public int    $bestCraftId            = 0;
-    public bool   $ispack                 = false;
-    public int    $craft_price            = 0;
-    public array  $potentialMatsAndCrafts = [];
+    public Price $priceData;
     public        $orSum;
-    public array  $allMats                = [];
-    public array  $allTrash               = [];
-    public object $priceData;
-    public array  $craftTree              = [];
+    public Craft  $bestCraft;
+    public int   $craftable    = 0;
+    public int   $auc_price    = 0;
+    public array $crafts       = [];
+    public       $valut_icon   = '';
+    public int   $bestCraftId  = 0;
+    public bool  $ispack       = false;
+    public int   $craft_price  = 0;
+    public array $allMats      = [];
+    public array $allTrash     = [];
+    public array $craftTree    = [];
+    public array $craftResults = [];
+    public array $lost         = [];
+    public bool  $isGoldable   = true;
+    public array $potential_crafts       = [];
+    public array $potentialMatsAndCrafts = [];
 
 
     public function byId(int $item_id)
@@ -99,6 +102,8 @@ class Item
         $this->is_trade_npc = $q->is_trade_npc;
         $this->ispack = (in_array($this->categ_id,[133,171]));
 
+        self::isGoldable();
+
         return true;
     }
 
@@ -109,10 +114,6 @@ class Item
         }
     }
 
-    /**
-     * @return array
-     * Возвращает рецепты
-     */
     public function getCrafts() : array
     {
         if(count($this->crafts))
@@ -136,13 +137,6 @@ class Item
         return $crafts;
     }
 
-    /**
-     * @param int $item_id
-     * @param array $arr
-     * @param int $i
-     * @return array
-     * Возможные материалы (включая дочерние)
-     */
     public function AllPotentialMats(int $item_id, array $arr=[], int $i=0)
     {
         $i = intval($i);
@@ -308,7 +302,7 @@ class Item
         return $arr;
     }
 
-    function RecountBestCraft($single = false)
+    function RecountBestCraft(bool|int $single = false, bool|int $lostIgnore = false)
     {
         global $lost, $User;
         if($single){
@@ -331,21 +325,35 @@ class Item
 
         $craftarr = self::CraftsBuffering();
 
-        if(!in_array($_SERVER['SCRIPT_NAME'],[
-            '/hendlers/packs_list.php',
-            '/hendlers/isbuysets.php',
-            '/packres.php',
-            '/hendlers/packpost/packpostinfo.php',
-            /*'/hendlers/packpost/packpostmats.php',*/
-            '/hendlers/packpost/packobj.php',
-            '/test.php'
-        ]) and count($lost)) {
+        if(count($lost)){
+            if(!in_array($_SERVER['SCRIPT_NAME'],[
+                    '/hendlers/packs_list.php',
+                    '/hendlers/isbuysets.php',
+                    '/packres.php',
+                    '/hendlers/packpost/packpostinfo.php',
+                    /*'/hendlers/packpost/packpostmats.php',*/
+                    '/hendlers/packpost/packobj.php',
+                    '/test.php'
+                ]) and !$lostIgnore) {
 
-            MissedList($lost);
-            //$craftsForClean = implode(',',$craftarr);
-            qwe("DELETE FROM user_crafts WHERE user_id = '$User->id' AND isbest < 2");
-            exit();
+                MissedList($lost);
+                qwe("DELETE FROM user_crafts WHERE user_id = '$User->id' AND isbest < 2");
+                exit();
+            }else{
+                $this->lost = array_unique($lost);
+                $this->lost = array_values($this->lost);
+                $arr = [];
+                foreach ($this->lost as $l){
+                    $LostItem = new Item;
+                    $LostItem->byId($l);
+                    $arr[] = $LostItem;
+                }
+                $this->lost = $arr;
+                qwe("DELETE FROM user_crafts WHERE user_id = '$User->id' AND isbest < 2");
+                return false;
+            }
         }
+
 
 
         if(!count($craftarr)) {
@@ -709,4 +717,120 @@ class Item
 
         return $arr;
     }
+
+    public function getCraftResults() : array
+    {
+        if(count($this->craftResults)){
+            return $this->craftResults;
+        }
+
+        $qwe = qwe("
+        SELECT craft_materials.result_item_id FROM craft_materials  
+        INNER JOIN items ON items.item_id = craft_materials.result_item_id
+        AND items.on_off
+        AND craft_materials.item_id = :item_id
+        INNER JOIN crafts c on craft_materials.craft_id = c.craft_id
+        AND c.on_off
+        GROUP BY c.result_item_id
+        ",
+        ['item_id' => $this->item_id]
+        );
+        if(!$qwe or !$qwe->rowCount()){
+            return [];
+        }
+        $this->craftResults = $qwe->fetchAll(PDO::FETCH_COLUMN,0);
+        return $this->craftResults;
+    }
+
+    public function isGoldable() : bool
+    {
+        $this->isGoldable = true;
+        if(in_array($this->categ_id,[133,171])){
+            $this->isGoldable = false;
+            return $this->isGoldable;
+        }
+
+        if($this->is_trade_npc){
+
+            if($this->personal){
+                $this->isGoldable = false;
+                return $this->isGoldable;
+            }
+
+            if($this->valut_id == 500){
+                $this->isGoldable = false;
+                return $this->isGoldable;
+            }
+        }
+
+        if($this->personal and $this->craftable){
+            $this->isGoldable = false;
+            return $this->isGoldable;
+        }
+
+
+
+        return $this->isGoldable;
+    }
+
+    public function initPrice()
+    {
+        $this->priceData = new Price($this->item_id);
+        $this->priceData->initData();
+    }
+
+    public function setAsBuy() : string
+    {
+        global $User;
+
+        if(!$this->craftable){
+            return '!craftable';
+        }
+
+        self::initPrice();
+
+        if(!$this->priceData->price){
+            return '!price';
+        }
+
+        if($this->priceData->autor != $User->id){
+            if(!$this->priceData->insert($this->priceData->price)){
+                return 'priceInsertErr';
+            }
+        }
+
+        $qwe = qwe("
+            UPDATE user_crafts
+            SET isbest = 3
+            WHERE item_id = :item_id
+            AND user_id = :user_id
+            AND isbest > 0
+        ",['item_id'=>$this->item_id, 'user_id'=>$User->id]);
+        if(!$qwe)
+            return 'insertErr';
+
+        $qwe = qwe("
+            DELETE FROM user_crafts
+            WHERE user_id = :user_id 
+            AND isbest < 2
+        ",['user_id'=>$User->id]);
+        if(!$qwe)
+            return 'delErr';
+
+
+        $qwe = qwe("
+            REPLACE INTO user_buys
+            (user_id, item_id)
+            values 
+            (:user_id, :item_id)
+        ",['user_id' => $User->id, 'item_id' => $this->item_id]);
+        if(!$qwe)
+            return 'regErr';
+
+
+        return 'ok';
+
+    }
+
+
 }

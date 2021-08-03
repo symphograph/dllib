@@ -20,15 +20,28 @@ class Price
     public int $item_id = 0;
     public int $price = 0;
     public string $time = '2020-02-22';
+    public string $date = '2020-02-22';
     public int $autor = 0;
     public string $how = 'Неизвестно';
     public string $color = '';
     public string $tcolor = '';
     public int $serverMedian = 0;
+    public array $exploded = [];
+    public string $text = 'Цена: ';
+    public string $text2 = 'Цена: ';
 
     public function __construct(int $item_id)
     {
         $this->item_id = $item_id;
+    }
+
+    public function initData()
+    {
+        self::byMode();
+        self::getColor();
+        self::exploded();
+        $this->date = date('d.m.Y',strtotime($this->time));
+        self::text2();
     }
 
     public function byMode() : bool
@@ -327,6 +340,7 @@ class Price
             >
             <?php echo $img_bronze;?>
         </div>
+
         <input type="hidden" name="item_id" value="<?php echo $this->item_id;?>">
         <input type="button" id="prdel_<?php echo $this->item_id;?>" <?php echo $is_shows[$is_show]?> name="del" class="small_del" value="del" data-tooltip="Удалить свою цену">
         <?php
@@ -339,17 +353,30 @@ class Price
 
         if(!$this->price){
             $this->color = '';
-            return self::PriceDataForm('Цена: ');
+            return self::PriceDataForm();
         }
 
 
         self::getColor();
+        $text = self::text();
+
+        self::PriceDataForm();
 
 
+        return true;
+    }
+
+    public function text()
+    {
+        global $User;
+
+        if(!$this->price){
+            return $this->text;
+        }
 
         if($this->autor == $User->id) {
 
-            $text = '<a href="user_prices.php" data-tooltip="Все мои цены">Вы указали: </a>';
+            $this->text = '<a href="user_prices.php" data-tooltip="Все мои цены">Вы указали: </a>';
         }else {
 
             $Puser = new User();
@@ -357,19 +384,17 @@ class Price
 
             if($Puser->user_nick) {
 
-                $text = '<a href="user_prices.php?puser_id='.$Puser->id.'" data-tooltip="Смотреть его(её) цены">'.$Puser->user_nick.'</a> указал: ';
+                $this->text = '<a href="user_prices.php?puser_id='.$Puser->id.'" data-tooltip="Смотреть его(её) цены">'.$Puser->user_nick.'</a> указал: ';
             }else
-                $text = 'Кто-то указал: ';
+                $this->text = 'Кто-то указал: ';
         }
 
-        self::PriceDataForm($text);
-
-
-        return true;
+        return $this->text;
     }
 
-    public function PriceDataForm($text): bool
+    public function text2()
     {
+
         global $User;
         $Server = new Server($User->id);
         $serverStr = '<span style="color: #3E454C" data-tooltip="Выбрать в настройках"><a href="user_customs.php">' . $Server->name . '</a></span>';
@@ -378,10 +403,25 @@ class Price
             $timestr = date('d.m.Y',strtotime($this->time)) .$serverStr.' <br>';
         else
             $timestr = $serverStr.' <br>';
+
+        ob_start();
         ?>
+
         <span style="color: <?php echo $this->tcolor?>">
-            <?php echo $timestr.$text?>
+            <?php echo $timestr.self::text()?>
         </span>
+        <?php
+        $this->text2 = ob_get_clean();
+        return $this->text2;
+
+    }
+
+    public function PriceDataForm(): bool
+    {
+        self::text2();
+        echo $this->text2;
+        ?>
+
         <form id="pr_<?php echo $this->item_id?>">
             <div class="money_area_down">
                 <?php self::MoneyLineBL();?>
@@ -453,6 +493,102 @@ class Price
         ?><br>В среднем по больнице:<br><?php
         echo esyprice($this->serverMedian,1);
         ?><br><br><?php
+        return true;
+    }
+
+    public function exploded() : array
+    {
+
+        $price = round($this->price);
+
+        $minus = $price < 0 ? '-' : '';
+        $str = (string) $price;
+        $str = strrev($str);
+
+        sscanf($str,'%2s%2s%s',$b,$s,$g);
+        $arr = [$g,$s,$b];
+
+        $arr = array_map('strrev',$arr);
+        $arr = array_map('intval',$arr);
+        array_unshift($arr,$minus);
+
+        $this->exploded = $arr;
+        return $arr;
+
+    }
+
+    public function del() : bool
+    {
+        global $User;
+        if(!isset($User->id)){
+            return false;
+        }
+
+        $qwe = qwe("
+            DELETE FROM `prices`
+            WHERE `user_id` = :user_id
+            AND `item_id` = :item_id 
+            AND `server_group` = :server_group;
+            ",[
+                'user_id'=>$User->id,
+                'item_id'=>$this->item_id,
+                'server_group'=>$User->server_group
+            ]);
+        if(!$qwe){
+            return false;
+        }
+
+
+        $qwe = qwe("
+            DELETE FROM `user_crafts` 
+            WHERE `user_id` = :user_id
+            AND `isbest` < 2",
+            ['user_id'=>$User->id]
+        );
+        if(!$qwe){
+            return false;
+        }
+
+        return true;
+    }
+
+    public function insert(int $value) : bool
+    {
+        if(!$value){
+            return false;
+        }
+
+        global $User;
+        if(!isset($User->id)){
+            return false;
+        }
+
+        $qwe = qwe("
+            REPLACE INTO `prices`
+            (user_id,item_id,auc_price,server_group,`time`)
+            VALUES 
+            (:user_id,:item_id,:auc_price,:server_group, now())
+            ",[
+            'user_id'=>$User->id,
+            'item_id'=>$this->item_id,
+            'auc_price'=> $value,
+            'server_group'=>$User->server_group
+        ]);
+        if(!$qwe){
+            return false;
+        }
+
+
+        $qwe = qwe("
+            DELETE FROM `user_crafts` 
+            WHERE `user_id` = :user_id
+            AND `isbest` < 2",
+                   ['user_id'=>$User->id]
+        );
+        if(!$qwe){
+            return false;
+        }
+
         return true;
     }
 

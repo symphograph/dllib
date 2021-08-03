@@ -131,8 +131,6 @@ rgba(206, 255, 0, 0.34) 99.48%
 
 .price_cell {
 	padding-top: 1em;
-	display: inline-block;
-	float: left;
 	min-width: 320px;
 }
 
@@ -142,7 +140,7 @@ rgba(206, 255, 0, 0.34) 99.48%
 }
 .money_area_down {
 	display: flex;
-	justify-content: flex-start;
+	justify-content: space-between;
 }
 
 .top_itim{
@@ -200,10 +198,13 @@ li:hover {
 	transition-duration: 100ms;
 }
 
-details, summary, label {
-	outline: none;
+summary, label {
 	cursor: pointer;
 	
+}
+
+details, summary, label {
+	outline: none;
 }
 
 summary {
@@ -325,7 +326,11 @@ optarity: 0,1;
 	background-image: url("../img/reward.png");
 }
 
-#isbuy input[type="number"] {
+#dcraft_craft_area {
+	padding: 1em 0;
+}
+
+#u_amount {
 	color: #6c3f00;
 	border: none;
 	background: none;
@@ -334,7 +339,7 @@ optarity: 0,1;
 	background-repeat: no-repeat;
 	text-align: right;
 	width: 3em;
-	background-size: 7em 36px;
+	background-size: 7em 3em;
 	padding: 10px 2em 8px 0;
 }
 
@@ -349,6 +354,10 @@ input[type='number'] {
 
 	
 
+}
+
+.hide{
+	display: none;
 }
 
 

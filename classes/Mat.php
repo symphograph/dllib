@@ -11,6 +11,7 @@ class Mat extends Item
     public int $spm2 = 0;
     public bool $is_buyable = false;
     public int $isbest = 0;
+    public string $tooltip = '';
 
 
 
@@ -127,13 +128,16 @@ class Mat extends Item
         return false;
     }
 
-    public function ToolTip($sum)
+    public function ToolTip($sum,$hsch = true)
     {
         if($this->item_id == 500)
             return $this->item_name.'<br>'.htmlspecialchars(esyprice(round($sum)));
 
         $matprice = esyprice($this->priceData->price);
-        $matprice = htmlspecialchars($matprice);
+        if($hsch){
+            $matprice = htmlspecialchars($matprice);
+        }
+
         $this->priceData->getColor();
 
         if($this->priceData->autor > 1){
@@ -141,13 +145,22 @@ class Mat extends Item
             $Puser->byId($this->priceData->autor);
             $autorName = $Puser->user_nick;
             $autorName = '<span style="color: '.$this->priceData->tcolor.'; text-shadow: 0 0 2px white">'.$autorName.'</span>';
-            $autorName = htmlspecialchars($autorName);
+            if($hsch){
+                $autorName = htmlspecialchars($autorName);
+            }
+
         }else
             $autorName = '';
 
+        $this->tooltip = $this->item_name.'<br>'.round($sum,4).' шт по<br>'.$matprice.$this->priceData->how.'<br>'.$autorName;
+        return $this->tooltip;
 
-        return $this->item_name.'<br>'.round($sum,4).' шт по<br>'.$matprice.$this->priceData->how.'<br>'.$autorName;
+    }
 
+    public function clone(Mat $m){
+        foreach ($m as $name => $value){
+            $this->$name = $value;
+        }
     }
 
 }

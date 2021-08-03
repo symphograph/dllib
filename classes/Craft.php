@@ -27,6 +27,7 @@ class Craft
     public int $isbest = 0;
     public int $orcost = 300;
 
+
     //ОР с учетом прокачки профы у юзера
     public int $labor_need2 = 0;
 
@@ -148,7 +149,7 @@ class Craft
     public function setCountedData(): bool
     {
         global $User;
-        $qwe = qwe("SELECT * FROM user_crafts 
+        $qwe = qwe("SELECT *, round(labor_total,2) as labor_totalr  FROM user_crafts 
         WHERE user_id = '$User->id'
         AND craft_id = '$this->craft_id'
         ") ;
@@ -159,7 +160,7 @@ class Craft
         $this->isbest      = $q->isbest;
         $this->spmu        = $q->spmu;
         $this->craft_price = $q->craft_price;
-        $this->labor_total = $q->labor_total;
+        $this->labor_total = $q->labor_totalr;
 
         return true;
     }
@@ -324,11 +325,13 @@ class Craft
            }
 
             $Mat->MatPrice();
+
             if(in_array($Mat->item_id,$flowers) and $Mat->mater_need < 0){
                 $Mat->priceData->price = $this->craft_price;
                 $Mat->priceData->autor = 1;
                 $Mat->priceData->how = 'Себестоимость (крафт)';
             }
+
             $mater_need = $Mat->mater_need * $u_amount;
             $tooltip = $Mat->ToolTip($mater_need);
 

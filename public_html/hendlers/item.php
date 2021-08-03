@@ -60,15 +60,11 @@ $description = $Item->description;
 		        </a>
 		        <br><br>
 		        <?php
-					
-				if(!$Item->personal){
-				    $Price->MoneyForm();
-				    $Price->serverMedianPrint();
-				}
 
 			}
-			
-		}elseif(!in_array($Item->categ_id,[133,171]))
+		}
+
+		if ($Item->isGoldable)
 		{
 			$Price->MoneyForm();
 			$Price->serverMedianPrint();
@@ -139,7 +135,8 @@ if($Item->craftable)
     }
 
 
-}else
+}
+else
 {
 	$refuse = IsRefuse($Item->item_id);
 	if($refuse)
@@ -434,23 +431,7 @@ function DwnCraftList(Item $Item)
 
 }
 
-function SPTime($mins)
-{
-    if(!$mins)
-        return '';
 
-    $m = $mins;
-    $h = floor($m/60);
-    $m = $m-$h*60;
-
-    $d = floor($h/24);
-    $h = $h-$d*24;
-    if($d>0)
-        $d = $d.'д.+';
-    else
-        $d = '';
-    return $d.$h.':'.$m;
-}
 
 function UpCraftList(int $item_id)
 {

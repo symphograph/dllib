@@ -1103,3 +1103,21 @@ function printVals($name,$val,$tooltip = '')
     </div>
     <?php
 }
+
+function SPTime($mins)
+{
+    if(!$mins)
+        return '';
+
+    $m = $mins;
+    $h = floor($m/60);
+    $m = $m-$h*60;
+
+    $d = floor($h/24);
+    $h = $h-$d*24;
+    if($d>0)
+        $d = $d.'д.+';
+    else
+        $d = '';
+    return $d.$h.':'.$m;
+}
