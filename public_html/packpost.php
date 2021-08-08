@@ -107,6 +107,7 @@ order by side, zone_name
     <?php
     //printr($Pack);
     ?>
+    <p style="color: red; text-align: center">в разработке</p>
 <h1>Пак-Инфо</h1>
     <div id="rent_in" class="rent_in">
         <div class="clear"></div>

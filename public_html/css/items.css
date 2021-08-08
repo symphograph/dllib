@@ -164,11 +164,12 @@ rgba(206, 255, 0, 0.34) 99.48%
 	padding-top: 1em;
 }
 select {
-	border: none;
+	/*border: none;*/
 	background: none;
 	color: #6c3f00;
-	height: 1em;
-	padding: 0.5em;
+	height: 2em;
+	width: 140px;
+	/*padding: 0 0.5em;*/
 	box-sizing: content-box;
 	font-size: 1em;
 	outline: none;

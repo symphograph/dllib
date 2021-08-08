@@ -53,7 +53,7 @@ echo 'hghgdh';
 
 </div>
 <script src="https://unpkg.com/vue@next"></script>
-<script src="js/app.js?<?php echo md5_file('js/app.js') ?>"></script>
+<script src="js/app.js?<?php echo md5_file('js/prices.js') ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 

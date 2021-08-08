@@ -163,11 +163,20 @@ select:hover {
 .item_name{
 	cursor: copy;
 }
-/*
-.price_object{
-	border-radius: 3px;
-	background-color: #b17f0017;
-	padding-left: 1em;
+.price_row{
+	/*width: 17em;*/
+}
+.price_pharams{
+	width: 11em;
 }
 
- */
+.comdate{
+	margin: 0 1em 0 0;
+}
+
+.parea{
+	margin: 0 1em;
+}
+.pinput{
+	background-color: rgba(121, 241, 72, 0.55);
+}

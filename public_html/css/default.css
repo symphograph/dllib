@@ -357,6 +357,7 @@ input[name^="setsilver"],input[name^="setbr"] {
 	color: #6c3f00;
 	text-align: right;
 	border-radius: 4px;
+	max-width: 10em;
 	/*background-color: rgba(226,222,198,0.00);*/
 	/*input:-webkit-outer-spin-button;*/
 }

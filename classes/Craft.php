@@ -87,15 +87,18 @@ class Craft
         SELECT craft_materials.* , 
                i.*,
                item_categories.item_group,
-               uc.isbest
+               uc.isbest,
+               ub.item_id > 0 as isbuy
         FROM craft_materials
         INNER JOIN items i on craft_materials.item_id = i.item_id
         LEFT JOIN `item_categories` ON i.`categ_id` = `item_categories`.`id`
         LEFT JOIN user_crafts uc on craft_materials.item_id = uc.item_id 
-                                        AND uc.user_id = '$User->id'
-                                        AND uc.isbest > 0
-        WHERE craft_materials.craft_id = '$this->craft_id'
-        ");
+            AND uc.user_id = :user_id
+            AND uc.isbest > 0
+        LEFT JOIN user_buys ub on i.item_id = ub.item_id
+            AND ub.user_id = :user_id1
+        WHERE craft_materials.craft_id = :craft_id
+        ",['user_id' => $User->id,  'user_id1' => $User->id, 'craft_id' => $this->craft_id]);
         foreach ($qwe as $q)
         {
             $q   = (object)$q;
@@ -118,8 +121,8 @@ class Craft
             $mat->isbest       = $q->isbest ?? 0;
             $mat->is_trade_npc = $q->is_trade_npc ?? 0;
             $mat->valut_id     = $q->valut_id ?? 500;
-            if($q->isbest == 3){
-                $mat->is_buyable = true;
+            if($q->isbuy){
+                $mat->isBuyCraft = true;
             }
 
             $mats[$mat->item_id] = $mat;

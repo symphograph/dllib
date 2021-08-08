@@ -31,6 +31,8 @@ class User
     public bool $isbot = false;
     public array $folows = [];
 
+    
+
     public function byId(int $user_id)
     {
         $qwe = qwe("
@@ -250,6 +252,7 @@ class User
         if(!$this->email)
             return false;
 
+
         $qwe = qwe("
         SELECT * 
         from `mailusers` 
@@ -292,6 +295,17 @@ class User
 
     private function regNewMail()
     {
+        $params = [
+            'fname' => $this->fname,
+            'last_name' => $this->last_name,
+            'avatar' => $this->avatar,
+            'mailnick' => $this->mailnick,
+            'last_time' => $this->last_time,
+            'last_ip' => $_SERVER['REMOTE_ADDR'],
+            'email' => $this->email,
+            'id' => $this->id
+        ];
+
         $qwe = qwe("
             UPDATE `mailusers` SET 
             `first_name` = :fname, 
@@ -299,22 +313,15 @@ class User
             `avatar` = :avatar, 
             `mailnick` = :mailnick, 
             `last_time` = :last_time, 
-            `last_ip` = :ip,
+            `last_ip` = :last_ip,
             `email` = :email
             WHERE `mail_id` = :id
-            ",[
-                'fname' => $this->fname,
-                'last_name' => $this->last_name,
-                'avatar' => $this->avatar,
-                'mailnick' => $this->mailnick,
-                'last_time' => $this->last_time,
-                'email' => $this->email,
-                'last_ip' => $_SERVER['REMOTE_ADDR'],
-                'id' => $this->id
-            ]
+            ", $params
         );
-        if(!$qwe)
+        if(!$qwe){
             return false;
+        }
+
 
         return true;
     }
@@ -503,16 +510,94 @@ class User
         return $this->orcost;
     }
 
-    function IsFolow($folow_id)
+    function isFolow(int $folow_id)
     {
         $qwe = qwe("
             SELECT * FROM folows 
-            WHERE `user_id` = '$this->id'
-            AND `folow_id` = '$folow_id'
-            ");
+            WHERE `user_id` = :user_id
+            AND `folow_id` = :folow_id
+            ", ['user_id' => $this->id, 'folow_id' => $folow_id]);
         if($qwe and $qwe->rowCount() > 0)
             return true;
         return false;
+    }
+
+    function clearUCraftCache() : bool
+    {
+        $qwe1 = qwe("
+        DELETE FROM user_crafts
+        WHERE user_id = :user_id
+        AND  isbest != 2
+        ", ['user_id' => $this->id]
+        );
+
+        $qwe2 = qwe("
+            UPDATE `user_crafts` 
+            SET `craft_price` = NULL 
+            WHERE `user_id` = :user_id
+            ",['user_id'=>$this->id]
+        );
+
+        return $qwe1 && $qwe2;
+
+    }
+
+    public function setServer(int $server) : bool
+    {
+        $qwe = qwe("
+            REPLACE INTO user_servers
+            (user_id, server) 
+            VALUES 
+            (:user_id, :server)
+           
+            ",['user_id' => $this->id, 'server' => $server]
+        );
+        if(!$qwe)
+            return false;
+
+        return $this->clearUCraftCache();
+    }
+
+    public function setMode(int $mode) : bool
+    {
+        $qwe = qwe("
+            UPDATE mailusers 
+            SET mode = :mode 
+            WHERE mail_id = :mail_id
+            ",['mode' => $mode, 'mail_id' => $this->id]
+        );
+        if(!$qwe)
+            return false;
+
+        return $this->clearUCraftCache();
+    }
+
+    public function getPublicInfo() : array
+    {
+        if(!$this->id){
+            return [];
+        }
+        return [
+              'server' => $this->server,
+              'server_group' => $this->server_group,
+              'user_nick' => $this->user_nick,
+        ];
+    }
+
+    public function getPrices(int $server_group)
+    {
+        $qwe = qwe("
+            SELECT prices.* FROM prices
+            INNER JOIN items
+            ON items.item_id = prices.item_id
+            AND prices.user_id = :user_id
+            AND items.on_off
+            AND server_group = :server_group
+        ",['user_id' => $this->id, 'server_group' => $server_group]);
+        if(!$qwe || !$qwe->rowCount()){
+            return [];
+        }
+        return $qwe->fetchAll();
     }
 
 }

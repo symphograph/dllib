@@ -140,7 +140,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';
 <?php
 include_once 'pageb/footer.php';
 
-addScript('js/packtable.js');
+//addScript('js/packtable.js');
 addScript('js/packtable/app.js');
 ?>
 

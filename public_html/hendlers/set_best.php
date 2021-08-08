@@ -14,6 +14,7 @@ if(!$User->byIdenty())
 $user_id = $User->id;
 $item_id = ResultItemId($craft_id);
 $isbest = isBest($craft_id);
+var_dump($isbest);
 if($isbest)
 {
 	qwe("

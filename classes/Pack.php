@@ -156,7 +156,7 @@ class Pack extends Item
         );
     }
 
-    public function initPrice(int $per,int $siol, int $quality = 0, $lvl = 0) : void
+    public function initPackPrice(int $per, int $siol, int $quality = 0, $lvl = 0) : void
     {
 
         self::initSalary(per: $per,siol:  $siol, quality:  $quality, lvl:  $lvl);

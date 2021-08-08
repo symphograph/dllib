@@ -39,7 +39,7 @@ class Price
     {
         self::byMode();
         self::getColor();
-        self::exploded();
+        //self::exploded();
         $this->date = date('d.m.Y',strtotime($this->time));
         self::text2();
     }
@@ -552,7 +552,7 @@ class Price
         return true;
     }
 
-    public function insert(int $value) : bool
+    public function insert(int $value, bool|int $multi = false) : bool
     {
         if(!$value){
             return false;
@@ -568,28 +568,21 @@ class Price
             (user_id,item_id,auc_price,server_group,`time`)
             VALUES 
             (:user_id,:item_id,:auc_price,:server_group, now())
-            ",[
-            'user_id'=>$User->id,
-            'item_id'=>$this->item_id,
-            'auc_price'=> $value,
-            'server_group'=>$User->server_group
+            ", [
+            'user_id'      => $User->id,
+            'item_id'      => $this->item_id,
+            'auc_price'    => $value,
+            'server_group' => $User->server_group
         ]);
         if(!$qwe){
             return false;
         }
 
-
-        $qwe = qwe("
-            DELETE FROM `user_crafts` 
-            WHERE `user_id` = :user_id
-            AND `isbest` < 2",
-                   ['user_id'=>$User->id]
-        );
-        if(!$qwe){
-            return false;
+        if(!$multi){
+            return $User->clearUCraftCache();
         }
-
         return true;
+
     }
 
 }

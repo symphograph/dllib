@@ -33,6 +33,14 @@ if(!empty($_COOKIE['item_id']))
 {
 	$item_id = intval($_COOKIE['item_id']);
 }
+
+$modeTooltips =
+    [
+        '<b>C Миру по нитке:</b><br>Режим для новичка.<br>Предпочитает Ваши цены или более новые из доверенных.<br>Если их нет, ищет у других.<br>Спрашивает только, если никто и никогда не указывал цену.',
+        '<b>Доверие:</b><br> Не видит ничьих цен, кроме Ваших и тех, кому Вы доверяете.<br>Предпочитает более новые.<br>ОР, РР, Честь и прочие субъективные предпочитает Ваши независимо от их новизны.',
+        '<b>Хардкор:</b><br>Видит только Ваши цены.<br>В любой непонятной ситуации будет спрашивать.'
+    ];
+$modeTooltips = implode('<br><br><br>',$modeTooltips);
 ?>
 <!doctype html>
 <html lang="ru">
@@ -55,6 +63,8 @@ if(!empty($_COOKIE['item_id']))
 <?php include_once $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';?>
 
 <?php /*?><div class="top"></div><?php */?>
+<input type="hidden" id="server" value="<?php echo $User->server?>">
+<input type="hidden" id="mode" value="<?php echo $User->mode?>">
 <main>
     <div id="rent">
 
@@ -74,6 +84,7 @@ if(!empty($_COOKIE['item_id']))
                 </div>
             </div>
         </div>
+        <div id="tiptop">{{ tiptop }}</div>
 
         <div id="tiptop"></div>
 
@@ -89,7 +100,7 @@ if(!empty($_COOKIE['item_id']))
                     <div v-if="Object.keys(catList).length" class="nav categories" id="categories">
                         <template v-for="cats in catList">
                             <br>
-                            <details>
+                            <details open="open">
                                 <summary>{{cats.name}}</summary>
                                 <ul>
                                    <li v-for="cat in cats.categs">
@@ -123,7 +134,7 @@ if(!empty($_COOKIE['item_id']))
                         <div class="clear"></div>
 
                         <div id="items">
-                            <div v-if="Object.keys(searched).length" class="items_list">
+                            <div v-if="Object.keys(searched).length" class="items_list" >
                                 <template v-for="(item,idx) in searched">
                                     <div class="item_row">
                                         <label class="nicon" :class="{ active: (idx === focusRow)}">
@@ -163,22 +174,22 @@ if(!empty($_COOKIE['item_id']))
                                 </template>
                             </div>
 
-                            <div v-if="itemId" id="catalog_area">
+                            <div v-if="itemId != 0 && !searched.length" id="catalog_area">
                                 <div class="item_descr_area">
                                     {{curItem.item_id}}
-                                    <div class="nicon">
-                                        <div class="itim" :style="{ backgroundImage: 'url(img/icons/50/'+curItem.icon+'.png)'}">
+                                    <div class="nicon" >
+                                        <div class="itim" @click="reloadItem" :style="{ backgroundImage: 'url(img/icons/50/'+curItem.icon+'.png)'}">
                                             <div class="grade" :style="{ backgroundImage: 'url(img/grade/icon_grade'+curItem.basic_grade+'.png)'}"></div>
                                         </div>
                                         <div class="itemname">
-                                            <div id="mitemname"><b>{{curItem.item_name}}</b></div>
+                                            <div id="mitemname" @click="copy(curItem.item_name)"><b>{{ curItem.item_name }}</b></div>
                                             <div v-if="curItem.personal" class="comdate">Персональный</div>
                                             <div class="mcateg">{{curItem.category}}</div>
                                         </div>
                                     </div>
                                     <br><br>
                                     <details><summary>Описание</summary>
-                                        <div class="item_descr">{{curItem.description}}</div>
+                                        <div class="item_descr" v-html="curItem.description"></div>
                                     </details><br>
 
                                     <a :href="'https://archeagecodex.com/ru/item/' + curItem.item_id" target="_blank">
@@ -194,7 +205,7 @@ if(!empty($_COOKIE['item_id']))
                                     </div>
 
                                     <template v-if="curItem.isGoldable">
-                                        <span v-html="curItem.priceData.text2"></span>
+                                        <div :style="{color: curItem.priceData.tcolor}">{{ curItem.priceData.date }} - {{curItem.priceData.how }}</div>
                                         <div class="money_area_down">
                                             <div class="money-line">
                                                 <div class="money-line">
@@ -224,8 +235,20 @@ if(!empty($_COOKIE['item_id']))
 
                                     </template>
                                     <br>
+                                    <div style="height: 2em">
+                                        <select v-model="server">
+                                            <option v-for="(ser,sid) in servers" :value="sid">{{ ser }}</option>
+                                        </select>
+                                    </div><br>
 
-                                    <a href="user_customs.php"><button class="def_button">Настройки</button></a><br>
+                                    <div style="height: 2em">
+                                        <select data-tooltip="<?php echo $modeTooltips?>"
+                                                v-model="mode">
+                                            <option v-for="(m,mid) in modes" :value="mid">{{ m }}</option>
+                                        </select>
+                                    </div><br>
+
+                                    <a href="user_customs.php"><button class="def_button">Настройки</button></a><br><br>
                                     <a href="user_prices.php"><button class="def_button">Мои цены</button></a>
                                 </div>
                                 <div id="catalog_right">
@@ -248,6 +271,30 @@ if(!empty($_COOKIE['item_id']))
                                         </template>
                                     </div>
 
+                                    <div v-if="itemId == 41488" class="craftCard">
+                                        Дополнительно о векселях можно узнать на
+                                        <a href="https://gisaa.ru/veksel"><b>gisaa.ru</b></a>
+                                    </div>
+
+                                    <template v-if="curItem.ValutInfo !== undefined">
+                                        <br>
+                                        <div class="craftCard">
+                                            <h3>Передаваемые предметы за эту валюту:</h3>
+                                            <div class="cyItems">
+                                                <template v-for="cyItem in curItem.ValutInfo.transItems">
+                                                    <label class="cubik" @click="pchId(cyItem.id)">
+                                                        <div class="itim" :style="{ backgroundImage: 'url(img/icons/50/'+cyItem.icon+'.png)'}">
+                                                            <div class="grade"
+                                                                 :data-tooltip="cyItem.tooltip"
+                                                                 :style="{ backgroundImage: 'url(img/grade/icon_grade'+cyItem.grade+'.png)'}">
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </template>
+
                                     <div v-if="curItem.craftable" class="dcraft_craft_area" id="dcraft_craft_area">
                                         <template v-if="Object.keys(curItem.lost).length">
                                             <div class="lost-area">
@@ -257,7 +304,7 @@ if(!empty($_COOKIE['item_id']))
                                                     <br>Без них я не могу посчитать и сравнить.
                                                 </div>
                                                 <div style="display: flex; flex-wrap: wrap; padding-bottom: 2em">
-                                                    <div v-for="(lost,idx) in curItem.lost" class="price_cell">
+                                                    <div v-for="(los,idx) in curItem.lost" class="price_cell">
                                                         <div class="price_row" style="height: 1em">
                                                             <div v-if="curItem.lost[idx].auc_price"
                                                                  v-html="valutImager(curItem.lost[idx].auc_price,500)"
@@ -267,19 +314,19 @@ if(!empty($_COOKIE['item_id']))
                                                         <div class="price_row">
 
                                                             <div class="itim"
-                                                                 :style="{ backgroundImage: 'url(img/icons/50/'+lost.icon+'.png)'}"
+                                                                 @click="pchId(los.item_id)"
+                                                                 :style="{ backgroundImage: 'url(img/icons/50/'+los.icon+'.png)'}"
                                                             >
                                                                 <div
                                                                         class="grade"
-                                                                        :style="{ backgroundImage: 'url(img/grade/icon_grade'+lost.basic_grade+'.png)'}"
-                                                                        :data-tooltip="itemTooltip(lost.item_name,0,lost.personal)"
+                                                                        :style="{ backgroundImage: 'url(img/grade/icon_grade'+los.basic_grade+'.png)'}"
+                                                                        :data-tooltip="itemTooltip(los.item_name,0,los.personal)"
                                                                 >
                                                                 </div>
-
                                                             </div>
                                                             <div class="price_pharams">
                                                                 <div>
-                                                                    <span class="item_name">{{lost.item_name}}</span>
+                                                                    <span class="item_name" @click="copy(los.item_name)">{{ los.item_name }}</span>
                                                                     <div class="money_area_down">
                                                                         <div class="money-line">
                                                                             <div class="money-line">
@@ -341,35 +388,135 @@ if(!empty($_COOKIE['item_id']))
                                                     <span>Покупать</span>
                                                 </div>
                                             </div>
-                                            <div v-if="isbuy != 3">
+
+                                            <div class="prefType"><b>{{prefText[curItem.bestCraft.isbest]}}</b></div>
+
+                                            <div v-if="Object.keys(curItem.crafts.best).length">
 
                                                 <craft-info :arr-props="curItem.crafts.best"
                                                             :uamount="Uamount"
                                                             :icon="curItem.icon"
                                                             :grade="curItem.basic_grade"
+                                                            :pref-text="'Сбросить'"
                                                             @chid="pchId"
+                                                            @reset="resetBest"
                                                 ></craft-info>
                                             </div>
-                                            <template v-if="Object.keys(curItem.crafts.other).length">
+
+                                            <details v-if="curItem.allMats.length">
+                                                <summary>Все материалы для {{ Uamount  *  curItem.crafts.best.result_amount }} шт</summary>
+                                                <div class="craftCard">
+                                                    <div class="all_res_area">
+                                                        <template v-for="mat in curItem.allMats">
+                                                            <label class="cubik" @click="pchId(mat.id)">
+                                                                <div class="itim" :style="{ backgroundImage: 'url(img/icons/50/'+mat.icon+'.png)'}">
+                                                                    <div class="grade"
+                                                                         :data-tooltip="mat.tooltip"
+                                                                         :style="{ backgroundImage: 'url(img/grade/icon_grade'+mat.grade+'.png)'}">
+                                                                        <div class="matneed">{{ round(mat.value * Uamount  *  curItem.crafts.best.result_amount) }}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </label>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </details>
+
+                                            <template v-if="curItem.allTrash.length">
+                                                <br><hr><br>
+                                                <details>
+                                                    <summary>Полученные отходы с {{ Uamount  *  curItem.crafts.best.result_amount }} шт</summary>
+                                                    <div class="craftCard">
+                                                        <div class="all_res_area">
+                                                            <template v-for="mat in curItem.allTrash">
+                                                                <label class="cubik" @click="pchId(mat.id)">
+                                                                    <div class="itim" :style="{ backgroundImage: 'url(img/icons/50/'+mat.icon+'.png)'}">
+                                                                        <div class="grade"
+                                                                             :data-tooltip="mat.tooltip"
+                                                                             :style="{ backgroundImage: 'url(img/grade/icon_grade'+mat.grade+'.png)'}">
+                                                                            <div class="matneed">{{ round(mat.value * Uamount  *  curItem.crafts.best.result_amount)  }}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </label>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </details>
+                                            </template>
+
+
+
+                                            <template v-if="curItem.crafts.other.length">
                                                 <br><hr><br>
                                                 <details><summary>Другие рецепты</summary>
                                                     <br>
-                                                    <div v-for="craft in curItem.crafts.other">
+                                                        <transition-group name="flip-list" tag="ul">
+                                                        <div v-for="craft in sortedCrafts" :key="craft.craft_id">
 
-                                                        <craft-info :arr-props="craft"
-                                                                    :uamount="Uamount"
-                                                                    :icon="curItem.icon"
-                                                                    :grade="curItem.basic_grade"
-                                                                    @chid="pchId"
-                                                        ></craft-info>
-                                                        <br><br>
-                                                    </div>
+                                                            <craft-info :arr-props="craft"
+                                                                        :uamount="Uamount"
+                                                                        :icon="curItem.icon"
+                                                                        :grade="curItem.basic_grade"
+                                                                        :pref-text="'Предпочитать этот'"
+                                                                        @chid="pchId"
+                                                                        @setbest="setBest"
+                                                            ></craft-info>
+
+                                                        </div>
+                                                    </transition-group>
                                                 </details>
                                             </template>
                                         </template>
 
 
                                     </div>
+                                </div>
+                                <br>
+                                <div v-if="curItem.ValutInfo !== undefined" class="craftCard">
+                                    <h3>Конвертация в золото</h3>
+                                    <br>
+                                    <div class="valut_median">
+                                        Медиана:
+                                        <img :src="'img/icons/50/'+curItem.ValutInfo.icon+'.png'"
+                                             class="smallIcon"
+                                             alt="Ремесленная репутация">
+                                        =
+                                        <span v-html="valutImager(curItem.ValutInfo.median,500)"></span>
+                                    </div>
+                                    <br>
+                                    <div id="medianList">
+                                        <template v-for="cyItem in curItem.ValutInfo.monetisationData" :key="cyItem.item_id">
+                                            <div class="price_cell">
+                                                <div class="price_row">
+                                                    <label class="cubik" @click="pchId(cyItem.id)">
+                                                        <div class="itim" :style="{ backgroundImage: 'url(img/icons/50/'+cyItem.icon+'.png)'}">
+                                                            <div class="grade"
+                                                                 :data-tooltip="cyItem.tooltip"
+                                                                 :style="{ backgroundImage: 'url(img/grade/icon_grade'+cyItem.grade+'.png)'}">
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                    <div class="price_pharams">
+                                                        <div>
+                                                            <div>{{cyItem.tooltip}}</div>
+                                                            <div>
+                                                                <img :src="'img/icons/50/'+curItem.ValutInfo.icon+'.png'"
+                                                                     class="smallIcon"
+                                                                     alt="Ремесленная репутация">
+                                                                =
+                                                                <span v-html="valutImager(cyItem.value,500)"></span>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <div style="width: 100%">
+
                                 </div>
 
                             </div>

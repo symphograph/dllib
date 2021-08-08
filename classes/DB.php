@@ -4,6 +4,7 @@
 class DB
 {
     public PDO|null $pdo;
+    private array $opt;
 
     public function __construct(
         $connectName = '',

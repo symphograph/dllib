@@ -169,13 +169,13 @@ if (!empty($_GET['error'])) {
 
 	foreach($user as $v)
 	{
-	//$uid = $v->uid;
-	//echo '<br><br>'.$uid;
-	$User->fname = $v ->first_name;
-	$User->last_name = $v ->last_name;
-	$User->email = $v ->email;
-	$User->avatar = $v ->pic_50;
-	$User->mailnick = $v ->nick;
+        //$uid = $v->uid;
+        //echo '<br><br>'.$uid;
+        $User->fname     = $v->first_name;
+        $User->last_name = $v->last_name;
+        $User->email     = $v->email;
+        $User->avatar    = $v->pic_50;
+        $User->mailnick  = $v->nick;
 	}
 
     if(!$User->authByEmail())

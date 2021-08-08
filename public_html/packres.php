@@ -69,7 +69,7 @@ items.basic_grade,
 prices.auc_price,
 prices.time,
 isbest,
-(isbest = 3) as isbuy,
+(user_buys.item_id > 0) as isbuy,
 user_crafts.craft_price
 FROM
 (
@@ -93,17 +93,20 @@ FROM
 ) as tmp
 INNER JOIN items 
 	ON items.item_id = tmp.item_id 
-	AND items.on_off 
-	AND items.item_id != 500
-    AND (!(items.valut_id = 500 AND items.is_trade_npc))
+        AND items.on_off 
+        AND items.item_id != 500
+        AND (!(items.valut_id = 500 AND items.is_trade_npc))
 LEFT JOIN prices 
 	ON prices.user_id = '$User->id' 
-	AND prices.item_id = items.item_id 
-	AND prices.server_group = '$User->server_group'
+        AND prices.item_id = items.item_id 
+        AND prices.server_group = '$User->server_group'
 LEFT JOIN user_crafts 
 	ON user_crafts.user_id = '$User->id' 
-	AND user_crafts.item_id = items.item_id 
-	AND user_crafts.isbest > 0
+        AND user_crafts.item_id = items.item_id 
+        AND user_crafts.isbest > 0
+LEFT JOIN user_buys 
+    ON user_buys.user_id = '$User->id' 
+           AND user_buys.item_id = prices.item_id
 	ORDER BY isbuy DESC, item_name
 	";
 $qwe = qwe($sql);
@@ -149,7 +152,7 @@ items.basic_grade,
 prices.auc_price,
 prices.time,
 isbest,
-(isbest = 3) as isbuy,
+(user_buys.item_id > 0) as isbuy,
 user_crafts.craft_price
 FROM
 (
@@ -185,6 +188,9 @@ LEFT JOIN user_crafts
 	ON user_crafts.user_id = '$User->id' 
 	AND user_crafts.item_id = items.item_id 
 	AND user_crafts.isbest > 0
+LEFT JOIN user_buys 
+    ON user_buys.user_id = '$User->id' 
+           AND user_buys.item_id = prices.item_id
 	ORDER BY isbuy DESC, item_name
 	";
 

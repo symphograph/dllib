@@ -24,6 +24,7 @@ class CraftInfo
     public int       $result_amount = 0;
     public int       $matMoney      = 0;
     public int $prefType = 0;
+    public int $craft_id = 0;
     private Price    $Price;
 
 
@@ -48,6 +49,7 @@ class CraftInfo
 
 
         $this->item_id    = $this->Item->item_id;
+        $this->craft_id = $this->Craft->craft_id;
         $this->craft_name = $Craft->rec_name ?? $this->Item->item_name;
         $this->prof_need  = $Craft->prof_need ?? 0;
         $this->prof_name  = $Prof->name;

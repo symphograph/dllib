@@ -5,19 +5,24 @@
 require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 if (!$cfg->myip)
     die('rrr');
-$User = new User();
-$User->byIdenty();
-$Item = new Item();
-$Item->byId(3685);
+$allMats = [
+        1=>44,
+        45=>56,
+        'tyu'=>34
+];
+$allMats = json_encode($allMats);
+qwe("
+REPLACE INTO user_crafts 
+    (user_id, craft_id, item_id, isbest, allMats) 
+VALUES 
+    (1, 1, 1, 2, :allMats)
+",['allMats'=>$allMats]);
 
-$Craft = new Craft(7571);
-$CraftInfo = new CraftInfo(
-        Craft: $Craft,
-        Item: $Item
-);
-$Mat = new Mat();
-printr($CraftInfo->mats);
-printr(json_encode($CraftInfo));
+$qwe = qwe("SELECT * FROM user_crafts
+WHERE user_id = 1 AND craft_id = 1
+");
+$q = $qwe->fetchObject();
+printr(json_decode($q->allMats));
 ?>
 
 

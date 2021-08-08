@@ -664,7 +664,7 @@ function PriceCell(int $item_id,$item_name,$icon, $grade,$time='',$isby='',$amou
 			<?php if(!empty($isby))
 			{
                 $chks = ['',' checked '];
-                $chk = intval($isby == 4);
+                $chk = intval($isby);
 
                 ?>
                 <div class="pricecell_date_row">
@@ -757,13 +757,17 @@ function IntimItems()
 		return $IntimItems;
 	$qwe = qwe("
 	SELECT item_id FROM items 
-	WHERE ((!is_trade_npc
-	AND ismat
-	AND !craftable
-	AND on_off
-	AND personal)
-	OR item_id IN 
-	(SELECT valut_id FROM valutas))
+	WHERE 
+    (
+	    (
+	        !is_trade_npc
+            AND ismat
+            AND !craftable
+            AND on_off
+            AND personal
+        )
+        OR item_id IN (SELECT valut_id FROM valutas)
+    )
 	AND item_id != 500
 	");
 	if(!$qwe or $qwe->rowCount() == 0) 
@@ -878,7 +882,7 @@ function UserPriceList($qwe)
         $isby = '';
 
         if($q->craftable)
-            $isby = intval($q->isbest)+1;
+            $isby = intval($q->isbuy);
 
         $amount = $q->mater_need ?? '';
         $basic_grade = $q->basic_grade ?? 1;
@@ -1078,7 +1082,7 @@ function UserPriceList2($qwe)
         $chk = $isby = '';
 
         if($q->craftable)
-            $isby = intval($q->isbest)+1;
+            $isby = intval($q->ismybuy);
 
         $basic_grade = $q->basic_grade ?? 1;
 
@@ -1121,3 +1125,4 @@ function SPTime($mins)
         $d = '';
     return $d.$h.':'.$m;
 }
+

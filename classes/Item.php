@@ -12,7 +12,7 @@ class Item
     public string $item_name;
     public        $description;
     public int    $on_off;
-    public int    $personal;
+    public int    $personal = 0;
     public int    $ismat;
     public int    $item_group;
     public        $categ_id;
@@ -29,21 +29,23 @@ class Item
     public Price $priceData;
     public        $orSum;
     public Craft  $bestCraft;
-    public int   $craftable    = 0;
-    public int   $auc_price    = 0;
-    public array $crafts       = [];
-    public       $valut_icon   = '';
-    public int   $bestCraftId  = 0;
-    public bool  $ispack       = false;
-    public int   $craft_price  = 0;
-    public array $allMats      = [];
-    public array $allTrash     = [];
-    public array $craftTree    = [];
-    public array $craftResults = [];
-    public array $lost         = [];
-    public bool  $isGoldable   = true;
+    public int   $craftable              = 0;
+    public int   $auc_price              = 0;
+    public array $crafts                 = [];
+    public       $valut_icon             = '';
+    public int   $bestCraftId            = 0;
+    public bool  $ispack                 = false;
+    public int   $craft_price            = 0;
+    public array $allMats                = [];
+    public array $allTrash               = [];
+    public array $craftTree              = [];
+    public array $craftResults           = [];
+    public array $lost                   = [];
+    public bool  $isGoldable             = true;
     public array $potential_crafts       = [];
     public array $potentialMatsAndCrafts = [];
+    public bool  $isBuyCraft             = false;
+    public ValutInfo $ValutInfo;
 
 
     public function byId(int $item_id)
@@ -76,31 +78,32 @@ class Item
     public function byQ(object $q) : bool
     {
         //printr($q);
-        $this->item_id  = $q->item_id;
-        $this->valut_id = $q->valut_id ?? 500;
-        $this->price_buy = $q->price_buy ?? 0;
-        $this->price_sale = $q->price_sale ?? 0;
-        $this->category = $q->category ?? '';
-        $this->item_name = htmlspecialchars($q->item_name);
+        $this->item_id     = $q->item_id;
+        $this->valut_id    = $q->valut_id ?? 500;
+        $this->price_buy   = $q->price_buy ?? 0;
+        $this->price_sale  = $q->price_sale ?? 0;
+        $this->category    = $q->category ?? '';
+        $this->item_name   = htmlspecialchars($q->item_name);
         $this->description = $q->description ?? '';
         //$this->description = nl2br(htmlspecialchars($q->description));
-        $this->on_off = $q->on_off ?? 1;
-        $this->personal = $q->personal;
-        $this->craftable = $q->craftable;
-        $this->ismat = $q->ismat;
-        $this->categ_id = $q->categ_id;
-        $this->categ_pid = $q->categ_pid;
-        $this->slot = $q->slot;
-        $this->lvl = $q->lvl;
-        $this->inst = $q->inst;
-        $this->basic_grade = $q->basic_grade ?? 1;
-        $this->forup_grade = $q->forup_grade;
-        $this->icon = $q->icon;
-        $this->md5_icon = $q->md5_icon;
-        $this->valut_name = $q->valut_name ?? '';
-        $this->sgr_id = $q->sgr_id ?? 0;
+        $this->on_off       = $q->on_off ?? 1;
+        $this->personal     = $q->personal ?? 0;
+        $this->craftable    = $q->craftable;
+        $this->ismat        = $q->ismat;
+        $this->categ_id     = $q->categ_id;
+        $this->categ_pid    = $q->categ_pid;
+        $this->slot         = $q->slot;
+        $this->lvl          = $q->lvl;
+        $this->inst         = $q->inst;
+        $this->basic_grade  = $q->basic_grade ?? 1;
+        $this->forup_grade  = $q->forup_grade;
+        $this->icon         = $q->icon;
+        $this->md5_icon     = $q->md5_icon;
+        $this->valut_name   = $q->valut_name ?? '';
+        $this->sgr_id       = $q->sgr_id ?? 0;
         $this->is_trade_npc = $q->is_trade_npc;
-        $this->ispack = (in_array($this->categ_id,[133,171]));
+        $this->ispack       = self::isPack();
+        $this->isBuyCraft   = $q->isbuy ?? self::isBuyCraft();
 
         self::isGoldable();
 
@@ -336,20 +339,12 @@ class Item
                     '/test.php'
                 ]) and !$lostIgnore) {
 
-                MissedList($lost);
-                qwe("DELETE FROM user_crafts WHERE user_id = '$User->id' AND isbest < 2");
+                $lost = MissedList($lost);
+                $User->clearUCraftCache();
                 exit();
-            }else{
-                $this->lost = array_unique($lost);
-                $this->lost = array_values($this->lost);
-                $arr = [];
-                foreach ($this->lost as $l){
-                    $LostItem = new Item;
-                    $LostItem->byId($l);
-                    $arr[] = $LostItem;
-                }
-                $this->lost = $arr;
-                qwe("DELETE FROM user_crafts WHERE user_id = '$User->id' AND isbest < 2");
+            }else
+            {
+                $lost = MissedList($lost);
                 return false;
             }
         }
@@ -381,6 +376,18 @@ class Item
         }
 
         return true;
+    }
+
+    public static function initLost(array $losted)
+    {
+        $losted = array_unique($losted);
+        $ll = [];
+        foreach ($losted as $l){
+            $Litem = new Item();
+            $Litem->byId($l);
+            $ll[] = $Litem;
+        }
+        return $ll;
     }
 
     public function CraftsBuffering() : array
@@ -498,6 +505,29 @@ class Item
         return $orsum;
     }
 
+    public function insertAllMats(int $craft_id) : bool
+    {
+        if(!count($this->allMats)){
+            return false;
+        }
+
+        global $User;
+
+        $allMats = json_encode($this->allMats);
+        $qwe = qwe("
+            UPDATE user_crafts 
+            SET allMats = :allMats
+            WHERE user_id = :user_id
+                AND craft_id = :craft_id
+            ", ['allMats' => $allMats, 'user_id' => $User->id, 'craft_id' => $craft_id]
+        );
+        if($qwe)
+            return true;
+
+        return false;
+
+    }
+
     public function getAllMats($arr = [],float $need = 1,$craftId = 0)
     {
         if(!$craftId)
@@ -517,7 +547,7 @@ class Item
             if ($mat->mater_need < 0)
                 continue;
 
-            if($mat->craftable and $mat->item_group != 23 and !$mat->is_buyable){
+            if($mat->craftable and $mat->item_group != 23 and !$mat->isBuyCraft){
 
                 $arr = $mat->getAllMats($arr,$mat->mater_need*$need/$Craft->result_amount);
                 continue;
@@ -531,6 +561,7 @@ class Item
 
         }
         $this->allMats = $arr;
+        self::insertAllMats($craftId);
         return $arr;
     }
 
@@ -670,7 +701,7 @@ class Item
         return true;
     }
 
-    public function ValutIcon() : string
+    public function valutIcon() : string
     {
         if(!empty($this->valut_icon))
             return $this->valut_icon;
@@ -705,7 +736,7 @@ class Item
                 continue;
 
             $arr[] = ['deep'=>$i, $this->item_id, $Mat->item_id, $Mat->item_name];
-            if($Mat->craftable and !$Mat->is_buyable){
+            if($Mat->craftable and !$Mat->isBuyCraft){
 
                 echo $Mat->getBestCraft();
                 //printr([$Mat->name,$Mat->is_buyable]);
@@ -745,22 +776,25 @@ class Item
     public function isGoldable() : bool
     {
         $this->isGoldable = true;
-        if(in_array($this->categ_id,[133,171])){
+        if(in_array($this->categ_id,[133,171,122])){
             $this->isGoldable = false;
             return $this->isGoldable;
         }
 
         if($this->is_trade_npc){
 
+            if($this->valut_id == 500){
+                $this->isGoldable = false;
+                return $this->isGoldable;
+            }
+
             if($this->personal){
                 $this->isGoldable = false;
                 return $this->isGoldable;
             }
 
-            if($this->valut_id == 500){
-                $this->isGoldable = false;
-                return $this->isGoldable;
-            }
+
+
         }
 
         if($this->personal and $this->craftable){
@@ -779,12 +813,35 @@ class Item
         $this->priceData->initData();
     }
 
-    public function setAsBuy() : string
+    public function isBuyCraft() : bool
+    {
+
+        if(!$this->craftable || $this->personal)
+            return false;
+
+        global $User;
+
+        $qwe = qwe("
+            SELECT * FROM user_buys 
+            WHERE item_id = :item_id 
+              AND user_id = :user_id
+        ", ['item_id' => $this->item_id, 'user_id' => $User->id]);
+        if($qwe && $qwe->rowCount())
+            return true;
+
+        return false;
+    }
+
+    public function setAsBuy(bool $multi = false) : string
     {
         global $User;
 
         if(!$this->craftable){
             return '!craftable';
+        }
+
+        if($this->personal){
+            return 'personal';
         }
 
         self::initPrice();
@@ -799,21 +856,12 @@ class Item
             }
         }
 
-        $qwe = qwe("
-            UPDATE user_crafts
-            SET isbest = 3
-            WHERE item_id = :item_id
-            AND user_id = :user_id
-            AND isbest > 0
-        ",['item_id'=>$this->item_id, 'user_id'=>$User->id]);
-        if(!$qwe)
-            return 'insertErr';
 
         $qwe = qwe("
             DELETE FROM user_crafts
             WHERE user_id = :user_id 
             AND isbest < 2
-        ",['user_id'=>$User->id]);
+        ",['user_id' => $User->id]);
         if(!$qwe)
             return 'delErr';
 
@@ -827,10 +875,122 @@ class Item
         if(!$qwe)
             return 'regErr';
 
+        if(!$multi)
+            $User->clearUCraftCache();
+
 
         return 'ok';
 
     }
 
+    public function unsetAsBuy() : bool
+    {
+
+        global $User;
+
+        $qwe = qwe("DELETE FROM user_buys
+            WHERE user_id = :user_id
+            AND item_id = :item_id
+            ",['user_id' => $User->id, 'item_id' => $this->item_id]
+        );
+        if(!$qwe){
+            return false;
+        }
+
+        self::delCountedCrafts();
+
+        return $User->clearUCraftCache();
+
+    }
+
+    public function setUserBestCraft(int $craft_id)
+    {
+        global $User;
+
+        self::delCountedCrafts();
+
+
+        qwe("REPLACE INTO `user_crafts`
+            (user_id, craft_id, item_id, isbest, updated) 
+            VALUES 
+            (:user_id, :craft_id, :item_id, :isbest, now())
+            ", ['user_id' => $User->id, 'craft_id' => $craft_id, 'item_id' => $this->item_id,'isbest'=> 2]
+        );
+
+
+        $User->clearUCraftCache();
+
+    }
+
+    public function unsetBestCraft() : bool
+    {
+        global $User;
+        self::delCountedCrafts();
+        return $User->clearUCraftCache();
+    }
+
+    private function delCountedCrafts() : void
+    {
+        $this->isCounted = false;
+        global $User;
+        $qwe = qwe("
+            DELETE FROM user_crafts 
+            WHERE  item_id = :item_id 
+            AND user_id = :user_id",
+            ['user_id' => $User->id, 'item_id' => $this->item_id]
+        );
+
+    }
+
+    public static function isCurrency(int $item_id) : bool
+    {
+        return in_array($item_id,[2,3,4,5,6,23633]);
+    }
+
+    private function isValutable() : bool
+    {
+        return ($this->is_trade_npc && $this->valut_id !=500) ||  self::isCurrency($this->item_id);
+    }
+
+    public function initValutInfo() : bool
+    {
+        if(!self::isValutable()){
+            return false;
+        }
+
+        $vid = $this->item_id;
+        $icon = $this->icon;
+
+        if(!self::isCurrency($this->item_id)){
+            $vid = $this->valut_id;
+            $icon = self::valutIcon();
+        }
+
+
+        $this->ValutInfo = new ValutInfo(
+                valut_id: $vid,
+                icon: $icon
+        );
+
+        return true;
+    }
+
+    public function isPrivate() : bool
+    {
+        return match (true){
+            $this->item_id == 500 => false,
+            self::isCurrency($this->item_id) => true,
+            $this->is_trade_npc => false,
+            $this->personal != 1 => false,
+            $this->craftable == 1 => false,
+            $this->ismat != 1 => false,
+            default => false
+        };
+    }
+
+    public function isPack()
+    {
+        return in_array($this->categ_id, [133, 171]);
+    }
 
 }

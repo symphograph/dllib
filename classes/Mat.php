@@ -8,11 +8,9 @@ class Mat extends Item
     public int $craftId = 0;
     public float $mater_need = 0;
     public int $price = 0;
-    public int $spm2 = 0;
-    public bool $is_buyable = false;
-    public int $isbest = 0;
+    public int  $spm2       = 0;
+    public int  $isbest     = 0;
     public string $tooltip = '';
-
 
 
     public function byRcost($q)
@@ -31,13 +29,13 @@ class Mat extends Item
         $this->is_trade_npc = $q->is_trade_npc;
         $this->price_buy = $q->price_buy;
         $this->craftable = $q->craftable;
-        $this->is_buyable = ($q->isbest == 3);
+        $this->isBuyCraft = parent::isBuyCraft();
 
 
         if (self::MatPrice())
             return true;
 
-        if($q->buffer_price and !$this->is_buyable) {
+        if($q->buffer_price and !$this->isBuyCraft) {
 
             $this->price = $q->buffer_price;
             //echo '<p>откопал в промежуточных: '.$q->item_name.' '.$this->price.'</p>';
@@ -62,7 +60,7 @@ class Mat extends Item
             return true;
         }
 
-        if($this->is_buyable or $this->mater_need < 0){
+        if($this->isBuyCraft or $this->mater_need < 0){
             $Price->byMode();
             if($Price->price) {
                 $this->price = $Price->price;

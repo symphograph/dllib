@@ -181,7 +181,7 @@ function MonetisationList($val_link, int $valut_id)
 		$basic_grade = $p['basic_grade'];
 		if(!$auc_price) continue;
 
-		$val_pr = round($auc_price/$price_buy*0.9,0);
+		$val_pr = round($auc_price/$price_buy*0.9);
 		$array[$item_id.'_,_'.$item_name.'_,_'.$price_buy] = $val_pr;
 		$icons[$item_id] = $p['icon'];
 		$formedian[$item_id] = $val_pr;

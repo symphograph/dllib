@@ -1,16 +1,12 @@
 ﻿<?php
 
-function MissedList($lost)
+function MissedList(array $lost) : array
 {
+    if(!count($lost))
+        return [];
+
 	$lost = array_unique($lost);
 	global $User;
-	?>
-    <div>
-        <br><b>Расчет не получился.</b>
-        <br>В дочерних рецептах есть неизвестные цены.
-        <br>Без них я не могу посчитать и сравнить.
-    </div>
-    <?php
 
 	$lostnames = ItemAny($lost,'item_name');
 	
@@ -20,12 +16,11 @@ function MissedList($lost)
 	
 	$valutas = array_diff($valutas,[500,'']);
 	$valutas = array_diff($valutas,[0,'']);
-	//printr($valutas);
+
 	if(count($valutas) > 0)
 	{
 		$valutas = ItemAny($valutas,'item_name');
-		//var_dump($valutas);
-		//printr($valutas);
+
 		foreach($valutas as $k => $v)
 		{
 			$item_valut[$k] = 500;
@@ -47,7 +42,8 @@ function MissedList($lost)
 	WHERE `item_id` IN (".$lostitems.")
 	");
 	if(!$qwe or !$qwe->rowCount())
-		return false;
+		return $lost;
+
 	$newlost = [];
 	foreach($qwe as $q)
 	{
@@ -55,15 +51,15 @@ function MissedList($lost)
 		if($q->valut_id and $q->valut_id != 500)
 			continue;
 
-		PriceCell($q->item_id,$q->item_name,$q->icon,$q->basic_grade);
+		//PriceCell($q->item_id,$q->item_name,$q->icon,$q->basic_grade);
 
 		if(!$q->craftable and $User->mode == 1){
             qwe("
             REPLACE INTO lost_items 
-            (user_id,item_id, server_group, detetime) 
+            (user_id, item_id, server_group, detetime) 
             VALUES 
-           ($User->id, $q->item_id, $User->server_group, now())
-           ");
+           (:user_id, :item_id, :server_group, now())
+           ",['user_id' => $User->id, 'item_id'=>$q->item_id, 'server_group'=>$User->server_group]);
         }
         $newlost[] = $q->item_id;
 	}

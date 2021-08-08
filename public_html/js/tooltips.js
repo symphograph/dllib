@@ -50,6 +50,7 @@ $('body').on('click', function()
 		tooltipElem.remove();
     	tooltipElem = null;	
 	}
+	$('.tooltip').remove();
 });
 $('body').on('keydown', function() 
 {

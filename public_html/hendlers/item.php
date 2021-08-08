@@ -56,7 +56,7 @@ $description = $Item->description;
 				echo $Item->price_buy;
 				?>
 				<a href="catalog.php?item_id=<?php echo $Item->valut_id?>">
-		        <img src="img/icons/50/<?php echo $Item->ValutIcon()?>.png" width="15" height="15" alt="<?php echo $Item->valut_name?>"/>
+		        <img src="img/icons/50/<?php echo $Item->valutIcon()?>.png" width="15" height="15" alt="<?php echo $Item->valut_name?>"/>
 		        </a>
 		        <br><br>
 		        <?php

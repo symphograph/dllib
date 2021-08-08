@@ -1,9 +1,11 @@
-
+const sortCraftsBySPM = (d1, d2) =>(d1.spmu > d2.spmu) ? 1 : -1;
 
 const app = Vue.createApp({
 
     data() {
         return {
+            startServer: true,
+            startMode: true,
             subCategs: {},
             sGrId: 0,
             view: 0,
@@ -18,7 +20,37 @@ const app = Vue.createApp({
             error: 'ok',
             price: 1,
             Uamount: 1,
-            isbuy: 1
+            isbuy: 1,
+            prefType: 0,
+            prefText: {
+                1: 'Выбран автоматически',
+                2: 'Выбран вами',
+                3: 'Покупается'
+            },
+            unset: 'Сбросить',
+            open: '',
+            tiptops: [{tip_text:''}],
+            tiptop: '',
+            server: 9,
+            servers: {
+                1: 'Фанем',
+                2: 'Нуи',
+                3: 'Шаеда',
+                4: 'Корвус',
+                5: 'Луций',
+                6: 'Каиль',
+                7: 'Ария',
+                8: 'Хазе',
+                9: 'Сервер ?',
+                10: 'Ренессанс',
+                11: 'Кракен',
+            },
+            modes: {
+                1: 'С миру по нитке',
+                2: 'Доверие',
+                3: 'Хардкор'
+            },
+            mode: 0
         }
     },
 
@@ -29,9 +61,31 @@ const app = Vue.createApp({
 
     watch: {
 
+        server: {
+            handler(val){
+                if(!this.startServer){
+                    this.setServer()
+                }else{
+                    this.startServer = false
+                }
+            }
+        },
+
+        mode: {
+            handler(val){
+                if(!this.startMode){
+                    this.setMode()
+                }else{
+                    this.startMode = false
+                }
+            }
+        },
+
+
+
         isbuy: {
             handler(val){
-                console.log(this.isbuy)
+                this.setIsBuy()
             }
         },
 
@@ -39,14 +93,16 @@ const app = Vue.createApp({
 
             handler(val){
                 this.getItem()
+                this.tiptopp()
             },
             deep: true
         },
 
-
-
         search: {
             handler(val){
+                if (!val || val.length < 3){
+                    this.searched = {}
+                }
                 this.getSearch()
                 this.items = {}
                 //this.itemId = 0
@@ -56,6 +112,9 @@ const app = Vue.createApp({
 
         sGrId:{
             handler(val){
+                if(!this.sGrId){
+                    return
+                }
                 this.getCategs()
                 this.items = {}
                 this.itemId = 0
@@ -67,6 +126,9 @@ const app = Vue.createApp({
 
         curCat:{
             handler(val){
+                if(!this.curCat){
+                    return
+                }
                 this.itemId = 0
                 this.getItemList()
             },
@@ -76,8 +138,67 @@ const app = Vue.createApp({
 
     methods: {
 
+        copy(val){
+            try{
+                navigator.clipboard.writeText(val)
+            } catch (e) {
+                throw e
+            }
+        },
+
+        tiptopp() {
+            this.tiptop = this.tiptops[Math.floor(Math.random()*this.tiptops.length)].tip_text;
+        },
+
+        getTipTops(){
+            $.ajax
+            ("hendlers/tiptops.php",
+                {
+                    type: "POST",
+                    data: {
+                        tiptop: 1
+                    },
+                    dataType: "json",
+                    cache: false,
+                    headers: {}
+                }).done(function (data) {
+                pt.error = 'ok'
+                pt.tiptops = data
+                pt.tiptopp()
+
+            }).fail(function (data) {
+                pt.error = data.responseText ?? 'yy'
+            })
+
+        },
+
         pchId(val){
             this.itemId = val
+        },
+
+        setBest(newBest){
+
+            $.ajax
+            ("hendlers/items/set_best.php",
+                {
+                    type: "POST",
+                    data: {
+                        craft_id: newBest
+                    },
+                    dataType: "json",
+                    cache: false,
+                    headers: {}
+                }).done(function (data) {
+                pt.error = 'ok'
+                pt.getCrafts()
+                let target = document.getElementById('isbuy');
+                let contaner = document.getElementById('items')
+                contaner.scrollTo({top: target.offsetTop - 50, behavior: 'smooth'});
+
+            }).fail(function (data) {
+                pt.error = data.responseText ?? 'yy'
+            })
+
         },
 
         setLostPrices(){
@@ -97,7 +218,7 @@ const app = Vue.createApp({
             }
 
             $.ajax
-            ("hendlers/items/set_prices.php",
+            ("hendlers/price/set_prices.php",
                 {
                     type: "POST",
                     data: {
@@ -116,24 +237,54 @@ const app = Vue.createApp({
 
         },
 
+        resetBest() {
+            $.ajax
+            ("hendlers/items/reset_best.php",
+                {
+                    type: "POST",
+                    data: {
+                        item_id: this.itemId
+                    },
+                    dataType: "json",
+                    cache: false,
+                    headers: {}
+                }).done(function (data) {
+                pt.error = 'ok'
+                pt.getCrafts()
+
+            }).fail(function (data) {
+                pt.error = data.responseText ?? 'yy'
+            })
+        },
+
+        setIsBuy(){
+            $.ajax
+            ("hendlers/isbuyset.php",
+                {
+                    type: "POST",
+                    data: {
+                        isbuy: this.isbuy,
+                        item_id: this.itemId
+                    },
+                    dataType: "json",
+                    cache: false,
+                    headers: {}
+                }).done(function (data) {
+                pt.error = 'ok'
+                pt.getCrafts()
+
+            }).fail(function (data) {
+                pt.error = data.responseText ?? 'yy'
+            })
+        },
+
         lostPrice(idx,price){
+
             price = '' + price
+            price = price.replace(/^0+/, '');
 
             this.curItem.lost[idx].auc_price = price
-            price = price.replace(/[^\d]/g,'')
-            if(price == 0){
-                price = 0
-            }
-
-            let len = price.length;
-            if(len>2){
-                price = price.substring(0, len-2) + " " + price.substring(len-2);
-                len = price.length;
-            }
-            if(len>5){
-                price = price.substring(0, len-5) + " " + price.substring(len-5);
-            }
-
+            price = this.priceStringer(price)
 
             this.curItem.lost[idx].auc_price = price
 
@@ -145,12 +296,12 @@ const app = Vue.createApp({
             Price = Price.replace(/[^\d]/g,'')
 
             $.ajax
-            ("hendlers/items/set_price.php",
+            ("hendlers/price/set_price.php",
                 {
                     type: "POST",
                     data: {
-                        itemId: itemId,
-                        Price: Price
+                        item_id: itemId,
+                        price: Price
 
                     },
                     dataType: "json",
@@ -158,11 +309,12 @@ const app = Vue.createApp({
                     headers: {}
                 }).done(function (data) {
                 pt.error = 'ok'
-                pt.getPrice()
+                //pt.getPrice()
+                pt.getItem()
 
             }).fail(function (data) {
                 pt.error = data.responseText ?? 'yy'
-                console.log(pt.error)
+               // console.log(pt.error)
             })
         },
 
@@ -177,6 +329,9 @@ const app = Vue.createApp({
             this.items = {}
             this.catList = {}
             this.focusRow = 0
+            this.tiptop
+            this.curCat = 0
+            this.sGrId = 0
 
             $.ajax
             ("hendlers/items/item.php",
@@ -190,23 +345,32 @@ const app = Vue.createApp({
                     headers: {}
             }).done(function (data) {
                 pt.curItem = data.item;
+                pt.curItem.isBuyCraft ? pt.isbuy = 3 : pt.isbuy = 1
+
                 pt.pricez = pt.curItem.priceData.price
                 pt.error = 'ok'
 
             }).fail(function (data) {
                 pt.curItem = {}
                 pt.error = data.responseText ?? 'yy'
-                console.log(pt.error)
+
             })
 
 
+        },
+
+        reloadItem(){
+            //let tmp = this.itemId
+            //this.curItem = {}
+            this.Uamount = 1
+            this.getItem()
         },
 
         getCrafts(){
             if(!this.itemId){
                 return
             }
-            this.curItem.crafts = {}
+            //this.curItem.crafts = {}
 
             $.ajax
             ("hendlers/items/item.php",
@@ -219,19 +383,27 @@ const app = Vue.createApp({
                     cache: false,
                     headers: {}
                 }).done(function (data) {
-                pt.curItem.crafts = data.item.crafts
+                pt.curItem = data.item
+                //pt.curItem.crafts = data.item.crafts
+                //pt.curItem.bestCraft = data.item.bestCraft
+                //pt.curItem.bestCraftId = data.item.bestCraftId
+
+                $('.tooltip').remove()
                 pt.error = 'ok'
 
             }).fail(function (data) {
                 pt.curItem.crafts = {}
                 pt.error = data.responseText ?? 'yy'
-                console.log(pt.error)
+               // console.log(pt.error)
             })
         },
 
         navgatItem(event){
 
             switch (event.keyCode) {
+                case 27:
+                    this.searched = {}
+                    break
                 case 13:
                     this.itemId = this.searched[this.focusRow].item_id
                     this.searched = {}
@@ -250,6 +422,7 @@ const app = Vue.createApp({
                         this.focusRow ++;
                     }
                     break;
+
             }
 
             var cHeihgt = document.getElementById('items').clientHeight
@@ -286,7 +459,6 @@ const app = Vue.createApp({
             }).fail(function (data) {
                 pt.searched = {}
                 pt.error = data.responseText ?? 'yy'
-                console.log(pt.error)
             })
         },
 
@@ -309,7 +481,7 @@ const app = Vue.createApp({
                 pt.subCategs = response.data;
             })
             .catch(function(error) {
-                console.log(error);
+                //console.log(error);
             });
 
         },
@@ -332,10 +504,9 @@ const app = Vue.createApp({
             .then(function(response) {
 
                 pt.catList = response.data;
-                console.log(response.data)
             })
             .catch(function(error) {
-                console.log(error);
+                //console.log(error);
             });
 
         },
@@ -354,10 +525,10 @@ const app = Vue.createApp({
             .then(function(response) {
 
                 pt.items = response.data;
-                //console.log(pt.catList)
+
             })
             .catch(function(error) {
-                console.log(error);
+               // console.log(error);
             });
 
         },
@@ -375,16 +546,60 @@ const app = Vue.createApp({
 
         delMainPrice(){
             this.delPrice(this.curItem.item_id)
-            this.getPrice()
+            this.reloadItem()
+        },
+
+        setServer(){
+            $.ajax
+            ("hendlers/set_server.php",
+                {
+                    type: "POST",
+                    data: {
+                        server: this.server
+                    },
+                    dataType: "json",
+                    cache: false,
+                    headers: {
+
+                    }
+                }).done(function (data) {
+                pt.error = 'ok'
+                pt.reloadItem()
+
+            }).fail(function (data) {
+                pt.error = data.responseText ?? 'yy'
+            })
+        },
+
+        setMode(){
+            $.ajax
+            ("hendlers/items/set_mode.php",
+                {
+                    type: "POST",
+                    data: {
+                        mode: this.mode
+                    },
+                    dataType: "json",
+                    cache: false,
+                    headers: {
+
+                    }
+                }).done(function (data) {
+                pt.error = 'ok'
+                pt.reloadItem()
+
+            }).fail(function (data) {
+                pt.error = data.responseText ?? 'yy'
+            })
         },
 
         delPrice(itemId){
             $.ajax
-            ("hendlers/items/del_price.php",
+            ("hendlers/price/del_price.php",
                 {
                     type: "POST",
                     data: {
-                        itemId: itemId
+                        item_id: itemId
                     },
                     dataType: "json",
                     cache: false,
@@ -396,13 +611,18 @@ const app = Vue.createApp({
 
             }).fail(function (data) {
                 pt.error = data.responseText ?? 'yy'
-                console.log(pt.error)
+              //  console.log(pt.error)
             })
+        },
+
+        round(val)
+        {
+            return +val.toFixed(2)
         },
 
         getPrice(){
             $.ajax
-            ("hendlers/items/get_price.php",
+            ("hendlers/price/get_price.php",
                 {
                     type: "POST",
                     data: {
@@ -419,15 +639,19 @@ const app = Vue.createApp({
 
             }).fail(function (data) {
                 pt.error = data.responseText ?? 'yy'
-                console.log(pt.error)
+                //console.log(pt.error)
             })
         },
 
         valutImager(value,vid = 500){
+            let minus = ''
+            if (value < 0) {
+                minus = '-'
+            }
             value = '' + value;
-            value = value.replace(/[^\d]/g,'')
-            if(vid !== 500){
-                return value + '<img src="../img/icons/50/'+vid+'.png" '+'style="width: 0.9em; height: 0.9em"  alt="v"/>';
+            value = value.replace(/[^\d]/g, '')
+            if (vid !== 500) {
+                return value + '<img src="../img/icons/50/' + vid + '.png" ' + 'style="width: 0.9em; height: 0.9em"  alt="v"/>';
             }
             var str = '' + value;
 
@@ -435,19 +659,45 @@ const app = Vue.createApp({
             let len = str.length;
             for (var i = 0; i < len; ++i) {
 
-                if(len - i === 2 && len>2){
-                    row+='<img src="img/silver.png" style="width: 0.9em; height: 0.9em" alt="s"/>';
+                if (len - i === 2 && len > 2) {
+                    row += '<img src="img/silver.png" style="width: 0.9em; height: 0.9em" alt="s"/>';
                 }
-                if(len - i === 4 && len>4){
-                    row+='<img src="img/gold.png" style="width: 0.9em; height: 0.9em" alt="g"/>';
+                if (len - i === 4 && len > 4) {
+                    row += '<img src="img/gold.png" style="width: 0.9em; height: 0.9em" alt="g"/>';
                 }
                 row += str.charAt(i);
 
-                //console.log(row);
+
             }
-            row+='<img src="img/bronze.png" style="width: 0.9em; height: 0.9em" alt="b"/>';
+            row = minus + row
+            row += '<img src="img/bronze.png" style="width: 0.9em; height: 0.9em" alt="b"/>';
             return row;
         },
+
+        cleanSearch(){
+
+            //this.searched = {}
+            //this.search = ''
+        },
+
+        priceStringer(str){
+            str = str + ''
+            str = str.replace(/[^\d]/g,'')
+            if(str == 0){
+                str = 0
+            }
+
+            let len = str.length;
+            if(len>2){
+                str = str.substring(0, len-2) + " " + str.substring(len-2);
+                len = str.length;
+            }
+            if(len>5){
+                str = str.substring(0, len-5) + " " + str.substring(len-5);
+            }
+
+            return str
+        }
 
 
     },
@@ -458,7 +708,23 @@ const app = Vue.createApp({
         if(itid){
             this.itemId = itid
         }
+        this.getTipTops()
+
+        let userver = document.getElementById("server").value;
+        if(userver){
+            this.server = userver
+        }
+
+        let umode = document.getElementById("mode").value;
+        if(umode){
+            this.mode = umode
+        }
+
         return true
+    },
+
+    Created() {
+
     },
 
     computed: {
@@ -472,7 +738,17 @@ const app = Vue.createApp({
                 case 'dbError': return 'Ошибка записи в базу данных';
                 default: return 'Ничего не понимаю';
             }
+        },
 
+
+
+        sortedCrafts() {
+            if(!this.curItem.craftable){
+                return
+            }
+            let crArr = this.curItem.crafts.other
+            return crArr.sort(sortCraftsBySPM);
+            //return  Object.fromEntries(crArr)
         },
 
         pricez: {
@@ -482,36 +758,24 @@ const app = Vue.createApp({
             },
 
             set(val) {
+
                 let str = '' + val;
+                str = str.replace(/^0+/, '');
+
+
                 this.price = str
-                str = str.replace(/[^\d]/g,'')
-                if(str == 0){
-                    str = 0
-                }
-
-                let len = str.length;
-                if(len>2){
-                    str = str.substring(0, len-2) + " " + str.substring(len-2);
-                    len = str.length;
-                }
-                if(len>5){
-                    str = str.substring(0, len-5) + " " + str.substring(len-5);
-                }
-
+                str = this.priceStringer(str)
 
                 this.price = str
             }
 
         }
 
-
-
-
     },
 
 })
 app.component('craft-info',{
-    props: ['arr-props','uamount','icon','grade'],
+    props: ['arr-props','uamount','icon','grade','pref-text'],
     data () {
         return {
             itemId: 0,
@@ -520,11 +784,18 @@ app.component('craft-info',{
                 1: '',
                 2: 'Сбросить выбор',
                 3: 'Сбросить выбор'
-            }
+            },
+
+            show: true,
+
         }
     },
     methods: {
         valutImager(value,vid = 500){
+            let minus = ''
+            if (value < 0) {
+                minus = '-'
+            }
             value = '' + value;
             value = value.replace(/[^\d]/g,'')
             if(vid !== 500){
@@ -544,14 +815,23 @@ app.component('craft-info',{
                 }
                 row += str.charAt(i);
 
-                //console.log(row);
             }
+            row = minus + row
             row+='<img src="img/bronze.png" style="width: 0.9em; height: 0.9em" alt="b"/>';
             return row;
         },
 
         chId(id){
             this.$emit('chid',id)
+        },
+
+        setBest(id){
+            if(!this.arrProps.prefType){
+                this.show = !this.show
+                this.$emit('setbest',id)
+            }else {
+                this.$emit('reset',id)
+            }
         },
 
         spaceReplace(str){
@@ -579,8 +859,8 @@ app.component('craft-info',{
             return this.arrProps.craft_price
         }
     },
-    template: `
-<div class="craftCard">
+    template: `<transition name="bounce">
+<div class="craftCard" v-if="show" :id="'craft_' + arrProps.craft_id">
 <div class="craftinfo">
     <div>
         <div class="crresults"><div></div></div>
@@ -620,7 +900,7 @@ app.component('craft-info',{
         <div v-if="arrProps.isGoldable">
             <div class="crresults">
                 <div>Прибыль:</div>
-                <div><div class="esyprice" v-html="valutImager(arrProps.profitor,500)"></div></div>
+                <div><div class="esyprice" v-html="valutImager(arrProps.profit,500)"></div></div>
             </div>
             
             <div class="crresults">
@@ -653,70 +933,32 @@ app.component('craft-info',{
     <div class="matarea">
         <div class="matrow">
             <div class="main_itim"
-                    :data-tooltip="pref[arrProps.prefType]"
-                     :style="{ backgroundImage: 'url(img/icons/50/'+icon+'.png)'}">
+                    :data-tooltip="prefText"
+                     :style="{ backgroundImage: 'url(img/icons/50/'+icon+'.png)'}"
+                     @click="setBest(arrProps.craft_id)"
+                     >
                 <div class="grade"
-                     data-tooltip=""
                      :style="{ backgroundImage: 'url(img/grade/icon_grade'+grade+'.png)'}">
                     <div class="matneed">{{ arrProps.result_amount  * uamount }}</div>
                 </div>
             </div>
             <template v-for="mat in arrProps.mats">
-            <label class="cubik">
-                <div class="itim" id="itim_8318" :style="{ backgroundImage: 'url(img/icons/50/'+mat.icon+'.png)'}">
-                    <div class="grade" :data-tooltip="mat.tooltip" 
-                        :style="{ backgroundImage: 'url(img/grade/icon_grade'+mat.need_grade+'.png)'}">
-                        <div class="matneed">{{ mat.mater_need  * uamount }}</div>            
-                    </div>
-                </div>
-                <input class="hide" type="radio" @change="chId(mat.item_id)" name="item" :value="mat.item_id">
+                <label class="cubik" @click="chId(mat.item_id)">
+                    <div class="itim" id="itim_8318" :style="{ backgroundImage: 'url(img/icons/50/'+mat.icon+'.png)'}">
+                        <div class="grade" 
+                            :data-tooltip="mat.tooltip" 
+                            :style="{ backgroundImage: 'url(img/grade/icon_grade'+mat.need_grade+'.png)'}">
+                            <div class="matneed">{{ mat.mater_need  * uamount }}</div>            
+                        </div>
+                    </div>       
                 </label>
             </template>
         </div>
     </div>
 </div>
-</div>
+</div></transition>
 `
 })
-app.component('price-input', {
-    props: ['price'],
-    data() {
-        return {
-            /*price: 123*/
-        }
-    },
-    emits: ['update:pricez'],
-    computed: {
-        pricez: {
-
-            get() {
-                console.log(this.price)
-                return this.price;
-
-            },
-
-            set(val) {
-                let str = '' + val;
-                str = str.replaceAll(' ','')
-                console.log(str)
-                let len = str.length;
-                if(len>2){
-                    str = str.substring(0, len-2) + " " + str.substring(len-2);
-                    len = str.length;
-                }
-                if(len>5){
-                    str = str.substring(0, len-5) + " " + str.substring(len-5);
-                }
-
-                this.$emit('pricez', str);
-                this.price = str
-            }
-
-        },
-    },
-    template: `<input :value="pricez" @input="$emit('update:pricez', $event.target.value)">`
-})
-
 
 const pt = app.mount('#rent')
 

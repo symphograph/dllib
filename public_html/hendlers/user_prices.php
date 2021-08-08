@@ -39,7 +39,7 @@ $User->check();
                         `items`.`basic_grade`,
                         `items`.`item_id` IN ( $based_prices ) as `isbased`,
                         user_crafts.isbest,
-                        user_crafts.isbest = 3 as ismybuy,
+                        user_buys.item_id > 0 as ismybuy,
                         items.craftable
                         FROM `prices`
                         INNER JOIN `items` ON `items`.`item_id` = `prices`.`item_id`
@@ -48,6 +48,7 @@ $User->check();
                         " . $valutignor . "
                         LEFT JOIN user_crafts ON user_crafts.user_id = '$User->id' AND user_crafts.item_id = `prices`.`item_id`
                         AND user_crafts.isbest > 0
+                        LEFT JOIN user_buys ON user_buys.user_id = '$User->id' AND user_buys.item_id = prices.item_id
                         ".$sorts[$sort]);
 
         UserPriceList2($qwe);

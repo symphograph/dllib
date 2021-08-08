@@ -8,19 +8,40 @@
 	padding-bottom: 100px;
 }
 
+#medianList {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#medianList .price_pharams{
+	width: max-content;
+}
+#medianList .price_cell{
+	width: 15em;
+	min-width: 10em;
+	padding: 1em;
+}
+
 
 @media screen and (min-width:600px){
 
-	.up_craft_area {
+	.up_craft_area, .cyItems {
 		max-width: 720px;
-		height: 216px;
 		overflow-y: scroll;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: flex-start;
 		align-content: flex-start;
 		padding-bottom: 20px;
-	}	
+	}
+
+	.cyItems {
+		max-height: 216px;
+	}
+
+	.up_craft_area{
+		max-height: 216px;
+	}
 	.all_res_area {
 		max-width: 720px;
 		max-height: 180px;
@@ -44,7 +65,7 @@
 }
 @media screen and (max-width:600px){
 	
-		.up_craft_area {
+		.up_craft_area, .cyItems {
 		max-width: 720px;
 		max-height: 225px;
 		overflow-x: auto;
@@ -57,6 +78,11 @@
 		padding-bottom: 20px;
 		
 	}
+
+	.up_craft_area{
+
+	}
+
 	.all_res_area {
 		/*max-width: 720px;*/
 		max-height: 180px;
@@ -169,8 +195,36 @@
 
 .craftCard {
 	background-color: rgba(211, 238, 144, 0.06);
-	padding: 2em;
+	padding: 1em 2em;
 	border-radius: 1em;
 	box-shadow:  0 0 1em 0 rgba(0, 0, 0, 0.09);
+	margin: 1em 0;
 }
 
+.prefType{
+	height: 2em;
+	text-align: center;
+	vertical-align: center;
+}
+
+.flip-list-move {
+	transition: transform 0.3s ease;
+}
+
+.bounce-enter-active {
+	animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+	animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+	0% {
+		transform: scale(0);
+	}
+	50% {
+		transform: scale(1.25);
+	}
+	100% {
+		transform: scale(1);
+	}
+}

@@ -84,19 +84,10 @@ if($packs_q and $packs_q->rowCount())
 
 
 
-if(isset($lost) and count($lost)>0)
+if(isset($lost) and count($lost))
 {
-    ob_start();
-    $lost = MissedList($lost);
-    ob_clean();
-	qwe("delete FROM user_crafts where user_id = '$User->id' AND isbest < 2");
-	$ll = [];
-	$lost = array_unique($lost);
-	foreach ($lost as $l){
-	    $Litem = new Item();
-	    $Litem->byId($l);
-	    $ll[] = $Litem;
-    }
+	$ll = Item::initLost($lost);
+	$User->clearUCraftCache();
 	echo json_encode(['lost'=>$ll]);
 	exit();
 }
@@ -139,7 +130,7 @@ foreach($qwe as $v)
     $v = (object) $v;
     $Pack = new Pack();
     $Pack->byQ($v);
-    $Pack->initPrice(
+    $Pack->initPackPrice(
         per: $per ?? 130,
         siol:$siol ?? 0,
         quality: $condition
