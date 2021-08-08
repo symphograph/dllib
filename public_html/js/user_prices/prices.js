@@ -251,7 +251,7 @@ const app = Vue.createApp({
         },
 
         sortByName(d1, d2){
-            return (d1.item_name.toLowerCase() < d2.item_name.toLowerCase()) ? 1 : -1;
+            return (d1.item_name.toLowerCase() > d2.item_name.toLowerCase()) ? 1 : -1;
         },
 
         valutImager(value,vid = 500){
