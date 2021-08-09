@@ -432,7 +432,7 @@ class User
                 {
                     ?>
                     <label for="folw_<?php echo $this->id?>">Доверять ценам
-                        <input type="checkbox" <?php echo $chk?> name="folow[<?php echo $this->id?>]" id="folw_<?php echo $this->id?>" value="1">
+                        <input type="checkbox" <?php echo $chk?> name="folow[<?php echo $this->id?>]" id="folw_<?php echo $this->id?>" value="<?php echo $this->id?>">
                     </label>
                     <?php
                 }
@@ -480,9 +480,9 @@ class User
             return $this->folows;
 
         $qwe = qwe("
-            SELECT `folow_id` FROM `folows`
-            WHERE `user_id` = '$this->id'
-            ");
+            SELECT folow_id FROM folows
+            WHERE user_id = :user_id
+            ", ['user_id' => $this->id]);
         if(!$qwe or !$qwe->rowCount())
             return [];
 
@@ -495,6 +495,27 @@ class User
             return $this->folows;
         }
         return [];
+    }
+
+    public function addFolow(int $folow_id) : void
+    {
+        qwe("REPLACE INTO `folows` 
+		(user_id, folow_id)
+		VALUES
+		(:user_id, :folow_id)
+		",['user_id' => $this->id , 'folow_id' => $folow_id]);
+
+        self::clearUCraftCache();
+    }
+
+    public function delFolow(int $folow_id) : void
+    {
+        qwe("DELETE FROM `folows`
+        WHERE user_id = :user_id
+		AND folow_id = :folow_id
+		",['user_id' => $this->id , 'folow_id' => $folow_id]);
+
+        self::clearUCraftCache();
     }
 
     public function orCost() : int

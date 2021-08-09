@@ -95,3 +95,20 @@ function newTiptop(tiptops){
 
     return ''
 }
+
+function chFolow(fuser,cond){
+    return $.ajax
+    ("hendlers/user/folows.php",
+        {
+            type: "POST",
+            data: {
+                puser: fuser,
+                cond: cond
+            },
+            dataType: "json",
+            cache: false,
+            headers: {}
+        })
+}
+
+

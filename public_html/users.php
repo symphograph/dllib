@@ -94,7 +94,7 @@ $ver = random_str(8);
                         WHERE `server_group` = '$User->server_group'
                         AND `item_id` NOT in ( $IntimString )
                         GROUP BY `user_id`
-                        ORDER BY `time` DESC
+                        ORDER BY `mtime` DESC
                         ) as `tmp`
                         INNER JOIN `mailusers` ON `mailusers`.`mail_id` = `tmp`.`user_id`
                         AND `mailusers`.`email` LIKE '%@%'
@@ -123,6 +123,7 @@ $ver = random_str(8);
 </main>
 <?php 
 include_once 'pageb/footer.php';
+jsFile('mixins/functs.js');
 addScript('js/users.js');
 if(!$User->ismobiledevice)
     addScript('js/tooltips.js');

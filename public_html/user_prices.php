@@ -61,7 +61,7 @@ $based_prices = '32103,32106,2,3,4,23633,32038,8007,32039,3712,27545,41488';
                     ?>
                     <label for="folw" data-tooltip="Если цена этого пользователя новее Вашей, она будет использована в расчетах.">
                     Доверять этим ценам
-                        <input type="checkbox" v-model="isFolow" name="sfolow" id="folw" :value="pUserId">
+                        <input type="checkbox" @change="chFoloww(pUserId,$event.target.checked)" v-model="isFolow" name="sfolow" id="folw" :value="pUserId">
                     </label>
 
                     <?php

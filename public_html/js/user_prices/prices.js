@@ -57,6 +57,16 @@ const app = Vue.createApp({
 
     methods: {
 
+        chFoloww(fuser,cond){
+
+            chFolow(fuser,cond)
+                .done(function (data) {
+                    pt.error = 'ok'
+                }).fail(function (data) {
+                    pt.error = data.responseText ?? 'yy'
+                })
+        },
+
         setServer() {
             $.ajax
             ("hendlers/set_server.php",
