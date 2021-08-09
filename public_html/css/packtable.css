@@ -396,6 +396,7 @@ background-color: rgb(232 194 68);
 .pkmats_area {
 	display: flex;
 	align-content: flex-end;
+	cursor: pointer;
 	
 	overflow: hidden;
 	width: 50px;

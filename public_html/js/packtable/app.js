@@ -44,6 +44,7 @@ const pt = Vue.createApp( {
         }
     },
     methods: {
+
         sendPrices() {
 
             $.ajax
@@ -64,6 +65,7 @@ const pt = Vue.createApp( {
                 $('#tiptop').html(pt.errorMsg)
             })
         },
+
         uPriceValidator(i,gol,sil,bro){
             if(gol < 0){ gol = 0; pt.uPrices[i].gold = 0}
             if(sil < 0){ sil = 0; pt.uPrices[i].silver = 0 }
@@ -79,6 +81,7 @@ const pt = Vue.createApp( {
             }
             pt.uPrices[i].sum = sum;
         },
+
         cleanUPrice(idx) {
             pt.uPrices[idx].sum = 0;
             pt.uPrices[idx].gold = null
@@ -182,29 +185,48 @@ const pt = Vue.createApp( {
             jdun.removeClass("loading"); jdun.addClass("jdun");
         },
 
-        getParams(){
+        getParams() {
             var ls = localStorage.getItem('packTypes');
-            if(ls === null){
+            if (ls === null) {
                 return false;
             }
-            if (JSON.parse(ls).length){
+            if (JSON.parse(ls).length) {
                 this.packForm.type = JSON.parse(ls)
                 return true
-            }else {
-                localStorage.setItem ("packTypes",JSON.stringify([]));
+            } else {
+                localStorage.setItem("packTypes", JSON.stringify([]));
             }
         },
+
         setParams(){
 
+        },
+
+        goToItem(item){
+
+            item = this.toNums(item)
+            if(item){
+                localStorage.setItem ('item',item);
+                document.location.href = "catalog.php";
+            }
+
+        },
+
+        toNums(val){
+            val += ''
+            val = +val.replace(/[^\d]/g,'')
+            return val
         }
 
     },
+
     mounted(){
 
         this.getParams()
        // console.log(this.$route.query)
         return true
     },
+
     computed: {
         sortedList() {
             switch (this.sortParam) {

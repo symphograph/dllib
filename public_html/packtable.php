@@ -367,15 +367,16 @@ function packList()
                     <div class="itdigp">{{row.Pack.Fresh.fresh_per}}%</div>
                 </div>
 
-                <div :id="row.Pack.item_id" class="pkmats_area">
+                <div :id="row.Pack.item_id"
+                     @click="goToItem(row.Pack.item_id)"
+                     class="pkmats_area">
                     <div class="pack_mats">
-
-                        <div v-for="mat in row.Pack.bestCraft.mats" class="maticon" :style="{backgroundImage: 'url(img/icons/50/'+mat.icon+'.png)'}">
+                        <div v-for="mat in row.Pack.bestCraft.mats"
+                             @click="goToItem(mat.item_id)"
+                             class="maticon"
+                             :style="{backgroundImage: 'url(img/icons/50/'+mat.icon+'.png)'}">
                             <div class="itdigit">{{ mat.mater_need }}</div>
                         </div>
-                        <a :href="'catalog.php?item_id='+row.Pack.item_id">
-                            <div class="maticon" style="background-image: url(img/icons/50/icon_item_4069.png)"></div>
-                        </a>
                     </div>
                 </div>
 

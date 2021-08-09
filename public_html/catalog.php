@@ -36,7 +36,7 @@ if(!empty($_COOKIE['item_id']))
 
 $modeTooltips =
     [
-        '<b>C Миру по нитке:</b><br>Режим для новичка.<br>Предпочитает Ваши цены или более новые из доверенных.<br>Если их нет, ищет у других.<br>Спрашивает только, если никто и никогда не указывал цену.',
+        '<b>C Миру по нитке:</b><br>Предпочитает Ваши цены или более новые из доверенных.<br>Если их нет, ищет у других.<br>Спрашивает только, если никто и никогда не указывал цену.',
         '<b>Доверие:</b><br> Не видит ничьих цен, кроме Ваших и тех, кому Вы доверяете.<br>Предпочитает более новые.<br>ОР, РР, Честь и прочие субъективные предпочитает Ваши независимо от их новизны.',
         '<b>Хардкор:</b><br>Видит только Ваши цены.<br>В любой непонятной ситуации будет спрашивать.'
     ];
@@ -48,7 +48,7 @@ $modeTooltips = implode('<br><br><br>',$modeTooltips);
     <meta charset="utf-8">
     <meta name = "description" content = "Калькулятор себестоимости ресурсов Archeage." />
       <meta name = "keywords" content = "Умный калькулятор, крафкулятор, archeage, архейдж, крафт" />
-      <meta name=“robots” content=“index, nofollow”>
+      <meta name=“robots” content=“index”>
     <title>Предметы</title>
         <?php CssMeta(['default.css','items.css','right_nav.css','catalog_area.css']);?>
     <meta name="viewport" content="width=device-width, initial-scale=0.7">
