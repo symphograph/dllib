@@ -111,6 +111,7 @@ $based_prices = '32103,32106,2,3,4,23633,32038,8007,32039,3712,27545,41488';
                                         </div>
                                         <div class="price_row">
                                             <div class="itim"
+                                                 @click="goToItem(price.item_id)"
                                                  :style="{ backgroundImage: 'url(/img/icons/50/'+ price.icon + '.png)' }">
                                                 <div class="grade"
                                                      :style="{ backgroundImage: 'url(/img/grade/icon_grade'+ price.grade + '.png)' }">

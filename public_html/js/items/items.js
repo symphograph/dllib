@@ -54,11 +54,6 @@ const app = Vue.createApp({
         }
     },
 
-    components: {
-        'price-form2':
-            window.httpVueLoader('js/items/components/price-form2.vue')
-    },
-
     watch: {
 
         server: {
@@ -92,10 +87,14 @@ const app = Vue.createApp({
         itemId: {
 
             handler(val){
+                if (this.itemId){
+                    localStorage.setItem ('item',this.itemId);
+                }
+
                 this.getItem()
                 this.tiptopp()
             },
-            deep: true
+
         },
 
         search: {
@@ -697,17 +696,24 @@ const app = Vue.createApp({
             }
 
             return str
+        },
+
+        toNums(val){
+            val += ''
+            val = +val.replace(/[^\d]/g,'')
+            return val
         }
-
-
     },
 
     mounted() {
-        this.getSubGroups()
-        var itid = document.getElementById("current").value;
-        if(itid){
-            this.itemId = itid
+
+        let item = localStorage.getItem('item') ?? 0;
+        item = this.toNums(item)
+        if(item){
+            this.itemId = item
         }
+
+        this.getSubGroups()
         this.getTipTops()
 
         let userver = document.getElementById("server").value;

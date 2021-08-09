@@ -293,6 +293,21 @@ const app = Vue.createApp({
             }
         },
 
+        goToItem(item){
+
+            item = this.toNums(item)
+            if(item){
+                localStorage.setItem ('item',item);
+                document.location.href = "catalog.php";
+            }
+
+        },
+        toNums(val){
+            val += ''
+            val = +val.replace(/[^\d]/g,'')
+            return val
+        }
+
     },
 
     computed: {

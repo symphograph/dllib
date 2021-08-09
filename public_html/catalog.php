@@ -55,7 +55,7 @@ $modeTooltips = implode('<br><br><br>',$modeTooltips);
     <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/vue@next/dist/vue.global<?php echo $cfg->vueprod?>.js"></script>
-    <script src="https://unpkg.com/http-vue-loader"></script>
+
 </head>
 
 <body>
