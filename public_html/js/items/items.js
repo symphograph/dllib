@@ -92,7 +92,7 @@ const app = Vue.createApp({
                 }
 
                 this.getItem()
-                this.tiptopp()
+                this.newTiptop()
             },
 
         },
@@ -145,30 +145,18 @@ const app = Vue.createApp({
             }
         },
 
-        tiptopp() {
-            this.tiptop = this.tiptops[Math.floor(Math.random()*this.tiptops.length)].tip_text;
+        newTiptop() {
+                this.tiptop = newTiptop(this.tiptops)
         },
 
         getTipTops(){
-            $.ajax
-            ("hendlers/tiptops.php",
-                {
-                    type: "POST",
-                    data: {
-                        tiptop: 1
-                    },
-                    dataType: "json",
-                    cache: false,
-                    headers: {}
-                }).done(function (data) {
+            getTipTops().done(function (data) {
                 pt.error = 'ok'
                 pt.tiptops = data
-                pt.tiptopp()
-
+                pt.newTiptop()
             }).fail(function (data) {
                 pt.error = data.responseText ?? 'yy'
             })
-
         },
 
         pchId(val){
@@ -681,26 +669,21 @@ const app = Vue.createApp({
         priceStringer(str){
             return priceStringer(str)
         },
-
-        toNums(val){
-            val += ''
-            val = +val.replace(/[^\d]/g,'')
-            return val
-        }
     },
 
     mounted() {
 
-
-
         let item = localStorage.getItem('item') ?? 0;
-        item = this.toNums(item)
+        item = toNums(item)
         if(item){
             this.itemId = item
         }
 
         this.getSubGroups()
         this.getTipTops()
+
+        //let gtp = getTipTops();
+        //console.log(gtp)
 
         let userver = document.getElementById("server").value;
         if(userver){
@@ -711,6 +694,8 @@ const app = Vue.createApp({
         if(umode){
             this.mode = umode
         }
+
+
 
         return true
     },

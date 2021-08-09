@@ -21,7 +21,9 @@ const pt = Vue.createApp( {
             uPrices: {},
             error: 'ok',
             color: 'gray',
-            min: 0
+            min: 0,
+            tiptops: [{tip_text:''}],
+            tiptop: '',
 
         }
     },
@@ -29,6 +31,8 @@ const pt = Vue.createApp( {
         packForm:{
             handler(val){
                 this.getPacks()
+
+                this.newTiptop()
             },
             deep: true
 
@@ -44,6 +48,21 @@ const pt = Vue.createApp( {
         }
     },
     methods: {
+
+        newTiptop() {
+            if(this.error === 'ok')
+                this.tiptop = newTiptop(this.tiptops)
+        },
+
+        getTipTops(){
+            getTipTops().done(function (data) {
+                pt.error = 'ok'
+                pt.tiptops = data
+                pt.newTiptop()
+            }).fail(function (data) {
+                pt.error = data.responseText ?? 'yy'
+            })
+        },
 
         sendPrices() {
 
@@ -95,8 +114,7 @@ const pt = Vue.createApp( {
             localStorage.setItem ("packTypes", JSON.stringify(pt.packForm.type));
             if(!this.packForm.side){
                 this.error = 'side'
-                $('#tiptop').html(this.errorMsg)
-                console.log(this.errorMsg)
+                this.tiptop = this.errorMsg
                 return false
             }
 
@@ -138,7 +156,7 @@ const pt = Vue.createApp( {
                     pt.lost = []
                 }
 
-                TipTop();
+
 
             }).fail(function(data) {
                 pt.jdunOff()
@@ -146,7 +164,7 @@ const pt = Vue.createApp( {
                 pt.packData = []
                 pt.lost = []
                 pt.error = data.responseText ?? 'yy'
-                $('#tiptop').html(pt.errorMsg)
+                pt.tiptop = pt.errorMsg
             })
 
         },
@@ -163,6 +181,7 @@ const pt = Vue.createApp( {
         jdunOff() {
             let jdun = $("#jdun");
             jdun.removeClass("loading"); jdun.addClass("jdun");
+            this.newTiptop()
         },
 
         getParams() {
@@ -197,12 +216,15 @@ const pt = Vue.createApp( {
     mounted(){
 
         this.getParams()
-       // console.log(this.$route.query)
+        this.getTipTops()
         return true
     },
 
     computed: {
         sortedList() {
+            if(!this.packData.length)
+                return []
+            this.newTiptop()
             switch (this.sortParam) {
                 case 'profit':
                     return this.packData.sort(sortByProfit);
@@ -220,6 +242,7 @@ const pt = Vue.createApp( {
         },
         errorMsg() {
             switch (this.error){
+                case 'ok' : return 'ok'
                 case 'side': return '??Восток, Север, Запад??';
                 case 'notypes': return 'Не вижу тип пака';
                 case 'no data': return 'Ничего не вижу';

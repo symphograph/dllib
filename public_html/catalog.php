@@ -530,19 +530,14 @@ $modeTooltips = implode('<br><br><br>',$modeTooltips);
 </main>
 
 <?php
-    include_once 'pageb/footer.php';
-    //jsFile('Catalog.js');
-    //jsFile('search.js');
+
+include_once 'pageb/footer.php';
+
 jsFile('mixins/functs.js');
 jsFile('items/items.js');
-//jsFile('items/components/price-form2.vue');
-?>
 
-
-
-<?php
-    if(!$User->ismobiledevice)
-        jsFile('tooltips.js');
+if(!$User->ismobiledevice)
+    jsFile('tooltips.js');
 ?>
 
 </body>

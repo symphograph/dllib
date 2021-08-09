@@ -113,7 +113,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';
             </form>
             <div class="clear"></div>
             <hr>
-            <div id="tiptop" :style="{color: isred}"></div>
+            <div id="tiptop" :style="{color: isred}"><span>{{ tiptop }}</span></div>
         </div>
 
 

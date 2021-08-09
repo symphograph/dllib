@@ -61,3 +61,37 @@ function goToItem(item) {
         document.location.href = "catalog.php";
     }
 }
+
+const myAjax = (url, data, method = 'post', headers = {}) => {
+    return new Promise(resolve => {
+        $.ajax({
+            method: method,
+            url: url,
+            data: data,
+            headers: headers,
+            dataType: 'json',
+            success: resolve,
+        });
+    })
+}
+
+function getTipTops() {
+    return $.ajax
+    ("hendlers/tiptops.php",
+        {
+            type: "POST",
+            data: {
+                tiptop: 1
+            },
+            dataType: "json",
+            cache: false,
+            headers: {}
+        })
+}
+
+function newTiptop(tiptops){
+    if(tiptops.length)
+        return tiptops[Math.floor(Math.random()*tiptops.length)].tip_text
+
+    return ''
+}
