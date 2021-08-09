@@ -114,7 +114,6 @@ include $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';
             <div class="clear"></div>
             <hr>
             <div id="tiptop" :style="{color: isred}"></div>
-
         </div>
 
 
@@ -140,7 +139,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';
 <?php
 include_once 'pageb/footer.php';
 
-//addScript('js/packtable.js');
+jsFile('mixins/functs.js');
 addScript('js/packtable/app.js');
 ?>
 

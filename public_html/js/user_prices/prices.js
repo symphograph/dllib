@@ -57,7 +57,7 @@ const app = Vue.createApp({
 
     methods: {
 
-        setServer(){
+        setServer() {
             $.ajax
             ("hendlers/set_server.php",
                 {
@@ -67,9 +67,7 @@ const app = Vue.createApp({
                     },
                     dataType: "json",
                     cache: false,
-                    headers: {
-
-                    }
+                    headers: {}
                 }).done(function (data) {
                 pt.error = 'ok'
                 //pt.reloadPrices()
@@ -79,7 +77,7 @@ const app = Vue.createApp({
             })
         },
 
-        getPuser(){
+        getPuser() {
             $.ajax
             ("hendlers/user/get.php",
                 {
@@ -89,9 +87,7 @@ const app = Vue.createApp({
                     },
                     dataType: "json",
                     cache: false,
-                    headers: {
-
-                    }
+                    headers: {}
                 }).done(function (data) {
                 pt.error = 'ok'
                 pt.puserData = data
@@ -102,7 +98,7 @@ const app = Vue.createApp({
             })
         },
 
-        getPrices(){
+        getPrices() {
             $.ajax
             ("hendlers/user/get_prices.php",
                 {
@@ -112,9 +108,7 @@ const app = Vue.createApp({
                     },
                     dataType: "json",
                     cache: false,
-                    headers: {
-
-                    }
+                    headers: {}
                 }).done(function (data) {
                 pt.error = 'ok'
                 pt.prices = data.prices
@@ -125,8 +119,8 @@ const app = Vue.createApp({
             })
         },
 
-        saveChecks(){
-            if(!this.uself){
+        saveChecks() {
+            if (!this.uself) {
                 return
             }
 
@@ -139,9 +133,7 @@ const app = Vue.createApp({
                     },
                     dataType: "json",
                     cache: false,
-                    headers: {
-
-                    }
+                    headers: {}
                 }).done(function (data) {
                 pt.error = 'ok'
 
@@ -152,13 +144,13 @@ const app = Vue.createApp({
 
         },
 
-        savePrice(id,price){
-            if(!this.uself){
+        savePrice(id, price) {
+            if (!this.uself) {
                 return
             }
 
             price = '' + price
-            price = price.replace(/[^\d]/g,'')
+            price = price.replace(/[^\d]/g, '')
 
             $.ajax
             ("hendlers/price/set_price.php",
@@ -170,9 +162,7 @@ const app = Vue.createApp({
                     },
                     dataType: "json",
                     cache: false,
-                    headers: {
-
-                    }
+                    headers: {}
                 }).done(function (data) {
                 pt.error = 'ok'
 
@@ -183,46 +173,46 @@ const app = Vue.createApp({
 
         },
 
-        setPrice(idx,price){
+        setPrice(idx, price) {
 
-            if(!this.uself){
+            if (!this.uself) {
                 return
             }
 
             price = '' + price
             price = price.replace(/^0+/, '');
-            price = price.replace(/[^\d]/g,'')
+            price = price.replace(/[^\d]/g, '')
 
-            price = price*1
+            price = price * 1
             this.prices[idx].price = price
 
-            this.savePrice(this.prices[idx].item_id,price)
+            this.savePrice(this.prices[idx].item_id, price)
 
             price = this.priceStringer(price)
 
             return price
         },
 
-        priceStringer(str){
+        priceStringer(str) {
             str = str + ''
-            str = str.replace(/[^\d]/g,'')
-            if(str == 0){
+            str = str.replace(/[^\d]/g, '')
+            if (str == 0) {
                 str = 0
             }
 
             let len = str.length;
-            if(len>2){
-                str = str.substring(0, len-2) + " " + str.substring(len-2);
+            if (len > 2) {
+                str = str.substring(0, len - 2) + " " + str.substring(len - 2);
                 len = str.length;
             }
-            if(len>5){
-                str = str.substring(0, len-5) + " " + str.substring(len-5);
+            if (len > 5) {
+                str = str.substring(0, len - 5) + " " + str.substring(len - 5);
             }
 
             return str
         },
 
-        delPrice(itemId){
+        delPrice(itemId) {
             $.ajax
             ("hendlers/price/del_price.php",
                 {
@@ -232,9 +222,7 @@ const app = Vue.createApp({
                     },
                     dataType: "json",
                     cache: false,
-                    headers: {
-
-                    }
+                    headers: {}
                 }).done(function (data) {
                 pt.error = 'ok'
                 pt.getPrices()
@@ -245,74 +233,33 @@ const app = Vue.createApp({
             })
         },
 
-        sortByDate(d1, d2){
+        sortByDate(d1, d2) {
             return (d1.timestamp < d2.timestamp) ? 1 : -1;
 
         },
 
-        sortByName(d1, d2){
+        sortByName(d1, d2) {
             return (d1.item_name.toLowerCase() > d2.item_name.toLowerCase()) ? 1 : -1;
         },
 
-        valutImager(value,vid = 500){
-            let minus = ''
-            if (value < 0) {
-                minus = '-'
-            }
-            value = '' + value;
-            value = value.replace(/[^\d]/g, '')
-            if (vid !== 500) {
-                return value + '<img src="../img/icons/50/' + vid + '.png" ' + 'style="width: 0.9em; height: 0.9em"  alt="v"/>';
-            }
-            var str = '' + value;
-
-            let row = '';
-            let len = str.length;
-            for (var i = 0; i < len; ++i) {
-
-                if (len - i === 2 && len > 2) {
-                    row += '<img src="img/silver.png" style="width: 0.9em; height: 0.9em" alt="s"/>';
-                }
-                if (len - i === 4 && len > 4) {
-                    row += '<img src="img/gold.png" style="width: 0.9em; height: 0.9em" alt="g"/>';
-                }
-                row += str.charAt(i);
-
-
-            }
-            row = minus + row
-            row += '<img src="img/bronze.png" style="width: 0.9em; height: 0.9em" alt="b"/>';
-            return row;
+        valutImager(value, vid = 500) {
+            return valutImager(value, vid)
         },
 
-        copy(val){
-            try{
+        copy(val) {
+            try {
                 navigator.clipboard.writeText(val)
             } catch (e) {
                 throw e
             }
         },
 
-        goToItem(item){
-
-            item = this.toNums(item)
-            if(item){
-                localStorage.setItem ('item',item);
-                document.location.href = "catalog.php";
-            }
-
+        goToItem(item) {
+            goToItem(item)
         },
-        toNums(val){
-            val += ''
-            val = +val.replace(/[^\d]/g,'')
-            return val
-        }
-
     },
 
     computed: {
-
-
 
         errorMsg() {
             switch (this.error) {
@@ -340,7 +287,6 @@ const app = Vue.createApp({
                     return this.prices;
             }
         },
-
 
     },
 

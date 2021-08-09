@@ -152,27 +152,7 @@ const pt = Vue.createApp( {
         },
 
         valutImager(value,vid = 500){
-            if(vid !== 500){
-                return value + '<img src="../img/'+vid+'.png" '+'style="width: 0.9em; height: 0.9em"  alt="coal"/>';
-            }
-            var str = '' + value;
-
-            let row = '';
-            let len = str.length;
-            for (var i = 0; i < len; ++i) {
-
-                if(len - i === 2 && len>2){
-                    row+='<img src="img/silver.png" style="width: 0.9em; height: 0.9em" alt="s"/>';
-                }
-                if(len - i === 4 && len>4){
-                    row+='<img src="img/gold.png" style="width: 0.9em; height: 0.9em" alt="g"/>';
-                }
-                row += str.charAt(i);
-
-                //console.log(row);
-            }
-            row+='<img src="img/bronze.png" style="width: 0.9em; height: 0.9em" alt="b"/>';
-            return row;
+            return valutImager(value,vid);
         },
 
         jdunOn() {
@@ -204,19 +184,13 @@ const pt = Vue.createApp( {
 
         goToItem(item){
 
-            item = this.toNums(item)
+            item = toNums(item)
             if(item){
                 localStorage.setItem ('item',item);
                 document.location.href = "catalog.php";
             }
 
         },
-
-        toNums(val){
-            val += ''
-            val = +val.replace(/[^\d]/g,'')
-            return val
-        }
 
     },
 

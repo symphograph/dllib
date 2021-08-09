@@ -533,7 +533,7 @@ $modeTooltips = implode('<br><br><br>',$modeTooltips);
     include_once 'pageb/footer.php';
     //jsFile('Catalog.js');
     //jsFile('search.js');
-
+jsFile('mixins/functs.js');
 jsFile('items/items.js');
 //jsFile('items/components/price-form2.vue');
 ?>
