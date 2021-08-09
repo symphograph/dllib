@@ -6,14 +6,12 @@ if(!$serv) die;
 if(empty($_COOKIE['path'])) die;
 require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 $User = new User;
-$User->check();
-$user_id = $User->id;
+if(!$User->byIdenty()){
+    header ('Location: /packtable.php');
+    die();
+}
 
-qwe("REPLACE INTO `user_servers` (`user_id`, `server`) VALUES ('$user_id', '$serv')");
-
-$sqldel="DELETE FROM `user_crafts` WHERE `user_id` = '$user_id' and `isbest` <2";
-qwe($sqldel);
-
+$User->setServer($serv);
 
 $path_white = [
 'packtable' => '/packtable.php',
@@ -29,5 +27,5 @@ if(in_array($path,$path_white))
 	$url = $path;
 else 
 	$url = 'packtable.php';
-header ('Location: '.$url);?>
-<meta http-equiv="refresh" content="0; url=<?php echo $url?>">
+
+header ('Location: '.$url);
