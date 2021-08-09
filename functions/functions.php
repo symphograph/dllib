@@ -471,8 +471,10 @@ function dbCleaner()
         ");
     }
 
+	/*
 	qwe("DELETE FROM user_crafts WHERE isbest != 2");
 	qwe("UPDATE user_crafts SET craft_price = null");
+	*/
 
 	qwe("
     DELETE from user_buys
