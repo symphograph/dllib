@@ -204,22 +204,7 @@ const app = Vue.createApp({
         },
 
         priceStringer(str) {
-            str = str + ''
-            str = str.replace(/[^\d]/g, '')
-            if (str == 0) {
-                str = 0
-            }
-
-            let len = str.length;
-            if (len > 2) {
-                str = str.substring(0, len - 2) + " " + str.substring(len - 2);
-                len = str.length;
-            }
-            if (len > 5) {
-                str = str.substring(0, len - 5) + " " + str.substring(len - 5);
-            }
-
-            return str
+            return priceStringer(str)
         },
 
         delPrice(itemId) {

@@ -2,9 +2,7 @@
 setcookie('path', 'items');
 require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/../functions/filefuncts.php';
-if(!$cfg->myip){
-    die();
-}
+
 $User = new User();
 if (!$User->check()) {
     header("Refresh: 0");

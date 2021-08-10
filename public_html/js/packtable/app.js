@@ -17,6 +17,11 @@ const pt = Vue.createApp( {
                 side: null,
                 siol: 0,
                 type: [],
+                filterFrom: 0
+            },
+            zones: {
+                form:[],
+                to:[]
             },
             uPrices: {},
             error: 'ok',
@@ -167,6 +172,14 @@ const pt = Vue.createApp( {
                 pt.tiptop = pt.errorMsg
             })
 
+        },
+
+        getZones(){
+            getZones().done(function (data) {
+                pt.error = 'ok'
+            }).fail(function (data) {
+                pt.error = data.responseText ?? 'yy'
+            })
         },
 
         valutImager(value,vid = 500){

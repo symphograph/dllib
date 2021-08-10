@@ -89,6 +89,20 @@ function getTipTops() {
         })
 }
 
+function getZones(side) {
+    return $.ajax
+    ("hendlers/tiptops.php",
+        {
+            type: "POST",
+            data: {
+                zones: side
+            },
+            dataType: "json",
+            cache: false,
+            headers: {}
+        })
+}
+
 function newTiptop(tiptops){
     if(tiptops.length)
         return tiptops[Math.floor(Math.random()*tiptops.length)].tip_text
