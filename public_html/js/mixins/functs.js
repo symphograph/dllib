@@ -62,19 +62,6 @@ function goToItem(item) {
     }
 }
 
-const myAjax = (url, data, method = 'post', headers = {}) => {
-    return new Promise(resolve => {
-        $.ajax({
-            method: method,
-            url: url,
-            data: data,
-            headers: headers,
-            dataType: 'json',
-            success: resolve,
-        });
-    })
-}
-
 function getTipTops() {
     return $.ajax
     ("hendlers/tiptops.php",
@@ -90,12 +77,13 @@ function getTipTops() {
 }
 
 function getZones(side) {
+
     return $.ajax
-    ("hendlers/tiptops.php",
+    ("hendlers/packpost/get_zones.php",
         {
             type: "POST",
             data: {
-                zones: side
+                side: side
             },
             dataType: "json",
             cache: false,
@@ -123,6 +111,21 @@ function chFolow(fuser,cond){
             cache: false,
             headers: {}
         })
+}
+
+function sortByProp(property) {
+    var sortOrder = 1;
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a,b) {
+        /* next line works with strings and numbers,
+         * and you may want to customize it to your needs
+         */
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
 }
 
 

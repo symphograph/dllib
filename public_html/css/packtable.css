@@ -126,7 +126,7 @@
 
 .freguency {
 	display: flex;
-	align-content: flex-end;
+	/*align-content: flex-end;*/
 }
 
 .slidecontainer {
@@ -504,7 +504,7 @@ div.rot {
 .sortmenu {
 	display: flex;
 	justify-content: space-between;
-	width: 70%;
+	width: 100%;
 }
 .profit_m {
 	width: 70px;
@@ -514,8 +514,8 @@ div.rot {
 
 .monsort {
 	display: flex;
-	justify-content: space-around;
-	width: 42%;
+	justify-content: space-between;
+	width: 50%;
 }
 #plz{
 	text-align: center;

@@ -9,28 +9,8 @@ if (!$User->check()) {
     die();
 }
 
-
-
-$item_sgroup = $_GET['item_sgroup'] ?? 1;
-$item_sgroup = intval($item_sgroup);
-$item_sgroup = $item_sgroup ?? 1;
-
-$item_id = $_GET['item_id'] ?? $_GET['query_id'] ?? 0;
-$item_id = intval($item_id);
-if($item_id  and !$User->isbot)
-{
-	$cooktime = time()+60*60*24*360;
-	setcookie("item_id",$item_id,$cooktime);
-	header("Location: catalog.php"); exit;
-}
-
 if(!empty($_GET['query']) and !$User->isbot)
 	{header("Location: catalog.php"); exit;}
-
-if(!empty($_COOKIE['item_id']))
-{
-	$item_id = intval($_COOKIE['item_id']);
-}
 
 $modeTooltips =
     [
@@ -91,8 +71,6 @@ $modeTooltips = implode('<br><br><br>',$modeTooltips);
             <div class="all_info_area" id="all_info_area">
 
                 <div class="all_info" id="all_info">
-
-                    <input type="hidden" id="current" name="current" value="<?php echo $item_id?>">
                     <input type="checkbox" id="nav-toggle" hidden="" checked>
 
                     <div v-if="Object.keys(catList).length" class="nav categories" id="categories">

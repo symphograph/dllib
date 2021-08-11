@@ -29,7 +29,7 @@ function perselect($per)
         if($f==$per) $sel_per = 'selected';
         echo '<option value="'.$f.'" '.$sel_per.'>'.$f.'</option>';
         $sel_per = '';
-    };
+    }
 
     ?></select><?php
 }
@@ -155,10 +155,6 @@ if(!$User->ismobiledevice)
 <?php
 function PackTypeButton(int $type, string $navname, string $img, array $ps)
 {
-    $chk = '';
-    if(isset($ps['type'][$type])){
-        $chk = ' checked ';
-    }
 
     ?>
     <div class="nicon_out">
@@ -177,23 +173,23 @@ function selectRow($ps)
         <div class="navcustoms">
             <div style="display: flex;
             justify-content: space-between;
-            box-shadow: #5c7b2c 0px 0px 10px 0px; padding: 0.5em 1em; border-radius: 0.5em; width: 10em"
+            box-shadow: #5c7b2c 0 0 10px 0; padding: 0.5em 1em; border-radius: 0.5em; width: 10em"
 
             >
                 <div class="nicon_out">
-                    <input v-model="packForm.side" type="radio" id="side_1" name="side" value="1" autocomplete="off">
+                    <input v-model="side" type="radio" id="side_1" name="side" value="1" autocomplete="off">
                     <label class="navicon" for="side_1" style="background-image: url(img/westhouse.png);"></label>
                     <div class="navname">Запад</div>
                 </div>
 
                 <div class="nicon_out">
-                    <input v-model="packForm.side" type="radio" id="side_3" name="side" value="3" autocomplete="off">
+                    <input v-model="side" type="radio" id="side_3" name="side" value="3" autocomplete="off">
                     <label for="side_3" class="navicon" style="background-image: url(img/icons/50/icon_item_0013.png);"></label>
                     <div class="navname">Север</div>
                 </div>
 
                 <div class="nicon_out">
-                    <input v-model="packForm.side" type="radio" id="side_2" name="side" value="2" autocomplete="off">
+                    <input v-model="side" type="radio" id="side_2" name="side" value="2" autocomplete="off">
                     <label for="side_2" class="navicon" style="background-image: url(img/icons/50/icon_house_029.png);"></label>
                     <div class="navname">Восток</div>
                 </div>
@@ -225,24 +221,43 @@ function selectRow($ps)
 function sortrow(){
     ?>
     <div class="sortrow">
+        <div style="display: flex; flex-wrap: wrap; width: 100%">
+            <div class="freguency" data-tooltip="Свежесть">
+                <select v-model="packForm.condition" class="select_input"
+                style="width: 7em">
+                    <option value="1" selected>Зрелые</option>
+                    <option value="2">Протухшие</option>
+                </select>
 
-        <div class="freguency" title="Свежесть">
-            <?php
-            /*
+            </div>
 
-            <select v-model="packForm.pack_age" name="pack_age" class="select_input" autocomplete="off" onchange="">
-                <?php FreshTimeSelect() ?>
-            </select>
-            */
-            ?>
-            <select v-model="packForm.condition" name="condition" class="select_input" autocomplete="off" onchange="">
-                <option value="1" selected>Зрелые</option>
-                <option value="2">Протухшие</option>
-            </select>
+            <div class="freguency"  style="flex-wrap: wrap">
+                <div title="Откуда">
+                    <select v-if="Object.keys(zonesFrom).length"
+                            v-model.number="zFrom"
+                            class="select_input"
+                            style="width: 14em" :disabled="!side > 0">
+                        <!--<option value="all">Весь материк</option>-->
+                        <template v-for="zone in zonesFrom[sside()]" :key="zone.zone_id">
+                            <option :value="zone.zone_id">{{ zone.zone_name }}</option>
+                        </template>
+                    </select>
+                </div>
+                <div title="Куда">
+                    <select v-if="loaded"
+                            v-model.number="zTo"
+                            class="select_input"
+                            style="width: 14em" :disabled="!side > 0">
+                        <template v-for="zone in zonesTo" :key="zone.zone_id">
+                            <option :value="zone.zone_id">{{ zone.zone_name }}</option>
+                        </template>
+                    </select>
+                </div>
 
+            </div>
         </div>
-
         <div class="sortmenu">
+            <!--
             <div class="nicon_out" @click="sortParam='ZoneFrom'">
                 <input type="radio" id="sort_1" name="sort" value="1">
                 <label class="navicon" for="sort_1" style="background-image: url(img/packmaker.png?ver=2);"></label>
@@ -253,8 +268,12 @@ function sortrow(){
                 <label class="navicon" for="sort_2" style="background-image: url(img/perdaru2.png);"></label>
                 <div class="navname">Куда</div>
             </div>
+            -->
+            <div></div>
             <div class="monsort">
-                <div class="nicon_out" @click="sortParam='salary'">
+                <div class="nicon_out"
+                     data-tooltip="Сортировка по выручке"
+                     @click="sortParam='salary'">
                     <input type="radio" id="sort_3" name="sort" value="3">
                     <label class="navicon" for="sort_3" style="background-image: url(img/icons/50/quest/icon_item_quest023.png);"></label>
                     <div class="navname">Выручка</div>

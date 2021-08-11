@@ -14,34 +14,70 @@ const pt = Vue.createApp( {
                 per: 130,
                 pack_age: 0,
                 condition: 1,
-                side: null,
                 siol: 0,
                 type: [],
                 filterFrom: 0
             },
-            zones: {
-                form:[],
-                to:[]
+            side: 0,
+            zonesFrom: {
+                0: {}
             },
+            zonesTo:{
+                0:{}
+            },
+            zFrom: 0,
+            zTo: 0,
+            zidx: 0,
             uPrices: {},
             error: 'ok',
             color: 'gray',
             min: 0,
             tiptops: [{tip_text:''}],
             tiptop: '',
+            all: false,
+            loaded: false,
+            zoneFilter: {}
 
         }
     },
     watch: {
+
+
+        zFrom: {
+            handler(val){
+                this.refreshZones()
+
+            },
+        },
+
+        zonesTo: {
+            handler(val){
+
+                if (typeof this.zonesTo[this.zTo] === "undefined") {
+                    this.zTo = 0
+                }
+            },
+            deep: true
+        },
+
         packForm:{
             handler(val){
                 this.getPacks()
-
                 this.newTiptop()
             },
             deep: true
-
         },
+
+        side: {
+            handler(val){
+                this.zTo = 0
+                this.zFrom = 0
+
+                this.getPacks()
+                this.newTiptop()
+            }
+        },
+
         uPrices:{
             handler(val){
                 var i = val.length;
@@ -53,6 +89,25 @@ const pt = Vue.createApp( {
         }
     },
     methods: {
+
+        refreshZones() {
+            let zonesFrom = this.zonesFrom[this.sside()].filter(obj => {
+                return obj.zone_id === this.zFrom
+            })
+            if (typeof zonesFrom[0] === "undefined") {
+                this.zonesTo = {}
+                return
+            }
+            this.zonesTo = zonesFrom[0].zonesTo
+            //console.log(res)
+        },
+
+        sside() {
+            if(this.side > 0)
+                return this.side
+
+            return 1
+        },
 
         newTiptop() {
             if(this.error === 'ok')
@@ -117,18 +172,21 @@ const pt = Vue.createApp( {
             pt.lost = []
             pt.uPrices = []
             localStorage.setItem ("packTypes", JSON.stringify(pt.packForm.type));
-            if(!this.packForm.side){
+            if(!this.side){
                 this.error = 'side'
                 this.tiptop = this.errorMsg
                 return false
             }
+            let data = {}
+            Object.assign(data, this.packForm)
+            data.side = this.side
 
             this.jdunOn()
             $.ajax
             ({
                 url: "hendlers/packs_list.php",
                 type: "POST",
-                data: this.packForm,
+                data: data,
                 dataType: "json",
                 cache: false
 
@@ -160,6 +218,7 @@ const pt = Vue.createApp( {
                     pt.packData = data
                     pt.lost = []
                 }
+                pt.refreshZones()
 
 
 
@@ -174,10 +233,15 @@ const pt = Vue.createApp( {
 
         },
 
-        getZones(){
-            getZones().done(function (data) {
-                pt.error = 'ok'
-            }).fail(function (data) {
+        getZones(side){
+            getZones(side).done(function (data) {
+                    pt.error = 'ok'
+                    pt.zonesFrom = data
+                    pt.zonesTo = pt.zonesFrom[pt.sside()][0].zonesTo
+                    pt.loaded = true
+                    //loaded.sortZones()
+                }
+            ).fail(function (data) {
                 pt.error = data.responseText ?? 'yy'
             })
         },
@@ -224,10 +288,32 @@ const pt = Vue.createApp( {
 
         },
 
+        sortZones(){
+            if(!Object.keys(this.zonesFrom).length)
+                return {}
+            console.log(this.zonesFrom[1])
+            console.log(Array.from(this.zonesFrom[1]))
+            this.zonesFrom[1] = Object.entries(this.zonesFrom[1])/*.sort(sortByProp('zone_name'));*/
+            this.zonesFrom[2] = [].slice.call(this.zonesFrom[2]).sort(sortByProp('zone_name'));
+            this.zonesFrom[3] = [].slice.call(this.zonesFrom[3]).sort(sortByProp('zone_name'));
+
+            return true
+        },
+
+    },
+
+    Created() {
+
+
+    },
+
+    mounting() {
+
     },
 
     mounted(){
 
+        this.getZones(1)
         this.getParams()
         this.getTipTops()
         return true
@@ -240,19 +326,38 @@ const pt = Vue.createApp( {
             this.newTiptop()
             switch (this.sortParam) {
                 case 'profit':
-                    return this.packData.sort(sortByProfit);
+                    return this.filtredList.sort(sortByProfit);
                 case 'profitor':
-                    return this.packData.sort(sortByProfitOr);
+                    return this.filtredList.sort(sortByProfitOr);
                 case 'salary':
-                    return this.packData.sort(sortBySalary);
+                    return this.filtredList.sort(sortBySalary);
                 case 'ZoneTo':
-                    return this.packData.sort(sortByZoneTo);
+                    return this.filtredList.sort(sortByZoneTo);
                 case 'ZoneFrom':
-                    return this.packData.sort(sortByZoneFrom);
+                    return this.filtredList.sort(sortByZoneFrom);
                 default:
-                    return this.packData;
+                    return this.filtredList;
             }
         },
+
+        filtredList() {
+            if(!this.packData.length)
+                return []
+            //let pData = this.packData
+            let result = this.packData
+
+            if(this.zFrom != 0){
+                result = result.filter(pack => pack.Pack.zone_from === this.zFrom)
+            }
+
+            if(this.zTo != 0){
+                result = result.filter(pack => pack.Pack.zone_to === this.zTo)
+            }
+
+            return result
+        },
+
+
         errorMsg() {
             switch (this.error){
                 case 'ok' : return 'ok'

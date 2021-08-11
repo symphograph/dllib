@@ -5,24 +5,31 @@
 require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 if (!$cfg->myip)
     die('rrr');
-$allMats = [
-        1=>44,
-        45=>56,
-        'tyu'=>34
-];
-$allMats = json_encode($allMats);
-qwe("
-REPLACE INTO user_crafts 
-    (user_id, craft_id, item_id, isbest, allMats) 
-VALUES 
-    (1, 1, 1, 2, :allMats)
-",['allMats'=>$allMats]);
 
-$qwe = qwe("SELECT * FROM user_crafts
-WHERE user_id = 1 AND craft_id = 1
-");
-$q = $qwe->fetchObject();
-printr(json_decode($q->allMats));
+class myTest{
+    private int $item_id;
+    public string $item_name;
+
+    public function __construct(public int $categ_id)
+    {
+    }
+
+    public function __set(string $name, $value): void
+    {
+
+    }
+
+    public function test()
+    {
+
+    }
+}
+
+$qwe = qwe("SELECT * FROM items where item_name and on_off limit 10");
+$t = $qwe->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE,'myTest');
+$t = new myTest();
+$a = $t->intval();
+printr($t);
 ?>
 
 
