@@ -37,6 +37,10 @@ if(str_starts_with($_SERVER['SERVER_NAME'],'test')){
 if(str_starts_with($_SERVER['SCRIPT_NAME'],'/hendlers/')){
     if ($_SERVER['REQUEST_METHOD'] != 'POST')
         die();
+
+    if($cfg->debug){
+        cors();
+    }
 }
 
 //------------------------------------------------------------------

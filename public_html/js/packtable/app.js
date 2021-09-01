@@ -36,10 +36,12 @@ const pt = Vue.createApp( {
             tiptop: '',
             all: false,
             loaded: false,
-            zoneFilter: {}
+            zoneFilter: {},
+            setup: false
 
         }
     },
+
     watch: {
 
 
@@ -68,6 +70,11 @@ const pt = Vue.createApp( {
             deep: true
         },
 
+        'packForm.per'(){
+            let per = toNums(this.packForm.per)
+            localStorage.setItem ("packPer",per);
+        },
+
         side: {
             handler(val){
                 this.zTo = 0
@@ -88,6 +95,7 @@ const pt = Vue.createApp( {
             deep: true
         }
     },
+
     methods: {
 
         refreshZones() {
@@ -169,6 +177,8 @@ const pt = Vue.createApp( {
         },
 
         getPacks(){
+            if(!this.setup) return
+
             pt.lost = []
             pt.uPrices = []
             localStorage.setItem ("packTypes", JSON.stringify(pt.packForm.type));
@@ -233,7 +243,7 @@ const pt = Vue.createApp( {
 
         },
 
-        getZones(side){
+        setZones(side){
             getZones(side).done(function (data) {
                     pt.error = 'ok'
                     pt.zonesFrom = data
@@ -262,20 +272,16 @@ const pt = Vue.createApp( {
         },
 
         getParams() {
-            var ls = localStorage.getItem('packTypes');
-            if (ls === null) {
-                return false;
-            }
-            if (JSON.parse(ls).length) {
-                this.packForm.type = JSON.parse(ls)
-                return true
-            } else {
-                localStorage.setItem("packTypes", JSON.stringify([]));
-            }
-        },
+            let per = localStorage.getItem('packPer') ?? 130;
+            per = perValid(per);
+            this.packForm.per = per;
 
-        setParams(){
+            var ls = localStorage.getItem('packTypes') ?? JSON.stringify([]);
+            ls = JSON.parse(ls)
+            this.packForm.type = ls
+            localStorage.setItem("packTypes", JSON.stringify([]))
 
+            this.setup = true
         },
 
         goToItem(item){
@@ -291,8 +297,7 @@ const pt = Vue.createApp( {
         sortZones(){
             if(!Object.keys(this.zonesFrom).length)
                 return {}
-            console.log(this.zonesFrom[1])
-            console.log(Array.from(this.zonesFrom[1]))
+
             this.zonesFrom[1] = Object.entries(this.zonesFrom[1])/*.sort(sortByProp('zone_name'));*/
             this.zonesFrom[2] = [].slice.call(this.zonesFrom[2]).sort(sortByProp('zone_name'));
             this.zonesFrom[3] = [].slice.call(this.zonesFrom[3]).sort(sortByProp('zone_name'));
@@ -307,13 +312,9 @@ const pt = Vue.createApp( {
 
     },
 
-    mounting() {
-
-    },
-
     mounted(){
 
-        this.getZones(1)
+        this.setZones(1)
         this.getParams()
         this.getTipTops()
         return true

@@ -9,7 +9,7 @@ if (!$User->check()) {
     die();
 }
 
-$ver = random_str(8);
+
 $aa_ver = '7.5';
 
 $ps = [];
@@ -22,12 +22,12 @@ function perselect($per)
 
     ?><select name="perc" class="perc" v-model="packForm.per"><?php
 
-    $f = 135; $sel_per = '';
+    $f = 135;
     for ($i = 1; $i <= 17; $i++)
     {
-        $f = $f-5;
-        if($f==$per) $sel_per = 'selected';
-        echo '<option value="'.$f.'" '.$sel_per.'>'.$f.'</option>';
+        $f -= 5;
+        //if($f==$per) $sel_per = 'selected';
+        echo "<option value='".$f."'>$f</option>";
         $sel_per = '';
     }
 
@@ -75,7 +75,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';
 <main>
     <div class="input1" id="rent">
         <div class="menu_area">
-            <form method="post" action="packtable.php" name="packsettings" id="packsettings">
+
                 <div class="navcustoms top">
                     <h2 class="p_title"><span>Паки <?php echo $aa_ver?> при</span><?php perselect(130)?><span>%</span></h2>
                     <div class="siol">
@@ -110,7 +110,7 @@ include $_SERVER['DOCUMENT_ROOT'].'/../includs/header.php';
                         sortrow();
                     ?>
                 </div>
-            </form>
+
             <div class="clear"></div>
             <hr>
             <div id="tiptop" :style="{color: isred}"><span>{{ tiptop }}</span></div>

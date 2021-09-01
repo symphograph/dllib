@@ -1,7 +1,7 @@
 function toNums(val) {
     val += ''
-    val = +val.replace(/[^\d]/g, '')
-    return val
+    val = val.replace(/[^\d]/g, '')
+    return +val
 }
 
 function priceStringer(str) {
@@ -125,6 +125,18 @@ function sortByProp(property) {
          */
         var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
         return result * sortOrder;
+    }
+}
+
+function perValid(per) {
+    per = toNums(per)
+    switch (true) {
+        case per < 50:
+            return 50;
+        case per > 130:
+            return 130;
+        default:
+            return per
     }
 }
 
