@@ -305,6 +305,41 @@ const pt = Vue.createApp( {
             return true
         },
 
+        async testApi() {
+
+            /*
+            try {
+                const responce = await axios.get(
+                    'https://test.sakh-orch.ru',
+                    {
+                        params: {
+                            testapi: '1'
+                        }
+
+                    },
+
+
+                )
+            } catch (e) {
+                console.log(e)
+            }
+
+             */
+            $.ajax
+            ("https://test.sakh-orch.ru?testapi=1",
+                {
+                    type: "GET",
+                    cache: false
+
+                }).done(function (data) {
+                pt.error = 'ok'
+
+            }).fail(function (data) {
+
+               // pt.error = data.responseText ?? 'yy'
+            })
+        },
+
     },
 
     Created() {
@@ -313,6 +348,7 @@ const pt = Vue.createApp( {
     },
 
     mounted(){
+        this.testApi()
 
         this.setZones(1)
         this.getParams()
