@@ -326,7 +326,7 @@ const pt = Vue.createApp( {
 
              */
             $.ajax
-            ("https://test.sakh-orch.ru?testapi=1",
+            ("https://sakh-orch.ru?testapi=1",
                 {
                     type: "GET",
                     cache: false
