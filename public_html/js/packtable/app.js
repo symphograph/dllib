@@ -348,7 +348,7 @@ const pt = Vue.createApp( {
     },
 
     mounted(){
-        this.testApi()
+        //this.testApi()
 
         this.setZones(1)
         this.getParams()
