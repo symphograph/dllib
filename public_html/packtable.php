@@ -10,7 +10,7 @@ if (!$User->check()) {
 }
 
 
-$aa_ver = '7.5';
+$aa_ver = '8.0';
 
 $ps = [];
 if(!empty($_COOKIE['pack_settings']))

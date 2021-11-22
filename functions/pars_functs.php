@@ -195,7 +195,7 @@ function ParsIcons($item_id)
 	$plink = 'http://archeagecodex.com/ru/item/'.$item_id;
 //var_dump($item_id);
 	$somepage = curl($plink);
-	sleep(1);
+	sleep(0.5);
 	if(!$somepage) 
 		return false;
 	

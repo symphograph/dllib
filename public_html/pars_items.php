@@ -40,13 +40,13 @@ WHERE `result_item_id` NOT IN
 GROUP BY `result_item_id`
 LIMIT 10
 ");*/
-/*
+
 $qwe = qwe("
-SELECT * FROM `New_items_75`
+SELECT * FROM `New_items_80`
 WHERE item_id >= (SELECT item_id FROM parsed_last)
 LIMIT 500
 ");
-*/
+
 /*
 $qwe = qwe("
 SELECT item_id FROM craft_materials WHERE item_id NOT in 
@@ -54,11 +54,13 @@ SELECT item_id FROM craft_materials WHERE item_id NOT in
 GROUP BY item_id
 ");
 */
+/*
 $qwe = qwe("
 SELECT * FROM `items`
 WHERE categ_id = 133
 AND item_id > (SELECT item_id FROM parsed_last)
 ");
+*/
 if(!$qwe or !$qwe->rowCount())
 	die('no items');
 $i = 0;
@@ -71,7 +73,7 @@ foreach($qwe as $q)
 	$itm = $q['item_id'];
  	$new = 1;
  	$new = (!IsItemExistInBD($itm));
- 	//if(!$new) continue;
+ 	if(!$new) continue;
 	$i++;
  	//if($i>100) break;
 	qwe("UPDATE `parsed_last` SET `item_id` = '$itm' WHERE `id` = 1");
@@ -79,7 +81,7 @@ foreach($qwe as $q)
 	echo '<hr>';
 	$plink = 'http://archeagecodex.com/ru/item/'.$itm;
  //echo $itm;
-	sleep(1);
+	sleep(0.5);
 	$somepage = curl($plink);
 
 
@@ -220,11 +222,11 @@ foreach($qwe as $q)
 	WHERE `item_id` = '$item_id'
 	");
 
-    /*
+
 	$iconfile = ParsIcons($item_id);
 	if($iconfile) {
 		?><div style="width: 40px; height: 40px; background-image: url(<?php echo 'img/icons/50/'.$iconfile.'.png?ver='.$ver?>)"></div><?php
-	}*/
+	}
 
 
 

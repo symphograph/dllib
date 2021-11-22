@@ -32,7 +32,7 @@ foreach($qlast as $q)
 */
 
 $qlist = qwe("
-SELECT * FROM New_crafts_75 
+SELECT * FROM New_crafts_80 
 WHERE craft_id NOT IN
     (SELECT craft_id FROM crafts)
 AND craft_id >= (SELECT item_id FROM parsed_last)
