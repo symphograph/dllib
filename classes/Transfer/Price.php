@@ -1,8 +1,8 @@
 <?php
 
-namespace transfer;
+namespace Transfer;
 
-use api\Api;
+use Api\Api;
 use PDO;
 
 class Price

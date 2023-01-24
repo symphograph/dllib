@@ -1,6 +1,6 @@
 <?php
 
-namespace api;
+namespace Api;
 
 class Api
 {
