@@ -30,9 +30,9 @@ class MailRuUser
         $qwe = qwe("
             select 
                 mailusers.*,
-                us.server as server_id
+                if(us.server, us.server, 9) as server_id
             from mailusers
-            inner join user_servers us 
+            left join user_servers us 
                 on mailusers.mail_id = us.user_id               
             where email = :email",
         ['email'=>$email]
@@ -48,7 +48,11 @@ class MailRuUser
      */
     public static function getEmails(): array|false
     {
-        $qwe = qwe("select email from mailusers where email like '%@%'");
+        $qwe = qwe("
+            select email from mailusers 
+            where email like '%@%'
+            and mail_id in (select distinct user_id from prices)"
+        );
         if(!$qwe || !$qwe->rowCount()){
             return false;
         }
