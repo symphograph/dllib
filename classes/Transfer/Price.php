@@ -16,7 +16,7 @@ class Price
     /**
      * @return bool|array<self>
      */
-    public static function getAllUserPrices(int $userId): bool|array
+    public static function getAllUserPrices(int $userId, string $lastDatetime): bool|array
     {
         $qwe = qwe("
             select item_id as itemId,
@@ -24,33 +24,14 @@ class Price
                    server_group as serverGroup,
                    time as datetime
             from prices 
-            where user_id = :user_id",
-            ['user_id'=>$userId]
+            where user_id = :user_id
+            and time >= :lastDatetime",
+            ['user_id'=>$userId, 'lastDatetime'=> $lastDatetime]
         );
         if(!$qwe || !$qwe->rowCount()){
             return false;
         }
         return $qwe->fetchAll(PDO::FETCH_CLASS, self::class);
     }
-
-    public static function sendList(int $userId): bool
-    {
-
-        $List = self::getAllUserPrices($userId);
-        if(empty($List)){
-            return false;
-        }
-        global $cfg;
-        $responce = Api::curl(
-            'https://' . $cfg->transfers->$_SERVER['SERVER_NAME'] . '/api/hooks/prices.php',
-            ['userId'=>$userId, 'prices' => $List]
-        );
-
-        if (($responce ?? '') === 'ok'){
-            return true;
-        }
-        return false;
-    }
-
 
 }
