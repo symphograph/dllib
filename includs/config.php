@@ -61,7 +61,7 @@ if(str_starts_with($_SERVER['SCRIPT_NAME'], '/api/')) {
 }
 
 if(str_starts_with($_SERVER['SCRIPT_NAME'],'/test/') || str_starts_with($_SERVER['SCRIPT_NAME'],'/api/')){
-    if(!$cfg->myip && !$cfg->tranferIp){
+    if(!$cfg->myip && !$cfg->transferIp){
         die('permis');
     }
 }

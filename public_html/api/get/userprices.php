@@ -1,6 +1,6 @@
 <?php
 require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
-if(!$cfg->tranferIp){
+if(!$cfg->transferIp){
     die('permis');
 }
 $userId = intval($_POST['userId'] ?? 0)
