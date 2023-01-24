@@ -34,7 +34,8 @@ class MailRuUser
             from mailusers
             left join user_servers us 
                 on mailusers.mail_id = us.user_id               
-            where email = :email",
+            where email = :email
+            and mail_id in (select distinct user_id from prices where server_group > 0)",
         ['email'=>$email]
         );
         if(!$qwe || !$qwe->rowCount()){
@@ -51,7 +52,7 @@ class MailRuUser
         $qwe = qwe("
             select email from mailusers 
             where email like '%@%'
-            and mail_id in (select distinct user_id from prices)"
+            and mail_id in (select distinct user_id from prices where server_group > 0)"
         );
         if(!$qwe || !$qwe->rowCount()){
             return false;
