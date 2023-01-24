@@ -25,7 +25,8 @@ class Price
                    time as datetime
             from prices 
             where user_id = :user_id
-            and time >= :lastDatetime",
+                and server_group
+                and time >= :lastDatetime",
             ['user_id'=>$userId, 'lastDatetime'=> $lastDatetime]
         );
         if(!$qwe || !$qwe->rowCount()){
