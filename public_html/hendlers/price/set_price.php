@@ -22,4 +22,3 @@ if(!$Price->insert($value)){
 }
 
 echo json_encode([]);
-

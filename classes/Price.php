@@ -30,7 +30,7 @@ class Price
     public string $text = 'Цена: ';
     public string $text2 = 'Цена: ';
 
-    public function __construct(int $item_id)
+    public function __construct(int $item_id = 0)
     {
         $this->item_id = $item_id;
     }
@@ -584,5 +584,7 @@ class Price
         return true;
 
     }
+
+
 
 }

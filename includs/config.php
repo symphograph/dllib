@@ -23,8 +23,9 @@ if($cfg->myip)
 
 }
 
-spl_autoload_register(function ($class_name) {
-    require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/classes/' . $class_name . '.php';
+spl_autoload_register(function ($className) {
+    $fileName = str_replace('\\', '/', $className) . '.php';
+    require_once dirname($_SERVER['DOCUMENT_ROOT']) . '/classes/' . $fileName;
 });
 
 $cfg->vueprod = '.prod';
@@ -40,6 +41,28 @@ if(str_starts_with($_SERVER['SCRIPT_NAME'],'/hendlers/')){
 
     if($cfg->debug){
         cors();
+    }
+}
+
+if(str_starts_with($_SERVER['SCRIPT_NAME'], '/api/')) {
+
+    if(!in_array($_SERVER['REQUEST_METHOD'], ['POST', 'OPTIONS']))
+        die();
+
+    if(empty($_POST)) {
+        $_POST = json_decode(file_get_contents('php://input'), true)['params'] ?? [];
+    }
+
+    if($cfg->debug) {
+
+    }
+
+    cors();
+}
+
+if(str_starts_with($_SERVER['SCRIPT_NAME'],'/test/') || str_starts_with($_SERVER['SCRIPT_NAME'],'/api/')){
+    if(!$cfg->myip && !$cfg->tranferIp){
+        die('permis');
     }
 }
 

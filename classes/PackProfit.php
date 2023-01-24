@@ -4,7 +4,7 @@ class PackProfit
 
     private int $valut_id;
     private int $craft_price;
-    private int $labor_total;
+    private int|float $labor_total;
     private int $finalSalary;
 
 
@@ -17,7 +17,7 @@ class PackProfit
         int $finalSalary,
         int $valut_id,
         int $craft_price,
-        int $labor_total
+        int|float $labor_total
     )
     {
         $this->finalSalary = $finalSalary;
