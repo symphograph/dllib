@@ -82,9 +82,15 @@ class MailRuUser
     public static function getIds(): array|false
     {
         $qwe = qwe("
-            select mail_id from mailusers 
+            select mu.mail_id from mailusers mu
             where email like '%@%'
-            and mail_id in (select distinct user_id from prices where server_group > 0)"
+            and (
+                mail_id in (select distinct user_id from prices where server_group > 0)
+                or 
+                mail_id in (select distinct user_id from folows)
+                or 
+                mail_id in (select distinct folow_id from folows)
+                )"
         );
         if(!$qwe || !$qwe->rowCount()){
             return false;
