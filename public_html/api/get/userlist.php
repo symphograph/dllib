@@ -3,7 +3,7 @@ require_once dirname($_SERVER['DOCUMENT_ROOT']).'/includs/config.php';
 
 use Transfer\MailRuUser;
 
-$List = MailRuUser::getIds()
+$List = MailRuUser::getList()
 or die(http_response_code(500));
 
-echo json_encode($List, JSON_UNESCAPED_UNICODE);
+echo json_encode($List);

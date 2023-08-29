@@ -79,7 +79,10 @@ class MailRuUser
         return $qwe->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    public static function getIds(): array|false
+    /**
+     * @return self[]
+     */
+    public static function getList(): array|false
     {
         $qwe = qwe("
             select mu.* from mailusers mu
