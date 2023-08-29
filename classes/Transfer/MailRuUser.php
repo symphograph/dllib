@@ -2,6 +2,7 @@
 
 namespace Transfer;
 
+use DTO\PriceDTO;
 use PDO;
 
 class MailRuUser
@@ -25,6 +26,7 @@ class MailRuUser
     public ?int    $mode;
     public ?int    $server_id;
     public ?array $follows = [];
+    public ?array $prices = [];
 
     public static function byEmail(string $email)
     {
@@ -61,7 +63,9 @@ class MailRuUser
         if(!$qwe || !$qwe->rowCount()){
             return false;
         }
-        return $qwe->fetchObject(self::class);
+        $muser = $qwe->fetchObject(self::class);
+        $muser->initData();
+        return $muser;
     }
 
     /**
@@ -86,28 +90,35 @@ class MailRuUser
     public static function getList(): array|false
     {
         $qwe = qwe("
-            select mu.* from mailusers mu
+            select mu.*,
+                   if(us.server, us.server, 9) as server_id
+            from mailusers mu
+            left join user_servers us 
+                on mu.mail_id = us.user_id
             where email like '%@%'
             and (
                 mail_id in (select distinct user_id from prices where server_group > 0)
-                or 
+                or
                 mail_id in (select distinct user_id from folows)
                 or 
                 mail_id in (select distinct folow_id from folows)
                 )"
         );
-        if(!$qwe || !$qwe->rowCount()){
-            return false;
-        }
 
         /** @var self[] $arr */
         $arr = $qwe->fetchAll(PDO::FETCH_CLASS, self::class);
         $List = [];
         foreach ($arr as $muser){
-            $muser->initFollows();
+            $muser->initData();
             $List[] = $muser;
         }
         return $List;
+    }
+
+    private function initData(): void
+    {
+        self::initFollows();
+        self::initPrices();
     }
 
     private function initFollows(): void
@@ -117,5 +128,10 @@ class MailRuUser
             return;
         }
         $this->follows = $qwe->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    private function initPrices(): void
+    {
+        $this->prices = PriceDTO::getListOfUser($this->mail_id);
     }
 }
