@@ -82,7 +82,7 @@ class MailRuUser
     public static function getIds(): array|false
     {
         $qwe = qwe("
-            select mu.mail_id from mailusers mu
+            select mu.* from mailusers mu
             where email like '%@%'
             and (
                 mail_id in (select distinct user_id from prices where server_group > 0)
@@ -95,6 +95,6 @@ class MailRuUser
         if(!$qwe || !$qwe->rowCount()){
             return false;
         }
-        return $qwe->fetchAll(PDO::FETCH_COLUMN);
+        return $qwe->fetchAll(PDO::FETCH_CLASS, self::class);
     }
 }
