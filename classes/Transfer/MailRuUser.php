@@ -44,7 +44,9 @@ class MailRuUser
         if(!$qwe || !$qwe->rowCount()){
             return false;
         }
-        return $qwe->fetchObject(self::class);
+        $muser = $qwe->fetchObject(self::class);
+        $muser->initData();
+        return $muser;
     }
 
     public static function byId(string $id)
