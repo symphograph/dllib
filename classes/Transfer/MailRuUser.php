@@ -44,6 +44,25 @@ class MailRuUser
         return $qwe->fetchObject(self::class);
     }
 
+    public static function byId(string $id)
+    {
+        $qwe = qwe("
+            select 
+                mailusers.*,
+                if(us.server, us.server, 9) as server_id
+            from mailusers
+            left join user_servers us 
+                on mailusers.mail_id = us.user_id               
+            where email = :email
+            and mail_id in (select distinct user_id from prices where server_group > 0)",
+            ['id'=>$id]
+        );
+        if(!$qwe || !$qwe->rowCount()){
+            return false;
+        }
+        return $qwe->fetchObject(self::class);
+    }
+
     /**
      * @return array<string>|false
      */
@@ -51,6 +70,19 @@ class MailRuUser
     {
         $qwe = qwe("
             select email from mailusers 
+            where email like '%@%'
+            and mail_id in (select distinct user_id from prices where server_group > 0)"
+        );
+        if(!$qwe || !$qwe->rowCount()){
+            return false;
+        }
+        return $qwe->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public static function getIds(): array|false
+    {
+        $qwe = qwe("
+            select mail_id from mailusers 
             where email like '%@%'
             and mail_id in (select distinct user_id from prices where server_group > 0)"
         );
