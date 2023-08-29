@@ -6,4 +6,4 @@ use Transfer\MailRuUser;
 $List = MailRuUser::getList()
 or die(http_response_code(500));
 
-echo json_encode($List);
+echo json_encode($List, JSON_UNESCAPED_UNICODE);
