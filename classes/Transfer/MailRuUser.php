@@ -24,6 +24,7 @@ class MailRuUser
     public ?string $avafile;
     public ?int    $mode;
     public ?int    $server_id;
+    public ?array $follows = [];
 
     public static function byEmail(string $email)
     {
@@ -98,6 +99,23 @@ class MailRuUser
         if(!$qwe || !$qwe->rowCount()){
             return false;
         }
-        return $qwe->fetchAll(PDO::FETCH_CLASS, self::class);
+
+        /** @var self[] $arr */
+        $arr = $qwe->fetchAll(PDO::FETCH_CLASS, self::class);
+        $List = [];
+        foreach ($arr as $muser){
+            $muser->initFollows();
+            $List[] = $muser;
+        }
+        return $List;
+    }
+
+    private function initFollows(): void
+    {
+        $qwe = qwe("select folow_id from folows where user_id = :user_id", ['user_id'=>$this->mail_id]);
+        if(!$qwe || !$qwe->rowCount()){
+            return;
+        }
+        $this->follows = $qwe->fetchAll(PDO::FETCH_COLUMN);
     }
 }
