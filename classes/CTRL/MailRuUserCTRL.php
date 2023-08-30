@@ -14,7 +14,7 @@ class MailRuUserCTRL extends MailRuUser
         $mail_id = $_POST['mail_id']
             ?? die(http_response_code(400));
         $MailUser = self::byId($mail_id)
-            or die(http_response_code(500));;
+            or die(http_response_code(500));
         echo json_encode($MailUser,JSON_UNESCAPED_UNICODE);
         die();
     }
