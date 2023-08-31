@@ -125,7 +125,7 @@ class MailRuUser
 
     private function initFollows(): void
     {
-        $qwe = qwe("select user_id from folows where folow_id = :user_id", ['user_id'=>$this->mail_id]);
+        $qwe = qwe("select folow_id from folows where user_id = :user_id", ['user_id'=>$this->mail_id]);
         if(!$qwe || !$qwe->rowCount()){
             return;
         }
