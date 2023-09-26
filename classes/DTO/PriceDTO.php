@@ -10,7 +10,7 @@ class PriceDTO extends DTO
     public int $userId;
     public int $itemId;
     public int $price;
-    public int $serverGroup;
+    public int $serverGroupId;
     public string $updatedAt;
 
     public static function byId(int $user_id, int $item_id)
@@ -28,7 +28,7 @@ class PriceDTO extends DTO
                 user_id as userId, 
                 item_id as itemId, 
                 auc_price as price, 
-                server_group as serverGroup, 
+                server_group as serverGroupId, 
                 `time` as updatedAt 
             from prices 
             where user_id = :user_id",

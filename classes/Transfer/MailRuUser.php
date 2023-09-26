@@ -136,4 +136,5 @@ class MailRuUser
     {
         $this->prices = PriceDTO::getListOfUser($this->mail_id);
     }
+
 }
