@@ -1,6 +1,11 @@
 # dllib
-Tools for Archeage
+Tools for MMO ArcheAge
 https://dllib.ru
+
+This project is deprecated and will be absorbed by [<b>ArcheAgeTools</b>](https://github.com/symphograph/ArcheAgeTools)
+
+---
+
 ![screenshot of sample](https://dllib.ru./img/pack_info_screen.png)
 
 Works:
