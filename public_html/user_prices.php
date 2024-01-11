@@ -30,7 +30,7 @@ $based_prices = '32103,32106,2,3,4,23633,32038,8007,32039,3712,27545,41488';
     <?php CssMeta(['default.css','user_prices.css']);?>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/vue@next/dist/vue.global<?php echo $cfg->vueprod?>.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/vue@3.4.8/dist/vue.global<?php echo $cfg->vueprod?>.js"></script>
 </head>
 
 <body>

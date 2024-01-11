@@ -63,7 +63,7 @@ if($User->siol == 5)
 <script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
 <!--    <script src="https://unpkg.com/vue@next"></script>-->
 
-<script type="text/javascript" src="https://unpkg.com/vue@next/dist/vue.global<?php echo $cfg->vueprod?>.js"></script>
+<script type="text/javascript" src="https://unpkg.com/vue@3.4.8/dist/vue.global<?php echo $cfg->vueprod?>.js"></script>
 </head>
 
 <body>
